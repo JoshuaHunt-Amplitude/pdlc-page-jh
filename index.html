@@ -364,7 +364,6 @@
     </div>
     <div class="nav-links">
       <a href="#manifesto">Manifesto</a>
-      <a href="#how">How it works</a>
       <a href="#loops">The loops</a>
       <a href="#surfaces">Surfaces</a>
     </div>
@@ -405,112 +404,14 @@
       <div class="reveal">
         <p>The product development loop has always been the same: <strong>build → ship → use → learn</strong>. Fifty years of work — programming languages, agile, cloud, and now coding agents — collapsed the left half. The distance from problem identified to code shipped is approaching zero.</p>
         <p>The right half hasn't moved. Humans still triage Slack threads, watch session replays, read error logs, interpret experiments, and try to synthesize all of it into "what should I build next?" For every issue that survives that gauntlet, hundreds don't.</p>
-        <p>Analytics, for a decade, has been an <strong>insight factory</strong>. "Here's what happened" charts. Dashboards no one opens. Anomalies no one routes. <strong>More than 95% of behavioral data goes unread.</strong> That isn't an analytics problem. It's a sensing problem.</p>
+        <p>Analytics, for a decade, has been an insight factory. "Here's what happened" charts. Dashboards no one opens. Anomalies no one routes. <strong>More than 95% of behavioral data goes unread.</strong> That isn't an analytics problem. It's a sensing problem.</p>
       </div>
       <div class="reveal">
         <p>The teams that have mastered this — Anthropic, OpenAI, Meta, Netflix, Stripe — run it manually, with proprietary tooling. Stripe ships <strong>1,300+ PRs/week</strong> from internal coding agents. Ramp's Inspect authors <strong>57% of merged PRs</strong>. The asymmetry between ship and sense is the gap they're closing one custom system at a time.</p>
         <p>PDLC is the version any team can run. An agent-native loop wired into the data layer that already knows what matters to your users — anomalies, replays, feedback, experiments, agent traces. It senses, prioritizes, specs, ships, verifies, and learns. Every cycle compounds the next.</p>
-        <p style="color:var(--white);font-size:18px;line-height:1.55"><strong>The next era of analytics isn't a better chart. It's a system that closes the loop on its own.</strong></p>
+        <p style="color:var(--white);font-size:18px;line-height:1.55"><strong>The next era of analytics is a closed loop.</strong></p>
       </div>
     </div>
-
-    <div class="stats-strip reveal">
-      <div class="stat-cell"><div class="stat-num">95%+</div><div class="stat-lbl">of behavioral data goes unread by humans</div></div>
-      <div class="stat-cell"><div class="stat-num">94%</div><div class="stat-lbl">of Amplitude code now authored by coding agents</div></div>
-      <div class="stat-cell"><div class="stat-num">1,300+</div><div class="stat-lbl">PRs/week shipped by Stripe's "Minions" agents</div></div>
-      <div class="stat-cell"><div class="stat-num">57%</div><div class="stat-lbl">of Ramp's merged PRs now authored by Inspect</div></div>
-    </div>
-
-    <div class="tenets reveal">
-      <div class="tenet"><div class="tenet-n">01</div><div class="tenet-t">Insight without action is overhead. <span>The job isn't "tell me what happened." It's "close the loop on it."</span></div></div>
-      <div class="tenet"><div class="tenet-n">02</div><div class="tenet-t">The agent's first question is "what should I work on?" <span>Be the canonical answer. For every Cursor, Claude Code, Codex, and custom harness.</span></div></div>
-      <div class="tenet"><div class="tenet-n">03</div><div class="tenet-t">Modeled product data beats raw logs every time. <span>An event graph turns a firehose into addressable opportunities. 10× the precision.</span></div></div>
-      <div class="tenet"><div class="tenet-n">04</div><div class="tenet-t">Track outcomes, not output. <span>The Outcome Graph — what was sensed, built, and worked — is the compounding asset no one else has.</span></div></div>
-      <div class="tenet"><div class="tenet-n">05</div><div class="tenet-t">A reviewer agent guards the human's time. <span>Most coding-agent failures aren't broken code. They're confidently shipping the wrong thing.</span></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ── HOW IT WORKS (six-state, concrete) ────────────── -->
-<section class="how2" id="how">
-  <div class="how2-head reveal">
-    <div class="eyebrow">How it works</div>
-    <h2 class="sec-title">Six states. <span class="a">One closed loop.</span></h2>
-    <p>The PDLC agent walks every signal through the same six-state machine. Each handoff is a structured artifact — not a Slack thread, not a Linear ticket, not a tribal handshake. The state shape is the contract that makes the loop addressable to humans and to other agents.</p>
-  </div>
-
-  <div class="state-chain reveal" aria-hidden="true">
-    <span class="chain-chip">Sense</span><span class="chain-arrow">→</span>
-    <span class="chain-chip">Prioritize</span><span class="chain-arrow">→</span>
-    <span class="chain-chip">Spec</span><span class="chain-arrow">→</span>
-    <span class="chain-chip">Act</span><span class="chain-arrow">→</span>
-    <span class="chain-chip">Verify</span><span class="chain-arrow">→</span>
-    <span class="chain-chip">Close</span><span class="chain-arrow">↺</span>
-    <span class="chain-chip" style="border-color:rgba(64,131,255,.4);color:var(--blue-d)">feeds Sense</span>
-  </div>
-
-  <div class="states reveal">
-
-    <div class="state-row">
-      <div class="st-n">01</div>
-      <div><div class="st-name">Sense<span>Continuous · zero human</span></div></div>
-      <div class="st-body">A scheduler runs across every product area's data sources — <strong>analytics, replays, feedback, error logs, agent traces, experiments</strong>. It watches for anomalies, regressions, friction, and unmet intent. Output: candidate problem statements, each tagged with source citations.</div>
-      <div class="st-tags">
-        <span class="st-tag accent">in: 6 surfaces</span>
-        <span class="st-tag">out: candidate</span>
-      </div>
-    </div>
-
-    <div class="state-row">
-      <div class="st-n">02</div>
-      <div><div class="st-name">Prioritize<span>Minutes · automatic</span></div></div>
-      <div class="st-body">Candidates score through an LLM rubric and a logistic-regression <strong>quality judge</strong> (~80% F1 on internal feedback). Low-confidence candidates are demoted. Survivors get a RICE-shaped impact estimate against the product area's objective metric.</div>
-      <div class="st-tags">
-        <span class="st-tag">judge: ~80% F1</span>
-        <span class="st-tag">impact: RICE</span>
-      </div>
-    </div>
-
-    <div class="state-row">
-      <div class="st-n">03</div>
-      <div><div class="st-name">Spec<span>Minutes · planning agent</span></div></div>
-      <div class="st-body">A planning agent writes a <strong>structured spec</strong>: problem one-liner, evidence (chart, replay, feedback citations), proposed solution, acceptance criteria, target repo. The spec is the contract between the loop and whichever agent picks up the work.</div>
-      <div class="st-tags">
-        <span class="st-tag">artifact: spec.md</span>
-        <span class="st-tag">cite: backlinks</span>
-      </div>
-    </div>
-
-    <div class="state-row">
-      <div class="st-n">04</div>
-      <div><div class="st-name">Act<span>Hours → days · agents (+ humans)</span></div></div>
-      <div class="st-body">A complexity tag routes the spec to the right executor — <strong>a Cursor cloud agent, a Claude Code session, or a human reviewer</strong> for larger work. Straightforward fixes ship without human review. Net-new features get flagged for sign-off.</div>
-      <div class="st-tags">
-        <span class="st-tag">route: complexity</span>
-        <span class="st-tag accent">Cursor · Claude</span>
-      </div>
-    </div>
-
-    <div class="state-row">
-      <div class="st-n">05</div>
-      <div><div class="st-name">Verify<span>Minutes · review agent</span></div></div>
-      <div class="st-body">Before a human ever opens the PR, a <strong>review agent</strong> pulls in the original spec, checks the diff against acceptance criteria, runs the code in a sandbox, and captures a session replay of the change in action. It posts a structured review back to the PR.</div>
-      <div class="st-tags">
-        <span class="st-tag">sandbox: replay</span>
-        <span class="st-tag">gate: human</span>
-      </div>
-    </div>
-
-    <div class="state-row">
-      <div class="st-n">06</div>
-      <div><div class="st-name">Close<span>Days → weeks · outcome tracking</span></div></div>
-      <div class="st-body">When the PR merges, the loop tracks the outcome metric named in the spec. Movement (or lack of it) feeds back into the quality judge as labeled data and into the ranker as <strong>outcome-aware impact priors</strong>. This is what makes the loop compound.</div>
-      <div class="st-tags">
-        <span class="st-tag">label: outcome</span>
-        <span class="st-tag accent">→ Outcome Graph</span>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -519,7 +420,7 @@
   <div class="loops-head reveal">
     <div class="eyebrow">Inside the system</div>
     <h2>One loop holds. <span class="a">Three loops compound.</span></h2>
-    <p>The six states run at three different speeds — and each speed feeds the next. As you scroll, watch the system build from the inside out.</p>
+    <p>Each loop runs at a different speed — and each speed feeds the next. As you scroll, watch the system build from the inside out.</p>
   </div>
 
   <div class="story-wrap">
@@ -690,35 +591,6 @@
    <span class="c">5+ feedback mentions · PR #102090</span>
 <span class="k">▸</span> Checkout silent-fail on Safari
    <span class="c">rage clicks · spec ready</span></pre>
-    </div>
-  </div>
-</section>
-
-<!-- ── COMPONENTS ────────────────────────────────────── -->
-<section class="cmps">
-  <div class="cmps-in">
-    <div class="cmps-head reveal">
-      <div class="eyebrow">The interesting engineering</div>
-      <h2 class="sec-title">Three pieces <span class="a">we had to build.</span></h2>
-      <p style="color:var(--dim);font-size:17px;line-height:1.7;margin-top:22px;max-width:60ch">Forever-loops are easy. The compounding comes from three components: a sensing harness wired into product data, a fleet of executing agents, and a reviewing agent that gates what reaches humans. Drop any one and throughput collapses.</p>
-    </div>
-
-    <div class="cmps-grid">
-      <div class="cmp reveal">
-        <div class="cmp-num">01 / Sense</div>
-        <h4>The Opportunity Harness.</h4>
-        <p>A scheduled agent system that maintains the candidate queue. Runs every product area's sensing pipeline, dedupes against historical opportunities, applies the quality judge, and ranks. Built around a <strong>structured Opportunity schema</strong> — problem statement, evidence, spec, citations, complexity tag. The schema is the contract.</p>
-      </div>
-      <div class="cmp reveal">
-        <div class="cmp-num">02 / Act</div>
-        <h4>The Executor Fleet.</h4>
-        <p>We don't run a homegrown coding agent. Specs route to <strong>Cursor cloud agents</strong> for self-contained tasks, <strong>Claude Code</strong> for richer-context sessions, and occasionally a human-driven session for larger work. Each handoff is a structured deep link — the agent loads the spec via MCP and starts from full context.</p>
-      </div>
-      <div class="cmp reveal">
-        <div class="cmp-num">03 / Verify</div>
-        <h4>The Review Agent.</h4>
-        <p>The piece we're most excited about and the least-written-about in public coding-agent stacks. Before a PR reaches a human, the review agent loads the original spec, checks against acceptance criteria, runs the code in a sandbox, captures a <strong>session replay of the change</strong>, and posts back a structured review. Catches the most expensive failure mode: confidently shipping the wrong thing.</p>
-      </div>
     </div>
   </div>
 </section>
