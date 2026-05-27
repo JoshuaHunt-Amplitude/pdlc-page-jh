@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDLC — Products that fix themselves. Then improve themselves. | Amplitude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<style>
+  :root {
+    --blue:   #0052F2;
+    --blue-d: #4083FF;
+    --lilac:  #6980FF;
+    --violet: #A373FF;
+    --pink:   #FF7D78;
+    --bg:     #0A0A0F;
+    --panel:  #111118;
+    --line:   rgba(255,255,255,.08);
+    --lines:  rgba(255,255,255,.18);
+    --white:  #FFFFFF;
+    --dim:    rgba(255,255,255,.62);
+    --dim2:   rgba(255,255,255,.42);
+    --mono:   'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans:   'Poppins', Helvetica, system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+  body {
+    margin: 0; background: var(--bg); color: var(--white);
+    font-family: var(--sans); font-weight: 400; line-height: 1.5; overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 1200px 600px at 70% -10%, rgba(0,82,242,.18), transparent 60%),
+      radial-gradient(ellipse 800px 400px at 0% 30%, rgba(64,131,255,.08), transparent 60%);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size: 80px 80px;
+    -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
+    mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
+    opacity: .5;
+  }
+  main, nav, footer { position: relative; z-index: 1; }
+
+  /* ── NAV ────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    background: rgba(10,10,15,.72); border-bottom: 1px solid var(--line);
+  }
+  .nav-in { max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { display: block; height: 22px; }
+  .brand-sep { width: 1px; height: 18px; background: var(--lines); flex-shrink: 0; }
+  .brand-sub { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--blue-d); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-btn { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--white); text-decoration: none; padding: 10px 18px; border: 1px solid var(--lines); border-radius: 999px; transition: all .2s; white-space: nowrap; }
+  .nav-btn:hover { border-color: var(--blue-d); color: var(--blue-d); }
+  @media (max-width: 820px) { .nav-links { display: none; } }
+
+  /* ── SHARED ─────────────────────────── */
+  .sec { padding: 120px 32px; max-width: 1320px; margin: 0 auto; }
+  @media (max-width: 720px) { .sec { padding: 80px 22px; } .nav-in { padding: 14px 22px; } }
+
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--blue-d); display: flex; align-items: center; gap: 14px; }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--blue-d); flex-shrink: 0; }
+
+  .sec-title { font-size: clamp(36px,4.8vw,64px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 16px 0 0; }
+  .sec-title .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+
+  /* ── HERO ───────────────────────────── */
+  .hero { min-height: 92vh; display: grid; grid-template-columns: 1fr; align-content: center; position: relative; padding: 0 32px; max-width: 1320px; margin: 0 auto; }
+  .hero h1 { font-size: clamp(48px,8.2vw,132px); font-weight: 600; line-height: .92; letter-spacing: -0.045em; margin: 32px 0 28px; max-width: 18ch; }
+  .hero h1 .a { color: var(--blue-d); font-weight: 700; font-style: italic; }
+  .hero .lede { font-size: clamp(18px,1.6vw,22px); line-height: 1.5; color: var(--dim); max-width: 56ch; margin: 0 0 48px; }
+
+  .hero-meta { display: flex; gap: 28px; flex-wrap: wrap; }
+  .hero-meta-item { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim2); display: flex; align-items: center; gap: 10px; }
+  .hero-meta-item .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue-d); box-shadow: 0 0 10px var(--blue-d); flex-shrink: 0; }
+
+  /* Loop rings (hero decoration) */
+  .lg { position: absolute; right: -60px; top: 50%; transform: translateY(-50%); width: min(620px,50vw); aspect-ratio: 1/1; pointer-events: none; opacity: .85; z-index: -1; }
+  @media (max-width: 980px) { .lg { position: relative; right: 0; top: 0; transform: none; width: 100%; max-width: 440px; margin: 48px auto 0; opacity: .55; } }
+  .lr { position: absolute; inset: 0; border: 1px solid var(--lines); border-radius: 50%; animation: spin 24s linear infinite; }
+  .lr::before { content: ""; position: absolute; top: -5px; left: 50%; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 24px var(--blue); }
+  .lr:nth-child(1) { inset: 0;   animation-duration: 32s; }
+  .lr:nth-child(2) { inset: 12%; animation-duration: 18s; animation-direction: reverse; }
+  .lr:nth-child(2)::before { background: var(--lilac); box-shadow: 0 0 20px var(--lilac); }
+  .lr:nth-child(3) { inset: 24%; animation-duration: 11s; }
+  .lr:nth-child(3)::before { background: var(--violet); box-shadow: 0 0 18px var(--violet); }
+  .lr:nth-child(4) { inset: 36%; animation-duration: 6s; animation-direction: reverse; }
+  .lr:nth-child(4)::before { background: var(--pink); box-shadow: 0 0 16px var(--pink); }
+  .lc { position: absolute; inset: 46%; border-radius: 50%; background: radial-gradient(circle,var(--white) 0%,var(--blue) 60%,transparent 100%); filter: blur(2px); animation: pulse 3s ease-in-out infinite; }
+  @keyframes spin  { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100%{opacity:.7;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
+
+  /* ── MANIFESTO ──────────────────────── */
+  .manifesto { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 140px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
+  .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 64px; }
+
+  .manifesto-head .eyebrow { margin-bottom: 24px; }
+  .manifesto-head h2 { font-family: var(--sans); font-size: clamp(40px, 5.4vw, 76px); font-weight: 600; letter-spacing: -0.04em; line-height: .98; margin: 0; max-width: 22ch; }
+  .manifesto-head h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+
+  .manifesto-body { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  @media (max-width: 880px) { .manifesto-body { grid-template-columns: 1fr; gap: 40px; } }
+  .manifesto-body p { font-size: 17px; line-height: 1.72; color: var(--dim); margin: 0 0 18px; }
+  .manifesto-body p:last-child { margin-bottom: 0; }
+  .manifesto-body strong { color: var(--white); font-weight: 500; }
+
+  /* Stats strip */
+  .stats-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 32px; }
+  @media (max-width: 720px) { .stats-strip { grid-template-columns: repeat(2,1fr); } }
+  .stat-cell { background: var(--bg); padding: 28px 24px; }
+  .stat-num { font-family: var(--mono); font-size: 32px; font-weight: 500; color: var(--blue-d); letter-spacing: -0.02em; line-height: 1; }
+  .stat-lbl { margin-top: 12px; font-size: 13px; color: var(--dim); line-height: 1.5; }
+
+  /* Tenets */
+  .tenets { display: grid; grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--line); margin-top: 16px; }
+  .tenet { display: grid; grid-template-columns: 80px 1fr; gap: 32px; padding: 28px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  @media (max-width: 720px) { .tenet { grid-template-columns: 60px 1fr; gap: 16px; } }
+  .tenet-n { font-family: var(--mono); font-size: 13px; color: var(--blue-d); letter-spacing: .14em; }
+  .tenet-t { font-size: 19px; font-weight: 500; color: var(--white); letter-spacing: -0.01em; line-height: 1.4; }
+  .tenet-t span { color: var(--dim); font-weight: 400; }
+
+  /* ── HOW IT WORKS (concrete six-state) ─ */
+  .how2 { padding: 140px 32px; max-width: 1320px; margin: 0 auto; }
+  .how2-head { max-width: 60ch; margin-bottom: 72px; }
+  .how2-head .eyebrow { margin-bottom: 20px; }
+  .how2-head p { color: var(--dim); font-size: 17px; line-height: 1.7; margin-top: 22px; }
+
+  .states { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .state-row {
+    background: var(--bg);
+    display: grid;
+    grid-template-columns: 70px 220px 1fr 220px;
+    gap: 32px;
+    padding: 32px 0;
+    align-items: start;
+    transition: background .3s;
+  }
+  .state-row:hover { background: rgba(64,131,255,.04); }
+  @media (max-width: 980px) {
+    .state-row { grid-template-columns: 56px 1fr; row-gap: 14px; }
+    .state-row .st-flow { grid-column: 2; }
+    .state-row .st-tags { grid-column: 2; }
+  }
+  .st-n { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--blue-d); letter-spacing: .12em; padding-top: 4px; }
+  .st-name { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+  .st-name span { display: block; font-family: var(--mono); font-size: 10px; font-weight: 400; text-transform: uppercase; letter-spacing: .2em; color: var(--dim); margin-top: 8px; }
+  .st-body { font-size: 15px; line-height: 1.7; color: var(--dim); max-width: 56ch; }
+  .st-body strong { color: var(--white); font-weight: 500; }
+
+  .st-tags { display: flex; flex-direction: column; gap: 8px; }
+  .st-tag { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); padding: 5px 10px; border: 1px solid var(--line); border-radius: 4px; background: rgba(0,0,0,.3); width: fit-content; }
+  .st-tag.accent { color: var(--blue-d); border-color: rgba(64,131,255,.3); }
+
+  /* Flow arrow chain (above states) */
+  .state-chain {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 48px; padding: 18px 22px;
+    background: rgba(0,0,0,.3);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .chain-chip {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--white);
+    padding: 7px 12px;
+    border: 1px solid var(--lines); border-radius: 999px;
+    background: rgba(255,255,255,.02);
+  }
+  .chain-arrow { color: var(--blue-d); font-family: var(--mono); font-size: 13px; }
+
+  /* ── LOOP BUILDER (scrolly canvas) ──── */
+  .loops-sec { padding: 0 0 180px; }
+  .loops-head { max-width: 1320px; margin: 0 auto; padding: 80px 32px 40px; }
+  .loops-head .eyebrow { margin-bottom: 20px; }
+  .loops-head h2 { font-size: clamp(36px,4.8vw,64px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 0; }
+  .loops-head h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .loops-head p { color: var(--dim); font-size: 17px; line-height: 1.7; margin-top: 22px; max-width: 60ch; }
+
+  .story-wrap {
+    display: flex; align-items: flex-start;
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 32px;
+    gap: 80px;
+  }
+  @media (max-width: 1000px) {
+    .story-wrap { flex-direction: column; padding: 0 22px; gap: 24px; }
+  }
+
+  .panels { flex: 1; min-width: 0; }
+  .panel {
+    min-height: 88vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 80px 0;
+    opacity: 0.22;
+    transition: opacity .5s ease;
+  }
+  .panel.active { opacity: 1; }
+  .loop-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 28px; padding: 0 14px; border-radius: 100px;
+    font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .14em;
+    text-transform: uppercase;
+    margin-bottom: 24px; width: fit-content;
+  }
+  .pill-dim   { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); color: var(--dim); }
+  .pill-blue  { background: rgba(64,131,255,.12);  border: 1px solid rgba(64,131,255,.3);  color: var(--blue-d); }
+  .pill-lilac { background: rgba(105,128,255,.12); border: 1px solid rgba(105,128,255,.3); color: var(--lilac); }
+  .pill-viol  { background: rgba(163,115,255,.12); border: 1px solid rgba(163,115,255,.3); color: var(--violet); }
+  .pill-pink  { background: rgba(255,125,120,.12); border: 1px solid rgba(255,125,120,.3); color: var(--pink); }
+  .pill-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .panel h3 {
+    font-family: var(--sans);
+    font-size: clamp(30px,4vw,46px);
+    font-weight: 600; line-height: 1.08;
+    letter-spacing: -0.025em; color: var(--white);
+    margin: 0 0 18px;
+  }
+  .panel p {
+    font-size: 16px; color: var(--dim);
+    line-height: 1.75; margin: 0 0 14px;
+    max-width: 52ch;
+  }
+  .panel p strong { color: var(--white); font-weight: 500; }
+  .steps { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 30px; }
+  .step-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    background: rgba(0,0,0,.4); border: 1px solid var(--line);
+    border-radius: 100px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+    color: var(--dim); white-space: nowrap;
+  }
+  .step-arrow { color: var(--blue-d); font-family: var(--mono); font-size: 11px; }
+
+  .j-meter { margin-top: 30px; }
+  .j-label { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+  .j-dots { display: flex; gap: 6px; }
+  .j-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.12);
+    background: transparent;
+  }
+  .j-dot.on { border-color: var(--active-color, #fff); background: var(--active-color, #fff); box-shadow: 0 0 6px var(--active-color, #fff); }
+
+  .clock-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--dim); margin-top: 22px;
+    padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px;
+  }
+
+  /* Diagram column */
+  .diagram-col {
+    width: 480px; flex-shrink: 0;
+    position: sticky;
+    top: calc(50vh - 260px);
+    align-self: flex-start;
+  }
+  @media (max-width: 1000px) {
+    .diagram-col { width: 100%; position: sticky; top: 70px; }
+    #main-canvas { width: 320px !important; height: 320px !important; margin: 0 auto; }
+  }
+  #main-canvas { display: block; margin: 0 auto; }
+
+  .legend { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .leg-item {
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; transform: translateX(6px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .leg-item.show { opacity: 1; transform: none; }
+  .leg-swatch { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .leg-text { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; }
+  .leg-text strong { color: var(--white); font-weight: 500; }
+
+  /* ── SURFACES ──────────────────────── */
+  .surfaces { padding: 140px 32px; max-width: 1320px; margin: 0 auto; }
+  .surfaces-head { margin-bottom: 64px; max-width: 60ch; }
+  .surfaces-head .eyebrow { margin-bottom: 20px; }
+  .surfaces-head p { color: var(--dim); font-size: 17px; line-height: 1.7; margin-top: 22px; }
+
+  .surfaces-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  @media (max-width: 900px) { .surfaces-grid { grid-template-columns: 1fr; } }
+  .surface-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 32px;
+    transition: border-color .25s, transform .25s;
+    position: relative; overflow: hidden;
+  }
+  .surface-card:hover { border-color: rgba(64,131,255,.5); transform: translateY(-2px); }
+  .surface-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--blue-d); display: flex; align-items: center; gap: 8px; }
+  .surface-tag .material-symbols-rounded { font-size: 16px; }
+  .surface-card h4 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 16px 0 12px; }
+  .surface-card p { font-size: 14px; color: var(--dim); line-height: 1.65; margin: 0 0 20px; }
+  .surface-code {
+    font-family: var(--mono); font-size: 12px;
+    background: rgba(0,0,0,.5); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px; color: var(--white);
+    overflow-x: auto; white-space: pre; line-height: 1.6;
+  }
+  .surface-code .c { color: var(--dim); }
+  .surface-code .k { color: var(--blue-d); }
+  .surface-code .s { color: var(--violet); }
+  .surface-code .v { color: var(--pink); }
+
+  /* ── COMPONENTS (Beat 7) ───────────── */
+  .cmps { border-top: 1px solid var(--line); padding: 140px 32px; }
+  .cmps-in { max-width: 1320px; margin: 0 auto; }
+  .cmps-head { margin-bottom: 64px; max-width: 60ch; }
+  .cmps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  @media (max-width: 900px) { .cmps-grid { grid-template-columns: 1fr; } }
+  .cmp { background: var(--bg); padding: 40px 32px; }
+  .cmp-num { font-family: var(--mono); font-size: 13px; color: var(--blue-d); letter-spacing: .14em; }
+  .cmp h4 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin: 14px 0 14px; }
+  .cmp p { color: var(--dim); font-size: 15px; line-height: 1.7; margin: 0; }
+  .cmp p strong { color: var(--white); font-weight: 500; }
+
+  /* ── CTA ────────────────────────────── */
+  .closer { text-align: center; padding: 160px 32px 140px; max-width: 1320px; margin: 0 auto; }
+  .closer .eyebrow { justify-content: center; display: inline-flex; }
+  .closer h2 { font-size: clamp(40px,6.6vw,96px); font-weight: 600; letter-spacing: -0.04em; line-height: 1; margin: 24px auto 32px; max-width: 18ch; }
+  .closer h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .closer p { color: var(--dim); font-size: 18px; max-width: 54ch; margin: 0 auto 48px; line-height: 1.65; }
+  .cta-row { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn { font-family: var(--sans); font-size: 15px; font-weight: 500; text-decoration: none; padding: 16px 30px; border-radius: 999px; transition: all .2s; display: inline-flex; align-items: center; border: none; cursor: pointer; gap: 8px; }
+  .btn-p { background: var(--blue); color: var(--white); }
+  .btn-p:hover { background: var(--blue-d); transform: translateY(-2px); }
+  .btn-g { color: var(--white); border: 1px solid var(--lines); background: transparent; }
+  .btn-g:hover { border-color: var(--blue-d); color: var(--blue-d); }
+
+  /* ── FOOTER ─────────────────────────── */
+  footer { border-top: 1px solid var(--line); padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .fc { color: var(--dim); font-size: 13px; font-family: var(--mono); letter-spacing: .1em; }
+
+  /* ── REVEAL ─────────────────────────── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-in">
+    <div class="brand">
+      <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="120" height="22">
+      <span class="brand-sep"></span>
+      <span class="brand-sub">PDLC</span>
+    </div>
+    <div class="nav-links">
+      <a href="#manifesto">Manifesto</a>
+      <a href="#how">How it works</a>
+      <a href="#loops">The loops</a>
+      <a href="#surfaces">Surfaces</a>
+    </div>
+    <a href="#cta" class="nav-btn">Request demo</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ── HERO ──────────────────────────────────────────── -->
+<section class="hero">
+  <div class="lg" aria-hidden="true">
+    <div class="lr"></div><div class="lr"></div>
+    <div class="lr"></div><div class="lr"></div>
+    <div class="lc"></div>
+  </div>
+  <div>
+    <div class="eyebrow reveal">Introducing PDLC</div>
+    <h1 class="reveal">Products that fix themselves</h1>
+    <p class="lede reveal">For decades, software waited. For bug reports, for a roadmap. That era is over. The best products now grow on loops.</p>
+    <div class="hero-meta reveal">
+      <div class="hero-meta-item"><span class="dot"></span>Internal at Amplitude · ~1 month in</div>
+      <div class="hero-meta-item"><span class="dot" style="background:var(--violet);box-shadow:0 0 10px var(--violet)"></span>94%+ of code authored by agents</div>
+      <div class="hero-meta-item"><span class="dot" style="background:var(--pink);box-shadow:0 0 10px var(--pink)"></span>Now taking design partners</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MANIFESTO ─────────────────────────────────────── -->
+<section class="manifesto" id="manifesto">
+  <div class="manifesto-in">
+    <div class="manifesto-head reveal">
+      <div class="eyebrow">The manifesto</div>
+      <h2>Sense is <span class="a">the new bottleneck.</span></h2>
+    </div>
+
+    <div class="manifesto-body">
+      <div class="reveal">
+        <p>The product development loop has always been the same: <strong>build → ship → use → learn</strong>. Fifty years of work — programming languages, agile, cloud, and now coding agents — collapsed the left half. The distance from problem identified to code shipped is approaching zero.</p>
+        <p>The right half hasn't moved. Humans still triage Slack threads, watch session replays, read error logs, interpret experiments, and try to synthesize all of it into "what should I build next?" For every issue that survives that gauntlet, hundreds don't.</p>
+        <p>Analytics, for a decade, has been an <strong>insight factory</strong>. "Here's what happened" charts. Dashboards no one opens. Anomalies no one routes. <strong>More than 95% of behavioral data goes unread.</strong> That isn't an analytics problem. It's a sensing problem.</p>
+      </div>
+      <div class="reveal">
+        <p>The teams that have mastered this — Anthropic, OpenAI, Meta, Netflix, Stripe — run it manually, with proprietary tooling. Stripe ships <strong>1,300+ PRs/week</strong> from internal coding agents. Ramp's Inspect authors <strong>57% of merged PRs</strong>. The asymmetry between ship and sense is the gap they're closing one custom system at a time.</p>
+        <p>PDLC is the version any team can run. An agent-native loop wired into the data layer that already knows what matters to your users — anomalies, replays, feedback, experiments, agent traces. It senses, prioritizes, specs, ships, verifies, and learns. Every cycle compounds the next.</p>
+        <p style="color:var(--white);font-size:18px;line-height:1.55"><strong>The next era of analytics isn't a better chart. It's a system that closes the loop on its own.</strong></p>
+      </div>
+    </div>
+
+    <div class="stats-strip reveal">
+      <div class="stat-cell"><div class="stat-num">95%+</div><div class="stat-lbl">of behavioral data goes unread by humans</div></div>
+      <div class="stat-cell"><div class="stat-num">94%</div><div class="stat-lbl">of Amplitude code now authored by coding agents</div></div>
+      <div class="stat-cell"><div class="stat-num">1,300+</div><div class="stat-lbl">PRs/week shipped by Stripe's "Minions" agents</div></div>
+      <div class="stat-cell"><div class="stat-num">57%</div><div class="stat-lbl">of Ramp's merged PRs now authored by Inspect</div></div>
+    </div>
+
+    <div class="tenets reveal">
+      <div class="tenet"><div class="tenet-n">01</div><div class="tenet-t">Insight without action is overhead. <span>The job isn't "tell me what happened." It's "close the loop on it."</span></div></div>
+      <div class="tenet"><div class="tenet-n">02</div><div class="tenet-t">The agent's first question is "what should I work on?" <span>Be the canonical answer. For every Cursor, Claude Code, Codex, and custom harness.</span></div></div>
+      <div class="tenet"><div class="tenet-n">03</div><div class="tenet-t">Modeled product data beats raw logs every time. <span>An event graph turns a firehose into addressable opportunities. 10× the precision.</span></div></div>
+      <div class="tenet"><div class="tenet-n">04</div><div class="tenet-t">Track outcomes, not output. <span>The Outcome Graph — what was sensed, built, and worked — is the compounding asset no one else has.</span></div></div>
+      <div class="tenet"><div class="tenet-n">05</div><div class="tenet-t">A reviewer agent guards the human's time. <span>Most coding-agent failures aren't broken code. They're confidently shipping the wrong thing.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS (six-state, concrete) ────────────── -->
+<section class="how2" id="how">
+  <div class="how2-head reveal">
+    <div class="eyebrow">How it works</div>
+    <h2 class="sec-title">Six states. <span class="a">One closed loop.</span></h2>
+    <p>The PDLC agent walks every signal through the same six-state machine. Each handoff is a structured artifact — not a Slack thread, not a Linear ticket, not a tribal handshake. The state shape is the contract that makes the loop addressable to humans and to other agents.</p>
+  </div>
+
+  <div class="state-chain reveal" aria-hidden="true">
+    <span class="chain-chip">Sense</span><span class="chain-arrow">→</span>
+    <span class="chain-chip">Prioritize</span><span class="chain-arrow">→</span>
+    <span class="chain-chip">Spec</span><span class="chain-arrow">→</span>
+    <span class="chain-chip">Act</span><span class="chain-arrow">→</span>
+    <span class="chain-chip">Verify</span><span class="chain-arrow">→</span>
+    <span class="chain-chip">Close</span><span class="chain-arrow">↺</span>
+    <span class="chain-chip" style="border-color:rgba(64,131,255,.4);color:var(--blue-d)">feeds Sense</span>
+  </div>
+
+  <div class="states reveal">
+
+    <div class="state-row">
+      <div class="st-n">01</div>
+      <div><div class="st-name">Sense<span>Continuous · zero human</span></div></div>
+      <div class="st-body">A scheduler runs across every product area's data sources — <strong>analytics, replays, feedback, error logs, agent traces, experiments</strong>. It watches for anomalies, regressions, friction, and unmet intent. Output: candidate problem statements, each tagged with source citations.</div>
+      <div class="st-tags">
+        <span class="st-tag accent">in: 6 surfaces</span>
+        <span class="st-tag">out: candidate</span>
+      </div>
+    </div>
+
+    <div class="state-row">
+      <div class="st-n">02</div>
+      <div><div class="st-name">Prioritize<span>Minutes · automatic</span></div></div>
+      <div class="st-body">Candidates score through an LLM rubric and a logistic-regression <strong>quality judge</strong> (~80% F1 on internal feedback). Low-confidence candidates are demoted. Survivors get a RICE-shaped impact estimate against the product area's objective metric.</div>
+      <div class="st-tags">
+        <span class="st-tag">judge: ~80% F1</span>
+        <span class="st-tag">impact: RICE</span>
+      </div>
+    </div>
+
+    <div class="state-row">
+      <div class="st-n">03</div>
+      <div><div class="st-name">Spec<span>Minutes · planning agent</span></div></div>
+      <div class="st-body">A planning agent writes a <strong>structured spec</strong>: problem one-liner, evidence (chart, replay, feedback citations), proposed solution, acceptance criteria, target repo. The spec is the contract between the loop and whichever agent picks up the work.</div>
+      <div class="st-tags">
+        <span class="st-tag">artifact: spec.md</span>
+        <span class="st-tag">cite: backlinks</span>
+      </div>
+    </div>
+
+    <div class="state-row">
+      <div class="st-n">04</div>
+      <div><div class="st-name">Act<span>Hours → days · agents (+ humans)</span></div></div>
+      <div class="st-body">A complexity tag routes the spec to the right executor — <strong>a Cursor cloud agent, a Claude Code session, or a human reviewer</strong> for larger work. Straightforward fixes ship without human review. Net-new features get flagged for sign-off.</div>
+      <div class="st-tags">
+        <span class="st-tag">route: complexity</span>
+        <span class="st-tag accent">Cursor · Claude</span>
+      </div>
+    </div>
+
+    <div class="state-row">
+      <div class="st-n">05</div>
+      <div><div class="st-name">Verify<span>Minutes · review agent</span></div></div>
+      <div class="st-body">Before a human ever opens the PR, a <strong>review agent</strong> pulls in the original spec, checks the diff against acceptance criteria, runs the code in a sandbox, and captures a session replay of the change in action. It posts a structured review back to the PR.</div>
+      <div class="st-tags">
+        <span class="st-tag">sandbox: replay</span>
+        <span class="st-tag">gate: human</span>
+      </div>
+    </div>
+
+    <div class="state-row">
+      <div class="st-n">06</div>
+      <div><div class="st-name">Close<span>Days → weeks · outcome tracking</span></div></div>
+      <div class="st-body">When the PR merges, the loop tracks the outcome metric named in the spec. Movement (or lack of it) feeds back into the quality judge as labeled data and into the ranker as <strong>outcome-aware impact priors</strong>. This is what makes the loop compound.</div>
+      <div class="st-tags">
+        <span class="st-tag">label: outcome</span>
+        <span class="st-tag accent">→ Outcome Graph</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── LOOP BUILDER (scrolly canvas — adapted from self-improving-v3) -->
+<section class="loops-sec" id="loops">
+  <div class="loops-head reveal">
+    <div class="eyebrow">Inside the system</div>
+    <h2>One loop holds. <span class="a">Three loops compound.</span></h2>
+    <p>The six states run at three different speeds — and each speed feeds the next. As you scroll, watch the system build from the inside out.</p>
+  </div>
+
+  <div class="story-wrap">
+
+    <div class="panels" id="panels">
+
+      <!-- Panel 0: Data core -->
+      <div class="panel active" data-panel="0">
+        <div class="loop-pill pill-dim">
+          <span class="pill-dot" style="background:rgba(255,255,255,.4)"></span>
+          The starting point
+        </div>
+        <h3>Everything starts<br>with modeled product data.</h3>
+        <p>At the center is a <strong>data core</strong> — a continuous stream of behavioral signals, error events, feedback themes, and agent traces. Not a firehose. <strong>Modeled</strong>. Schemas, taxonomies, an event graph.</p>
+        <p>Six raw log streams with no schema produce 100× more candidate problems and 10× lower precision. The data core is what makes every loop above it grounded enough to act on.</p>
+      </div>
+
+      <!-- Panel 1: Heal -->
+      <div class="panel" data-panel="1">
+        <div class="loop-pill pill-blue">
+          <span class="pill-dot" style="background:var(--blue-d);box-shadow:0 0 6px var(--blue-d)"></span>
+          Loop 01 · Heal
+        </div>
+        <h3>The loop<br>that never sleeps.</h3>
+        <p>The innermost loop requires <strong>zero human judgment</strong>. Errors surface, get diagnosed, and get patched in milliseconds. Crash loops restart. Rate limits self-throttle. Latency spikes trigger fallbacks. No ticket. No standup.</p>
+        <p>This loop runs on rules and automation. It's not intelligent — it's <strong>relentless</strong>. That relentlessness is exactly what makes it powerful.</p>
+        <div class="steps">
+          <div class="step-chip">Error</div><span class="step-arrow">→</span>
+          <div class="step-chip">Detect</div><span class="step-arrow">→</span>
+          <div class="step-chip">Diagnose</div><span class="step-arrow">→</span>
+          <div class="step-chip">Auto-fix</div><span class="step-arrow">→</span>
+          <div class="step-chip">Verify</div>
+        </div>
+        <div class="j-meter" style="--active-color:var(--blue-d)">
+          <div class="j-label">Human judgment</div>
+          <div class="j-dots">
+            <div class="j-dot on"></div>
+            <div class="j-dot"></div><div class="j-dot"></div><div class="j-dot"></div><div class="j-dot"></div>
+          </div>
+        </div>
+        <div class="clock-chip">Clock · Milliseconds → Seconds</div>
+      </div>
+
+      <!-- Panel 2: Detect -->
+      <div class="panel" data-panel="2">
+        <div class="loop-pill pill-viol">
+          <span class="pill-dot" style="background:var(--violet);box-shadow:0 0 6px var(--violet)"></span>
+          Loop 02 · Detect
+        </div>
+        <h3>Not every problem<br>throws an exception.</h3>
+        <p>A 12% drop in day-7 retention isn't an error — it's a <strong>signal</strong>. The detection loop watches what users actually do: where they hesitate, what they skip, which funnels they abandon, what they rage-click. It surfaces anomalies before they compound.</p>
+        <p>Human judgment enters at triage. Everything before — collection, anomaly detection, theming, routing — is <strong>automated</strong>.</p>
+        <div class="steps">
+          <div class="step-chip">Behavior</div><span class="step-arrow">→</span>
+          <div class="step-chip">Anomaly</div><span class="step-arrow">→</span>
+          <div class="step-chip">Theme</div><span class="step-arrow">→</span>
+          <div class="step-chip">Route</div><span class="step-arrow">→</span>
+          <div class="step-chip">Triage</div>
+        </div>
+        <div class="j-meter" style="--active-color:var(--violet)">
+          <div class="j-label">Human judgment</div>
+          <div class="j-dots">
+            <div class="j-dot on"></div><div class="j-dot on"></div><div class="j-dot on"></div>
+            <div class="j-dot"></div><div class="j-dot"></div>
+          </div>
+        </div>
+        <div class="clock-chip">Clock · Minutes → Hours</div>
+      </div>
+
+      <!-- Panel 3: Decide -->
+      <div class="panel" data-panel="3">
+        <div class="loop-pill pill-pink">
+          <span class="pill-dot" style="background:var(--pink);box-shadow:0 0 6px var(--pink)"></span>
+          Loop 03 · Decide
+        </div>
+        <h3>Where humans<br>make the call.</h3>
+        <p>The outermost loop is where <strong>strategy lives</strong>. Usage patterns surface opportunities — features users wish existed, journeys that feel broken, segments quietly churning. The machine proposes. The team decides. Data validates who was right.</p>
+        <p>Then the loop repeats — <strong>tighter and smarter each cycle</strong>, because every outcome is labeled training data for the next round.</p>
+        <div class="steps">
+          <div class="step-chip">Signal</div><span class="step-arrow">→</span>
+          <div class="step-chip">Opportunity</div><span class="step-arrow">→</span>
+          <div class="step-chip">Spec</div><span class="step-arrow">→</span>
+          <div class="step-chip">Ship</div><span class="step-arrow">→</span>
+          <div class="step-chip">Validate</div>
+        </div>
+        <div class="j-meter" style="--active-color:var(--pink)">
+          <div class="j-label">Human judgment</div>
+          <div class="j-dots">
+            <div class="j-dot on"></div><div class="j-dot on"></div><div class="j-dot on"></div>
+            <div class="j-dot on"></div><div class="j-dot on"></div>
+          </div>
+        </div>
+        <div class="clock-chip">Clock · Days → Weeks</div>
+      </div>
+
+      <!-- Panel 4: Compounding -->
+      <div class="panel" data-panel="4">
+        <div class="loop-pill pill-lilac">
+          <span class="pill-dot" style="background:var(--lilac);box-shadow:0 0 6px var(--lilac)"></span>
+          The compound effect
+        </div>
+        <h3>Every loop<br>feeds the next.</h3>
+        <p>Heal stabilizes the product — freeing human attention for higher-order work. Detect surfaces <strong>what to improve</strong>. Decide <strong>chooses what gets built</strong>. Every output feeds back into the data core. Each loop gets faster and more autonomous over time.</p>
+        <p>Cut any one and the system stops. Without Heal, your product breaks in silence. Without Decide, your product gets better at the wrong thing.</p>
+        <p style="color:var(--white)"><strong>The flywheel never stops. It just gets better at spinning.</strong></p>
+      </div>
+
+    </div><!-- /panels -->
+
+    <div class="diagram-col">
+      <canvas id="main-canvas" width="960" height="960" style="width:480px;height:480px;"></canvas>
+      <div class="legend" id="legend">
+        <div class="leg-item" id="leg-0">
+          <div class="leg-swatch" style="background:var(--blue-d);box-shadow:0 0 6px var(--blue-d)"></div>
+          <div class="leg-text"><strong>Heal</strong> — Fully automated · ms</div>
+        </div>
+        <div class="leg-item" id="leg-1">
+          <div class="leg-swatch" style="background:var(--violet);box-shadow:0 0 6px var(--violet)"></div>
+          <div class="leg-text"><strong>Detect</strong> — Minimal judgment · hours</div>
+        </div>
+        <div class="leg-item" id="leg-2">
+          <div class="leg-swatch" style="background:var(--pink);box-shadow:0 0 6px var(--pink)"></div>
+          <div class="leg-text"><strong>Decide</strong> — Human + data · days–weeks</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /story-wrap -->
+</section>
+
+<!-- ── SURFACES ──────────────────────────────────────── -->
+<section class="surfaces" id="surfaces">
+  <div class="surfaces-head reveal">
+    <div class="eyebrow">Three surfaces</div>
+    <h2 class="sec-title">However your team <span class="a">already works.</span></h2>
+    <p>Same loop. Same data. Same opportunities. Three places to meet you where you are — inside Amplitude, inside your coding agent, inside your terminal.</p>
+  </div>
+
+  <div class="surfaces-grid">
+    <div class="surface-card reveal">
+      <div class="surface-tag"><span class="material-symbols-rounded">hub</span>MCP</div>
+      <h4>For every coding agent.</h4>
+      <p>The primary surface. Every Cursor, Claude Code, Codex, or custom harness can ask Amplitude "what should I work on?" and get a ranked list with full evidence — chart IDs, replay IDs, feedback IDs. Source-cited context so the agent grounds its work.</p>
+      <pre class="surface-code"><span class="c"># Cursor / Claude Code</span>
+<span class="k">→</span> <span class="s">amplitude.opportunities</span>(
+    area: <span class="v">"chart-creation"</span>,
+    limit: <span class="v">5</span>
+  )</pre>
+    </div>
+
+    <div class="surface-card reveal">
+      <div class="surface-tag"><span class="material-symbols-rounded">terminal</span>CLI</div>
+      <h4>For the developer loop.</h4>
+      <p>The same opportunities as MCP, shell-shaped. Query the queue from a terminal without a UI. Where MCP fits inside an agent loop, the CLI fits inside a developer's loop — between commits, between context switches.</p>
+      <pre class="surface-code"><span class="c">$ amp opportunities list \</span>
+    <span class="k">--area</span> chart-creation \
+    <span class="k">--limit</span> <span class="v">10</span>
+
+<span class="c"># → ranked spec output</span></pre>
+    </div>
+
+    <div class="surface-card reveal">
+      <div class="surface-tag"><span class="material-symbols-rounded">dashboard</span>In-app</div>
+      <h4>For PMs and leads.</h4>
+      <p>The Opportunity Feed. A ranked queue per product area. Every morning, your team opens it instead of opening five dashboards. Each opportunity carries a problem statement, evidence, a proposed spec, and a status: <em>Planned · In Review · Shipped · Outcome Tracked</em>.</p>
+      <pre class="surface-code"><span class="c">// Opportunity Feed</span>
+<span class="k">▸</span> Stop Response cancels session
+   <span class="c">5+ feedback mentions · PR #102090</span>
+<span class="k">▸</span> Checkout silent-fail on Safari
+   <span class="c">rage clicks · spec ready</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMPONENTS ────────────────────────────────────── -->
+<section class="cmps">
+  <div class="cmps-in">
+    <div class="cmps-head reveal">
+      <div class="eyebrow">The interesting engineering</div>
+      <h2 class="sec-title">Three pieces <span class="a">we had to build.</span></h2>
+      <p style="color:var(--dim);font-size:17px;line-height:1.7;margin-top:22px;max-width:60ch">Forever-loops are easy. The compounding comes from three components: a sensing harness wired into product data, a fleet of executing agents, and a reviewing agent that gates what reaches humans. Drop any one and throughput collapses.</p>
+    </div>
+
+    <div class="cmps-grid">
+      <div class="cmp reveal">
+        <div class="cmp-num">01 / Sense</div>
+        <h4>The Opportunity Harness.</h4>
+        <p>A scheduled agent system that maintains the candidate queue. Runs every product area's sensing pipeline, dedupes against historical opportunities, applies the quality judge, and ranks. Built around a <strong>structured Opportunity schema</strong> — problem statement, evidence, spec, citations, complexity tag. The schema is the contract.</p>
+      </div>
+      <div class="cmp reveal">
+        <div class="cmp-num">02 / Act</div>
+        <h4>The Executor Fleet.</h4>
+        <p>We don't run a homegrown coding agent. Specs route to <strong>Cursor cloud agents</strong> for self-contained tasks, <strong>Claude Code</strong> for richer-context sessions, and occasionally a human-driven session for larger work. Each handoff is a structured deep link — the agent loads the spec via MCP and starts from full context.</p>
+      </div>
+      <div class="cmp reveal">
+        <div class="cmp-num">03 / Verify</div>
+        <h4>The Review Agent.</h4>
+        <p>The piece we're most excited about and the least-written-about in public coding-agent stacks. Before a PR reaches a human, the review agent loads the original spec, checks against acceptance criteria, runs the code in a sandbox, captures a <strong>session replay of the change</strong>, and posts back a structured review. Catches the most expensive failure mode: confidently shipping the wrong thing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────── -->
+<section id="cta" class="closer">
+  <div class="eyebrow reveal">The invitation</div>
+  <h2 class="reveal">Point this at <span class="a">your own product.</span></h2>
+  <p class="reveal">PDLC has been running inside Amplitude for a month. The opportunities land. The agents ship. The reviewer catches what humans shouldn't have to. We're now looking for a small group of design partners who want to run the same loop on their own data — and help us figure out what works next.</p>
+  <div class="cta-row reveal">
+    <a class="btn btn-p" href="https://amplitude.com/demo">Become a design partner →</a>
+    <a class="btn btn-g" href="#manifesto">Read the manifesto</a>
+  </div>
+  <p style="margin-top:80px;font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-d)" class="reveal">Your unfair advantage starts with the loop.</p>
+</section>
+
+</main>
+
+<footer>
+  <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="100" height="20" style="opacity:.4">
+  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; PDLC</span>
+</footer>
+
+<script>
+  // ── Scroll reveal ───────────────────────────────────
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 50);
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── Loop-builder canvas ─────────────────────────────
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  const RINGS = [
+    { id: 0, r: 68,  color: '#4083FF', glow: 'rgba(64,131,255,0.5)',  dash: [],     speed: 1.4,
+      nodes: [{a:0,t:'Detect'},{a:90,t:'Diagnose'},{a:180,t:'Auto-fix'},{a:270,t:'Verify'}] },
+    { id: 1, r: 138, color: '#A373FF', glow: 'rgba(163,115,255,0.4)', dash: [7,4],  speed: 0.75,
+      nodes: [{a:45,t:'Behavior'},{a:135,t:'Anomaly'},{a:225,t:'Theme'},{a:315,t:'Route'}] },
+    { id: 2, r: 208, color: '#FF7D78', glow: 'rgba(255,125,120,0.3)', dash: [12,6], speed: 0.38,
+      nodes: [{a:25,t:'Signal'},{a:97,t:'Opportunity'},{a:169,t:'Spec'},{a:241,t:'Ship'},{a:313,t:'Validate'}] },
+  ];
+
+  function rad(deg){ return (deg - 90) * Math.PI / 180; }
+  function ptOnCircle(cx,cy,r,deg){ return { x: cx + r*Math.cos(rad(deg)), y: cy + r*Math.sin(rad(deg)) }; }
+
+  function createEngine(canvasId, cssSize) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+    canvas.width = cssSize * DPR; canvas.height = cssSize * DPR;
+    canvas.style.width = cssSize + 'px'; canvas.style.height = cssSize + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(DPR, DPR);
+    const cx = cssSize/2, cy = cssSize/2;
+    const scale = cssSize / 480;
+
+    const state = RINGS.map(() => ({ alpha: 0, target: 0, pAngle: Math.random()*360, trail: [] }));
+    let hovered = -1;
+
+    canvas.addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+      const dist = Math.sqrt((mx-cx)*(mx-cx)+(my-cy)*(my-cy)) / scale;
+      hovered = -1;
+      RINGS.forEach((r,i) => { if (state[i].alpha > 0.3 && Math.abs(dist - r.r) < 14) hovered = i; });
+      canvas.style.cursor = hovered >= 0 ? 'pointer' : 'default';
+    });
+
+    function setActive(ids) { RINGS.forEach((r,i) => { state[i].target = ids.includes(i) ? 1 : 0; }); }
+
+    function drawCore() {
+      const r = 24 * scale;
+      const g = ctx.createRadialGradient(cx,cy,0,cx,cy,r*4);
+      g.addColorStop(0,'rgba(0,82,242,0.22)'); g.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(cx,cy,r*4,0,Math.PI*2); ctx.fillStyle = g; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+      ctx.strokeStyle = 'rgba(64,131,255,0.55)'; ctx.lineWidth = 1*scale; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx,cy,r-3*scale,0,Math.PI*2);
+      ctx.fillStyle = 'rgba(64,131,255,0.08)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx,cy,5*scale,0,Math.PI*2);
+      ctx.fillStyle = '#4083FF'; ctx.shadowColor = '#4083FF'; ctx.shadowBlur = 12*scale; ctx.fill(); ctx.shadowBlur = 0;
+      ctx.save();
+      ctx.font = `500 ${8*scale}px "JetBrains Mono", monospace`;
+      ctx.fillStyle = 'rgba(64,131,255,0.7)';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('DATA', cx, cy + 14*scale);
+      ctx.restore();
+    }
+
+    function drawRing(ring, s, isHovered) {
+      const r = ring.r * scale;
+      const a = s.alpha;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+      ctx.strokeStyle = ring.color;
+      ctx.setLineDash(ring.dash.map(v => v*scale));
+      ctx.lineWidth = (isHovered ? 2 : 1.2) * scale;
+      ctx.globalAlpha = a * 0.9;
+      ctx.shadowColor = ring.color; ctx.shadowBlur = (isHovered ? 18 : 10) * scale;
+      ctx.stroke();
+      ctx.shadowBlur = 0; ctx.setLineDash([]);
+      ctx.restore();
+
+      ring.nodes.forEach(n => {
+        const pt = ptOnCircle(cx,cy,r,n.a);
+        ctx.save(); ctx.globalAlpha = a;
+        ctx.beginPath(); ctx.arc(pt.x,pt.y,4*scale,0,Math.PI*2);
+        ctx.fillStyle = ring.color;
+        ctx.shadowColor = ring.color; ctx.shadowBlur = 8*scale;
+        ctx.fill(); ctx.shadowBlur = 0; ctx.restore();
+
+        const lpt = ptOnCircle(cx,cy,r + 24*scale,n.a);
+        ctx.save(); ctx.globalAlpha = a * (isHovered ? 1 : 0.78);
+        ctx.font = `500 ${9*scale}px "JetBrains Mono", monospace`;
+        ctx.fillStyle = isHovered ? '#ffffff' : 'rgba(255,255,255,0.65)';
+        const dx = lpt.x - cx;
+        ctx.textAlign = Math.abs(dx) < 8*scale ? 'center' : dx > 0 ? 'left' : 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(n.t.toUpperCase(), lpt.x, lpt.y);
+        ctx.restore();
+      });
+    }
+
+    function drawParticle(ring, s, pt) {
+      const a = s.alpha;
+      s.trail.forEach((p,i) => {
+        const ta = (i/s.trail.length) * 0.4 * a;
+        const ts = (i/s.trail.length) * 2.6;
+        ctx.save(); ctx.globalAlpha = ta;
+        ctx.beginPath(); ctx.arc(p.x,p.y,ts,0,Math.PI*2);
+        ctx.fillStyle = ring.color; ctx.fill(); ctx.restore();
+      });
+      ctx.save(); ctx.globalAlpha = a;
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,3.6,0,Math.PI*2);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = ring.color; ctx.shadowBlur = 14;
+      ctx.fill(); ctx.shadowBlur = 0; ctx.restore();
+    }
+
+    function tick() {
+      ctx.clearRect(0,0,cssSize,cssSize);
+      drawCore();
+      RINGS.forEach((ring,i) => {
+        const s = state[i];
+        s.alpha += (s.target - s.alpha) * 0.04;
+        if (s.alpha < 0.001) s.alpha = 0;
+        if (s.alpha > 0.001) {
+          drawRing(ring, s, i === hovered);
+          s.pAngle += ring.speed;
+          if (s.pAngle >= 360) s.pAngle -= 360;
+          const pt = ptOnCircle(cx,cy,ring.r*scale,s.pAngle);
+          s.trail.push({x:pt.x,y:pt.y});
+          if (s.trail.length > 18) s.trail.shift();
+          drawParticle(ring, s, pt);
+        }
+      });
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    return { setActive };
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const engine = createEngine('main-canvas', 480);
+    const panels = document.querySelectorAll('.panel');
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
+          const idx = parseInt(entry.target.dataset.panel);
+          panels.forEach(p => p.classList.remove('active'));
+          entry.target.classList.add('active');
+          const loopMap = { 0: [], 1: [0], 2: [0,1], 3: [0,1,2], 4: [0,1,2] };
+          if (engine) engine.setActive(loopMap[idx] || []);
+          for (let i = 0; i < 3; i++) {
+            const el = document.getElementById('leg-' + i);
+            if (el) el.classList.toggle('show', idx >= i + 1);
+          }
+        }
+      });
+    }, { threshold: 0.45 });
+    panels.forEach(p => obs.observe(p));
+  });
+</script>
+
+<script>
+(function(){
+  try { if (window.self !== window.top) return; } catch (_) { return; }
+  if (!/^https?:$/.test(location.protocol)) return;
+  function loadAmplitude(apiKey) {
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.amplitude.com/script/' + encodeURIComponent(apiKey) + '.js';
+      s.async = true;
+      s.onload = function(){ resolve(); };
+      s.onerror = function(){ reject(new Error('loader blocked')); };
+      document.head.appendChild(s);
+    });
+  }
+  fetch('/api/config').then(function(r){ return r.json(); }).then(function(cfg){
+    if (!cfg.amplitudeApiKey) return;
+    loadAmplitude(cfg.amplitudeApiKey).then(function(){
+      if (!window.amplitude || typeof window.amplitude.init !== 'function') return;
+      if (window.sessionReplay && typeof window.sessionReplay.plugin === 'function' && typeof window.amplitude.add === 'function') {
+        try { window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 1 })); } catch (_) {}
+      }
+      window.amplitude.init(cfg.amplitudeApiKey, { fetchRemoteConfig: true, autocapture: true });
+    }).catch(function(){});
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>

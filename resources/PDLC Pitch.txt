@@ -1,0 +1,375 @@
+﻿PDLC 3.0: Building the Agent-Native Opportunity Manager and Outcome Graph[a]
+Updated: 2/19/26 + Figma Explorations
+Context
+The Product Development Loop
+The best predictor of quality is the number of iterations. Every product team runs the same loop: build → ship → use → learn. The left side is now incredibly fast from 50 years of improvement: programming languages, agile, cloud, and now agentic coding. The distance from problem identified → solution ideated → code shipped is approaching zero. 
+  
+
+However the right side (use and learn) sits in the stone ages. More than 95% of data goes unlooked at. For every bug that's caught, hundreds of issues go undetected. Sensing opportunities and specifying plans is now the limited reagent for great product development.
+The teams that have mastered this loop (ex: Anthropic, OpenAI, Meta, Netflix) run thousands of experiments and treat every interaction and release as signal. They're investing in proprietary systems to sense, prioritize, and close the loop at scale while everyone else iterates at a snail's pace. Amplitude has always played on the right side of the loop. We've built an exceptional data platform and insight generation machine. But we've stopped at the edge of value: we tell customers "here's what's happening" but have never led with "here's what to do about it." 
+
+
+That gap, going from insight to action, is exactly where the next generation of great products will be built. Self-improving products don't just measure and report on what's trending. They proactively surface insights, prioritize what matters, recommend fixes, close the execution loop, then learn from what works. Amplitude can be the platform that enables this. By tracking what shipped and whether it worked, we build the proprietary data asset, the Outcome Graph, that makes self-improvement possible at scale.
+
+
+A New Era of AI-Powered Builders
+AI has shifted who can act on insights. A PM with Cursor can ship a feature. A designer with v0 can build a working prototype. An engineer with Claude can write their own PRD. A marketer with Claude Code can write their own automations. The walls between roles are collapsing into a new persona: the AI-powered builder - someone who can sense, decide, and directly act regardless of job title.
+These builders can now ship ten things in the time it used to take to ship one. But their newest constraint isn't building, but sensing. They're drowning in dashboards, alerts, and fragmented signals across tools. They need ambient awareness of what's broken without actively looking for it. And as they orchestrate more agents and humans to tackle problems in parallel, they need systems that tell them what’s worth working on then whether or not their bets worked.
+The path to self-improving products runs through AI-powered builders first. Before products can improve themselves, teams need to close the loop manually: see opportunities, act on them, measure results. As the Outcome Graph accumulates patterns and integrations mature, more of the loop can be automated. Builders become orchestrators. Orchestrators become supervisors. The tools we ship in 2026 are the foundation for the autonomous systems of 2027 and beyond.
+Some examples of customers and AI community chatter on this issue:
+* PM from Coinbase building their own coding agent harness and task management system
+* Eng Lead from Coinbase saying 5% of all PRs merged coming from in-house coding agents now
+* 30% of merged PRs at Ramp built by internal coding agent harness built on top of OpenCode
+* A few days later 57% of Ramp’s PRs shipped by their coding agent
+* Head of Engineering at Square saying coding agents are now fixing bugs in the background with their developers just coming and reviewing PRs in the morning
+* Stripe building “minions” or their homegrown coding agents and merging thousands of PRs by one-shotting bugs, features, and more E2E work
+* “Coding is practically solved for me, and I think it'll be the case for everyone regardless of domain." Not hedging. Not "in five years." Now. The title "software engineer" is going away. What replaces it: builder, PM, or "we keep it as a vestigial thing.””
+* Competitors like Sentry are already building direct log -> issue generation -> PR generated via coding agent workstreams and seeing immense PMF on this use case
+* Non-stop chatter like this about the SDLC being reinvented with coding agents
+
+
+Why Amplitude Can Define PDLC 3.0
+The first era of product development was waterfall: long cycles, big releases, infrequent feedback. PDLC 2.0 was agile: shorter cycles, continuous deployment, faster iteration. PDLC 3.0 is the agent-native loop: agents ambiently sensing opportunities, guiding prioritization, humans orchestrating agents on execution, then closing the feedback loop and improving future decisions across the product lifecycle.
+Other tools own pieces of this workflow. GitHub owns code. Linear owns tickets. Figma owns design. But none of them deeply know what matters to users.
+Amplitude owns that product context: [b]which features drive retention, where users drop off, what experiments moved metrics, and what users are asking for. We have the world's largest dataset on digital behavior: trillions of actions across thousands of products. That's exactly what builders need to decide what to work on next. And it's exactly what self-improving products need to close the loop. No one else has the right to win for being the product intelligence layer besides Amplitude.
+
+
+Other Amplitude Problem Narratives
+Can cut but these are other Amplitude + Agent specific problems top of mind this doc tackles:
+
+
+* Fragmentation Problem: Today, insights are scattered across Amplitude: anomalies, experiment results, survey results, session replay, AI feedback themes, agent analyses and recs. Customers have no way to unify, compare, or prioritize across sources. The result is fatigue, duplicate alerts, and paralysis. What they need is fewer, better-prioritized opportunities to drive impact.
+* Agent Creation is Broken: Amplitude users struggle with creating agents and setting relevant context. [c]Now that we have Global Agent, our async agentic workflows don't need to be constrained to chat anymore. We can capitalize by flipping our async model: Amplitude intelligently creates relevant agents that run ambiently and we surface only the top insights and actions that matter.
+* From Insight Factory to Value[d] Engine: We've never been responsible for helping customers turn insights into improvements. When a customer discovers issues in Amplitude, we barely track whether they acted on it and if it improved. By owning the end to end insight to action flow, we can finally measure and take credit for the value we identify. And potentially eventually price it.[e]
+
+
+Solution Exploration [WIP🟥] 
+[p0] The Opportunity Feed
+Amplitude Opportunities is a feed that unifies insights from all sources then presents them as prioritized, actionable items. Every morning, builders ask: "What’s broken? What should I work on?" The Opportunity Feed has the answer. One place to see the product and growth opportunities that matter, ranked by estimated impact on metrics each org cares about, with clear next steps on what to do next.
+In 2025, we explored showing the value of individual agents. Users had to create, trigger, subscribe, and manage insights themselves. In 2026, we flip the model: the Opportunity Manager sits at the center, unifying insights and actions across Amplitude’s platform and automatically identifying improvements from multiple sources and routing them to the right teams or destinations.
+The Opportunity Feed is how Amplitude earns a place in the daily “builder” workflow. Not a passive[f] dashboard you check weekly, but a tool you open every morning to kickoff agents or teammates in one-click to work on the top problems identified across Amplitude[g]. This is the ambient and proactive sensing, deciding, and acting layer that makes self-improving products possible.
+  
+
+Opportunity Sources[h]
+* Amplitude Agents: Dashboard, Session Replay, Feedback, Experiment, Taxonomy, and Global Agents generate opportunity recommendations directly.[i] 
+   * Amplitude can also auto-create relevant agents based on your taxonomy and usage patterns with little to no manual steps required.
+   * Global Agent may identify an insight or idea in a live chat, kickoff follow-up investigations in chat or via subagents, then convert those takeaways into opportunities to follow-up on.
+* AI Feedback [j]& LLM Analytics[k]: Convert themes from customer feedback insights and LLM/agent trace clusters into clear opportunities on what to build or optimize.[l]
+* Anomalies: Connect to chart anomalies, automatically fire when metrics deviate from expectations, then kickoff agents to investigate the root cause and plan how to fix it.
+* Session Replays: Highlight dead clicks, rage clicks, or conversion drop-offs identified in Session Replays then assign an agent to investigate and recommend fixes.
+* Experiments: Convert experiment findings into roll out or product improvements.
+* PR Reviews / Webhooks: Surface opportunities based on pending code changes, then recommend improvements based on behavioral context or insights identified in the review process.
+* User investigations: Human-initiated questions or goals that feed into the opportunity pipeline.
+Key Opportunity Capabilities
+* Impact Estimation: Each opportunity is scored against the metrics defined in your Amplitude taxonomy. Revenue, activation, retention, whatever matters to your business. The goal isn't false precision; it's giving builders enough signal to make informed tradeoffs.
+* Collaborative Prioritization: V1 shows estimated impact and lets customers decide. Over time, we learn from behavior: when customers act on opportunities, the feed gets smarter. Customers can set explicit weights: "I care more about retention than conversion this quarter.[m][n]"
+* Smarter Triggers: We need better mechanisms than the current naive daily and weekly schedules[o] on when new insights and opportunities get surfaced by Agents.
+* Ambient Alerting: Notifications via email or Slack/Teams when opportunity status changes. You'll be alerted when your product breaks, when UX issues accumulate, when a launch underperforms.
+[p0] The Recommendation Engine[p]
+For each opportunity, we can build Product and/or Growth Agents to generate concrete recommendations informed by behavioral data, codebase context when available, and patterns from the Outcome Graph. And if a user dislikes the recommendation, they can override with their own context and preferences.[q][r][s]
+Not just "checkout conversion dropped 12%" but "checkout conversion dropped 12% after Tuesday's deployment. The latency increase[t] in payment validation is the likely cause. Recommended fix: add caching to the validatePaymentMethod function. Expected impact: 8-15% conversion recovery based on similar patterns."
+Moving into recommendations begins separating Amplitude from every other analytics tool. Our direct competition shows you data. Amplitude proactively analyzes it for accurate insights, reasons about what best levers to take, then works with you on executing it.
+Key Capabilities[u]
+* Product Agent: A specialized subagent that generates scoped recommendations, refined over time as we learn which recommendations get acted on and which get overridden.
+* Codebase Connection (Phase 1): For customers who grant repo access, trace behavioral issues back to specific code paths, deployments, and commits. An insight is created identifying where users are struggling → codebase access shows where in the code the problem lives.
+* Deploy Correlation (Phase 2): Know when deploys happen and correlate them with metric changes. No code access required.[v]
+* Growth Agent (Phase 2): We can potentially build a specialized subagent that takes growth and conversion insights and ideates on relevant non-product/growth focused actions that can be taken (ex: orchestration, personalization, etc.)
+Example Amplitude customer message sent to Global Agent in Slack  
+
+
+[p0] Action Integrations
+Recommendations are useless if they don't connect to where work happens. By integrating deeply with workflow tools, both human and AI, we close the gap between knowing and doing.
+Key integrations for PDLC actions
+* [p0] Agent Coding Tools (Cursor, Claude Code, Codex): Recommendations formatted as specs that agents can execute. Context-rich handoffs: the problem, the data, the suggested approach. The entire cycle (opportunity surfaced, spec generated, code shipped, impact measured) can happen in minutes.
+* [p1] Github Integration for codebase access[w]
+   * Will customers let us do this? Can we prove the value
+* [p1] Issue management (Jira, Linear): One-click ticket creation from any opportunity, pre-populated with the data, the recommendation, and the estimated impact. Tracking IDs embedded for outcome measurement. Status sync so we know when work starts and ships.[x]
+* [p3] GitHub PR review: Surface relevant Amplitude context directly in the PR review process. Show reviewers what user behavior motivated this change and what metrics to watch post-merge.[y]
+Key integrations for Growth actions[z]
+Need to define with Win the Marketer team on what growth recs and actions we should take:
+* [p1] Amplitude actions (Guides, Surveys, Experiments)
+* [p2] Orchestration[aa] (in or off-Amplitude)
+* [p2] Marketing / LCM Tools[ab]
+
+
+[p1] Becoming the Agent's Default Interface
+Every Claude Code, Cursor, Codex, and other agents should be asking: "What should I work on?" and "Did the last fix help?" Amplitude should be the canonical answer.
+Build a first-class Agent API and MCP server exposing opportunity feeds, recommendations, and outcome data. Don't just be a dashboard humans look at. Be the intelligence layer agents call before making product decisions. The more places our data is embedded into a customer's workflow, the better.
+Key capabilities:[ac]
+* Missing Data or Tool Exposure for Agents
+Currently insights that are generated, agents an org has created, and other core Amplitude data sources like chart anomalies are not exposed via API or MCP tools. These are all key context sources for external builder agents to use when deciding what to work on that need to be thought through and built out.
+
+Once built, the deduped and prioritized actions from the Opportunity feed should also be exposed to internal and external agents to be worked on.
+
+We need to make a call depending on use case whether we need APIs, MCP tools, webhooks, etc.
+
+* Partnership strategy: Direct co-development with Cursor, Anthropic, OpenAI, etc. When a coding agent needs to know what matters to users, Amplitude should be the default answer for THE most accurate and relevant context.[ad]
+
+
+[P2] Building the Outcome Graph
+Every insight, opportunity, recommendation, action taken, and result becomes a proprietary dataset no competitor can replicate.
+Most teams can ship quickly now. What actually limits velocity is learning. When a metric moves or an alert fires, teams need to understand what changed, why it mattered, and what to do next. That understanding typically lives in code and in the mental models engineers build over time. The Outcome Graph makes that understanding explicit, so teams and the AI systems they use can learn what matters and act faster.
+This is the first time we can track the full loop: what recommendations get generated from an insight, what gets clicked or viewed, what gets acted on, how teams override agent recommendations (giving us labeled data on what plans they actually want), how the code and product evolves, and what metric movements result. Every signal feeds back to make recommendations smarter.
+What we track
+   * Insight to Opportunity: Which insights from across the product were relevant and important enough to create opportunities for (helping tune insight quality)
+   * Recommendation Generation: Which insights trigger which recs, and how confident are we?
+   * Engagement Signals: What gets viewed, clicked, dismissed? Which do teams care about?
+   * Override Patterns: When humans edit or reject agent recommendations, what do they change? This is gold-standard labeled data for improving the Product Recommendation Agent.
+   * Execution Tracking: What shipped, when, and how did the implementation differ from the rec?
+   * Outcome Measurement: Did the metric improve? By how much vs. estimated?
+What tracking outcomes enables
+   * Confident recommendations: "Companies like yours saw 23% lift when they fixed this pattern."
+   * Impact prediction: "Based on similar opportunities, we expect 15-25% improvement."
+   * Amplitude taking credit: "Amplitude identified 23 opportunities that we acted on in the last quarter, leading to a X% increase in conversion and +$XXX increase in sales."
+   * Peer benchmarks: "Your checkout conversion is in the bottom quartile for B2C e-commerce."
+   * Compounding learning: Over time, this value compounds. New opportunities come with suggested fixes. New alerts come with meaningful runbooks. Launches come with checklists derived from real dependencies. Teams and their AI systems spend less time figuring out what matters and more time improving it.
+
+
+PDLC 3.0 Building Blocks[ae]
+PDLC 3.0 is the agent-native loop — agents sensing opportunities, humans orchestrating execution, and the feedback loop closing automatically. GitHub owns code, Linear owns tickets, Figma owns design, but only Amplitude knows what actually matters to users.
+Below are the 4 main building blocks of PDLC 3.0…
+[1] Insight Generation
+	[2] Opportunity Management
+	[3] Recommendation Engine
+	[4] Actions & Outcomes
+	the agent needs to find signal worth acting on
+	package an insight with a metric so that it's prioritized & actionable
+	translating the opportunity into a concrete spec
+	the change (e.g. PR) as well as tracking (events, A/B, etc) to generate further Insights
+	
+
+PDLC Proposed MVP [In Scope]
+
+
+What’s lightest MVP spec we can run in the next month to prove this is valuable
+   * Agents + LLM Analytics > Recommendations > Cursor / Claude Code
+   * Build prototype quickly in Langley for the full flow or within Amplitude behind FF
+
+
+
+
+Insight Generation
+	Recommendation Engine
+	Actions & Outcomes
+	Agents + LLM Analytics identifies a cluster of low-quality interactions (e.g. users rephrasing the same prompt repeatedly)
+	Amplitude generates a plain-text recommendation using a product agent: "prompt X is underperforming, here's a suggested tweak and why"
+	That recommendation gets manually passed to Cursor as a spec & Cursor implements the change
+	
+
+PDLC MVP [Out of Scope]
+Issue Management (e.g. Jira, Linear)
+   * Adds a human approval step that slows down the loop. MVP we want to go directly from insight to code as fast as possible
+   * Ticket creation is a (annoying, but) solved problem and doesn't prove anything new about the PDLC 3.0 workflow
+
+
+Orchestration Tools (e.g. Braze)
+   * Growth actions are a different workflow & often persona than product/code changes. Let’s not mix too early to avoid muddying what we’re validating[af]
+Handoff to Existing Coding Agents vs Build Agent Harness vs Build IDE
+
+
+Prototypes
+Exploration Figma + Prototype in baby-amp
+  
+
+  
+
+  
+
+  
+
+
+
+How do we validate this step by step?  [WIP 🟥] 
+[Need to define what’s the minimum build to validate this is useful since this would be such a step-function change than what Amplitude currently is….][ag][ah]
+[ai]
+
+
+
+
+
+
+________________
+
+
+Scratch Notes
+The Opportunity Layer
+The Opportunity Feed. A unified layer that aggregates insights from all sources—anomalies, experiments, feedback, session replays, agent recommendations, LLM trace clusters—and presents them as prioritized, actionable items. Not more dashboards. Fewer, better-prioritized opportunities with clear next steps. This solves the unification problem: customers have insights scattered everywhere with no way to compare or prioritize. The Opportunity Feed answers "what should we work on next?"
+Workflow Integrations. Bidirectional connections with Jira, Linear, and GitHub. Opportunities flow out as tickets; outcomes flow back as data. When a fix ships, we measure impact. This closes the loop we've never closed—finally showing customers: "Here are the opportunities Amplitude surfaced, the fixes you shipped, and the measurable results."
+Zero-Setup Coverage. Automatically spawn agents based on existing charts and taxonomies. Broad coverage from day one, intelligent filtering to surface what matters. Agent setup friction is killing adoption—only customers who heavily configure get value. Flip the model: instrument everything by default, let customers tune down the noise.[aj]
+The Intelligence Infrastructure
+Codebase Connection. Integrate with customer repositories to trace behavioral issues back to specific code paths, deployments, and commits. Session replays show that users struggle; codebase access shows where in the code the problem lives. This transforms insights from "something is wrong" to "here's exactly what to fix."
+The Recommendation Engine. For each opportunity, generate a concrete recommendation on what to do—informed by the behavioral data, the codebase context (when available), and patterns from similar issues. Not just "checkout conversion dropped 12%" but "checkout conversion dropped 12% after Tuesday's deploy; the latency increase in the payment validation service is the likely cause; here's a scoped fix." Amplitude becomes the system that senses problems, diagnoses root causes, and specs the solution—ready for an engineer or coding agent to execute.
+Become the Agent's Interface. Every Cursor, Devin, and Claude Code instance needs to ask: "What should I work on?" and "Did the last fix help?" Amplitude should be the canonical answer. Build a first-class Agent API and MCP server exposing opportunity feeds, recommendations, and outcome data. Don't just be a dashboard humans look at—be the intelligence layer agents call before making product decisions.
+The Outcome Moat
+Own the Outcome. Track the full lifecycle: insight surfaced → recommendation generated → action taken → fix shipped[ak] → impact measured. When we show customers the concrete value Amplitude delivered, the conversation changes. We're no longer a cost center selling events—we're a partner with measurable ROI, and eventually the ability to price on value delivered.
+Build the Outcome Graph. Every opportunity, recommendation, action, and result—anonymized and aggregated across thousands of companies—becomes a proprietary dataset no competitor can replicate. This lets us recommend with confidence ("companies like yours saw 23% lift when they fixed this pattern"), benchmark against peers, and predict impact before customers act. PostHog can open-source their code. They can't open-source a decade of data on what actually works. This is the compounding moat that makes Amplitude's recommendations better than anyone else's.
+Scratch Notes
+   * Realize the dream of helping build self improving or healing products
+   * We’re generating high-quality insights throughout the Amplitude platform through trends and anomalies occurring in charts and dashboards, ongoing experiments, surveys being sent, agents analyzing all this platform data for insights, customer feedback themes, and now LLM analytics identifying clusters of issues from agents and AI chat traces.
+   * We’ve never been responsible for figuring out what to do based on an insight we discover
+   * We’ve never been responsible for helping customers turn those insights into clear actions and improvements, and as a result have never been able to take credit for the value we can drive for customers (aside from just capturing and presenting data)
+   * With AI + agents, converting insights into plans into actions and improvements is a reality for Amplitude, and we just need to piece everything together and capitalize it.
+   * The other meta theme is that coding agents have continued to exponentially improve on quality, so the bottleneck for being more productive using agents is now telling it what to build that’s valuable and specifying tasks on what to work on. Amplitude should be continue being the platform that captures ALL the data on how users are interacting with your product but evolve to the proactive engine intelligently analyzing all of that data, identifying and prioritizing the top insights from it (with minimal human work), taking those insights and using agents (and humans in the loop) to reason about the best plan to action on that insight, then orchestrating the humans and agents to do it.
+   * Opportunity Management: Build an opportunities feed to collect/filter/validate insights using multiple agents and manage the lifecycle of insights -> actions chain.
+   * Connect Existing Components: Don't build too many new agents. Focus on connecting components we already have, integrations, getting into the core Product development lifecycle (PDLC)
+   * Broaden coverage: Zero setup + Broader coverage: Automatically create agents across a product based on created charts and taxonomies. Scale out insight generation and source from multiple agents.
+   * Customers have limited time and resources for analyzing their data, finding the insights, figuring out what it all means for their business, and have limited bandwidth to act on everything.
+   * filtering signal from noise for customers
+   * agents need to evolve with more intelligent triggers and alerts for what really matters
+   * help them find insights and improvements they would never be able to otherwise - intelligent agent creation, data selection. lean into the variance that the agent might look into something a human would never think to
+   * There are reports, insights, and recommendations sitting in several places throughout Amplitude but it takes a lot of work to view them, figure out what’s actually important, then decide what to work on. Ideally we can unify these “opportunities” in one place.
+   * when we generate insights or recommendations, we currently have no data or linkage that tells us whether the insight we generated was useful or the recommendation works. we need to capture this to eval and  improve quality and impact.
+   * we really need codebase access[al] to make this work so we can figure out where the actual problem comes from. close the loop from data captured, insight sensed, plan created, fix implemented in the code, monitor what happens next.
+   * Agent specific issues
+   * Users still struggle to understand optimal use and capabilities of the SR agent. Dashboard agent is overwhelmingly async already.
+   * Insights get repeated and lost since we are narrowly focused on shallow funnels in many cases and feeds become overwhelming.
+   * Interactive use is limited by latency in most cases (long processing times limit number of sessions and desire to wait) and is better suited to global chat.
+   * Lost signals: Duplication of agents, low visibility of insights across teams, setup, signal overload (daily emails repeating information)
+   * Low conversion to action is untracked and not friction free today. We are not in the PDLC yet.
+
+
+Agents / Foundations / MCP Light Planning Notes
+Potential Goals
+Feel free to add ideas on potential goals we should be thinking about here
+
+
+   * Drive higher agent adoption + stickiness
+   * More agents created / intelligently doing so
+   * Better share / democratize insights across the org
+   * Reduce noise / improve relevance on insights and recs generated
+   * Sense, Decide, Act / Prototyping self-improving products - +1
+   * Sense: proactively surface “relevant”/”actionable” insights
+   * Decide: help customers figure out the best action to take based on insight
+   * Act: help customers ship improvements / orchestrate more actions
+   * Currently missing the full feedback loop on customers are getting value
+   * Surface areas; how do we make this amazing for a given persona
+   * Follow up on prios for the persona
+   * Are we enabling PMs to be more developer like?
+   * Does Amplitude really have the “right to win” with our data
+   * What should we be actually doing with our data
+
+
+Potential Themes Relevant for PDLC
+Feel free to add ideas on potential themes we’re seeing
+
+
+   * Simplifying Agents / Improving UX
+   * Ambient Agents
+   * Manual -> one-click + proactive agent creation
+   * Forking threads in Agents, Ask AI, Slack, Teams
+   * Reducing Noise / Improving Relevance
+   * Smarter agent triggers (+1)
+   * SDLC 3.0
+   * Form factor
+   * Active exploration?
+   * Feed?
+   * Opportunities
+   * Primitives already exist
+   * Pulling opportunity and agent context via MCP tool
+   * Generating PRs / orchestrating agents
+   * Ask AI is good enough to start spinning up tasks -> let’s lean into this
+   * Coding agent handoffs (cursor + claude + copilot)
+   * Tagging in Github (?)
+   * Amplitude Agent PR review (github app) [EC prototyping]
+   * Experimentation
+   * Rolling out opportunistic changes via experiments
+   * Improving AI Context
+   * Memory
+   * Agent Memory
+   * User Memory (inc global chat)
+   * Adding org/app context here that we released?
+   * Data cleanliness + governance
+   * Pulling in external MCPs (?)
+   * Driving more partnerships[am] [EC has comments 😀…]
+   * Github
+   * Active MCP convos: Anthropic, OpenAI, Figma, Atlassian, Lovable, Glean, etc
+
+
+
+
+
+
+
+
+[a]2 total reactions
+Steven Cheng reacted with 🔥 at 2026-02-03 23:31 PM
+Ram Soma reacted with 🔥 at 2026-02-23 18:17 PM
+[b]+1
+[c]How does async solve this problem? Ambient agents need context too
+[d]This is another way of saying "system of action", right? Priors on that
+[e]2 total reactions
+Karan Johar reacted with 💯 at 2026-02-21 01:00 AM
+Carmen DeCouto reacted with 💯 at 2026-03-02 18:50 PM
+[f]Feels like we are skipping a big step here to assume that the workflow would be to kickoff an agent on the problem identified in Amplitude. Would we use it this way? Or would we discuss the issue is Slack first (with options and context from Ampl), create the ticket in Github issues/Linear and eventually use a coding agent we already trust to work on the resolution? 
+And based on the workflow, the feed might not be an actionable work item but the right set of options to debate in Slack. Food for thought in case we don't have any design partners engaged in this
+[g]2 total reactions
+Will Newton reacted with 🔥 at 2026-02-24 05:59 AM
+Enzo Avigo reacted with 🔥 at 2026-03-24 11:15 AM
+[h]We started to automatically capture error & frustration data automatically. This could be another good source. Here is the data we are capturing now
+1. web vitals: Gives performance data like LCP, FCP etc...
+2. Error Clicks, Errors
+3. Frustration signals like thrashed cursor
+4. Form abandonment events
+[i]We can include our Surveys product here.
+[j]it feels like a true v0 would be using ai feedback/agent today and pushing it through to cursor/etc?
+[k]something crazy valuable would be putting in perspective analytics and AI feedback, i.e; 
+
+
+- what's the typcial feedback from someone who used AI viz every week
+- what's the feedback from someone who couldn't set up a CRM integration
+
+
+this is typically how PMs tend to prioritize things, and we're uniquely positioned to do so
+[l]Could be worth clarifying here (or elsewhere) that the ultimate goal of LLM Analytics is actually to spearhead Amplitude's traditional product instrumentation for the GenAI product space.  All the same concepts map over (activation, retention, conversion etc), but the form factor is different.   It is a segment that we can iterate on very fast to understand the new PDLC patterns without being burdened by all the software engineering, and taxonomy difficulties of full products.
+[m]this ultimately feels like a flavor of AI Context Setting just at a more dynamic level. .. i.e. what is strategic focus
+[n]+1 and love the connection to metrics. Opportunity Manager can also learn and suggest metrics and frame priorities around them.
+[o]1 total reaction
+Carmen DeCouto reacted with 💯 at 2026-03-02 18:56 PM
+[p]@frank.lee@amplitude.com how does this relate to our warehouse strategy? 
+If they already have a semantics layer like Looker-do we compliment or compete? Are we accounting for data that lives outside of the warehouse?
+_Assigned to frank.lee@amplitude.com_
+[q]@frank.lee@amplitude.com Think predictive not recommendations is how we will differentiate from Posthog and Adobe.
+_Assigned to frank.lee@amplitude.com_
+[r]@frank.lee@amplitude.com will we also be adding-Predictive churn scoring (which accounts are likely to churn based on behavioral patterns)
+Propensity modeling (which users are likely to convert, upgrade, expand)
+Forecasting (given current trends, where will this metric be in 30 days)
+Anomaly prediction vs. just anomaly detection (the doc only covers detection)
+Next-best-action recommendations driven by predictive models, not just pattern matching-as part of this....
+_Assigned to frank.lee@amplitude.com_
+[s]This would lay the foundation for lifecycle marketers (would be ideal in Opportunity Feed)
+[t]Seems to imply we do APM or network monitoring to measure latency
+[u]You would also want to connect this to flags and experiments to inspect if there were any rollouts that would be the cause of metric changes
+[v]1 total reaction
+Enzo Avigo reacted with 😍 at 2026-03-24 11:16 AM
+[w]An Amplitude coding agent powered by Claude would probably yield very similar results to "[p0] Agent Coding Tools (Cursor, Claude Code, Codex)" and make users mor sticky on our platform, what do you think @frank.lee@amplitude.com ?
+[x]ideally long term, we should replace jira and linear.
+[y]Auto-instrumentation
+Ruddestack
+[z]Add marketing use cases - orchestration, steering decision engines
+[aa]The question that is top of mind: are we building the right orchestration product for this new world?
+[ab]Close integration gap for:
+1. Growth marketer (nearly the same as PD)
+2. Performance marketers (have some progress)
+3. Lifecycle marker (big gap)
+[ac]PR reviews
+IDEs/TUIs
+[ad]@frank.lee@amplitude.com how are we thinking about bridging between behavioral context and infrastructure context (via observability) to truly do root cause analysis that works for a complex enterprise customer?
+_Assigned to frank.lee@amplitude.com_
+[ae]@tommy.keeley@amplitude.com I moved over here and will continue updating MVP proposal - feel free to edit as well
+1 total reaction
+Tommy Keeley reacted with 👀 at 2026-02-19 19:49 PM
+[af]agreed for PMs, agreed, but this is likely where WTM agents will have to focus very early on. The insight we got is that marketers care less about insights themselves than about the ability to take action. If we can deliver on this, we significantly increase our chances with WTM.
+[ag]It may also be worth enumerating the key questions, risks, ambiguity so that we can focus on those in planning and split out the no-regret work from the phasing work.  Some of those are:
+
+
+- How well can we auto-instrument? 
+- Is the quality of insight good enough to proceed? 
+- What are the key feedback loops, human or agentic and how far into automation can we lean? 
+- What is the balance of "In-product" vs external surfaces we want to target?
+[ah]TODO: revisit this section @frank.lee@amplitude.com
+[ai]Would love to see a  a realistic and meaningful Amplitude / customer use case that we use to gauge progress. Agents dog food? n-th user / growth use cases? time to value & data quality related?
+[aj]This is doing a lot of work, but it makes sense and goes hand-in-hand with the opportunity feed.
+[ak]This will include "new instrumentations (for the fixes) added", right?
+[al]@frank.lee@amplitude.com the Outcome Graph as a cross-customer dataset has significant enterprise procurement implications. SOC 2, GDPR, data residency, IP concerns around sharing codebase context
+_Assigned to frank.lee@amplitude.com_
+[am]+ linear

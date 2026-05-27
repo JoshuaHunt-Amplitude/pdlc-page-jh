@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDLC — Products that fix themselves. Then improve themselves. | Amplitude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blue:   #0052F2;
+    --blue-d: #4083FF;
+    --lilac:  #6980FF;
+    --violet: #A373FF;
+    --pink:   #FF7D78;
+    --bg:     #0A0A0F;
+    --panel:  #111118;
+    --line:   rgba(255,255,255,.08);
+    --lines:  rgba(255,255,255,.18);
+    --white:  #FFFFFF;
+    --dim:    rgba(255,255,255,.62);
+    --mono:   'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans:   'Poppins', Helvetica, system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+  body {
+    margin: 0; background: var(--bg); color: var(--white);
+    font-family: var(--sans); font-weight: 400; line-height: 1.5; overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 1200px 600px at 70% -10%, rgba(0,82,242,.18), transparent 60%),
+      radial-gradient(ellipse 800px 400px at 0% 30%, rgba(64,131,255,.08), transparent 60%);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size: 80px 80px;
+    -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
+    mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
+    opacity: .5;
+  }
+  main, nav, footer { position: relative; z-index: 1; }
+
+  /* ── NAV ────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    background: rgba(10,10,15,.72); border-bottom: 1px solid var(--line);
+  }
+  .nav-in { max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { display: block; height: 22px; }
+  .brand-sep { width: 1px; height: 18px; background: var(--lines); flex-shrink: 0; }
+  .brand-sub { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--blue-d); }
+  .nav-btn { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--white); text-decoration: none; padding: 10px 18px; border: 1px solid var(--lines); border-radius: 999px; transition: all .2s; white-space: nowrap; }
+  .nav-btn:hover { border-color: var(--blue-d); color: var(--blue-d); }
+
+  /* ── SHARED ─────────────────────────── */
+  .sec { padding: 120px 32px; max-width: 1320px; margin: 0 auto; }
+  @media (max-width: 720px) { .sec { padding: 80px 22px; } .nav-in { padding: 14px 22px; } }
+
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--blue-d); display: flex; align-items: center; gap: 14px; }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--blue-d); flex-shrink: 0; }
+
+  .sec-title { font-size: clamp(36px,4.8vw,64px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 16px 0 0; }
+  .sec-title .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+
+  /* ── HERO ───────────────────────────── */
+  .hero { min-height: 92vh; display: grid; grid-template-columns: 1fr; align-content: center; position: relative; padding: 0 32px; max-width: 1320px; margin: 0 auto; }
+  .hero h1 { font-size: clamp(48px,8.2vw,132px); font-weight: 600; line-height: .92; letter-spacing: -0.045em; margin: 32px 0 28px; max-width: 18ch; }
+  .hero h1 .a { color: var(--blue-d); font-weight: 700; font-style: italic; }
+  .hero .lede { font-size: clamp(18px,1.6vw,22px); line-height: 1.5; color: var(--dim); max-width: 56ch; margin: 0 0 48px; }
+
+  /* Loop rings (hero decoration) */
+  .lg { position: absolute; right: -60px; top: 50%; transform: translateY(-50%); width: min(620px,50vw); aspect-ratio: 1/1; pointer-events: none; opacity: .85; }
+  @media (max-width: 980px) { .lg { position: relative; right: 0; top: 0; transform: none; width: 100%; max-width: 440px; margin: 48px auto 0; opacity: .7; } }
+  .lr { position: absolute; inset: 0; border: 1px solid var(--lines); border-radius: 50%; animation: spin 24s linear infinite; }
+  .lr::before { content: ""; position: absolute; top: -5px; left: 50%; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 24px var(--blue); }
+  .lr:nth-child(1) { inset: 0;   animation-duration: 32s; }
+  .lr:nth-child(2) { inset: 12%; animation-duration: 18s; animation-direction: reverse; }
+  .lr:nth-child(2)::before { background: var(--lilac); box-shadow: 0 0 20px var(--lilac); }
+  .lr:nth-child(3) { inset: 24%; animation-duration: 11s; }
+  .lr:nth-child(3)::before { background: var(--violet); box-shadow: 0 0 18px var(--violet); }
+  .lr:nth-child(4) { inset: 36%; animation-duration: 6s; animation-direction: reverse; }
+  .lr:nth-child(4)::before { background: var(--pink); box-shadow: 0 0 16px var(--pink); }
+  .lc { position: absolute; inset: 46%; border-radius: 50%; background: radial-gradient(circle,var(--white) 0%,var(--blue) 60%,transparent 100%); filter: blur(2px); animation: pulse 3s ease-in-out infinite; }
+  @keyframes spin  { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100%{opacity:.7;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
+
+  /* ── CONCEPT ────────────────────────── */
+  .concept-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start; }
+  @media (max-width: 900px) { .concept-grid { grid-template-columns: 1fr; gap: 40px; } }
+  .loops-list { display: grid; gap: 1px; background: var(--line); }
+  .loop-row { background: var(--bg); padding: 32px 0; display: grid; grid-template-columns: 80px 1fr 2fr; gap: 32px; align-items: baseline; }
+  @media (max-width: 720px) { .loop-row { grid-template-columns: 60px 1fr; row-gap: 12px; } .loop-row .ld { grid-column: 1/-1; } }
+  .ln { font-family: var(--mono); font-size: 36px; font-weight: 500; color: var(--blue-d); letter-spacing: -0.02em; }
+  .lname { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+  .lname span { display: block; font-family: var(--mono); font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: .2em; color: var(--dim); margin-top: 6px; }
+  .ld { color: var(--dim); font-size: 17px; line-height: 1.55; }
+
+  /* ── HOW IT WORKS ───────────────────── */
+  .how-outer { max-width: 1320px; margin: 0 auto; padding: 0 32px 180px; }
+  @media (max-width: 720px) { .how-outer { padding: 0 22px 120px; } }
+
+  .how-header { margin-bottom: 80px; }
+  .how-header .eyebrow { margin-bottom: 20px; }
+
+  .how-body { display: flex; align-items: flex-start; gap: 80px; }
+  @media (max-width: 1000px) { .how-body { flex-direction: column; gap: 0; } }
+
+  /* LEFT: stepper */
+  .how-steps { flex: 1; min-width: 0; }
+
+  .how-step {
+    display: grid; grid-template-columns: 72px 1fr; gap: 0 32px;
+    opacity: .22; transition: opacity .5s ease;
+  }
+  .how-step.lit { opacity: 1; }
+  @media (max-width: 680px) { .how-step { grid-template-columns: 52px 1fr; gap: 0 20px; } }
+
+  /* Step marker */
+  .sm { display: flex; flex-direction: column; align-items: center; padding-top: 3px; }
+  .sm-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.12);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,.3); flex-shrink: 0;
+    background: var(--bg); position: relative; z-index: 1;
+    transition: border-color .4s, color .4s, box-shadow .4s;
+  }
+  .how-step.lit .sm-num { color: var(--rc,#fff); border-color: var(--rc,rgba(255,255,255,.3)); box-shadow: 0 0 14px rgba(var(--rc-r,255),var(--rc-g,255),var(--rc-b,255),.2); }
+  .sm-line { flex: 1; width: 1px; background: rgba(255,255,255,.08); margin-top: 0; min-height: 24px; transition: background .5s; }
+  .how-step.lit .sm-line { background: rgba(var(--rc-r,255),var(--rc-g,255),var(--rc-b,255),.15); }
+  .how-step:last-child .sm-line { display: none; }
+
+  /* Step content */
+  .sc { padding-bottom: 72px; }
+  .how-step:last-child .sc { padding-bottom: 0; }
+
+  .sc-cat { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .22em; color: var(--dim); margin-bottom: 10px; display: block; }
+  .sc-title { font-size: clamp(22px,2.8vw,32px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.12; color: var(--white); margin-bottom: 14px; }
+  .sc-body { font-size: 16px; color: var(--dim); line-height: 1.72; max-width: 60ch; }
+  .sc-body strong { color: rgba(255,255,255,.9); font-weight: 500; }
+
+  /* Judgment + timescale row */
+  .sc-meta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 22px; }
+  .j-wrap { display: flex; align-items: center; gap: 8px; }
+  .j-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .2em; color: var(--dim); }
+  .j-dots { display: flex; gap: 5px; }
+  .j-dot { width: 7px; height: 7px; border-radius: 50%; border: 1px solid rgba(255,255,255,.15); background: transparent; }
+  .j-dot.on { background: var(--rc,#fff); border-color: var(--rc,#fff); box-shadow: 0 0 5px var(--rc,#fff); }
+  .ts-chip { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; padding: 5px 12px; border: 1px solid rgba(255,255,255,.1); border-radius: 999px; color: var(--dim); }
+  .how-step.lit .ts-chip { border-color: var(--rc,rgba(255,255,255,.2)); color: var(--rc,var(--dim)); }
+
+  /* Passes-forward block */
+  .pf {
+    margin-top: 22px; padding: 14px 18px;
+    background: rgba(0,0,0,.3);
+    border-left: 2px solid rgba(255,255,255,.1);
+    border-radius: 0 8px 8px 0;
+    transition: border-color .4s;
+    max-width: 58ch;
+  }
+  .how-step.lit .pf { border-color: var(--rc,rgba(255,255,255,.3)); }
+  .pf-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .2em; color: var(--dim); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .pf-label::before { content: "↓"; font-size: 12px; }
+  .pf-text { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; }
+  .how-step.lit .pf-text { color: rgba(255,255,255,.7); }
+  .how-step:last-child .pf { display: none; }
+
+  /* RIGHT: sticky ring diagram */
+  .how-diagram {
+    width: 460px; flex-shrink: 0;
+    position: sticky; top: calc(50vh - 280px);
+    align-self: flex-start;
+  }
+  @media (max-width: 1000px) {
+    .how-diagram { width: 100%; position: static; max-width: 440px; margin: 0 auto 56px; }
+  }
+
+  /* Ring diagram */
+  .rd { position: relative; width: 440px; height: 440px; margin: 0 auto; }
+  @media (max-width: 480px) { .rd { width: 320px; height: 320px; } }
+
+  .rd-core {
+    position: absolute; width: 28px; height: 28px;
+    top: calc(50% - 14px); left: calc(50% - 14px);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--white) 0%, var(--blue) 70%, transparent 100%);
+    box-shadow: 0 0 20px var(--blue), 0 0 60px rgba(0,82,242,.25);
+    animation: pulse 3s ease-in-out infinite;
+    z-index: 2;
+  }
+
+  .rd-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid; animation: spin var(--dur) linear infinite;
+    opacity: 0; transition: opacity .9s ease;
+  }
+  .rd-ring.lit { opacity: 1; }
+  .rd-ring::before {
+    content: ""; position: absolute; top: -5px; left: 50%;
+    transform: translateX(-50%);
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--rc); box-shadow: 0 0 16px var(--rc), 0 0 32px rgba(0,0,0,.3);
+  }
+
+  .rd-r0 { --rc:#4083FF; --dur:6s;  inset: 30%; border-color: rgba(64,131,255,.5); }
+  .rd-r1 { --rc:#6980FF; --dur:13s; inset: 20%; border-color: rgba(105,128,255,.4); border-style: dashed; animation-direction: reverse; }
+  .rd-r2 { --rc:#A373FF; --dur:22s; inset: 10%; border-color: rgba(163,115,255,.35); border-style: dashed; }
+  .rd-r3 { --rc:#FF7D78; --dur:38s; inset: 1%;  border-color: rgba(255,125,120,.3); animation-direction: reverse; }
+
+  /* Ring labels */
+  .rd-label {
+    position: absolute; font-family: var(--mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: .15em;
+    color: rgba(255,255,255,0); transition: color .9s ease;
+    white-space: nowrap; pointer-events: none;
+  }
+  .rd-label.lit { color: var(--lc); }
+  .rl-0 { --lc: rgba(64,131,255,.8);   top: calc(30% - 18px); left: 50%; transform: translateX(-50%); }
+  .rl-1 { --lc: rgba(105,128,255,.7);  top: calc(20% - 18px); left: 50%; transform: translateX(-50%); }
+  .rl-2 { --lc: rgba(163,115,255,.65); top: calc(10% - 18px); left: 50%; transform: translateX(-50%); }
+  .rl-3 { --lc: rgba(255,125,120,.6);  top: calc(1% - 18px);  left: 50%; transform: translateX(-50%); }
+
+  /* Diagram legend */
+  .rd-legend { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .rdl { display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateX(6px); transition: opacity .5s ease, transform .5s ease; }
+  .rdl.lit { opacity: 1; transform: none; }
+  .rdl-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .rdl-text { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+
+  /* ── COMPOUNDING ────────────────────── */
+  .cmp { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 100px 32px; }
+  .cmp-in { max-width: 880px; margin: 0 auto; }
+
+  /* ── CLOSER ─────────────────────────── */
+  .closer { text-align: center; padding: 160px 32px 140px; max-width: 1320px; margin: 0 auto; }
+  .closer .eyebrow { justify-content: center; display: inline-flex; }
+  .closer h2 { font-size: clamp(40px,6.6vw,96px); font-weight: 600; letter-spacing: -0.04em; line-height: 1; margin: 24px auto 32px; max-width: 18ch; }
+  .closer h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .closer p { color: var(--dim); font-size: 18px; max-width: 50ch; margin: 0 auto 48px; }
+  .cta-row { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn { font-family: var(--sans); font-size: 15px; font-weight: 500; text-decoration: none; padding: 16px 30px; border-radius: 999px; transition: all .2s; display: inline-flex; align-items: center; border: none; cursor: pointer; }
+  .btn-p { background: var(--blue); color: var(--white); }
+  .btn-p:hover { background: var(--blue-d); transform: translateY(-2px); }
+  .btn-g { color: var(--white); border: 1px solid var(--lines); background: transparent; }
+  .btn-g:hover { border-color: var(--blue-d); color: var(--blue-d); }
+
+  /* ── FOOTER ─────────────────────────── */
+  footer { border-top: 1px solid var(--line); padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .fc { color: var(--dim); font-size: 13px; font-family: var(--mono); letter-spacing: .1em; }
+
+  /* ── REVEAL ─────────────────────────── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-in">
+    <div class="brand">
+      <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="120" height="22">
+      <span class="brand-sep"></span>
+      <span class="brand-sub">PDLC</span>
+    </div>
+    <a href="#cta" class="nav-btn">Request demo</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ── HERO ──────────────────────────────────────────── -->
+<section class="hero">
+  <div class="lg" aria-hidden="true">
+    <div class="lr"></div><div class="lr"></div>
+    <div class="lr"></div><div class="lr"></div>
+    <div class="lc"></div>
+  </div>
+  <div>
+    <div class="eyebrow reveal">Introducing PDLC</div>
+    <h1 class="reveal">Products that fix themselves. <span class="a">Then improve themselves.</span></h1>
+    <p class="lede reveal">For decades, software waited. Waited for a bug report. Waited for a roadmap. Waited for the next quarter to ask if anything actually worked. That era is over. The best products now run on loops. And the loops never stop.</p>
+  </div>
+</section>
+
+<!-- ── CONCEPT ────────────────────────────────────────── -->
+<section class="sec" id="concept">
+  <div class="concept-grid">
+    <div>
+      <div class="eyebrow reveal">The system</div>
+      <h2 class="sec-title reveal">Four loops. <span class="a">One product.</span></h2>
+      <p style="color:var(--dim);margin-top:28px;max-width:36ch;font-size:16px;line-height:1.65" class="reveal">Each loop is faster than the one outside it. Slower than the one inside it. Together, they compound.</p>
+    </div>
+    <div class="loops-list">
+      <div class="loop-row reveal">
+        <div class="ln">00</div>
+        <div class="lname">Heal<span>Seconds · no one watching</span></div>
+        <div class="ld">A crash hits. A patch ships. No one calls support. The product handled it.</div>
+      </div>
+      <div class="loop-row reveal">
+        <div class="ln">01</div>
+        <div class="lname">Fix<span>Hours · a few watching</span></div>
+        <div class="ld">A funnel drops. A variant rolls out. The metric holds. The team didn't have to meet.</div>
+      </div>
+      <div class="loop-row reveal">
+        <div class="ln">02</div>
+        <div class="lname">Decide<span>Weeks · the team watching</span></div>
+        <div class="ld">An opportunity surfaces. A PM weighs it. A change ships with a hypothesis attached — and real outcome data answers it.</div>
+      </div>
+      <div class="loop-row reveal">
+        <div class="ln">03</div>
+        <div class="lname">Evolve<span>Quarters · everyone watching</span></div>
+        <div class="ld">Patterns from every inner loop roll up. Strategy gets set from evidence, not slides.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ───────────────────────────────────── -->
+<div class="how-outer">
+  <div class="how-header reveal">
+    <div class="eyebrow" style="margin-bottom:20px">Inside the System</div>
+    <h2 class="sec-title">How the loops <span class="a">build on each other.</span></h2>
+    <p style="color:var(--dim);margin-top:20px;max-width:60ch;font-size:17px;line-height:1.7">Four loops. Four time scales. Each one feeds the next. As you scroll, watch the system build from the inside out.</p>
+  </div>
+
+  <div class="how-body">
+
+    <!-- STEPS (left) -->
+    <div class="how-steps" id="how-steps">
+
+      <!-- LOOP 00 -->
+      <div class="how-step" data-ring="0" style="--rc:#4083FF;--rc-r:64;--rc-g:131;--rc-b:255">
+        <div class="sm">
+          <div class="sm-num">00</div>
+          <div class="sm-line"></div>
+        </div>
+        <div class="sc">
+          <span class="sc-cat">The Innermost Loop</span>
+          <div class="sc-title">Your product heals itself.</div>
+          <p class="sc-body">The fastest loop in the system requires <strong>zero human judgment</strong>. It watches system health — error rates, latency, crash patterns — and responds in milliseconds. When something breaks, the system diagnoses and patches it before any user knows it happened. No ticket filed. No standup called. The product handled it.</p>
+          <div class="sc-meta">
+            <div class="j-wrap">
+              <span class="j-label">Judgment</span>
+              <div class="j-dots">
+                <div class="j-dot on"></div>
+                <div class="j-dot"></div><div class="j-dot"></div><div class="j-dot"></div><div class="j-dot"></div>
+              </div>
+            </div>
+            <span class="ts-chip">Clock: Seconds</span>
+          </div>
+          <div class="pf">
+            <div class="pf-label">Passes forward to Loop 01</div>
+            <div class="pf-text">A growing library of resolved failure patterns — giving the Fix loop a baseline for what normal behavior looks like, and what precedes breakage.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOOP 01 -->
+      <div class="how-step" data-ring="1" style="--rc:#6980FF;--rc-r:105;--rc-g:128;--rc-b:255">
+        <div class="sm">
+          <div class="sm-num">01</div>
+          <div class="sm-line"></div>
+        </div>
+        <div class="sc">
+          <span class="sc-cat">The Behavioral Loop</span>
+          <div class="sc-title">Your product watches what users stop doing.</div>
+          <p class="sc-body">Not every problem throws an exception. A drop in activation, a funnel everyone's abandoning, a feature nobody's using — these are behavioral signals, not system errors. The Fix loop watches user behavior continuously, <strong>surfaces anomalies before they compound</strong>, and routes the right signal to the right person. Human judgment enters only at triage.</p>
+          <div class="sc-meta">
+            <div class="j-wrap">
+              <span class="j-label">Judgment</span>
+              <div class="j-dots">
+                <div class="j-dot on"></div><div class="j-dot on"></div><div class="j-dot on"></div>
+                <div class="j-dot"></div><div class="j-dot"></div>
+              </div>
+            </div>
+            <span class="ts-chip">Clock: Hours</span>
+          </div>
+          <div class="pf">
+            <div class="pf-label">Passes forward to Loop 02</div>
+            <div class="pf-text">A real-time map of where users are struggling — the raw material the Decide loop turns into prioritized roadmap opportunities.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOOP 02 -->
+      <div class="how-step" data-ring="2" style="--rc:#A373FF;--rc-r:163;--rc-g:115;--rc-b:255">
+        <div class="sm">
+          <div class="sm-num">02</div>
+          <div class="sm-line"></div>
+        </div>
+        <div class="sc">
+          <span class="sc-cat">The Strategy Loop</span>
+          <div class="sc-title">Your roadmap runs on evidence.</div>
+          <p class="sc-body">The Decide loop is where <strong>human judgment meets machine speed</strong>. Usage patterns surface competing hypotheses. The machine models both paths, recommends the higher-impact bet, and ships it with the hypothesis attached. Real outcome data validates the call in weeks — not quarters. The team decides. Data confirms who was right.</p>
+          <div class="sc-meta">
+            <div class="j-wrap">
+              <span class="j-label">Judgment</span>
+              <div class="j-dots">
+                <div class="j-dot on"></div><div class="j-dot on"></div><div class="j-dot on"></div>
+                <div class="j-dot on"></div><div class="j-dot on"></div>
+              </div>
+            </div>
+            <span class="ts-chip">Clock: Days → Weeks</span>
+          </div>
+          <div class="pf">
+            <div class="pf-label">Passes forward to Loop 03</div>
+            <div class="pf-text">Validated decisions and outcome patterns — a factual foundation the Evolve loop uses to set strategic direction that's grounded in what actually worked.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOOP 03 -->
+      <div class="how-step" data-ring="3" style="--rc:#FF7D78;--rc-r:255;--rc-g:125;--rc-b:120">
+        <div class="sm">
+          <div class="sm-num">03</div>
+          <div class="sm-line"></div>
+        </div>
+        <div class="sc">
+          <span class="sc-cat">The Strategic Loop</span>
+          <div class="sc-title">Your strategy gets smarter every cycle.</div>
+          <p class="sc-body">The outermost loop synthesizes everything the inner loops have learned. Resolved failures. Behavioral patterns. Validated experiments. All of it rolls up into a clear picture of where the product is headed — <strong>updated every quarter by real outcomes, not assumptions</strong>. Strategy stops being a slide deck and starts being a compounding institutional knowledge base.</p>
+          <div class="sc-meta">
+            <div class="j-wrap">
+              <span class="j-label">Judgment</span>
+              <div class="j-dots">
+                <div class="j-dot on"></div><div class="j-dot on"></div><div class="j-dot on"></div>
+                <div class="j-dot on"></div><div class="j-dot on"></div>
+              </div>
+            </div>
+            <span class="ts-chip">Clock: Months → Quarters</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /how-steps -->
+
+    <!-- DIAGRAM (right, sticky) -->
+    <div class="how-diagram" id="how-diagram">
+      <div class="rd">
+        <div class="rd-ring rd-r3" id="rd-r3"></div>
+        <div class="rd-ring rd-r2" id="rd-r2"></div>
+        <div class="rd-ring rd-r1" id="rd-r1"></div>
+        <div class="rd-ring rd-r0" id="rd-r0"></div>
+        <div class="rd-label rl-3" id="rl-3">Evolve · Quarters</div>
+        <div class="rd-label rl-2" id="rl-2">Decide · Weeks</div>
+        <div class="rd-label rl-1" id="rl-1">Fix · Hours</div>
+        <div class="rd-label rl-0" id="rl-0">Heal · Seconds</div>
+        <div class="rd-core"></div>
+      </div>
+      <div class="rd-legend">
+        <div class="rdl" id="rdl-0"><span class="rdl-dot" style="background:#4083FF;box-shadow:0 0 6px #4083FF"></span><span class="rdl-text">00 · Heal</span></div>
+        <div class="rdl" id="rdl-1"><span class="rdl-dot" style="background:#6980FF;box-shadow:0 0 6px #6980FF"></span><span class="rdl-text">01 · Fix</span></div>
+        <div class="rdl" id="rdl-2"><span class="rdl-dot" style="background:#A373FF;box-shadow:0 0 6px #A373FF"></span><span class="rdl-text">02 · Decide</span></div>
+        <div class="rdl" id="rdl-3"><span class="rdl-dot" style="background:#FF7D78;box-shadow:0 0 6px #FF7D78"></span><span class="rdl-text">03 · Evolve</span></div>
+      </div>
+    </div>
+
+  </div><!-- /how-body -->
+</div><!-- /how-outer -->
+
+<!-- ── COMPOUNDING ──────────────────────────────────────── -->
+<div class="cmp">
+  <div class="cmp-in">
+    <div class="eyebrow reveal">The compounding</div>
+    <h2 class="sec-title reveal" style="margin-top:20px">Cut a loop, <span class="a">and the system stops.</span></h2>
+    <p style="font-size:clamp(18px,2vw,24px);color:var(--dim);line-height:1.6;max-width:60ch;margin:24px 0 0" class="reveal">Without the inner loops, your product breaks in silence. Without the outer loops, your product gets better at the wrong thing. The magic isn't any single loop — it's the feedback between them. Outer loops recalibrate what the inner loops chase. Inner loops give the outer loops something real to reason from.</p>
+  </div>
+</div>
+
+<!-- ── CTA ────────────────────────────────────────────── -->
+<div id="cta" class="closer">
+  <div class="eyebrow reveal">The premise</div>
+  <h2 class="reveal">You don't need more data. You need to <span class="a">put it to work.</span></h2>
+  <p class="reveal">Automatically. Continuously. Across every layer of judgment your product runs on. That's what self-improving products do. That's what Amplitude is built to power.</p>
+  <div class="cta-row reveal">
+    <a class="btn btn-p" href="https://amplitude.com/demo">Request a PDLC demo</a>
+    <a class="btn btn-g" href="#concept">See how the loops work</a>
+  </div>
+  <p style="margin-top:80px;font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-d)" class="reveal">Your unfair advantage starts with the loop.</p>
+</div>
+
+</main>
+
+<footer>
+  <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="100" height="20" style="opacity:.4">
+  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; PDLC</span>
+</footer>
+
+<script>
+  // Scroll reveal
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 60);
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // Ring activation
+  const steps   = document.querySelectorAll('.how-step');
+  const rings   = [0,1,2,3].map(i => document.getElementById('rd-r'  + i));
+  const rlabels = [0,1,2,3].map(i => document.getElementById('rl-'   + i));
+  const legends = [0,1,2,3].map(i => document.getElementById('rdl-'  + i));
+
+  function activateUpTo(idx) {
+    steps.forEach(  (s,i) => s.classList.toggle('lit', i <= idx));
+    rings.forEach(  (r,i) => r && r.classList.toggle('lit', i <= idx));
+    rlabels.forEach((r,i) => r && r.classList.toggle('lit', i <= idx));
+    legends.forEach((l,i) => {
+      if (!l) return;
+      l.classList.toggle('lit', i <= idx);
+      l.style.transitionDelay = i <= idx ? (i * 80) + 'ms' : '0ms';
+    });
+  }
+
+  activateUpTo(0);
+
+  const stepObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && e.intersectionRatio >= 0.45) {
+        activateUpTo(parseInt(e.target.dataset.ring));
+      }
+    });
+  }, { threshold: 0.45 });
+
+  steps.forEach(s => stepObs.observe(s));
+</script>
+
+<script>
+(function(){
+  try { if (window.self !== window.top) return; } catch (_) { return; }
+  if (!/^https?:$/.test(location.protocol)) return;
+  function loadAmplitude(apiKey) {
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.amplitude.com/script/' + encodeURIComponent(apiKey) + '.js';
+      s.async = true;
+      s.onload = function(){ resolve(); };
+      s.onerror = function(){ reject(new Error('loader blocked')); };
+      document.head.appendChild(s);
+    });
+  }
+  fetch('/api/config').then(function(r){ return r.json(); }).then(function(cfg){
+    if (!cfg.amplitudeApiKey) return;
+    loadAmplitude(cfg.amplitudeApiKey).then(function(){
+      if (!window.amplitude || typeof window.amplitude.init !== 'function') return;
+      // Register session replay BEFORE init so it captures the first session.
+      // Remote config (fetchRemoteConfig: true) will override sampleRate/privacy
+      // from the Amplitude dashboard when enabled; the default below keeps
+      // capture working even if the dashboard toggle is off.
+      if (window.sessionReplay && typeof window.sessionReplay.plugin === 'function' && typeof window.amplitude.add === 'function') {
+        try { window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 1 })); } catch (_) {}
+      }
+      window.amplitude.init(cfg.amplitudeApiKey, {
+        fetchRemoteConfig: true,
+        autocapture: true,
+      });
+    }).catch(function(){});
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>

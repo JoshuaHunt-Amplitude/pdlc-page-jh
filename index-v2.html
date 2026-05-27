@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDLC — The self-improving product cycle | Amplitude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<style>
+  :root {
+    --blue:    #0052F2;
+    --blue-d:  #4083FF;
+    --lilac:   #6980FF;
+    --violet:  #A373FF;
+    --pink:    #FF7D78;
+    --green:   #57E3A4;
+    --amber:   #FFB94A;
+    --bg:      #07080C;
+    --bg2:     #0B0D14;
+    --panel:   #0F1219;
+    --panel2:  #131722;
+    --line:    rgba(255,255,255,.06);
+    --lines:   rgba(255,255,255,.14);
+    --linesb:  rgba(255,255,255,.22);
+    --white:   #FFFFFF;
+    --dim:     rgba(255,255,255,.62);
+    --dim2:    rgba(255,255,255,.42);
+    --dim3:    rgba(255,255,255,.28);
+    --mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans:    'Poppins', Helvetica, system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body {
+    margin: 0; background: var(--bg); color: var(--white);
+    font-family: var(--sans); font-weight: 400; line-height: 1.5;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 1200px 600px at 70% -10%, rgba(0,82,242,.16), transparent 60%),
+      radial-gradient(ellipse 800px 400px at 0% 40%, rgba(64,131,255,.06), transparent 60%);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 110% 80% at 50% 20%, black 30%, transparent 80%);
+    mask-image: radial-gradient(ellipse 110% 80% at 50% 20%, black 30%, transparent 80%);
+    opacity: .6;
+  }
+  main, nav, footer { position: relative; z-index: 1; }
+  ::selection { background: rgba(64,131,255,.4); color: #fff; }
+
+  /* ── NAV ───────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    background: rgba(7,8,12,.78); border-bottom: 1px solid var(--line);
+  }
+  .nav-in {
+    max-width: 1280px; margin: 0 auto; padding: 14px 28px;
+    display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { display: block; height: 22px; }
+  .brand-sep { width: 1px; height: 18px; background: var(--lines); flex-shrink: 0; }
+  .brand-sub {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--blue-d);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .brand-sub::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .nav-links { display: flex; gap: 24px; align-items: center; margin-left: auto; }
+  .nav-links a {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--dim); text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-btn {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--white); text-decoration: none;
+    padding: 9px 16px; background: var(--blue);
+    border-radius: 6px; transition: all .2s; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(255,255,255,.1);
+  }
+  .nav-btn:hover { background: var(--blue-d); transform: translateY(-1px); }
+  @media (max-width: 880px) { .nav-links { display: none; } }
+
+  /* ── HERO ──────────────────────────────────────────── */
+  .hero {
+    max-width: 1280px; margin: 0 auto; padding: 100px 28px 120px;
+    display: grid; grid-template-columns: 1.15fr 1fr; gap: 80px;
+    align-items: center;
+  }
+  @media (max-width: 1000px) { .hero { grid-template-columns: 1fr; padding: 60px 22px 80px; gap: 56px; } }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 7px 14px; border: 1px solid var(--lines); border-radius: 999px;
+    background: rgba(64,131,255,.06);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--blue-d);
+    margin-bottom: 28px;
+  }
+  .hero-badge .material-symbols-rounded { font-size: 14px; color: var(--blue-d); }
+
+  .hero h1 {
+    font-size: clamp(44px, 6.5vw, 84px); font-weight: 600;
+    line-height: .98; letter-spacing: -0.04em;
+    margin: 0 0 22px; max-width: 14ch;
+  }
+  .hero h1 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .hero .lede {
+    font-size: 18px; line-height: 1.6; color: var(--dim);
+    max-width: 50ch; margin: 0 0 36px;
+  }
+
+  .waitlist {
+    display: flex; gap: 8px; max-width: 480px;
+    background: var(--panel); border: 1px solid var(--lines);
+    border-radius: 10px; padding: 6px; transition: border-color .2s;
+  }
+  .waitlist:focus-within { border-color: var(--blue-d); box-shadow: 0 0 0 3px rgba(64,131,255,.15); }
+  .waitlist input {
+    flex: 1; background: transparent; border: 0; outline: 0;
+    color: var(--white); font-family: var(--sans); font-size: 14px;
+    padding: 10px 14px;
+  }
+  .waitlist input::placeholder { color: var(--dim2); }
+  .waitlist button {
+    background: var(--blue); color: var(--white);
+    border: 0; cursor: pointer; padding: 10px 18px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; border-radius: 6px;
+    transition: background .2s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .waitlist button:hover { background: var(--blue-d); }
+  .waitlist-meta {
+    margin-top: 14px; font-family: var(--mono);
+    font-size: 11px; letter-spacing: .1em; color: var(--dim2);
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .waitlist-meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+  /* Hero terminal card */
+  .terminal {
+    background: var(--panel); border: 1px solid var(--lines); border-radius: 14px;
+    overflow: hidden; font-family: var(--mono);
+    box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.02);
+    position: relative;
+  }
+  .terminal::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: 14px;
+    background: linear-gradient(180deg, rgba(64,131,255,.04) 0%, transparent 30%);
+  }
+  .term-head {
+    display: flex; align-items: center; padding: 12px 16px;
+    border-bottom: 1px solid var(--line); background: rgba(0,0,0,.25);
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim);
+  }
+  .term-dots { display: flex; gap: 6px; margin-right: 14px; }
+  .term-dots span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.1); }
+  .term-dots span:nth-child(1) { background: #ff5f57; }
+  .term-dots span:nth-child(2) { background: #febc2e; }
+  .term-dots span:nth-child(3) { background: #28c840; }
+  .term-title { letter-spacing: .12em; font-size: 11px; color: var(--dim); flex: 1; }
+  .term-tag {
+    font-size: 10px; letter-spacing: .14em; color: var(--blue-d);
+    padding: 3px 8px; border: 1px solid rgba(64,131,255,.3);
+    border-radius: 4px; background: rgba(64,131,255,.06);
+  }
+  .term-body { padding: 22px 22px 26px; font-size: 13px; line-height: 1.75; color: var(--dim); }
+  .term-body .p { color: var(--blue-d); }
+  .term-body .c { color: var(--dim2); }
+  .term-body .k { color: var(--violet); }
+  .term-body .s { color: var(--green); }
+  .term-body .w { color: var(--amber); }
+  .term-body .x { color: var(--pink); }
+  .term-body .o { color: var(--white); }
+  .term-body .b { font-weight: 600; color: var(--white); }
+  .blink { animation: cursor-blink 1.1s steps(1) infinite; }
+  @keyframes cursor-blink { 50% { opacity: 0; } }
+
+  /* ── SECTIONS ──────────────────────────────────────── */
+  .sec {
+    max-width: 1280px; margin: 0 auto; padding: 120px 28px;
+    position: relative;
+  }
+  @media (max-width: 720px) { .sec { padding: 80px 22px; } }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--blue-d);
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .eyebrow::before {
+    content: ""; width: 24px; height: 1px; background: var(--blue-d);
+  }
+  .sec-title {
+    font-size: clamp(32px, 4.6vw, 56px); font-weight: 600;
+    letter-spacing: -0.035em; line-height: 1.04;
+    margin: 18px 0 0; max-width: 22ch;
+  }
+  .sec-title .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .sec-lede {
+    font-size: 17px; line-height: 1.7; color: var(--dim);
+    max-width: 60ch; margin: 22px 0 0;
+  }
+
+  /* ── VISION / STORY ────────────────────────────────── */
+  .vision { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .vision-in { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 80px; align-items: start; }
+  @media (max-width: 980px) { .vision-in { grid-template-columns: 1fr; gap: 48px; } }
+
+  .vision-narrative { font-size: 16px; line-height: 1.75; color: var(--dim); margin-top: 28px; }
+  .vision-narrative p { margin: 0 0 18px; }
+  .vision-narrative p:last-child { margin-bottom: 0; }
+  .vision-narrative strong { color: var(--white); font-weight: 500; }
+  .vision-narrative .quote {
+    border-left: 2px solid var(--blue-d);
+    padding: 4px 0 4px 20px;
+    color: var(--white); font-size: 17px;
+    margin: 8px 0 22px;
+  }
+
+  .cycle {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 32px; position: relative;
+  }
+  .cycle-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: var(--line);
+    border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+  }
+  .cycle-node {
+    background: var(--panel); padding: 22px 20px;
+    display: flex; flex-direction: column; gap: 8px;
+    position: relative; min-height: 130px;
+  }
+  .cycle-node .ix {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--blue-d);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cycle-node .ix::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue-d); box-shadow: 0 0 6px var(--blue-d);
+  }
+  .cycle-node h4 {
+    margin: 4px 0 4px; font-size: 17px; font-weight: 600;
+    letter-spacing: -0.015em; color: var(--white);
+  }
+  .cycle-node p { margin: 0; font-size: 13px; color: var(--dim); line-height: 1.55; }
+  .cycle-node[data-stage] {
+    border-top: 2px solid transparent;
+  }
+  .cycle-node[data-stage="sense"]    { --c: var(--blue-d); }
+  .cycle-node[data-stage="prio"]     { --c: var(--lilac); }
+  .cycle-node[data-stage="spec"]     { --c: var(--violet); }
+  .cycle-node[data-stage="act"]      { --c: var(--pink); }
+  .cycle-node[data-stage="verify"]   { --c: var(--amber); }
+  .cycle-node[data-stage="close"]    { --c: var(--green); }
+  .cycle-node .ix { color: var(--c); }
+  .cycle-node .ix::before { background: var(--c); box-shadow: 0 0 8px var(--c); }
+
+  .cycle-caption {
+    margin-top: 18px; padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+    color: var(--dim2); text-transform: uppercase;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  .cycle-caption b { color: var(--white); font-weight: 500; }
+
+  /* ── DEMO ──────────────────────────────────────────── */
+  .demo-sec {
+    background: linear-gradient(180deg, transparent 0%, rgba(64,131,255,.04) 50%, transparent 100%);
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .demo-head { max-width: 800px; margin: 0 auto 48px; text-align: center; }
+  .demo-head .eyebrow { justify-content: center; display: inline-flex; }
+  .demo-head .sec-title { margin: 18px auto 0; }
+  .demo-head .sec-lede { margin: 22px auto 0; }
+
+  .demo-card {
+    background: var(--panel);
+    border: 1px solid var(--lines); border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    max-width: 1080px; margin: 0 auto;
+  }
+  .demo-tabs {
+    display: flex; border-bottom: 1px solid var(--line);
+    background: rgba(0,0,0,.3); overflow-x: auto;
+  }
+  .demo-tab {
+    flex-shrink: 0; padding: 18px 22px;
+    background: transparent; border: 0; cursor: pointer;
+    color: var(--dim); font-family: var(--mono);
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+    display: inline-flex; align-items: center; gap: 10px;
+    white-space: nowrap;
+  }
+  .demo-tab .ix {
+    width: 22px; height: 22px; border-radius: 4px;
+    border: 1px solid var(--line); display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--dim);
+  }
+  .demo-tab:hover { color: var(--white); }
+  .demo-tab.active { color: var(--white); border-bottom-color: var(--blue-d); }
+  .demo-tab.active .ix { color: var(--blue-d); border-color: rgba(64,131,255,.4); background: rgba(64,131,255,.08); }
+
+  .demo-stage { padding: 32px; min-height: 460px; display: none; }
+  .demo-stage.active { display: grid; }
+  .demo-stage { grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+  @media (max-width: 880px) { .demo-stage { grid-template-columns: 1fr; gap: 28px; padding: 22px; } }
+
+  .demo-prose .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+    color: var(--blue-d); text-transform: uppercase;
+    padding: 5px 10px; border: 1px solid rgba(64,131,255,.3);
+    border-radius: 4px; background: rgba(64,131,255,.06); margin-bottom: 16px;
+  }
+  .demo-prose h3 {
+    font-size: 26px; font-weight: 600; letter-spacing: -0.02em;
+    line-height: 1.15; margin: 0 0 14px;
+  }
+  .demo-prose p { font-size: 14px; color: var(--dim); line-height: 1.7; margin: 0 0 14px; max-width: 50ch; }
+  .demo-prose p strong { color: var(--white); font-weight: 500; }
+  .demo-prose .ctx {
+    margin-top: 18px; padding: 14px 16px;
+    background: rgba(0,0,0,.3); border: 1px solid var(--line); border-radius: 8px;
+    font-family: var(--mono); font-size: 11px; color: var(--dim);
+    line-height: 1.7;
+  }
+  .demo-prose .ctx b { color: var(--white); font-weight: 500; }
+  .demo-prose .ctx span { color: var(--blue-d); }
+
+  .demo-view {
+    background: rgba(0,0,0,.35); border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px; font-family: var(--mono); font-size: 12px;
+    color: var(--dim); line-height: 1.75; overflow: hidden;
+  }
+  .demo-view .vh {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .demo-view .vh-title { color: var(--white); letter-spacing: .12em; font-size: 11px; text-transform: uppercase; }
+  .demo-view .vh-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; letter-spacing: .14em; padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .vs-running { color: var(--amber); background: rgba(255,185,74,.08); border: 1px solid rgba(255,185,74,.25); }
+  .vs-done    { color: var(--green); background: rgba(87,227,164,.08); border: 1px solid rgba(87,227,164,.25); }
+  .vs-review  { color: var(--violet); background: rgba(163,115,255,.08); border: 1px solid rgba(163,115,255,.25); }
+  .vs-merged  { color: var(--blue-d); background: rgba(64,131,255,.08); border: 1px solid rgba(64,131,255,.3); }
+
+  .demo-view code {
+    display: block; font-family: var(--mono); color: var(--dim);
+    white-space: pre; overflow-x: auto;
+  }
+  .demo-view .p { color: var(--blue-d); }
+  .demo-view .c { color: var(--dim3); }
+  .demo-view .k { color: var(--violet); }
+  .demo-view .s { color: var(--green); }
+  .demo-view .w { color: var(--amber); }
+  .demo-view .x { color: var(--pink); }
+  .demo-view .o { color: var(--white); }
+  .demo-view .l { color: var(--lilac); }
+
+  .opp-card {
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 10px;
+  }
+  .opp-card .opp-h {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin-bottom: 6px;
+  }
+  .opp-card .opp-t { color: var(--white); font-size: 12px; font-weight: 500; letter-spacing: -0.01em; }
+  .opp-card .opp-sc {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .14em;
+    color: var(--blue-d); padding: 3px 7px; border: 1px solid rgba(64,131,255,.3);
+    border-radius: 4px;
+  }
+  .opp-card .opp-meta {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    color: var(--dim2); text-transform: uppercase;
+  }
+  .opp-card.hl { border-color: rgba(64,131,255,.5); box-shadow: 0 0 0 1px rgba(64,131,255,.2), 0 0 24px rgba(64,131,255,.08); }
+
+  /* PR-style diff block */
+  .diff {
+    font-family: var(--mono); font-size: 12px;
+    background: rgba(0,0,0,.3); border: 1px solid var(--line); border-radius: 8px;
+    overflow: hidden;
+  }
+  .diff-line { padding: 2px 14px; white-space: pre; line-height: 1.7; }
+  .diff-line.add { background: rgba(87,227,164,.08); color: var(--green); }
+  .diff-line.rem { background: rgba(255,125,120,.08); color: var(--pink); }
+  .diff-line.h   { color: var(--dim); background: rgba(255,255,255,.02); }
+
+  /* ── STATUS / HONEST ───────────────────────────────── */
+  .status {
+    border-top: 1px solid var(--line);
+  }
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 56px; }
+  @media (max-width: 880px) { .status-grid { grid-template-columns: 1fr; } }
+  .status-col { background: var(--bg); padding: 40px 36px; }
+  .status-col h3 {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--blue-d);
+    display: flex; align-items: center; gap: 10px;
+    margin: 0 0 28px;
+  }
+  .status-col h3 .pip {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+  }
+  .status-col.wip h3 { color: var(--amber); }
+  .status-col.wip h3 .pip { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+
+  .status-item {
+    padding: 22px 0; border-bottom: 1px solid var(--line);
+  }
+  .status-item:last-child { border-bottom: 0; }
+  .status-item h4 {
+    font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
+    margin: 0 0 8px; color: var(--white);
+  }
+  .status-item p { margin: 0; font-size: 14px; color: var(--dim); line-height: 1.65; }
+  .status-item .ev {
+    margin-top: 10px; font-family: var(--mono); font-size: 11px;
+    color: var(--dim2); letter-spacing: .06em;
+  }
+  .status-item .ev b { color: var(--blue-d); font-weight: 500; }
+
+  /* ── DEV SURFACES ──────────────────────────────────── */
+  .dev {
+    border-top: 1px solid var(--line);
+  }
+  .dev-grid {
+    margin-top: 56px;
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+  }
+  @media (max-width: 900px) { .dev-grid { grid-template-columns: 1fr; } }
+  .dev-card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 26px; position: relative; overflow: hidden;
+    transition: border-color .2s, transform .2s;
+  }
+  .dev-card:hover { border-color: rgba(64,131,255,.4); transform: translateY(-2px); }
+  .dev-card .ix {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+    color: var(--blue-d); text-transform: uppercase;
+  }
+  .dev-card .ix .material-symbols-rounded { font-size: 16px; }
+  .dev-card h4 {
+    margin: 14px 0 10px; font-size: 20px; font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .dev-card p { margin: 0 0 18px; font-size: 13px; color: var(--dim); line-height: 1.65; }
+  .dev-code {
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.7;
+    background: rgba(0,0,0,.4); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px; white-space: pre; overflow-x: auto;
+  }
+  .dev-code .c { color: var(--dim3); }
+  .dev-code .k { color: var(--blue-d); }
+  .dev-code .s { color: var(--green); }
+  .dev-code .v { color: var(--violet); }
+  .dev-code .n { color: var(--amber); }
+
+  /* ── CTA ───────────────────────────────────────────── */
+  .closer {
+    text-align: center; padding: 180px 28px 140px;
+    max-width: 1280px; margin: 0 auto; position: relative;
+  }
+  .closer::before {
+    content: ""; position: absolute; top: 30%; left: 50%;
+    transform: translate(-50%, -50%); width: 700px; height: 500px;
+    background: radial-gradient(ellipse, rgba(64,131,255,.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .closer > * { position: relative; }
+  .closer .eyebrow { justify-content: center; display: inline-flex; }
+  .closer h2 {
+    font-size: clamp(42px, 6.4vw, 88px); font-weight: 600;
+    letter-spacing: -0.04em; line-height: 1;
+    margin: 22px auto 22px; max-width: 16ch;
+  }
+  .closer h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .closer p { color: var(--dim); font-size: 17px; max-width: 56ch; margin: 0 auto 40px; line-height: 1.65; }
+  .closer .waitlist { margin: 0 auto; }
+  .closer .waitlist-meta { justify-content: center; }
+
+  /* ── FOOTER ────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--line); padding: 32px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .fc { color: var(--dim2); font-size: 12px; font-family: var(--mono); letter-spacing: .1em; }
+  footer img { opacity: .4; height: 20px; }
+
+  /* ── REVEAL ────────────────────────────────────────── */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-in">
+    <div class="brand">
+      <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="120" height="22">
+      <span class="brand-sep"></span>
+      <span class="brand-sub">PDLC&nbsp;·&nbsp;Beta</span>
+    </div>
+    <div class="nav-links">
+      <a href="#vision">The cycle</a>
+      <a href="#demo">Demo</a>
+      <a href="#status">What's working</a>
+      <a href="#dev">For builders</a>
+    </div>
+    <a href="#cta" class="nav-btn">Join the waitlist <span class="material-symbols-rounded" style="font-size:14px">arrow_forward</span></a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ── HERO ──────────────────────────────────────────── -->
+<section class="hero">
+  <div class="reveal">
+    <div class="hero-badge">
+      <span class="material-symbols-rounded">autorenew</span>
+      The Self-Improving Product Cycle
+    </div>
+    <h1>A factory for <span class="a">products that improve themselves.</span></h1>
+    <p class="lede">Coding agents made shipping cheap. Sensing — figuring out what to build next — hasn't kept up. PDLC closes the gap: a loop that reads your product data, finds what to fix, drafts the spec, and routes it to your coding agents. Built at Amplitude. Running on Amplitude.</p>
+
+    <form class="waitlist" onsubmit="event.preventDefault(); this.dataset.sent='1'; this.querySelector('button').innerHTML='You\'re on the list <span class=&quot;material-symbols-rounded&quot; style=&quot;font-size:14px&quot;>check</span>';">
+      <input type="email" placeholder="you@company.com" required aria-label="Email">
+      <button type="submit">Join the beta <span class="material-symbols-rounded" style="font-size:14px">arrow_forward</span></button>
+    </form>
+    <div class="waitlist-meta">
+      <span><span class="dot"></span>Now accepting design partners</span>
+      <span>·</span>
+      <span>Limited cohort · Q3 2026</span>
+    </div>
+  </div>
+
+  <div class="reveal terminal" aria-hidden="true">
+    <div class="term-head">
+      <div class="term-dots"><span></span><span></span><span></span></div>
+      <div class="term-title">pdlc · live · amplitude.com</div>
+      <div class="term-tag">running</div>
+    </div>
+    <div class="term-body">
+      <div><span class="c"># sense → prioritize → spec → act → verify → close</span></div>
+      <div><span class="p">pdlc&nbsp;❯</span> <span class="k">sense</span> --area=chart-creation</div>
+      <div><span class="c">  ↳ scanning 6 sources · 12,481 events · 38 replays · 17 feedback themes</span></div>
+      <div><span class="c">  ↳ 4 candidates surfaced · 1 high-confidence</span></div>
+      <div>&nbsp;</div>
+      <div><span class="p">pdlc&nbsp;❯</span> <span class="k">prioritize</span></div>
+      <div><span class="c">  ↳ quality judge: <span class="s">0.91</span> · impact estimate: <span class="o">+8–14% activation</span></span></div>
+      <div>&nbsp;</div>
+      <div><span class="p">pdlc&nbsp;❯</span> <span class="k">spec</span> --opp=stop-response-bug</div>
+      <div><span class="c">  ↳ evidence: <span class="l">5 feedback mentions</span>, <span class="l">3 replays</span></span></div>
+      <div><span class="c">  ↳ routing → <span class="o">cursor:cloud</span></span></div>
+      <div>&nbsp;</div>
+      <div><span class="p">pdlc&nbsp;❯</span> <span class="k">act</span> &amp;&amp; <span class="k">verify</span></div>
+      <div><span class="c">  ↳ PR <span class="o">#102090</span> · +334 / −54 · 13 files</span></div>
+      <div><span class="c">  ↳ <span class="s">claude[bot]</span>: spec satisfied · replay attached</span></div>
+      <div>&nbsp;</div>
+      <div><span class="s">✓ merged · tracking outcome metric · activation_d7</span></div>
+      <div><span class="p">pdlc&nbsp;❯</span> <span class="blink">▌</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VISION / THE STORY ────────────────────────────── -->
+<section class="sec vision" id="vision">
+  <div class="vision-in">
+    <div class="reveal">
+      <div class="eyebrow">The story</div>
+      <h2 class="sec-title">The cycle <span class="a">that builds the product.</span></h2>
+      <div class="vision-narrative">
+        <p>Every product team runs the same loop: <strong>build → ship → use → learn</strong>. Fifty years of work — programming languages, agile, cloud, and now coding agents — collapsed the left half. The distance from problem to PR is approaching zero.</p>
+        <p>The right half hasn't moved. Humans still triage Slack, watch replays, read logs, and try to synthesize "what should we build next?" For every issue that survives, hundreds don't.</p>
+        <p class="quote">Sense is the new bottleneck. More than <strong>95% of behavioral data goes unread</strong>.</p>
+        <p>The teams that have mastered this — Anthropic, Meta, Netflix, Stripe — run proprietary systems that sense, prioritize, ship, and learn at machine speed. Stripe's "Minions" merge <strong>1,300+ PRs a week</strong>. Ramp's Inspect authors 57% of merged PRs.</p>
+        <p>PDLC is the cycle, made general. It runs on the modeled product data Amplitude already owns. It surfaces what matters. It writes the spec. It hands off to your coding agents. It tracks the outcome. <strong>Every cycle that closes makes the next one smarter.</strong></p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="cycle">
+        <div class="cycle-grid">
+          <div class="cycle-node" data-stage="sense">
+            <div class="ix">01 · Sense</div>
+            <h4>Read every signal.</h4>
+            <p>Analytics, replays, feedback, error logs, agent traces, experiments. Six surfaces, one queue.</p>
+          </div>
+          <div class="cycle-node" data-stage="prio">
+            <div class="ix">02 · Prioritize</div>
+            <h4>Score, rank, demote noise.</h4>
+            <p>A quality judge filters by confidence. Survivors get a RICE-shaped impact estimate.</p>
+          </div>
+          <div class="cycle-node" data-stage="spec">
+            <div class="ix">03 · Spec</div>
+            <h4>Write the contract.</h4>
+            <p>Problem, evidence, acceptance criteria, target repo. The artifact every agent inherits.</p>
+          </div>
+          <div class="cycle-node" data-stage="act">
+            <div class="ix">04 · Act</div>
+            <h4>Route to the right hands.</h4>
+            <p>Cursor, Claude Code, or a human session — picked by complexity. The work just starts.</p>
+          </div>
+          <div class="cycle-node" data-stage="verify">
+            <div class="ix">05 · Verify</div>
+            <h4>Review before humans do.</h4>
+            <p>A review agent checks the diff against the spec, runs it in a sandbox, captures a replay.</p>
+          </div>
+          <div class="cycle-node" data-stage="close">
+            <div class="ix">06 · Close</div>
+            <h4>Did it actually work?</h4>
+            <p>Outcome metric feeds back as labeled data. The ranker learns. The next cycle is sharper.</p>
+          </div>
+        </div>
+        <div class="cycle-caption">
+          <span><b>Run</b> · Continuously · per product area</span>
+          <span><b>Compound</b> · Every cycle improves the next</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEMO ──────────────────────────────────────────── -->
+<section class="sec demo-sec" id="demo">
+  <div class="demo-head reveal">
+    <div class="eyebrow">Live at Amplitude</div>
+    <h2 class="sec-title">Watch one cycle <span class="a">close end-to-end.</span></h2>
+    <p class="sec-lede">A real opportunity that ran through PDLC inside Amplitude this quarter. Sourced from customer feedback. Specced by the planning agent. Shipped by Cursor. Reviewed by claude[bot]. Merged. Tracked.</p>
+  </div>
+
+  <div class="demo-card reveal">
+    <div class="demo-tabs" role="tablist">
+      <button class="demo-tab active" data-tab="0"><span class="ix">01</span>Sense</button>
+      <button class="demo-tab" data-tab="1"><span class="ix">02</span>Prioritize</button>
+      <button class="demo-tab" data-tab="2"><span class="ix">03</span>Spec</button>
+      <button class="demo-tab" data-tab="3"><span class="ix">04</span>Act</button>
+      <button class="demo-tab" data-tab="4"><span class="ix">05</span>Verify</button>
+      <button class="demo-tab" data-tab="5"><span class="ix">06</span>Close</button>
+    </div>
+
+    <!-- 01 SENSE -->
+    <div class="demo-stage active" data-stage="0">
+      <div class="demo-prose">
+        <span class="tag"><span class="material-symbols-rounded" style="font-size:13px">radar</span>Sense</span>
+        <h3>The signal nobody routed.</h3>
+        <p>Five customers said the same thing in AI Feedback over two weeks: <strong>"the Stop Response button cancels my whole session."</strong> Three rage-click replays. No bug ticket. No PR. No PM had it on a list.</p>
+        <p>The Sense agent reads <strong>all six surfaces continuously</strong> — feedback themes, replay friction, anomalies, error logs, agent traces, experiments. It dedupes against prior opportunities and tags everything with source backlinks.</p>
+        <div class="ctx"><b>Surfaces scanned</b> · <span>feedback · replay · errors · analytics · agent_traces · experiments</span></div>
+      </div>
+      <div class="demo-view">
+        <div class="vh">
+          <div class="vh-title">Opportunity Feed · Chart Creation</div>
+          <div class="vh-status vs-running">● Scanning</div>
+        </div>
+        <div class="opp-card hl">
+          <div class="opp-h">
+            <div class="opp-t">Stop Response button cancels session</div>
+            <div class="opp-sc">0.91</div>
+          </div>
+          <div class="opp-meta">feedback · 5 mentions · 3 replays · activation_d7</div>
+        </div>
+        <div class="opp-card">
+          <div class="opp-h">
+            <div class="opp-t">Funnel chart save fails on Safari 17</div>
+            <div class="opp-sc">0.74</div>
+          </div>
+          <div class="opp-meta">errors · 142 events · 1 replay</div>
+        </div>
+        <div class="opp-card">
+          <div class="opp-h">
+            <div class="opp-t">Drop-off in segment builder step 3</div>
+            <div class="opp-sc">0.62</div>
+          </div>
+          <div class="opp-meta">analytics · funnel −12% w/w</div>
+        </div>
+        <div class="opp-card">
+          <div class="opp-h">
+            <div class="opp-t">Dashboard duplicate-shortcut conflict</div>
+            <div class="opp-sc">0.41 · demoted</div>
+          </div>
+          <div class="opp-meta">feedback · 1 mention · low confidence</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 PRIORITIZE -->
+    <div class="demo-stage" data-stage="1">
+      <div class="demo-prose">
+        <span class="tag"><span class="material-symbols-rounded" style="font-size:13px">sort</span>Prioritize</span>
+        <h3>Rank with a quality judge.</h3>
+        <p>Every candidate runs through an LLM rubric and a logistic-regression <strong>quality judge</strong> — currently ~80% F1 against thumbs-up/down from internal PMs. Low-confidence candidates get demoted before they ever reach a human.</p>
+        <p>Survivors get a RICE-shaped impact estimate against the product area's objective. <strong>Activation, retention, conversion, revenue</strong> — whatever the team owns.</p>
+        <div class="ctx"><b>Quality judge</b> · <span>~80% F1 · 140+ labeled examples</span><br><b>Impact estimate</b> · <span>+8–14% on activation_d7</span></div>
+      </div>
+      <div class="demo-view">
+        <div class="vh">
+          <div class="vh-title">Stop Response · scoring</div>
+          <div class="vh-status vs-done">● Ranked</div>
+        </div>
+<code><span class="c"># quality_judge.eval(candidate)</span>
+<span class="k">→</span> evidence_strength   <span class="s">0.94</span>  <span class="c">(5 mentions, 3 replays)</span>
+<span class="k">→</span> citation_validity   <span class="s">0.96</span>
+<span class="k">→</span> product_area_match  <span class="s">0.88</span>
+<span class="k">→</span> feature_not_shipped <span class="s">0.92</span>
+<span class="k">─</span>
+<span class="o">  composite_score    </span><span class="s">0.91</span>  <span class="w">accept</span>
+
+<span class="c"># impact_estimate(activation_d7)</span>
+<span class="k">→</span> reach        <span class="o">~ 2,140 users / wk</span>
+<span class="k">→</span> impact       <span class="o">+8–14% activation</span>
+<span class="k">→</span> confidence   <span class="o">medium-high</span>
+<span class="k">─</span>
+<span class="o">  rice_score   </span><span class="s">312</span>  <span class="w">→ top of queue</span></code>
+      </div>
+    </div>
+
+    <!-- 03 SPEC -->
+    <div class="demo-stage" data-stage="2">
+      <div class="demo-prose">
+        <span class="tag"><span class="material-symbols-rounded" style="font-size:13px">description</span>Spec</span>
+        <h3>The artifact every agent inherits.</h3>
+        <p>A planning agent (we call it <strong>Wave</strong> internally) drafts a structured spec for every opportunity that clears the bar. Problem, evidence, proposed solution, acceptance criteria, target repo, complexity tag.</p>
+        <p>The spec is the <strong>contract between the loop and whichever agent picks up the work</strong>. Cursor, Claude Code, a Codex session, a human — they all load the same artifact, with the same backlinks, in the same shape.</p>
+        <div class="ctx"><b>Drafted by</b> · <span>Wave (planning agent)</span><br><b>Routed to</b> · <span>cursor:cloud</span> · <b>Owner</b> · <span>will.newton@amplitude.com</span></div>
+      </div>
+      <div class="demo-view">
+        <div class="vh">
+          <div class="vh-title">spec.md · opp-1042</div>
+          <div class="vh-status vs-done">● Ready to route</div>
+        </div>
+<code><span class="c"># opportunity</span>
+<span class="k">title:</span>      <span class="s">Stop Response cancels session</span>
+<span class="k">area:</span>       <span class="s">chart-creation/ai</span>
+<span class="k">objective:</span>  <span class="s">activation_d7</span>
+
+<span class="c"># evidence</span>
+<span class="k">- type:</span> <span class="v">feedback</span>   <span class="l">id:</span> fb_8421 fb_8893 ...
+<span class="k">- type:</span> <span class="v">replay</span>     <span class="l">id:</span> rep_3318 rep_3402 rep_3441
+<span class="k">- type:</span> <span class="v">chart</span>      <span class="l">id:</span> ch_pause_attempt
+
+<span class="c"># proposal</span>
+Decouple Stop button from session lifecycle.
+Stop should cancel <span class="o">in-flight LLM call</span> only.
+
+<span class="c"># acceptance</span>
+- Stop kills active stream, preserves history
+- session.id unchanged after Stop
+- Retry button appears on cancelled message
+
+<span class="c"># route</span>
+<span class="k">complexity:</span> <span class="v">small</span>   <span class="k">→</span> cursor:cloud
+<span class="k">repo:</span>       <span class="v">amplitude/web</span></code>
+      </div>
+    </div>
+
+    <!-- 04 ACT -->
+    <div class="demo-stage" data-stage="3">
+      <div class="demo-prose">
+        <span class="tag"><span class="material-symbols-rounded" style="font-size:13px">bolt</span>Act</span>
+        <h3>The spec routes itself.</h3>
+        <p>Based on the complexity tag, the spec opens a branch and dispatches to the right executor. Small, self-contained fixes go to a <strong>Cursor cloud agent</strong>. Richer-context sessions go to <strong>Claude Code</strong>. Larger work routes to a human-owned session.</p>
+        <p>There's no Linear ticket. No Slack handoff. The agent loads the spec via MCP and starts from full context — citations and all.</p>
+        <div class="ctx"><b>Executor</b> · <span>cursor[bot]</span><br><b>Branch</b> · <span>pdlc/opp-1042-stop-response</span></div>
+      </div>
+      <div class="demo-view">
+        <div class="vh">
+          <div class="vh-title">PR #102090 · amplitude/web</div>
+          <div class="vh-status vs-review">● Draft · agent working</div>
+        </div>
+        <div class="diff">
+          <div class="diff-line h">diff --git a/src/components/AiChat/StopButton.tsx</div>
+          <div class="diff-line h">@@ -42,9 +42,6 @@ export function StopButton() {</div>
+          <div class="diff-line rem">-  const { cancelSession } = useSession();</div>
+          <div class="diff-line rem">-  const onClick = () =&gt; cancelSession();</div>
+          <div class="diff-line h">@@ +44,12 @@</div>
+          <div class="diff-line add">+  const { cancelInFlight } = useLlmStream();</div>
+          <div class="diff-line add">+  const onClick = () =&gt; cancelInFlight();</div>
+          <div class="diff-line add">+  // session.id is preserved — only the stream is killed.</div>
+        </div>
+        <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--dim);line-height:1.7">
+          <div><span style="color:var(--green)">+334</span>&nbsp;&nbsp;<span style="color:var(--pink)">−54</span>&nbsp;&nbsp;<span style="color:var(--dim2)">13 files</span></div>
+          <div style="margin-top:6px"><span style="color:var(--blue-d)">cursor[bot]</span> · authored from spec.md</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 VERIFY -->
+    <div class="demo-stage" data-stage="4">
+      <div class="demo-prose">
+        <span class="tag"><span class="material-symbols-rounded" style="font-size:13px">verified</span>Verify</span>
+        <h3>The review agent goes first.</h3>
+        <p>Before a human ever opens the PR, a separate <strong>review agent</strong> loads the original spec, runs the modified code in a sandbox, captures a <strong>session replay of the change in action</strong>, and posts a structured review back to the PR.</p>
+        <p>Most coding-agent failures aren't "the code doesn't compile" — they're <strong>"the agent confidently shipped the wrong thing."</strong> The reviewer catches those before humans burn time on them.</p>
+        <div class="ctx"><b>Reviewer</b> · <span>claude[bot]</span><br><b>Artifacts</b> · <span>spec_match.md · replay_capture.mp4 · sandbox_run.log</span></div>
+      </div>
+      <div class="demo-view">
+        <div class="vh">
+          <div class="vh-title">claude[bot] · review on #102090</div>
+          <div class="vh-status vs-review">● Spec satisfied</div>
+        </div>
+<code><span class="k">▸</span> Acceptance criteria
+  <span class="s">✓</span> Stop kills active stream
+  <span class="s">✓</span> session.id preserved across Stop
+  <span class="s">✓</span> Retry button rendered on cancelled msg
+
+<span class="k">▸</span> Sandbox run        <span class="s">passed (12.4s)</span>
+<span class="k">▸</span> Session replay      <span class="s">attached</span>
+<span class="k">▸</span> Lint / type-check   <span class="s">passed</span>
+<span class="k">▸</span> Regression scan     <span class="s">0 flagged</span>
+
+<span class="w">▲</span> 1 note:
+  consider debouncing rapid Stop clicks
+  <span class="c">(non-blocking)</span>
+
+<span class="o">→ ready for human review</span></code>
+      </div>
+    </div>
+
+    <!-- 06 CLOSE -->
+    <div class="demo-stage" data-stage="5">
+      <div class="demo-prose">
+        <span class="tag"><span class="material-symbols-rounded" style="font-size:13px">trending_up</span>Close</span>
+        <h3>Did it actually work?</h3>
+        <p>Once the PR merges, the loop watches the outcome metric named in the spec. <strong>activation_d7 moved +11.4%</strong> against the control. The opportunity gets a "shipped + worked" label that flows back into the ranker — and the next time a similar signal appears, it scores higher, faster.</p>
+        <p>This is what makes the loop <strong>compound</strong>. Every closed cycle is a new training example. Every outcome shapes the next one.</p>
+        <div class="ctx"><b>Outcome metric</b> · <span>activation_d7</span><br><b>Delta</b> · <span style="color:var(--green)">+11.4%</span> · <b>Within forecast</b> · <span>+8–14%</span></div>
+      </div>
+      <div class="demo-view">
+        <div class="vh">
+          <div class="vh-title">outcome · opp-1042</div>
+          <div class="vh-status vs-merged">● Merged · tracking</div>
+        </div>
+<code><span class="k">▸</span> Merged              <span class="s">PR #102090</span>
+<span class="k">▸</span> Outcome window      <span class="o">14d</span>
+<span class="k">▸</span> Metric              <span class="o">activation_d7</span>
+<span class="k">▸</span> Baseline            <span class="o">42.1%</span>
+<span class="k">▸</span> Treatment           <span class="s">46.9%</span>  <span class="o">(+11.4%)</span>
+<span class="k">▸</span> Forecast range      <span class="o">+8–14%</span>  <span class="s">✓ within</span>
+
+<span class="k">▸</span> Feedback to ranker
+  <span class="s">+</span> label: shipped_and_worked
+  <span class="s">+</span> pattern: feedback_cluster + replay_friction
+  <span class="s">+</span> impact_prior: <span class="o">updated</span>
+
+<span class="o">↺ loop closes · next cycle starts</span></code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATUS · HONEST ───────────────────────────────── -->
+<section class="sec status" id="status">
+  <div class="reveal" style="max-width:60ch">
+    <div class="eyebrow">Where we are</div>
+    <h2 class="sec-title">Concrete today. <span class="a">Compounding tomorrow.</span></h2>
+    <p class="sec-lede">PDLC has been running inside Amplitude for about a month. Honest read: the sensing half lands today; the full agentic orchestration is still being wired up. Both parts of that are true, and we'd rather you know.</p>
+  </div>
+
+  <div class="status-grid reveal">
+    <div class="status-col">
+      <h3><span class="pip"></span>Working today</h3>
+
+      <div class="status-item">
+        <h4>Finding the right problems to work on.</h4>
+        <p>The opportunity feed surfaces real bugs and friction PMs say they would actually take. Concept resonance is the strongest signal we have: every internal review and every customer preview reacts the same way.</p>
+        <p class="ev"><b>Evidence</b> · Stop Response bug from 5+ feedback mentions · checkout silent-fail from replay rage-clicks · Global Agent multi-count from agent traces</p>
+      </div>
+
+      <div class="status-item">
+        <h4>Routing specs to coding agents.</h4>
+        <p>Specs hand off cleanly to Cursor cloud agents and Claude Code sessions. Small, well-scoped fixes ship without human review. The review agent catches the obvious "wrong thing" failures.</p>
+        <p class="ev"><b>Evidence</b> · PR #102090 — Cursor authored, claude[bot] reviewed, merged · 334 / 54 / 13</p>
+      </div>
+
+      <div class="status-item">
+        <h4>Net-new product builds on fresh repos.</h4>
+        <p>When the agent is pointed at fresh, lower-stakes codebases, end-to-end ship rate is dramatically higher. 101 shipped features in a week during AI Week — each with a recorded GIF proving the change worked.</p>
+        <p class="ev"><b>Evidence</b> · AI Week 2026 · 101 shipped features · browser-verified</p>
+      </div>
+    </div>
+
+    <div class="status-col wip">
+      <h3><span class="pip"></span>Still being built</h3>
+
+      <div class="status-item">
+        <h4>Citation quality on noisy signals.</h4>
+        <p>Replay analysis is noisy. Some chart and feedback citations go stale. Today, evidence is solid enough to triage from but not always to ship from without re-verification. The quality judge is the main gate; an override taxonomy feeds back as training data.</p>
+        <p class="ev"><b>Gate</b> · 8-failure-mode override taxonomy → labeled retraining</p>
+      </div>
+
+      <div class="status-item">
+        <h4>Codebase &amp; environment resolution.</h4>
+        <p>Identifying the right repo, recreating a working dev environment, and confirming whether a bug is still live or already shipped are real time sinks. "Feature already shipped" remains one of our most common override reasons.</p>
+        <p class="ev"><b>Lever</b> · per-area codebase indexing · "what's live" context channel in every spec</p>
+      </div>
+
+      <div class="status-item">
+        <h4>End-to-end ship rate on legacy code.</h4>
+        <p>Even with the right repo and a reasonable rec, shipping into a mature codebase still needs heavy review and domain knowledge to sign off. The reviewer agent is the lever we're pulling here — and the lever we expect to keep pulling for a while.</p>
+        <p class="ev"><b>Lever</b> · review agent · sandbox + replay capture before any human review</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEV SURFACES ──────────────────────────────────── -->
+<section class="sec dev" id="dev">
+  <div class="reveal" style="max-width:60ch">
+    <div class="eyebrow">Built for builders</div>
+    <h2 class="sec-title">Where your team <span class="a">already lives.</span></h2>
+    <p class="sec-lede">PDLC isn't a dashboard you visit. It's a context source your agents call, a CLI you pipe through, and a feed you scan in the morning. Same loop. Same data. Same evidence.</p>
+  </div>
+
+  <div class="dev-grid">
+    <div class="dev-card reveal">
+      <div class="ix"><span class="material-symbols-rounded">hub</span>MCP server</div>
+      <h4>For every coding agent.</h4>
+      <p>Cursor, Claude Code, Codex, custom harnesses — any of them can ask Amplitude "what should I work on?" and get a ranked, source-cited list. The spec loads as full context, not a ticket summary.</p>
+<pre class="dev-code"><span class="c"># In Cursor / Claude Code</span>
+<span class="k">→</span> <span class="v">amplitude.opportunities</span>(
+    area: <span class="s">"chart-creation"</span>,
+    limit: <span class="n">5</span>
+  )</pre>
+    </div>
+
+    <div class="dev-card reveal">
+      <div class="ix"><span class="material-symbols-rounded">terminal</span>amp CLI</div>
+      <h4>For your developer loop.</h4>
+      <p>The same data, shell-shaped. Pipe it. Grep it. Kick off an agent from a one-liner between commits. Where MCP fits inside an agent loop, the CLI fits inside <em>yours</em>.</p>
+<pre class="dev-code"><span class="c">$ amp opp list \</span>
+    <span class="k">--area</span> chart-creation \
+    <span class="k">--min-score</span> <span class="n">0.8</span> \
+    <span class="k">--route</span> cursor</pre>
+    </div>
+
+    <div class="dev-card reveal">
+      <div class="ix"><span class="material-symbols-rounded">dashboard</span>Opportunity feed</div>
+      <h4>For PMs and eng leads.</h4>
+      <p>One queue per product area. Every morning: a ranked list with evidence, a spec, a status (Planned · In Review · Shipped · Outcome Tracked). The fewer dashboards you open, the better it's working.</p>
+<pre class="dev-code"><span class="c">// Today's feed</span>
+<span class="k">▸</span> Stop Response cancels session
+   <span class="c">0.91 · PR #102090 · merged</span>
+<span class="k">▸</span> Funnel save fails on Safari
+   <span class="c">0.74 · spec ready</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────────────── -->
+<section id="cta" class="closer">
+  <div class="eyebrow reveal">Join the beta</div>
+  <h2 class="reveal">Run the loop on <span class="a">your own product.</span></h2>
+  <p class="reveal">We're taking a small cohort of design partners next quarter. If you've already wired coding agents into your team and you're feeling the sense bottleneck, we want to talk. We'll point PDLC at your Amplitude data, your repos, and your agents — and figure out together what works next.</p>
+
+  <form class="waitlist reveal" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='You\'re on the list <span class=&quot;material-symbols-rounded&quot; style=&quot;font-size:14px&quot;>check</span>';">
+    <input type="email" placeholder="you@company.com" required aria-label="Email">
+    <button type="submit">Join the waitlist <span class="material-symbols-rounded" style="font-size:14px">arrow_forward</span></button>
+  </form>
+  <div class="waitlist-meta reveal">
+    <span><span class="dot"></span>Q3 2026 cohort · limited slots</span>
+    <span>·</span>
+    <span>No sales call · we email you when there's a slot</span>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude">
+  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; PDLC Beta</span>
+</footer>
+
+<script>
+  // ── Scroll reveal ───────────────────────────────────
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 50);
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── Demo tabs ───────────────────────────────────────
+  const tabs = document.querySelectorAll('.demo-tab');
+  const stages = document.querySelectorAll('.demo-stage');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const idx = tab.dataset.tab;
+      tabs.forEach(t => t.classList.toggle('active', t === tab));
+      stages.forEach(s => s.classList.toggle('active', s.dataset.stage === idx));
+    });
+  });
+
+  // ── Auto-advance demo when in view ──────────────────
+  let demoTimer = null;
+  const demoCard = document.querySelector('.demo-card');
+  if (demoCard) {
+    const advance = () => {
+      const active = document.querySelector('.demo-tab.active');
+      const next = active && active.nextElementSibling && active.nextElementSibling.classList.contains('demo-tab')
+        ? active.nextElementSibling
+        : tabs[0];
+      if (next) next.click();
+    };
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (!demoTimer) demoTimer = setInterval(advance, 4200);
+        } else {
+          clearInterval(demoTimer); demoTimer = null;
+        }
+      });
+    }, { threshold: 0.35 });
+    obs.observe(demoCard);
+    // Pause auto-advance on user interaction
+    tabs.forEach(t => t.addEventListener('click', () => { clearInterval(demoTimer); demoTimer = null; }));
+  }
+</script>
+
+<script>
+(function(){
+  try { if (window.self !== window.top) return; } catch (_) { return; }
+  if (!/^https?:$/.test(location.protocol)) return;
+  function loadAmplitude(apiKey) {
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.amplitude.com/script/' + encodeURIComponent(apiKey) + '.js';
+      s.async = true;
+      s.onload = function(){ resolve(); };
+      s.onerror = function(){ reject(new Error('loader blocked')); };
+      document.head.appendChild(s);
+    });
+  }
+  fetch('/api/config').then(function(r){ return r.json(); }).then(function(cfg){
+    if (!cfg.amplitudeApiKey) return;
+    loadAmplitude(cfg.amplitudeApiKey).then(function(){
+      if (!window.amplitude || typeof window.amplitude.init !== 'function') return;
+      if (window.sessionReplay && typeof window.sessionReplay.plugin === 'function' && typeof window.amplitude.add === 'function') {
+        try { window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 1 })); } catch (_) {}
+      }
+      window.amplitude.init(cfg.amplitudeApiKey, { fetchRemoteConfig: true, autocapture: true });
+    }).catch(function(){});
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>

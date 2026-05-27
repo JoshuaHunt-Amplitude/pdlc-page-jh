@@ -1,0 +1,131 @@
+﻿Author @fEric Carlson
+________________
+PDLC Preview Narrative Outline( NG )
+Beat 1 — Opening hook (≈200 words)
+Goal: State what the system is and why we built it, in one paragraph. No buildup,. The reader should know within 30 seconds whether to keep reading.
+Core argument to land: Coding agents have made the build half of product development cheap. Sensing — figuring out what to build next — has not kept up. We built an internal system at Amplitude that closes that gap by reading our own product data and shipping PRs against it. This is the writeup of what's working and what isn't, after a month.
+Specifics to pull in:
+* Coding agents now author 94%+ of Amplitude's committed code (verify number).
+* Stripe ships 1,300+ PRs/week from Minions; Ramp's Inspect agent authors 57% of merged PRs. Cite these so the reader knows we're operating in the same lineage.
+* Name the asymmetry directly: ship is fast, sense is slow, and 95%+ of behavioral data goes unread.
+
+
+  
+
+
+
+Beat 2 — Why we built this (≈250 words)
+Heading idea: Sense is the new bottleneck.
+
+
+Core argument: The product development loop is build → ship → use → learn. Fifty years of work — programming languages, agile, cloud, coding agents — collapsed the left half. The right half (use, learn) hasn't moved. Humans still triage Slack threads, watch session replays, read error logs, interpret experiments, and try to synthesize all of it into "what should I build next?". For every issue that survives that gauntlet, hundreds don't.[a]
+Specifics to pull in:
+* Anchor in the existing wiki theme Wiki/Theme-InsightToActionLoop: "Amplitude has spent a decade perfecting the left half — ingest behavior, generate insight, show the chart. 'Here's what happened' is only half the job."
+* Name the loop explicitly: Sense → Prioritize → Recommend → Act → Measure → Learn. This is the canonical state shape; Beat 3 will walk through it.
+* The teams that have already mastered this run it manually with proprietary tooling (Anthropic, Meta, Netflix, OpenAI). We wanted to know if we could build something general enough that any team could run it.
+
+
+Beat 3 — The agent's state machine (≈400 words)
+Heading idea: The loop, as we run it
+Core argument: Walk through the six states of the loop and what happens in each. This is the technical core of the piece. For developers reading this, this beat is "OK, show me how it actually works."
+State-by-state breakdown to draft:
+1. Sense. A scheduler runs continuously across each product area's data sources (listed in Beat 4). It watches for anomalies, regression, friction signals, and unmet user intent[b]. Output: candidate problem statements, each tagged with source citations.
+2. Prioritize. Candidates are scored by an LLM rubric → logistic-regression classifier (the "quality judge" — Eric Carlson, ~80% F1 on thumbs-up/down trained from ~140 internal feedback examples). Low-confidence candidates are filtered or demoted. Survivors get a RICE-shaped impact estimate against the product area's objective.
+3. Spec. For each surviving opportunity, a planning agent writes a structured spec: problem one-liner, evidence (chart/replay/feedback citations), proposed solution (one or more issues), acceptance criteria, target repo. The spec is the contract between the loop and any executing agent.
+4. Act. Based on a complexity tag (Eric Carlson's OpportunityTag enum: execution method, autonomy level, sizing, location), the spec routes to one of: a Cursor cloud agent, a Claude Code session, or a human reviewer for larger work. Straightforward fixes ship without human review; net-new features get flagged.
+5. Verify. A PR review agent (described in Beat 7) reviews the agent-authored PR before it reaches a human. It pulls in the original spec, checks acceptance criteria, runs the modified code in a sandboxed environment, and captures a session replay of the change in action. Comments back to the PR.
+6. Close. Once the PR merges, the loop tracks the outcome metric named in the spec. Movement (or absence of movement) feeds back into the quality judge as labeled training data, and into the opportunity ranker as outcome-aware impact priors. This is what makes the loop compound.
+Diagram to commission: A six-node state diagram. Nodes labeled with state name + one-line description. Arrows labeled with what flows between states (candidate problem statement → ranked opportunity → spec → PR → outcome). Use this as the article's primary visual.
+
+
+Beat 4 — Data sources and why modeled product data matters (≈300 words)
+Heading idea: Why this works on Amplitude data specifically
+Core argument: The agent is only as good as what it senses. The reason we built this on top of Amplitude is not preference — it's that the loop requires modeled, queryable product data, and that's the surface Amplitude already owns. Code-only signals (Sentry, GitHub Issues) tell you what broke. Modeled product data tells you what matters to users.
+Six surfaces the agent reads:
+1. Product analytics. Funnel charts, retention curves, anomaly detection, KPI movements. The "what happened" layer.
+2. Customer feedback. Categorized, deduplicated, themed. Surfaces "stop response button cancels session" before it shows up in analytics.
+3. Session replay. The "why" layer. Rage clicks, hesitation, exit patterns.[c]
+4. Error logs. Network failures, JS errors, click-handler regressions. Caught the checkout-button silent-fail in our internal example. 
+5. Agent traces (Agent Analytics). Tool error rates, hallucination patterns, retention by tool failure. Critical for AI-native teams.
+6. Experiment results. Which past changes moved which metrics — feeds the impact-estimation prior.[d]
+The modeled-data argument: Without a taxonomy and an event graph, the agent gets noise. Six raw log streams with no schema produce 100x more candidate problems and 10x lower precision. Modeled data lets the agent ask "what's broken in the checkout funnel" instead of "find anomalies in this firehose." This is also what makes the recommendations grounded enough to cite — every opportunity carries source backlinks (chart IDs, replay IDs, feedback IDs) so the executing agent and the human reviewer can verify.[e]
+Beat 5 — How Amplitude engineers engage with the agent today (≈250 words)
+Heading idea: What it looks like when an Amplitude PM wakes up
+Core argument: Show, concretely, how an internal user touches the system today. Avoid "powerful and intuitive" language; describe the actual workflow.
+Three surfaces engineers and PMs use today:
+1. The Opportunity Feed (in-app). A ranked queue per product area. Every morning, ~25 internal PMs open it. Each opportunity carries a one-line problem statement, evidence citations, a proposed spec, and a status (Planned / In Review / Shipped / Outcome Tracked).
+2. The MCP server. The same opportunities exposed as MCP tools. From a Cursor or Claude Code session, an engineer asks "what should I work on in chart creation?" and the agent returns a ranked list with full context. This is the surface that turns Amplitude into the data source other agents call.
+3. GitHub. When an opportunity is routed to a coding agent, a branch and PR appear automatically. The PR description carries back the original spec, acceptance criteria, and source citations. Post-merge, the outcome metric is tracked back against the opportunity.[f]
+Concrete walkthrough: Pick the "Stop Response button" example end to end. Sourced from 5+ AI Feedback mentions; Wave wrote the spec; assigned to Will Newton; Cursor agent kicked off; agent finished work; PR #102090 created with 334 additions, 54 deletions, 13 files changed; reviewed by claude[bot] and cursor[bot]; merged. This is the strongest end-to-end example we have today.
+
+
+Beat 6 — How we expect customers to engage with this (≈150 words)
+Heading idea: Three surfaces: MCP, CLI, in-app — why all three
+Core argument: We expect customers will engage through three surfaces. Each surface fits a different job; building one without the others narrows the loop's reach.
+The three:
+* MCP. Primary surface. The bet is that every coding agent — Cursor, Claude Code, Codex, Factory droids, custom harnesses — should be calling Amplitude when the user asks "what should I work on?" Anchor: Wiki/Theme-AgentInterfaceAndMCP. Outputs include source citations so the calling agent grounds its work.
+* CLI. For developers who want to query the loop from a terminal without a UI — amp opportunities list --area chart-creation --limit 10. Same data shape as MCP, just shell-friendly. Where MCP fits in an agent loop, the CLI fits in a developer's loop.
+* In-app. For PMs and engineering leads who want a queue to triage from. Same opportunities, same evidence, same routing — surfaced as a list view with review controls.
+
+
+
+
+Beat 7 — Novel infrastructure we're leveraging (≈350 words)
+Heading idea: The three pieces we had to build
+Core argument: The interesting engineering isn't the loop itself — forever-loops are easy. The interesting engineering is the three components that make the loop compound: a sensing harness wired into our product data, a fleet of executing agents, and a reviewing agent that gates what reaches humans. Drop any one and the throughput stays low.
+The three components, each one paragraph:
+1. The opportunity harness (sensing). A scheduled agent system that maintains the candidate queue — runs every product area's sensing pipeline, dedupes against historical opportunities, applies the quality judge, and ranks. Built around a structured Opportunity schema (problem statement, evidence, spec, source citations, complexity tag). The schema is the contract that makes opportunities addressable to both humans and downstream agents.
+2. Cursor and Claude Code agents (executing). We don't run a homegrown coding agent. Once a spec is ready, the harness routes to whichever execution surface fits the job: Cursor cloud agents for self-contained tasks, Claude Code for sessions that need richer context, occasionally a human-driven session for larger work. Each handoff is a structured deep link — the executing agent loads the spec via MCP and starts from full context, not a Linear ticket.
+3. The PR review agent (verifying). This is the piece we're most excited about and the piece least covered in public writing about coding-agent stacks. Before a coding agent's PR reaches a human reviewer, a separate review agent pulls in the original opportunity spec, checks the change against the acceptance criteria, runs the modified code in a sandboxed environment, captures a session replay of the change in action, and posts back a structured review. Most coding-agent failures aren't "the code doesn't compile" — they're "the agent confidently shipped the wrong thing." The reviewer catches these before a human burns time on them.
+
+
+
+
+Beat 8 — What's working and what isn't (≈400 words)
+Heading idea: Results from a month of internal use
+Core argument: The honest section. Three things working well; three problems still choking PR ship rate. This is the beat the audience trusts the rest of the piece on. Lift the language directly from the brief — it's already calibrated.
+What's working (one paragraph each):
+1. Opportunity identification. The agent surfaces real bugs and friction from Amplitude data, and resurfaces big ideas from customer feedback and the web. Internal PMs have repeatedly said the problem statements land. Ground in: the Stop Response button bug surfaced from 5+ feedback mentions; checkout button click handlers caught from session replay rage-click patterns; the Global Agent KPI multi-count bug surfaced from agent traces.
+2. Concept resonance with PMs and customers. Every internal PM reviewing opportunities reacts the same way: the problem statement lands and the surfaced opportunities feel like things they would actually work on. The 3–6 customer previews over the last two weeks produced the same reaction.
+3. Agent performance on fresh repos. Eric Carlson's AI Week experiment showed the agent is remarkably good at building net-new products end-to-end when pointed at fresh repos with lower stakes — 101 shipped features in a week, each with a browser-recorded GIF proving the feature worked. The fresh-repo case is much closer to "solved" than the legacy-codebase case. (See: Drafts/Building a ralph wiggum self-improving-product-loop.md.)
+What we're still improving (one paragraph each — be specific, this is where credibility lives):
+1. Agent analysis and citation quality. Session replay analysis is noisy. Chart and feedback references are sometimes stale. Citations aren't yet trustworthy enough to act without re-verification. We're tightening this with the quality judge (80% F1 on up/down) as a hard gate, and an override taxonomy (8 failure modes — Evidence Not Sufficient, Inaccurate Citation, Product Area Unclear, Feature Already Shipped, Bad Strategy in Plan, Wrong Repos Selected, Non-Coding Agent Task, Not Worth It) feeding back as labeled training data.
+2. Codebase and environment resolution. Identifying the right repo, recreating a working dev environment, and confirming whether a bug is still live or already fixed are major time sinks. The "Feature Already Shipped" failure mode is one of the most common today. We're addressing this with a "what's currently live" context channel in every spec, plus per-product-area codebase indexing.
+3. The human-in-the-loop funnel. Even with the right repo and a reasonable recommendation, shipping a PR still requires heavy review, manual iteration, and enough domain knowledge to sign off on production code. End-to-end ship rate is still well short of what fresh-repo experiments suggest is possible. The PR review agent (Beat 7) is the main lever we're pulling here.
+
+
+Beat 9 — What this is shaping toward (≈200 words)
+Heading idea: The Outcome Graph and the AI software factory
+Core argument: Close on the larger thing this is in service of. Ground the speculation in present evidence — this beat is not "the future looks bright."
+Three connected ideas:
+1. Self-improving products. A product that doesn't just measure outcomes but autonomously improves them. Every cycle that closes — from sense to ship to outcome to learn — is a gradient step on the product itself.
+2. The Outcome Graph. The dataset that emerges from running the loop: what was sensed, what was built, what worked, what didn't. Every cycle the graph gets richer; every cycle the next opportunity is more accurately scored against historical impact. This is the compounding asset. (Anchor: Wiki/Theme-OutcomeGraphAsCompoundingMoat.)
+3. The AI software factory. Coding agents have made factories possible. Factories that know what to build — and improve every cycle — are the ones that win long-term. The internal experiment is the smallest version of that factory we could run on ourselves first.
+Closing line idea: "We're looking for design partners who want to point this at their own product." Direct, no flourish. End the piece on a concrete invitation, not on rhetoric.
+
+
+
+
+
+
+[a]There is something about not just volume / comprehensiveness, but prioritization. WHAT should we build.
+[b]There is a deeper story here which is that the system is not just reactive, but proactive.  It doesn't just triage a list of bugs from datadog, it actually goes and assigns a swarm of custom agents to go look across specific parts of your product that need the most help.  It starts from a literal map of the product, figures out where the holes are, and then scans that to generate ideas.
+[c]Deeper than this. Video and journey analysis > rage clicks
+[d]Some additional potential additions.  There is also web search for things like competitive landscape etc.  
+
+
+different data types are important at different product stages (0->1, growth, high volume optimization)
+
+
+We then dispatch agents in each of these directions to go and research the best ideas.
+[e]Provenance and corroboration increase confidence in a signal by grounding it across multiple independent sources.
+
+
+Without that grounding, the system behaves like an ant: locally reactive, brittle, and limited to simple, high-certainty tasks.
+
+
+With it, the system becomes more like an octopus: integrating signals in parallel, reconciling inconsistencies, and forming higher-order judgments about what matters.
+
+
+That’s the difference between reacting to noise and acting on understanding.
+[f]Is there any reason to have Github here vs "Cloud environments" Cursor, Claude etc.  Work offline? Github itself is not very important.
