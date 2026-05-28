@@ -1,0 +1,87 @@
+﻿Amplitude Opportunities Alpha Onboarding
+Intro to Amplitude Opportunities 
+  
+
+Amplitude Opportunities helps product and engineering teams proactively analyze signals happening across your Amplitude data then identify clear problems to fix or opportunities to grow your product, generate specs for humans or coding agents to work on, and measure whether what’s shipped leads to impact, then self-learn and improve over time.
+  
+
+These opportunities are identified by Amplitude unifying insights occurring in your analytics, session replays, customer feedback, web vitals, agent traces, experiments, and competitor data then using agents to analyze it all and explore potential improvement ideas. The more data sources and agents created in your Amplitude instance, the more context our agent has for identifying high-value opportunities.  In the Amplitude UI, you can route opportunities into your issue tracker OR connect Github, Claude, Cursor, or other coding tools to enable coding agents to pre-draft PRs with fixes for your review before shipping. If you don’t want to use Amplitude’s UI, you can also read and edit all Opportunity context via Amplitude’s MCP server, so you can pull ideas and context directly into Claude Code, Codex, and Cursor to auto-triage opportunities then orchestrate coding agents to draft PRs for improvements for your review autonomously!
+  
+
+
+
+What to expect in this onboarding guide
+By the end of onboarding, you should be able to:
+* Create an initial set of Product Areas
+* Generate and then view Opportunities
+* Connect the workflows you want to use for execution
+* Connect the new Opportunities MCP tools in your preferred AI client
+* Review an initial batch of Opportunities and give feedback
+* Take action on at least one high-confidence item
+This alpha is designed to help you find valuable problems faster. It is not a fully autonomous workflow yet, so we recommend starting with review, validation, and one small action.
+Getting set up
+1. Create your first Product Areas
+Product Areas provide context to Amplitude’s agents on where best to focus based on your product surface areas and allows you to customize instructions on how our agents should identify, prioritize, and spec new Opportunities. 
+  
+
+For each initial Product Area, we recommend defining:
+* A concise product area name
+* A brief description of what that product is and its top strategic objectives
+* [Optional] The key metrics or goals you care about
+* [Optional] The competitors or comparables you want to monitor
+See some Amplitude examples of product areas we’ve configured here. 
+  
+
+You can create new product areas when visiting Opportunities for the first time OR viewing all product areas, then either use the setup agent to chat and create product areas or manually create product areas yourself. We recommend starting narrow with 2-3 well-defined areas!
+2. Connect the context that matters
+Opportunities work best when it has more Amplitude data, including:
+* Product Analytics (existing charts, dashboards)
+* Session Replay
+* AI Feedback
+* Autocapture
+* Agent Analytics
+* Experiments
+You do not need every data source connected on day one, but the more relevant data sources and activity happening, the more signals our agent has to analyze.
+We also use context captured from any existing Specialized Agents running in your organization, so any insights coming from Dashboard, Session Replay, Customer Feedback, and other agents are more likely to show up as signals driving new recs.
+After product areas are created, context can be edited in the opportunity settings to improve product understanding, investigation/prioritization instructions, how the agent generates plans, along with how it drafts PRs for your review: 
+  
+
+  
+
+The #1 most effective context source for understanding the current state of your product and how to improve it is your codebase. If your org is open to it, give our team a heads up and we can help get a select few Github repositories connected so that Opportunity recommendations better reflect the current state of the product + where best to recommend a change happens:
+  
+
+3. Choose how you want to take action
+There are two common ways to work with Opportunities:
+In-app: review opportunities in Amplitude, then use the in-product CTAs to push opportunities to Jira, Linear, GitHub, or coding agents
+  
+
+  
+
+Agent-native: use MCP in Claude Code, Codex, Cursor, or another client to read, edit, triage, and act on opportunities directly
+  
+
+  
+
+4. Generate and review your first batch
+Once your initial Product Areas and connections are set up, generate your first batch of Opportunities. If you want to refresh your Opportunities, click Discover.
+  
+
+As you review opportunities, you can ask three simple questions:
+* Is the analysis or signal correct?
+* Is the opportunity a reasonable problem?
+* Is the suggested plan useful?
+Feel free to provide us the feedback when reviewing each opportunity by using the thumbs up/down CTA - every labeled input is used as context on your team’s preferences so that the next batch of identified opportunities improves over time automatically:
+  
+
+5. Take one real action
+The best way to get value quickly is to pick one small, high-confidence opportunity and move it forward. That could mean:
+* Sending it to Jira or Linear
+* Opening it in Claude, Cursor, or another coding tool
+* Refining it through Global Chat or the MCP before handing it to a coding agent
+* Validating it internally and deciding next steps with engineering
+If the Opportunity’s analysis or recommendation isn’t exactly how you’d like it, you can change the plan directly or chat with Global Agent to run follow-up analysis and make changes to the analysis and specifications before taking action:
+  
+
+Suggested next step
+Once setup is complete, start with a small first batch, choose one high-confidence opportunity, and work it through your normal execution flow. That is usually the fastest path to seeing value and improving quality from there.
