@@ -4,7 +4,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PDLC — Products that fix themselves. Then improve themselves. | Amplitude</title>
+<title>PDLC — Your team, AI-accelerated. | Amplitude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -120,6 +120,37 @@
   .lv-callout-sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; fill: var(--dim2); }
   .lv-particle { animation: lv-spin 7s linear infinite; transform-origin: 380px 220px; }
   @keyframes lv-spin { to { transform: rotate(360deg); } }
+
+  /* Product loop (v4 end visual) */
+  .product-loop { width: 100%; max-width: 540px; margin: 0 auto; }
+  .product-loop svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .pl-node circle {
+    fill: var(--bg);
+    stroke: rgba(64,131,255,0.5);
+    stroke-width: 1.4;
+  }
+  .pl-node .pl-node-icon {
+    font-family: var(--mono);
+    font-size: 18px;
+    fill: var(--blue-d);
+  }
+  .pl-label {
+    font-family: var(--mono); font-size: 13px; font-weight: 500;
+    letter-spacing: .22em; text-transform: uppercase;
+    fill: var(--blue-d);
+  }
+  .pl-desc {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .04em;
+    fill: var(--dim);
+  }
+  .pl-center-title {
+    font-family: var(--sans); font-size: 17px; font-weight: 600;
+    fill: var(--white); letter-spacing: -0.01em;
+  }
+  .pl-center-sub {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .14em;
+    fill: var(--dim2);
+  }
 
   /* ── PRODUCT SHOWCASE ───────────────── */
   .pshot { position: relative; padding: 140px 0; border-top: 1px solid var(--line); overflow: hidden; }
@@ -633,8 +664,8 @@
     </div>
     <div class="nav-links">
       <a href="#manifesto">Manifesto</a>
-      <a href="#loops">The loops</a>
       <a href="#backlog">Surfaces</a>
+      <a href="#loops">The team loop</a>
       <a href="docs.html">Docs</a>
     </div>
     <a href="#cta" class="nav-btn">Request demo</a>
@@ -652,12 +683,12 @@
   </div>
   <div>
     <div class="eyebrow reveal">Introducing PDLC</div>
-    <h1 class="reveal">Products that fix themselves</h1>
-    <p class="lede reveal">For decades, software waited. For bug reports, for a roadmap. That era is over. The best products now grow on loops.</p>
+    <h1 class="reveal">Your team, <span class="a">AI-accelerated.</span></h1>
+    <p class="lede reveal">Coding agents made shipping fast. But your team is still drowning in signals — figuring out what's worth building. PDLC closes that gap so your team can ship 2–3× the PRs without lowering the bar.</p>
     <div class="hero-meta reveal">
       <div class="hero-meta-item"><span class="dot"></span>Internal at Amplitude · ~1 month in</div>
-      <div class="hero-meta-item"><span class="dot" style="background:var(--violet);box-shadow:0 0 10px var(--violet)"></span>94%+ of code authored by agents</div>
-      <div class="hero-meta-item"><span class="dot" style="background:var(--pink);box-shadow:0 0 10px var(--pink)"></span>Now taking design partners</div>
+      <div class="hero-meta-item"><span class="dot" style="background:var(--violet);box-shadow:0 0 10px var(--violet)"></span>2–3× PRs per dev per month</div>
+      <div class="hero-meta-item"><span class="dot" style="background:var(--pink);box-shadow:0 0 10px var(--pink)"></span>Same review bar</div>
     </div>
 
     <div class="hero-cta reveal" style="margin-top:40px">
@@ -775,134 +806,17 @@
 
     <div class="manifesto-body">
       <div class="reveal">
-        <p>The product development loop has always been the same: <strong>build → ship → use → learn</strong>. Fifty years of work — programming languages, agile, cloud, and now coding agents — collapsed the left half. The distance from problem identified to code shipped is approaching zero.</p>
-        <p>The right half hasn't moved. Humans still triage Slack threads, watch session replays, read error logs, interpret experiments, and try to synthesize all of it into "what should I build next?" For every issue that survives that gauntlet, hundreds don't.</p>
-        <p>Analytics, for a decade, has been an insight factory. "Here's what happened" charts. Dashboards no one opens. Anomalies no one routes. <strong>More than 95% of behavioral data goes unread.</strong> That isn't an analytics problem. It's a sensing problem.</p>
+        <p>Every product team runs the same loop: <strong>build → ship → use → learn</strong>. Fifty years of work — programming languages, agile, cloud, and now coding agents — collapsed the left half. Your team can write a PR in minutes that used to take a week.</p>
+        <p>The right half hasn't moved. Your PMs still triage Slack threads, watch session replays, and read feedback themes trying to answer one question: <strong>"what's worth working on next?"</strong> For every issue that survives that gauntlet, dozens don't.</p>
+        <p>The result is a strange bottleneck. Your engineers can ship faster than ever. Your roadmap can't keep up. The unit economics of a developer just changed, and your team's velocity is now capped by sensing, not coding.</p>
       </div>
       <div class="reveal">
-        <p>The teams that have mastered this — Anthropic, OpenAI, Meta, Netflix, Stripe — run it manually, with proprietary tooling. Stripe ships <strong>1,300+ PRs/week</strong> from internal coding agents. Ramp's Inspect authors <strong>57% of merged PRs</strong>. The asymmetry between ship and sense is the gap they're closing one custom system at a time.</p>
-        <p>PDLC is the version any team can run. An agent-native loop wired into the data layer that already knows what matters to your users — anomalies, replays, feedback, experiments, agent traces. It senses, prioritizes, specs, ships, verifies, and learns. Every cycle compounds the next.</p>
-        <p style="color:var(--white);font-size:18px;line-height:1.55"><strong>The next era of analytics is a closed loop.</strong></p>
+        <p>The teams pulling ahead — Anthropic, Stripe, Ramp, Meta — built proprietary systems to close this gap. Stripe's "Minions" merge <strong>1,300+ PRs/week</strong>. Ramp's Inspect authors <strong>57% of merged PRs</strong>. Their devs aren't 10× engineers. They're orchestrators, with a sensing layer telling them what to point their agents at.</p>
+        <p>PDLC is that layer, made general. It reads the modeled product data Amplitude already owns, surfaces what matters, drafts the spec, routes it to your coding agents, and tracks the outcome. <strong>Your team becomes the orchestrator</strong> — not the bottleneck.</p>
+        <p style="color:var(--white);font-size:18px;line-height:1.55"><strong>Same team. 2–3× the throughput. Same review bar.</strong></p>
       </div>
     </div>
   </div>
-</section>
-
-<!-- ── LOOP BUILDER (scrolly canvas — adapted from self-improving-v3) -->
-<section class="loops-sec" id="loops">
-
-  <div class="story-wrap">
-
-    <div class="panels" id="panels">
-
-      <!-- Panel 1: Heal -->
-      <div class="panel active" data-panel="1">
-        <div class="loop-pill pill-blue">
-          <span class="pill-dot" style="background:var(--blue-d);box-shadow:0 0 6px var(--blue-d)"></span>
-          Loop 01 · Heal
-        </div>
-        <h3>The loop<br>that never sleeps.</h3>
-        <p>The innermost loop requires <strong>zero human judgment</strong>. Errors surface, get diagnosed, and get patched in milliseconds. Crash loops restart. Rate limits self-throttle. Latency spikes trigger fallbacks. No ticket. No standup.</p>
-        <p>This loop runs on rules and automation. It's not intelligent — it's <strong>relentless</strong>. That relentlessness is exactly what makes it powerful.</p>
-        <div class="steps">
-          <div class="step-chip">Error</div><span class="step-arrow">→</span>
-          <div class="step-chip">Detect</div><span class="step-arrow">→</span>
-          <div class="step-chip">Diagnose</div><span class="step-arrow">→</span>
-          <div class="step-chip">Auto-fix</div><span class="step-arrow">→</span>
-          <div class="step-chip">Verify</div>
-        </div>
-        <div class="j-meter" style="--active-color:var(--blue-d)">
-          <div class="j-label">Human judgment</div>
-          <div class="j-dots">
-            <div class="j-dot on"></div>
-            <div class="j-dot"></div><div class="j-dot"></div><div class="j-dot"></div><div class="j-dot"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Panel 2: Detect -->
-      <div class="panel" data-panel="2">
-        <div class="loop-pill pill-viol">
-          <span class="pill-dot" style="background:var(--violet);box-shadow:0 0 6px var(--violet)"></span>
-          Loop 02 · Detect
-        </div>
-        <h3>Not every problem<br>throws an exception.</h3>
-        <p>A 12% drop in day-7 retention isn't an error — it's a <strong>signal</strong>. The detection loop watches what users actually do: where they hesitate, what they skip, which funnels they abandon, what they rage-click. It surfaces anomalies before they compound.</p>
-        <p>Human judgment enters at triage. Everything before — collection, anomaly detection, theming, routing — is <strong>automated</strong>.</p>
-        <div class="steps">
-          <div class="step-chip">Behavior</div><span class="step-arrow">→</span>
-          <div class="step-chip">Anomaly</div><span class="step-arrow">→</span>
-          <div class="step-chip">Theme</div><span class="step-arrow">→</span>
-          <div class="step-chip">Route</div><span class="step-arrow">→</span>
-          <div class="step-chip">Triage</div>
-        </div>
-        <div class="j-meter" style="--active-color:var(--violet)">
-          <div class="j-label">Human judgment</div>
-          <div class="j-dots">
-            <div class="j-dot on"></div><div class="j-dot on"></div><div class="j-dot on"></div>
-            <div class="j-dot"></div><div class="j-dot"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Panel 3: Decide -->
-      <div class="panel" data-panel="3">
-        <div class="loop-pill pill-pink">
-          <span class="pill-dot" style="background:var(--pink);box-shadow:0 0 6px var(--pink)"></span>
-          Loop 03 · Decide
-        </div>
-        <h3>Where humans<br>make the call.</h3>
-        <p>The outermost loop is where <strong>strategy lives</strong>. Usage patterns surface opportunities — features users wish existed, journeys that feel broken, segments quietly churning. The machine proposes. The team decides. Data validates who was right.</p>
-        <p>Then the loop repeats — <strong>tighter and smarter each cycle</strong>, because every outcome is labeled training data for the next round.</p>
-        <div class="steps">
-          <div class="step-chip">Signal</div><span class="step-arrow">→</span>
-          <div class="step-chip">Opportunity</div><span class="step-arrow">→</span>
-          <div class="step-chip">Spec</div><span class="step-arrow">→</span>
-          <div class="step-chip">Ship</div><span class="step-arrow">→</span>
-          <div class="step-chip">Validate</div>
-        </div>
-        <div class="j-meter" style="--active-color:var(--pink)">
-          <div class="j-label">Human judgment</div>
-          <div class="j-dots">
-            <div class="j-dot on"></div><div class="j-dot on"></div><div class="j-dot on"></div>
-            <div class="j-dot on"></div><div class="j-dot on"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Panel 4: Compounding -->
-      <div class="panel" data-panel="4">
-        <div class="loop-pill pill-lilac">
-          <span class="pill-dot" style="background:var(--lilac);box-shadow:0 0 6px var(--lilac)"></span>
-          The compound effect
-        </div>
-        <h3>Every loop<br>feeds the next.</h3>
-        <p>Heal stabilizes the product — freeing human attention for higher-order work. Detect surfaces <strong>what to improve</strong>. Decide <strong>chooses what gets built</strong>. Every output feeds back into the data core. Each loop gets faster and more autonomous over time.</p>
-        <p>Cut any one and the system stops. Without Heal, your product breaks in silence. Without Decide, your product gets better at the wrong thing.</p>
-        <p style="color:var(--white)"><strong>The flywheel never stops. It just gets better at spinning.</strong></p>
-      </div>
-
-    </div><!-- /panels -->
-
-    <div class="diagram-col">
-      <canvas id="main-canvas" width="960" height="960" style="width:480px;height:480px;"></canvas>
-      <div class="legend" id="legend">
-        <div class="leg-item" id="leg-0">
-          <div class="leg-swatch" style="background:var(--blue-d);box-shadow:0 0 6px var(--blue-d)"></div>
-          <div class="leg-text"><strong>Heal</strong> — Fully automated</div>
-        </div>
-        <div class="leg-item" id="leg-1">
-          <div class="leg-swatch" style="background:var(--violet);box-shadow:0 0 6px var(--violet)"></div>
-          <div class="leg-text"><strong>Detect</strong> — Minimal judgment</div>
-        </div>
-        <div class="leg-item" id="leg-2">
-          <div class="leg-swatch" style="background:var(--pink);box-shadow:0 0 6px var(--pink)"></div>
-          <div class="leg-text"><strong>Decide</strong> — Human + data</div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /story-wrap -->
 </section>
 
 <!-- ── PRODUCT SHOWCASE 1 · Opportunity Feed ────────── -->
@@ -1144,9 +1058,166 @@
   </div>
 </section>
 
+<!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
+<section class="loops-sec" id="loops" style="border-top:1px solid var(--line); padding:140px 0 160px;">
+
+  <div class="story-wrap" style="align-items:center">
+
+    <div class="panels" style="min-height:auto">
+      <div class="panel active" style="min-height:auto;padding:0;opacity:1">
+        <div class="loop-pill pill-lilac">
+          <span class="pill-dot" style="background:var(--lilac);box-shadow:0 0 6px var(--lilac)"></span>
+          The product loop
+        </div>
+        <h3>One loop. Six stages.<br>Endlessly compounding.</h3>
+        <p>Every opportunity moves through the same path — <strong>Sense → Prioritize → Spec → Act → Verify → Measure</strong>. The system handles the plumbing. Your team decides what gets shipped.</p>
+        <p>Each cycle that closes makes the next one sharper. Every shipped outcome trains the ranker. Every miss feeds the spec template. <strong>The loop doesn't reset — it compounds.</strong></p>
+        <p style="color:var(--white)"><strong>The flywheel never stops. Your team just gets sharper at spinning it.</strong></p>
+      </div>
+    </div>
+
+    <div class="diagram-col" style="position:relative;top:0">
+      <div class="product-loop">
+        <svg viewBox="0 0 700 560" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="pl-ring-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6980FF"/>
+              <stop offset="100%" stop-color="#4083FF"/>
+            </linearGradient>
+            <filter id="pl-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4"/>
+            </filter>
+            <marker id="pl-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="#4083FF"/>
+            </marker>
+          </defs>
+
+          <!-- Path the particle travels along (full circle starting at top, clockwise) -->
+          <path id="pl-path"
+                d="M 350 110 A 170 170 0 1 1 349.9 110"
+                fill="none" stroke="none"/>
+
+          <!-- Subtle base ring -->
+          <circle cx="350" cy="280" r="170" fill="none"
+                  stroke="rgba(255,255,255,0.06)" stroke-width="30"/>
+
+          <!-- Active ring -->
+          <circle cx="350" cy="280" r="170" fill="none"
+                  stroke="url(#pl-ring-grad)" stroke-width="2"/>
+
+          <!-- Glow under ring -->
+          <circle cx="350" cy="280" r="170" fill="none"
+                  stroke="#4083FF" stroke-width="2"
+                  opacity="0.5" filter="url(#pl-glow)"/>
+
+          <!-- 6 arrow indicators at midpoints of each segment (30°, 90°, 150°, 210°, 270°, 330°) -->
+          <!-- Computed: midpoint position on circle, with tangent direction -->
+          <g fill="#4083FF">
+            <!-- between SENSE (0°) and PRIORITIZE (60°), midpoint 30° -->
+            <polygon points="0,-5 8,0 0,5"
+                     transform="translate(435 133) rotate(60)"/>
+            <!-- 90° -->
+            <polygon points="0,-5 8,0 0,5"
+                     transform="translate(520 280) rotate(120)"/>
+            <!-- 150° -->
+            <polygon points="0,-5 8,0 0,5"
+                     transform="translate(435 427) rotate(180)"/>
+            <!-- 210° -->
+            <polygon points="0,-5 8,0 0,5"
+                     transform="translate(265 427) rotate(240)"/>
+            <!-- 270° -->
+            <polygon points="0,-5 8,0 0,5"
+                     transform="translate(180 280) rotate(300)"/>
+            <!-- 330° -->
+            <polygon points="0,-5 8,0 0,5"
+                     transform="translate(265 133) rotate(0)"/>
+          </g>
+
+          <!-- Traveling particle -->
+          <circle r="5" fill="#fff">
+            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#pl-path"/>
+            </animateMotion>
+          </circle>
+
+          <!-- 6 nodes (radius 32, positioned clockwise from top) -->
+          <!-- 1: SENSE — top (350, 110) -->
+          <g class="pl-node">
+            <circle cx="350" cy="110" r="32"/>
+            <text x="350" y="116" class="pl-node-icon" text-anchor="middle">◎</text>
+          </g>
+          <!-- 2: PRIORITIZE — top-right (497, 195) -->
+          <g class="pl-node">
+            <circle cx="497" cy="195" r="32"/>
+            <text x="497" y="201" class="pl-node-icon" text-anchor="middle">▤</text>
+          </g>
+          <!-- 3: SPEC — bottom-right (497, 365) -->
+          <g class="pl-node">
+            <circle cx="497" cy="365" r="32"/>
+            <text x="497" y="371" class="pl-node-icon" text-anchor="middle">▦</text>
+          </g>
+          <!-- 4: ACT — bottom (350, 450) -->
+          <g class="pl-node">
+            <circle cx="350" cy="450" r="32"/>
+            <text x="350" y="456" class="pl-node-icon" text-anchor="middle">▶</text>
+          </g>
+          <!-- 5: VERIFY — bottom-left (203, 365) -->
+          <g class="pl-node">
+            <circle cx="203" cy="365" r="32"/>
+            <text x="203" y="371" class="pl-node-icon" text-anchor="middle">✓</text>
+          </g>
+          <!-- 6: MEASURE — top-left (203, 195) -->
+          <g class="pl-node">
+            <circle cx="203" cy="195" r="32"/>
+            <text x="203" y="201" class="pl-node-icon" text-anchor="middle">↗</text>
+          </g>
+
+          <!-- Center text -->
+          <text x="350" y="275" text-anchor="middle"
+                class="pl-center-title">The Product Loop</text>
+          <text x="350" y="298" text-anchor="middle"
+                class="pl-center-sub">Sense. Build. Measure. Learn.</text>
+
+          <!-- Labels for each node -->
+          <!-- SENSE (top) -->
+          <text x="350" y="50" text-anchor="middle" class="pl-label">SENSE</text>
+          <text x="350" y="68" text-anchor="middle" class="pl-desc">Find problems</text>
+          <text x="350" y="82" text-anchor="middle" class="pl-desc">worth solving</text>
+
+          <!-- PRIORITIZE (top-right) -->
+          <text x="540" y="178" text-anchor="start" class="pl-label">PRIORITIZE</text>
+          <text x="540" y="196" text-anchor="start" class="pl-desc">Rank by impact</text>
+          <text x="540" y="210" text-anchor="start" class="pl-desc">and confidence</text>
+
+          <!-- SPEC (bottom-right) -->
+          <text x="540" y="348" text-anchor="start" class="pl-label">SPEC</text>
+          <text x="540" y="366" text-anchor="start" class="pl-desc">Define the solution</text>
+          <text x="540" y="380" text-anchor="start" class="pl-desc">and acceptance criteria</text>
+
+          <!-- ACT (bottom) -->
+          <text x="350" y="510" text-anchor="middle" class="pl-label">ACT</text>
+          <text x="350" y="528" text-anchor="middle" class="pl-desc">Build the right</text>
+          <text x="350" y="542" text-anchor="middle" class="pl-desc">thing</text>
+
+          <!-- VERIFY (bottom-left) -->
+          <text x="160" y="348" text-anchor="end" class="pl-label">VERIFY</text>
+          <text x="160" y="366" text-anchor="end" class="pl-desc">Check the work</text>
+          <text x="160" y="380" text-anchor="end" class="pl-desc">and capture replay</text>
+
+          <!-- MEASURE (top-left) -->
+          <text x="160" y="178" text-anchor="end" class="pl-label">MEASURE</text>
+          <text x="160" y="196" text-anchor="end" class="pl-desc">Track outcomes</text>
+          <text x="160" y="210" text-anchor="end" class="pl-desc">and impact</text>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ── CTA ────────────────────────────────────────────── -->
 <section id="cta" class="closer">
-  <h2 class="reveal">Ready for your product to <span class="a">become self-improving?</span></h2>
+  <h2 class="reveal">Ready to <span class="a">accelerate your team?</span></h2>
   <p class="reveal">Now taking design partners for the Q3 cohort.</p>
   <form class="waitlist reveal" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='You\'re on the list ✓'; this.querySelector('button').disabled = true;">
     <input type="email" placeholder="you@company.com" required aria-label="Email address">
@@ -1176,159 +1247,6 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
   document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-  // ── Loop-builder canvas ─────────────────────────────
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-
-  const RINGS = [
-    { id: 0, r: 68,  color: '#4083FF', glow: 'rgba(64,131,255,0.5)',  dash: [],     speed: 1.4,
-      nodes: [{a:0,t:'Detect'},{a:90,t:'Diagnose'},{a:180,t:'Auto-fix'},{a:270,t:'Verify'}] },
-    { id: 1, r: 138, color: '#A373FF', glow: 'rgba(163,115,255,0.4)', dash: [7,4],  speed: 0.75,
-      nodes: [{a:45,t:'Behavior'},{a:135,t:'Anomaly'},{a:225,t:'Theme'},{a:315,t:'Route'}] },
-    { id: 2, r: 208, color: '#FF7D78', glow: 'rgba(255,125,120,0.3)', dash: [12,6], speed: 0.38,
-      nodes: [{a:25,t:'Signal'},{a:97,t:'Opportunity'},{a:169,t:'Spec'},{a:241,t:'Ship'},{a:313,t:'Validate'}] },
-  ];
-
-  function rad(deg){ return (deg - 90) * Math.PI / 180; }
-  function ptOnCircle(cx,cy,r,deg){ return { x: cx + r*Math.cos(rad(deg)), y: cy + r*Math.sin(rad(deg)) }; }
-
-  function createEngine(canvasId, cssSize) {
-    const canvas = document.getElementById(canvasId);
-    if (!canvas) return null;
-    canvas.width = cssSize * DPR; canvas.height = cssSize * DPR;
-    canvas.style.width = cssSize + 'px'; canvas.style.height = cssSize + 'px';
-    const ctx = canvas.getContext('2d');
-    ctx.scale(DPR, DPR);
-    const cx = cssSize/2, cy = cssSize/2;
-    const scale = cssSize / 480;
-
-    const state = RINGS.map(() => ({ alpha: 0, target: 0, pAngle: Math.random()*360, trail: [] }));
-    let hovered = -1;
-
-    canvas.addEventListener('mousemove', e => {
-      const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-      const dist = Math.sqrt((mx-cx)*(mx-cx)+(my-cy)*(my-cy)) / scale;
-      hovered = -1;
-      RINGS.forEach((r,i) => { if (state[i].alpha > 0.3 && Math.abs(dist - r.r) < 14) hovered = i; });
-      canvas.style.cursor = hovered >= 0 ? 'pointer' : 'default';
-    });
-
-    function setActive(ids) { RINGS.forEach((r,i) => { state[i].target = ids.includes(i) ? 1 : 0; }); }
-
-    function drawCore() {
-      const r = 24 * scale;
-      const g = ctx.createRadialGradient(cx,cy,0,cx,cy,r*4);
-      g.addColorStop(0,'rgba(0,82,242,0.22)'); g.addColorStop(1,'transparent');
-      ctx.beginPath(); ctx.arc(cx,cy,r*4,0,Math.PI*2); ctx.fillStyle = g; ctx.fill();
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-      ctx.strokeStyle = 'rgba(64,131,255,0.55)'; ctx.lineWidth = 1*scale; ctx.stroke();
-      ctx.beginPath(); ctx.arc(cx,cy,r-3*scale,0,Math.PI*2);
-      ctx.fillStyle = 'rgba(64,131,255,0.08)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(cx,cy,5*scale,0,Math.PI*2);
-      ctx.fillStyle = '#4083FF'; ctx.shadowColor = '#4083FF'; ctx.shadowBlur = 12*scale; ctx.fill(); ctx.shadowBlur = 0;
-      ctx.save();
-      ctx.font = `500 ${8*scale}px "JetBrains Mono", monospace`;
-      ctx.fillStyle = 'rgba(64,131,255,0.7)';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('DATA', cx, cy + 14*scale);
-      ctx.restore();
-    }
-
-    function drawRing(ring, s, isHovered) {
-      const r = ring.r * scale;
-      const a = s.alpha;
-      ctx.save();
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-      ctx.strokeStyle = ring.color;
-      ctx.setLineDash(ring.dash.map(v => v*scale));
-      ctx.lineWidth = (isHovered ? 2 : 1.2) * scale;
-      ctx.globalAlpha = a * 0.9;
-      ctx.shadowColor = ring.color; ctx.shadowBlur = (isHovered ? 18 : 10) * scale;
-      ctx.stroke();
-      ctx.shadowBlur = 0; ctx.setLineDash([]);
-      ctx.restore();
-
-      ring.nodes.forEach(n => {
-        const pt = ptOnCircle(cx,cy,r,n.a);
-        ctx.save(); ctx.globalAlpha = a;
-        ctx.beginPath(); ctx.arc(pt.x,pt.y,4*scale,0,Math.PI*2);
-        ctx.fillStyle = ring.color;
-        ctx.shadowColor = ring.color; ctx.shadowBlur = 8*scale;
-        ctx.fill(); ctx.shadowBlur = 0; ctx.restore();
-
-        const lpt = ptOnCircle(cx,cy,r + 24*scale,n.a);
-        ctx.save(); ctx.globalAlpha = a * (isHovered ? 1 : 0.78);
-        ctx.font = `500 ${9*scale}px "JetBrains Mono", monospace`;
-        ctx.fillStyle = isHovered ? '#ffffff' : 'rgba(255,255,255,0.65)';
-        const dx = lpt.x - cx;
-        ctx.textAlign = Math.abs(dx) < 8*scale ? 'center' : dx > 0 ? 'left' : 'right';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(n.t.toUpperCase(), lpt.x, lpt.y);
-        ctx.restore();
-      });
-    }
-
-    function drawParticle(ring, s, pt) {
-      const a = s.alpha;
-      s.trail.forEach((p,i) => {
-        const ta = (i/s.trail.length) * 0.4 * a;
-        const ts = (i/s.trail.length) * 2.6;
-        ctx.save(); ctx.globalAlpha = ta;
-        ctx.beginPath(); ctx.arc(p.x,p.y,ts,0,Math.PI*2);
-        ctx.fillStyle = ring.color; ctx.fill(); ctx.restore();
-      });
-      ctx.save(); ctx.globalAlpha = a;
-      ctx.beginPath(); ctx.arc(pt.x,pt.y,3.6,0,Math.PI*2);
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = ring.color; ctx.shadowBlur = 14;
-      ctx.fill(); ctx.shadowBlur = 0; ctx.restore();
-    }
-
-    function tick() {
-      ctx.clearRect(0,0,cssSize,cssSize);
-      drawCore();
-      RINGS.forEach((ring,i) => {
-        const s = state[i];
-        s.alpha += (s.target - s.alpha) * 0.04;
-        if (s.alpha < 0.001) s.alpha = 0;
-        if (s.alpha > 0.001) {
-          drawRing(ring, s, i === hovered);
-          s.pAngle += ring.speed;
-          if (s.pAngle >= 360) s.pAngle -= 360;
-          const pt = ptOnCircle(cx,cy,ring.r*scale,s.pAngle);
-          s.trail.push({x:pt.x,y:pt.y});
-          if (s.trail.length > 18) s.trail.shift();
-          drawParticle(ring, s, pt);
-        }
-      });
-      requestAnimationFrame(tick);
-    }
-    tick();
-
-    return { setActive };
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const engine = createEngine('main-canvas', 480);
-    const panels = document.querySelectorAll('.panel');
-
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
-          const idx = parseInt(entry.target.dataset.panel);
-          panels.forEach(p => p.classList.remove('active'));
-          entry.target.classList.add('active');
-          const loopMap = { 1: [0], 2: [0,1], 3: [0,1,2], 4: [0,1,2] };
-          if (engine) engine.setActive(loopMap[idx] || []);
-          for (let i = 0; i < 3; i++) {
-            const el = document.getElementById('leg-' + i);
-            if (el) el.classList.toggle('show', idx >= i + 1);
-          }
-        }
-      });
-    }, { threshold: 0.45 });
-    panels.forEach(p => obs.observe(p));
-  });
 </script>
 
 <script>
