@@ -70,7 +70,8 @@
   .sec { padding: 120px 32px; max-width: 1320px; margin: 0 auto; }
   @media (max-width: 720px) { .sec { padding: 80px 22px; } .nav-in { padding: 14px 22px; } }
 
-  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--blue-d); display: inline-flex; align-items: center; gap: 14px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--blue-d); display: flex; align-items: center; gap: 14px; }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--blue-d); flex-shrink: 0; }
 
   .sec-title { font-size: clamp(36px,4.8vw,64px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 16px 0 0; }
   .sec-title .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
@@ -594,23 +595,17 @@
   .waitlist button:hover { background: var(--blue-d); }
   .waitlist button:active { transform: translateY(1px); }
   .waitlist-help {
-    margin-top: 10px;
-    font-family: var(--mono); font-size: 9px; letter-spacing: .08em;
+    margin-top: 12px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .06em;
     color: var(--dim2);
-    display: inline-flex; align-items: center; gap: 7px;
+    display: inline-flex; align-items: center; gap: 8px;
     white-space: nowrap;
   }
   .waitlist-help .dot {
-    width: 4px; height: 4px; border-radius: 50%;
-    background: var(--blue-d); box-shadow: 0 0 5px var(--blue-d);
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--blue-d); box-shadow: 0 0 6px var(--blue-d);
     flex-shrink: 0;
   }
-
-  /* Hero waitlist variant (smaller, left-aligned) */
-  .hero .waitlist { margin: 0; max-width: 460px; }
-  .hero .waitlist input { font-size: 14px; padding: 10px 14px; }
-  .hero .waitlist button { padding: 10px 18px; font-size: 10.5px; }
-  .hero .waitlist-help-wrap { margin-top: 22px; }
 
   /* ── FOOTER ─────────────────────────── */
   footer { border-top: 1px solid var(--line); padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
@@ -658,14 +653,6 @@
       <div class="hero-meta-item"><span class="dot"></span>Internal at Amplitude · ~1 month in</div>
       <div class="hero-meta-item"><span class="dot" style="background:var(--violet);box-shadow:0 0 10px var(--violet)"></span>94%+ of code authored by agents</div>
       <div class="hero-meta-item"><span class="dot" style="background:var(--pink);box-shadow:0 0 10px var(--pink)"></span>Now taking design partners</div>
-    </div>
-
-    <div class="hero-cta reveal" style="margin-top:40px">
-      <form class="waitlist" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='You\'re on the list ✓'; this.querySelector('button').disabled = true;">
-        <input type="email" placeholder="you@company.com" required aria-label="Email address">
-        <button type="submit">Join the waitlist →</button>
-      </form>
-      <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
     </div>
   </div>
 </section>
