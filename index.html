@@ -418,29 +418,13 @@
 
 <!-- ── LOOP BUILDER (scrolly canvas — adapted from self-improving-v3) -->
 <section class="loops-sec" id="loops">
-  <div class="loops-head reveal">
-    <div class="eyebrow">Inside the system</div>
-    <h2>One loop holds. <span class="a">Three loops compound.</span></h2>
-    <p>Each loop runs at a different speed — and each speed feeds the next. As you scroll, watch the system build from the inside out.</p>
-  </div>
 
   <div class="story-wrap">
 
     <div class="panels" id="panels">
 
-      <!-- Panel 0: Data core -->
-      <div class="panel active" data-panel="0">
-        <div class="loop-pill pill-dim">
-          <span class="pill-dot" style="background:rgba(255,255,255,.4)"></span>
-          The starting point
-        </div>
-        <h3>Everything starts<br>with modeled product data.</h3>
-        <p>At the center is a <strong>data core</strong> — a continuous stream of behavioral signals, error events, feedback themes, and agent traces. Not a firehose. <strong>Modeled</strong>. Schemas, taxonomies, an event graph.</p>
-        <p>Six raw log streams with no schema produce 100× more candidate problems and 10× lower precision. The data core is what makes every loop above it grounded enough to act on.</p>
-      </div>
-
       <!-- Panel 1: Heal -->
-      <div class="panel" data-panel="1">
+      <div class="panel active" data-panel="1">
         <div class="loop-pill pill-blue">
           <span class="pill-dot" style="background:var(--blue-d);box-shadow:0 0 6px var(--blue-d)"></span>
           Loop 01 · Heal
@@ -769,7 +753,7 @@
           const idx = parseInt(entry.target.dataset.panel);
           panels.forEach(p => p.classList.remove('active'));
           entry.target.classList.add('active');
-          const loopMap = { 0: [], 1: [0], 2: [0,1], 3: [0,1,2], 4: [0,1,2] };
+          const loopMap = { 1: [0], 2: [0,1], 3: [0,1,2], 4: [0,1,2] };
           if (engine) engine.setActive(loopMap[idx] || []);
           for (let i = 0; i < 3; i++) {
             const el = document.getElementById('leg-' + i);
