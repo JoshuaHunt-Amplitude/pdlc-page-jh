@@ -483,7 +483,7 @@
   }
   #main-canvas { display: block; margin: 0 auto; }
 
-  .legend { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .legend { margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .leg-item {
     display: flex; align-items: center; gap: 10px;
     opacity: 0; transform: translateX(6px);
@@ -596,9 +596,10 @@
   .waitlist button:active { transform: translateY(1px); }
   .waitlist-help {
     margin-top: 12px;
-    font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .06em;
     color: var(--dim2);
     display: inline-flex; align-items: center; gap: 8px;
+    white-space: nowrap;
   }
   .waitlist-help .dot {
     width: 5px; height: 5px; border-radius: 50%;
@@ -628,7 +629,7 @@
     <div class="nav-links">
       <a href="#manifesto">Manifesto</a>
       <a href="#loops">The loops</a>
-      <a href="#surfaces">Surfaces</a>
+      <a href="#backlog">Surfaces</a>
       <a href="docs.html">Docs</a>
     </div>
     <a href="#cta" class="nav-btn">Request demo</a>
@@ -804,7 +805,6 @@
             <div class="j-dot"></div><div class="j-dot"></div><div class="j-dot"></div><div class="j-dot"></div>
           </div>
         </div>
-        <div class="clock-chip">Clock · Milliseconds → Seconds</div>
       </div>
 
       <!-- Panel 2: Detect -->
@@ -830,7 +830,6 @@
             <div class="j-dot"></div><div class="j-dot"></div>
           </div>
         </div>
-        <div class="clock-chip">Clock · Minutes → Hours</div>
       </div>
 
       <!-- Panel 3: Decide -->
@@ -856,7 +855,6 @@
             <div class="j-dot on"></div><div class="j-dot on"></div>
           </div>
         </div>
-        <div class="clock-chip">Clock · Days → Weeks</div>
       </div>
 
       <!-- Panel 4: Compounding -->
@@ -878,15 +876,15 @@
       <div class="legend" id="legend">
         <div class="leg-item" id="leg-0">
           <div class="leg-swatch" style="background:var(--blue-d);box-shadow:0 0 6px var(--blue-d)"></div>
-          <div class="leg-text"><strong>Heal</strong> — Fully automated · ms</div>
+          <div class="leg-text"><strong>Heal</strong> — Fully automated</div>
         </div>
         <div class="leg-item" id="leg-1">
           <div class="leg-swatch" style="background:var(--violet);box-shadow:0 0 6px var(--violet)"></div>
-          <div class="leg-text"><strong>Detect</strong> — Minimal judgment · hours</div>
+          <div class="leg-text"><strong>Detect</strong> — Minimal judgment</div>
         </div>
         <div class="leg-item" id="leg-2">
           <div class="leg-swatch" style="background:var(--pink);box-shadow:0 0 6px var(--pink)"></div>
-          <div class="leg-text"><strong>Decide</strong> — Human + data · days–weeks</div>
+          <div class="leg-text"><strong>Decide</strong> — Human + data</div>
         </div>
       </div>
     </div>
@@ -895,7 +893,7 @@
 </section>
 
 <!-- ── PRODUCT SHOWCASE 1 · Opportunity Feed ────────── -->
-<section class="pshot">
+<section class="pshot" id="backlog">
   <div class="pshot-in">
     <div class="pshot-copy reveal">
       <div class="eyebrow">A ranked backlog</div>
@@ -1142,7 +1140,7 @@
     <button type="submit">Join the waitlist →</button>
   </form>
   <div class="reveal" style="display:flex;justify-content:center">
-    <p class="waitlist-help"><span class="dot"></span>Use the email you logged into Amplitude with.</p>
+    <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
   </div>
 </section>
 
