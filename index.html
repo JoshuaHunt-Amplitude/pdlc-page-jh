@@ -106,6 +106,214 @@
   .manifesto { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 140px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 64px; }
 
+  /* Loop visual */
+  .loop-viz { max-width: 820px; margin: 8px auto 0; width: 100%; }
+  .loop-viz svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .lv-node-bg { fill: var(--bg); stroke: rgba(255,255,255,.55); stroke-width: 1.5; }
+  .lv-node-label { font-family: var(--sans); font-weight: 600; letter-spacing: .14em; fill: var(--white); font-size: 13px; }
+  .lv-center { font-family: var(--mono); fill: var(--dim); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; }
+  .lv-center-sub { font-family: var(--mono); fill: var(--dim2); font-size: 10px; letter-spacing: .14em; }
+  .lv-side { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; }
+  .lv-side.fast { fill: var(--blue-d); }
+  .lv-side.slow { fill: var(--pink); }
+  .lv-side-sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; fill: var(--dim2); }
+  .lv-callout { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; fill: var(--pink); }
+  .lv-callout-sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; fill: var(--dim2); }
+  .lv-particle { animation: lv-spin 7s linear infinite; transform-origin: 380px 220px; }
+  @keyframes lv-spin { to { transform: rotate(360deg); } }
+
+  /* ── PRODUCT SHOWCASE ───────────────── */
+  .pshot { position: relative; padding: 140px 0; border-top: 1px solid var(--line); overflow: hidden; }
+  .pshot.alt { background: linear-gradient(180deg, var(--bg) 0%, #060810 100%); }
+  .pshot-in {
+    max-width: 1320px; margin: 0 auto; padding: 0 32px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  @media (max-width: 980px) {
+    .pshot { padding: 80px 0; }
+    .pshot-in { grid-template-columns: 1fr; gap: 48px; padding: 0 22px; }
+    .pshot-in.reverse { direction: ltr; }
+    .pshot-visual { order: 2; }
+    .pshot.reverse-section .pshot-visual { order: 2; }
+  }
+  .pshot-copy { max-width: 500px; }
+  .pshot-copy .eyebrow { margin-bottom: 22px; }
+  .pshot-copy h2 {
+    font-size: clamp(32px,4vw,52px); font-weight: 600;
+    letter-spacing: -0.035em; line-height: 1.04; margin: 0 0 24px;
+  }
+  .pshot-copy h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .pshot-copy p { color: var(--dim); font-size: 17px; line-height: 1.65; margin: 0 0 14px; max-width: 48ch; }
+  .pshot-copy p strong { color: var(--white); font-weight: 500; }
+  .pshot-checks { margin: 28px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .pshot-checks li { display: flex; align-items: center; gap: 12px; color: var(--white); font-size: 15px; }
+  .pshot-checks li .ck {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    background: var(--blue); display: flex; align-items: center; justify-content: center;
+    color: var(--white); font-size: 13px; font-weight: 700;
+  }
+  .pshot-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+  .pshot-chips .pchip {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    padding: 8px 14px; border: 1px solid var(--lines); border-radius: 999px;
+    color: var(--dim); background: rgba(0,0,0,.4);
+  }
+
+  /* Bleed wrapper */
+  .pshot-visual { position: relative; min-width: 0; }
+  .pshot-visual.bleed-r { margin-right: clamp(-200px, calc((100vw - 1320px) / -2 - 32px), 0px); }
+  .pshot-visual.bleed-l { margin-left: clamp(-200px, calc((100vw - 1320px) / -2 - 32px), 0px); }
+  @media (max-width: 980px) {
+    .pshot-visual.bleed-r, .pshot-visual.bleed-l { margin: 0; }
+  }
+
+  /* ── Section 1: Opportunity Feed ────── */
+  .opp-feed {
+    background: var(--panel);
+    border: 1px solid var(--lines);
+    border-radius: 14px 0 0 14px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.03);
+    position: relative;
+    transform: perspective(2200px) rotateY(-2.5deg);
+    transform-origin: right center;
+  }
+  @media (max-width: 980px) { .opp-feed { transform: none; border-radius: 14px; } }
+  .opp-feed-head {
+    padding: 18px 22px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,.02);
+  }
+  .opp-feed-title { font-size: 16px; font-weight: 600; color: var(--white); letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
+  .opp-feed-title .badge { font-family: var(--mono); font-size: 10px; padding: 3px 7px; border: 1px solid var(--line); border-radius: 4px; color: var(--dim2); letter-spacing: .14em; font-weight: 400; }
+  .opp-feed-controls { display: flex; gap: 6px; }
+  .opp-feed-btn {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    padding: 6px 10px; border: 1px solid var(--line); border-radius: 5px;
+    color: var(--dim); background: rgba(0,0,0,.3);
+  }
+  .opp-feed-btn.primary { color: var(--blue-d); border-color: rgba(64,131,255,.3); background: rgba(64,131,255,.06); }
+  .opp-section {
+    padding: 11px 22px;
+    background: rgba(255,255,255,.03);
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--dim);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .opp-section .count {
+    margin-left: auto; font-size: 9px;
+    padding: 2px 7px; border-radius: 3px;
+    color: var(--dim2); background: rgba(0,0,0,.3); border: 1px solid var(--line);
+  }
+  .opp-row {
+    display: grid; grid-template-columns: 3px 1fr auto auto;
+    align-items: center; gap: 14px;
+    padding: 16px 22px 16px 0;
+    border-bottom: 1px solid var(--line);
+    position: relative; transition: background .15s;
+  }
+  .opp-row:hover { background: rgba(255,255,255,.02); }
+  .opp-row:last-child { border-bottom: 0; }
+  .opp-row .bar { width: 3px; height: 100%; background: var(--bar, var(--blue-d)); align-self: stretch; }
+  .opp-row .title { color: var(--white); font-size: 14px; line-height: 1.45; padding-left: 18px; }
+  .opp-row .score {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+    padding: 4px 8px; border-radius: 4px;
+    color: var(--blue-d); background: rgba(64,131,255,.08); border: 1px solid rgba(64,131,255,.25);
+  }
+  .opp-row .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--dim2); margin-right: 22px;
+  }
+
+  /* ── Section 2: Product Map ─────────── */
+  .pmap {
+    position: relative; width: 100%; aspect-ratio: 16 / 10;
+    background: radial-gradient(ellipse at 30% 50%, rgba(64,131,255,.08), transparent 60%), var(--bg);
+    border: 1px solid var(--lines);
+    border-radius: 0 14px 14px 0;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.55);
+  }
+  @media (max-width: 980px) { .pmap { border-radius: 14px; aspect-ratio: 4/3; } }
+  .pmap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .pmap .pmap-node circle.outer { fill: rgba(64,131,255,.18); }
+  .pmap .pmap-node circle.inner { fill: #1a4fd6; stroke: rgba(64,131,255,.6); stroke-width: 1; }
+  .pmap-label {
+    position: absolute; font-family: var(--mono); font-size: 10px;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--dim);
+    padding: 4px 8px; background: rgba(0,0,0,.5); border: 1px solid var(--line);
+    border-radius: 4px; transform: translate(-50%, -50%);
+    backdrop-filter: blur(6px);
+  }
+
+  /* ── Section 3: Opportunity Brief ───── */
+  .brief {
+    background: var(--panel);
+    border: 1px solid var(--lines);
+    border-radius: 14px 0 0 14px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.03);
+    transform: perspective(2200px) rotateY(-2.5deg);
+    transform-origin: right center;
+  }
+  @media (max-width: 980px) { .brief { transform: none; border-radius: 14px; } }
+  .brief-head {
+    padding: 20px 28px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,.02);
+  }
+  .brief-head .lbl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--dim);
+  }
+  .brief-head .pill {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .14em;
+    padding: 4px 9px; border-radius: 999px;
+    color: var(--green); background: rgba(87,227,164,.08); border: 1px solid rgba(87,227,164,.3);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .brief-head .pill::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 6px var(--green);
+  }
+  .brief-body { padding: 28px; }
+  .brief-title { font-size: 20px; font-weight: 600; color: var(--white); margin: 0 0 8px; letter-spacing: -0.015em; line-height: 1.35; }
+  .brief-sub { font-size: 13px; color: var(--dim); margin: 0 0 24px; line-height: 1.6; }
+  .brief-meta-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 16px; border: 1px solid var(--line); border-radius: 8px;
+    background: rgba(0,0,0,.3); margin-bottom: 10px;
+  }
+  .brief-meta-row .ico {
+    width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0;
+    background: rgba(64,131,255,.18); border: 1px solid rgba(64,131,255,.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--blue-d); font-family: var(--mono); font-size: 10px;
+  }
+  .brief-meta-row .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); width: 100px; flex-shrink: 0; }
+  .brief-meta-row .val { font-size: 13px; color: var(--white); flex: 1; }
+  .brief-meta-row .val em { color: var(--dim); font-style: normal; }
+  .brief-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  @media (max-width: 720px) { .brief-grid { grid-template-columns: 1fr; } }
+  .brief-card {
+    border: 1px dashed var(--line); border-radius: 10px;
+    padding: 16px 18px; background: rgba(255,255,255,.015);
+  }
+  .brief-card .h {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--dim2); margin-bottom: 10px;
+  }
+  .brief-card .v { font-size: 14px; color: var(--white); line-height: 1.5; }
+  .brief-card .v .em { color: var(--blue-d); }
+  .brief-card .delta {
+    font-family: var(--mono); font-size: 18px; color: var(--green);
+    font-weight: 500; letter-spacing: -0.01em;
+  }
+
   .manifesto-head .eyebrow { margin-bottom: 24px; }
   .manifesto-head h2 { font-family: var(--sans); font-size: clamp(40px, 5.4vw, 76px); font-weight: 600; letter-spacing: -0.04em; line-height: .98; margin: 0; max-width: 22ch; }
   .manifesto-head h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
@@ -401,6 +609,98 @@
       <h2>Sense is <span class="a">the new bottleneck.</span></h2>
     </div>
 
+    <div class="loop-viz reveal" aria-hidden="true">
+      <svg viewBox="0 0 760 440" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="lv-fast" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4083FF"/>
+            <stop offset="100%" stop-color="#0052F2"/>
+          </linearGradient>
+          <linearGradient id="lv-slow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#A373FF"/>
+            <stop offset="100%" stop-color="#FF7D78"/>
+          </linearGradient>
+          <filter id="lv-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4"/>
+          </filter>
+        </defs>
+
+        <!-- Subtle base ring -->
+        <circle cx="380" cy="220" r="150" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="26"/>
+
+        <!-- Left half: FAST — solid bright blue -->
+        <path d="M 380 70 A 150 150 0 0 0 380 370"
+              stroke="url(#lv-fast)" stroke-width="24"
+              fill="none" stroke-linecap="round"/>
+        <!-- Glow under left half -->
+        <path d="M 380 70 A 150 150 0 0 0 380 370"
+              stroke="#4083FF" stroke-width="24"
+              fill="none" stroke-linecap="round"
+              opacity="0.35" filter="url(#lv-glow)"/>
+
+        <!-- Right half: BOTTLENECK — dashed dim violet→pink -->
+        <path d="M 380 70 A 150 150 0 0 1 380 370"
+              stroke="url(#lv-slow)" stroke-width="24"
+              fill="none" stroke-linecap="round"
+              stroke-dasharray="2 10" opacity="0.55"/>
+
+        <!-- Animated particle on the fast (left) half -->
+        <g class="lv-particle">
+          <circle cx="230" cy="220" r="4" fill="#fff">
+            <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+
+        <!-- 4 nodes at diagonals -->
+        <!-- SHIP top-left -->
+        <g>
+          <circle cx="274" cy="114" r="44" class="lv-node-bg"/>
+          <text x="274" y="120" class="lv-node-label" text-anchor="middle">SHIP</text>
+        </g>
+        <!-- USE top-right -->
+        <g>
+          <circle cx="486" cy="114" r="44" class="lv-node-bg"/>
+          <text x="486" y="120" class="lv-node-label" text-anchor="middle">USE</text>
+        </g>
+        <!-- LEARN bottom-right -->
+        <g>
+          <circle cx="486" cy="326" r="44" class="lv-node-bg"/>
+          <text x="486" y="332" class="lv-node-label" text-anchor="middle">LEARN</text>
+        </g>
+        <!-- BUILD bottom-left -->
+        <g>
+          <circle cx="274" cy="326" r="44" class="lv-node-bg"/>
+          <text x="274" y="332" class="lv-node-label" text-anchor="middle">BUILD</text>
+        </g>
+
+        <!-- Center label -->
+        <text x="380" y="216" class="lv-center" text-anchor="middle">the loop</text>
+        <text x="380" y="236" class="lv-center-sub" text-anchor="middle">build → ship · use → learn</text>
+
+        <!-- LEFT side caption: FAST -->
+        <line x1="100" y1="180" x2="158" y2="180" stroke="rgba(64,131,255,0.45)" stroke-width="1"/>
+        <text x="100" y="170" class="lv-side fast" text-anchor="start">Fast</text>
+        <text x="100" y="200" class="lv-side-sub" text-anchor="start">collapsed by 50 years</text>
+        <text x="100" y="216" class="lv-side-sub" text-anchor="start">of tooling + agents</text>
+
+        <!-- RIGHT side caption: BOTTLENECK -->
+        <line x1="602" y1="180" x2="660" y2="180" stroke="rgba(255,125,120,0.45)" stroke-width="1"/>
+        <text x="660" y="170" class="lv-side slow" text-anchor="end">Bottleneck</text>
+        <text x="660" y="200" class="lv-side-sub" text-anchor="end">95% of behavioral data</text>
+        <text x="660" y="216" class="lv-side-sub" text-anchor="end">goes unread</text>
+
+        <!-- Pinch marker on right edge of ring -->
+        <g transform="translate(530, 220)">
+          <line x1="-7" y1="-7" x2="7" y2="7" stroke="#FF7D78" stroke-width="1.5"/>
+          <line x1="-7" y1="7" x2="7" y2="-7" stroke="#FF7D78" stroke-width="1.5"/>
+        </g>
+
+        <!-- Bottom captions under each half -->
+        <text x="220" y="410" class="lv-side-sub" text-anchor="middle" style="opacity:.65">programming · agile · cloud · agents</text>
+        <text x="540" y="410" class="lv-side-sub" text-anchor="middle" style="opacity:.65">slack · replays · logs · guesswork</text>
+      </svg>
+    </div>
+
     <div class="manifesto-body">
       <div class="reveal">
         <p>The product development loop has always been the same: <strong>build → ship → use → learn</strong>. Fifty years of work — programming languages, agile, cloud, and now coding agents — collapsed the left half. The distance from problem identified to code shipped is approaching zero.</p>
@@ -534,6 +834,201 @@
     </div>
 
   </div><!-- /story-wrap -->
+</section>
+
+<!-- ── PRODUCT SHOWCASE 1 · Opportunity Feed ────────── -->
+<section class="pshot">
+  <div class="pshot-in">
+    <div class="pshot-copy reveal">
+      <div class="eyebrow">A ranked backlog</div>
+      <h2>Every friction point, <span class="a">scored and grouped.</span></h2>
+      <p><strong>Strategic Bets, Quick Wins, New Features, Bugs.</strong></p>
+      <p>Each tied to evidence, sized, and ready for review — so you spend time deciding, not digging.</p>
+    </div>
+    <div class="pshot-visual bleed-r reveal">
+      <div class="opp-feed">
+        <div class="opp-feed-head">
+          <div class="opp-feed-title">Opportunities <span class="badge">CHART CREATION</span></div>
+          <div class="opp-feed-controls">
+            <span class="opp-feed-btn">Filter</span>
+            <span class="opp-feed-btn primary">Discover</span>
+          </div>
+        </div>
+
+        <div class="opp-section">
+          <span>Starred</span>
+          <span class="count">3</span>
+        </div>
+
+        <div class="opp-row" style="--bar:#4083FF">
+          <div class="bar"></div>
+          <div class="title">Chart Agent retry loop adds latency and duplicate URLs</div>
+          <span class="score">0.94</span>
+          <span class="tag">Bug</span>
+        </div>
+        <div class="opp-row" style="--bar:#4083FF">
+          <div class="bar"></div>
+          <div class="title">Chart Builder name/description inputs block first-time saves</div>
+          <span class="score">0.91</span>
+          <span class="tag">Bug</span>
+        </div>
+        <div class="opp-row" style="--bar:#57E3A4">
+          <div class="bar"></div>
+          <div class="title">Slow chart queries leave users without progress or cancel</div>
+          <span class="score">0.88</span>
+          <span class="tag">Strategic</span>
+        </div>
+
+        <div class="opp-section">
+          <span>Quick Win</span>
+          <span class="count">2</span>
+        </div>
+
+        <div class="opp-row" style="--bar:#4083FF">
+          <div class="bar"></div>
+          <div class="title">Add 'Save as new chart' recovery when a teammate deletes mid-edit</div>
+          <span class="score">0.82</span>
+          <span class="tag">Quick Win</span>
+        </div>
+        <div class="opp-row" style="--bar:#4083FF">
+          <div class="bar"></div>
+          <div class="title">Removing a formula-referenced event silently breaks the chart</div>
+          <span class="score">0.79</span>
+          <span class="tag">Quick Win</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRODUCT SHOWCASE 2 · Live Product Map ────────── -->
+<section class="pshot alt">
+  <div class="pshot-in">
+    <div class="pshot-visual bleed-l reveal" style="order:-1">
+      <div class="pmap">
+        <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="pmap-node" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#4083FF" stop-opacity="1"/>
+              <stop offset="60%" stop-color="#0052F2" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#0036A8" stop-opacity="0.8"/>
+            </radialGradient>
+            <filter id="pmap-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6"/>
+            </filter>
+          </defs>
+
+          <!-- Dashed connector paths -->
+          <g stroke="#3b6bff" stroke-width="1.5" stroke-dasharray="6 6" fill="none" opacity="0.7">
+            <path d="M -20 180 C 100 180, 180 180, 260 200"/>
+            <path d="M -20 280 C 120 320, 240 340, 360 290"/>
+            <path d="M 260 200 C 320 220, 380 240, 420 280"/>
+            <path d="M 360 290 C 380 300, 400 295, 420 280"/>
+            <path d="M 420 280 C 480 220, 530 170, 580 130"/>
+            <path d="M 420 280 C 460 230, 520 195, 600 220"/>
+            <path d="M 420 280 C 440 340, 470 380, 520 410"/>
+            <path d="M 520 410 C 580 420, 620 425, 680 460"/>
+          </g>
+
+          <!-- Nodes (background glow) -->
+          <g filter="url(#pmap-glow)" opacity="0.6">
+            <circle cx="260" cy="200" r="22" fill="#1a4fd6"/>
+            <circle cx="420" cy="280" r="30" fill="#1a4fd6"/>
+            <circle cx="580" cy="130" r="20" fill="#1a4fd6"/>
+            <circle cx="600" cy="220" r="18" fill="#1a4fd6"/>
+            <circle cx="520" cy="410" r="18" fill="#1a4fd6"/>
+            <circle cx="680" cy="460" r="16" fill="#1a4fd6"/>
+          </g>
+
+          <!-- Nodes (foreground solid) -->
+          <g>
+            <circle cx="260" cy="200" r="22" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
+            <circle cx="420" cy="280" r="30" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.55)" stroke-width="1.2"/>
+            <circle cx="580" cy="130" r="20" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
+            <circle cx="600" cy="220" r="18" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
+            <circle cx="520" cy="410" r="18" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
+            <circle cx="680" cy="460" r="16" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
+          </g>
+
+          <!-- Subtle inline labels on the big node -->
+          <text x="420" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="8" letter-spacing="1.4" fill="rgba(255,255,255,0.7)">CHART</text>
+        </svg>
+
+        <!-- Node labels (HTML for crisp text) -->
+        <div class="pmap-label" style="left:32.5%; top:30%">Entry</div>
+        <div class="pmap-label" style="left:52.5%; top:60%">Chart Builder</div>
+        <div class="pmap-label" style="left:72.5%; top:18%">Save</div>
+        <div class="pmap-label" style="left:65%; top:88%; color:var(--pink); border-color:rgba(255,125,120,.4)">Drop-off · 12%</div>
+      </div>
+    </div>
+
+    <div class="pshot-copy reveal">
+      <div class="eyebrow">A live product map</div>
+      <h2>See every path <span class="a">your users take.</span></h2>
+      <p>Amplitude maps your product as users actually use it — every entry, every detour, every drop-off. The map updates itself as your product changes.</p>
+      <div class="pshot-chips">
+        <span class="pchip">Auto-generated</span>
+        <span class="pchip">Session-grounded</span>
+        <span class="pchip">Drop-off detection</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRODUCT SHOWCASE 3 · Opportunity Brief ───────── -->
+<section class="pshot">
+  <div class="pshot-in">
+    <div class="pshot-copy reveal">
+      <div class="eyebrow">From insight to action</div>
+      <h2>A plan, before <span class="a">the meeting.</span></h2>
+      <p>Every opportunity opens to a full brief — the evidence, the proposed fix, the rollout plan, the expected impact. You review. You ship.</p>
+      <ul class="pshot-checks">
+        <li><span class="ck">✓</span>Evidence linked from real sessions</li>
+        <li><span class="ck">✓</span>Rollout, instrumentation, falsifiers included</li>
+        <li><span class="ck">✓</span>You review everything before merge</li>
+      </ul>
+    </div>
+
+    <div class="pshot-visual bleed-r reveal">
+      <div class="brief">
+        <div class="brief-head">
+          <span class="lbl">Problem summary</span>
+          <span class="pill">Spec ready</span>
+        </div>
+        <div class="brief-body">
+          <h3 class="brief-title">Chart Agent retry loop adds latency and duplicate URLs</h3>
+          <p class="brief-sub">Sourced from 5 customer feedback mentions and 3 session replays. Confidence <strong style="color:var(--blue-d)">0.94</strong> · area <strong style="color:var(--white)">chart-creation</strong>.</p>
+
+          <div class="brief-meta-row">
+            <span class="ico">⌖</span>
+            <span class="lbl">Evidence</span>
+            <span class="val">5 feedback mentions · 3 replays · <em>fb_8421, rep_3318</em></span>
+          </div>
+          <div class="brief-meta-row">
+            <span class="ico">▶</span>
+            <span class="lbl">Rollout</span>
+            <span class="val">Behind feature flag · falsifier: <em>retry_count &gt; 1 within 2s</em></span>
+          </div>
+          <div class="brief-meta-row">
+            <span class="ico">📈</span>
+            <span class="lbl">Metric</span>
+            <span class="val">activation_d7 · expected <em>+8–14%</em></span>
+          </div>
+
+          <div class="brief-grid">
+            <div class="brief-card">
+              <div class="h">Hypothesis</div>
+              <div class="v">Removing retry on <span class="em">200</span> stops duplicate URL writes.</div>
+            </div>
+            <div class="brief-card">
+              <div class="h">Expected impact</div>
+              <div class="v"><span class="delta">+11.4%</span> on activation_d7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ── SURFACES ──────────────────────────────────────── -->
