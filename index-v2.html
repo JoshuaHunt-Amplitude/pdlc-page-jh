@@ -1081,5 +1081,154 @@ Stop should cancel <span class="o">in-flight LLM call</span> only.
   }).catch(function(){});
 })();
 </script>
+
+<!-- ── CMD+K version switcher ─────────────────────── -->
+<style id="cmdk-style">
+  .cmdk-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 16vh;
+    animation: cmdk-fade .15s ease;
+  }
+  .cmdk-overlay[hidden] { display: none; }
+  @keyframes cmdk-fade { from { opacity: 0; } }
+  .cmdk-modal {
+    width: 100%; max-width: 560px;
+    background: #0F1219; border: 1px solid rgba(255,255,255,.18);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 40px 120px rgba(0,0,0,.7);
+    animation: cmdk-rise .2s ease;
+    font-family: 'Poppins', system-ui, sans-serif;
+  }
+  @keyframes cmdk-rise { from { transform: translateY(10px); opacity: 0; } }
+  .cmdk-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,.08);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+  }
+  .cmdk-label { color: #4083FF; }
+  .cmdk-hint { color: rgba(255,255,255,.42); }
+  .cmdk-hint kbd {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    padding: 2px 5px; margin: 0 1px;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 3px; color: #fff;
+  }
+  .cmdk-list { padding: 6px; max-height: 60vh; overflow-y: auto; }
+  .cmdk-item {
+    display: grid; grid-template-columns: 50px 1fr auto;
+    align-items: center; gap: 14px;
+    padding: 12px 14px; margin: 2px 0;
+    border-radius: 8px;
+    text-decoration: none; color: #fff;
+    cursor: pointer; transition: background .12s;
+  }
+  .cmdk-item.selected { background: rgba(64,131,255,.12); outline: 1px solid rgba(64,131,255,.3); }
+  .cmdk-item:hover { background: rgba(255,255,255,.04); }
+  .cmdk-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .14em; color: #4083FF;
+    padding: 5px 8px; border: 1px solid rgba(64,131,255,.3);
+    border-radius: 4px; background: rgba(64,131,255,.06);
+    text-align: center;
+  }
+  .cmdk-text .cmdk-name { font-size: 14px; font-weight: 500; color: #fff; letter-spacing: -.01em; line-height: 1.35; }
+  .cmdk-text .cmdk-desc { font-size: 11px; color: rgba(255,255,255,.55); font-family: 'JetBrains Mono', monospace; letter-spacing: .03em; margin-top: 3px; }
+  .cmdk-current {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .16em;
+    color: #57E3A4; padding: 3px 7px;
+    border: 1px solid rgba(87,227,164,.3); background: rgba(87,227,164,.06);
+    border-radius: 3px;
+  }
+  .cmdk-item:not(.is-current) .cmdk-current { display: none; }
+</style>
+
+<div id="cmdk" class="cmdk-overlay" hidden role="dialog" aria-label="Switch version">
+  <div class="cmdk-modal">
+    <div class="cmdk-head">
+      <span class="cmdk-label">Switch version</span>
+      <span class="cmdk-hint">↑↓ <kbd>↵</kbd> · <kbd>Esc</kbd></span>
+    </div>
+    <div class="cmdk-list" id="cmdk-list">
+      <a class="cmdk-item" href="index.html" data-page="index.html">
+        <span class="cmdk-num">V1</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">Products that fix themselves</div>
+          <div class="cmdk-desc">Self-improving · build → ship → use → learn · 3 loops</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+      <a class="cmdk-item" href="index-v2.html" data-page="index-v2.html">
+        <span class="cmdk-num">V2</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">Live demo + waitlist</div>
+          <div class="cmdk-desc">Builder-native · 6-tab demo · honest status</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+      <a class="cmdk-item" href="index-v3.html" data-page="index-v3.html">
+        <span class="cmdk-num">V3</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">Your team, AI-accelerated</div>
+          <div class="cmdk-desc">Team velocity · 2–3× PRs · compound 3-loop end visual</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+      <a class="cmdk-item" href="index-v4.html" data-page="index-v4.html">
+        <span class="cmdk-num">V4</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">The product loop · 6 stages</div>
+          <div class="cmdk-desc">Single ring · Sense · Prioritize · Spec · Act · Verify · Measure</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const overlay = document.getElementById('cmdk');
+  if (!overlay) return;
+  const items = Array.from(overlay.querySelectorAll('.cmdk-item'));
+  const currentPath = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  items.forEach(it => { if (it.dataset.page.toLowerCase() === currentPath) it.classList.add('is-current'); });
+
+  let selected = 0;
+  function setSelected(idx) {
+    items.forEach((el, i) => el.classList.toggle('selected', i === idx));
+    selected = idx;
+    items[idx].scrollIntoView({ block: 'nearest' });
+  }
+  function open() {
+    overlay.hidden = false;
+    let startIdx = items.findIndex(it => !it.classList.contains('is-current'));
+    if (startIdx < 0) startIdx = 0;
+    setSelected(startIdx);
+  }
+  function close() { overlay.hidden = true; }
+
+  document.addEventListener('keydown', (e) => {
+    const isMod = e.metaKey || e.ctrlKey;
+    if (isMod && (e.key === 'k' || e.key === 'K')) {
+      e.preventDefault();
+      overlay.hidden ? open() : close();
+      return;
+    }
+    if (overlay.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); setSelected((selected + 1) % items.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setSelected((selected - 1 + items.length) % items.length); }
+    else if (e.key === 'Enter') { e.preventDefault(); items[selected].click(); }
+  });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  items.forEach((it, i) => it.addEventListener('mouseenter', () => setSelected(i)));
+})();
+</script>
+<!-- ── /CMD+K version switcher ────────────────────── -->
+
 </body>
 </html>

@@ -77,7 +77,7 @@
 
   /* ── HERO ───────────────────────────── */
   .hero { min-height: 92vh; display: grid; grid-template-columns: 1fr; align-content: center; position: relative; padding: 0 32px; max-width: 1320px; margin: 0 auto; }
-  .hero h1 { font-size: clamp(48px,8.2vw,132px); font-weight: 600; line-height: .92; letter-spacing: -0.045em; margin: 32px 0 28px; max-width: 18ch; }
+  .hero h1 { font-size: clamp(42px,5.6vw,88px); font-weight: 600; line-height: 1; letter-spacing: -0.04em; margin: 32px 0 28px; max-width: 18ch; }
   .hero h1 .a { color: var(--blue-d); font-weight: 700; font-style: italic; }
   .hero .lede { font-size: clamp(18px,1.6vw,22px); line-height: 1.5; color: var(--dim); max-width: 56ch; margin: 0 0 48px; }
 
@@ -86,7 +86,14 @@
   .hero-meta-item .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue-d); box-shadow: 0 0 10px var(--blue-d); flex-shrink: 0; }
 
   /* Loop rings (hero decoration) */
-  .lg { position: absolute; right: -60px; top: 50%; transform: translateY(-50%); width: min(620px,50vw); aspect-ratio: 1/1; pointer-events: none; opacity: .85; z-index: -1; }
+  .lg {
+    position: absolute; right: -180px; top: 50%;
+    transform: translateY(-50%) perspective(1400px) rotateX(52deg) rotateZ(-14deg);
+    transform-origin: 60% 50%;
+    width: min(880px, 68vw); aspect-ratio: 1/1;
+    pointer-events: none; opacity: .55; z-index: -1;
+  }
+
   @media (max-width: 980px) { .lg { position: relative; right: 0; top: 0; transform: none; width: 100%; max-width: 440px; margin: 48px auto 0; opacity: .55; } }
   .lr { position: absolute; inset: 0; border: 1px solid var(--lines); border-radius: 50%; animation: spin 24s linear infinite; }
   .lr::before { content: ""; position: absolute; top: -5px; left: 50%; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 24px var(--blue); }
@@ -122,8 +129,23 @@
   @keyframes lv-spin { to { transform: rotate(360deg); } }
 
   /* Product loop (v4 end visual) */
-  .product-loop { width: 100%; max-width: 540px; margin: 0 auto; }
+  .pl-section { padding: 140px 32px 160px; max-width: 1320px; margin: 0 auto; border-top: 1px solid var(--line); }
+  .pl-head { max-width: 720px; margin: 0 auto 80px; text-align: center; }
+  .pl-head .loop-pill { display: inline-flex; margin: 0 auto 24px; }
+  .pl-head h3 {
+    font-family: var(--sans); font-size: clamp(32px,4.4vw,52px);
+    font-weight: 600; line-height: 1.05; letter-spacing: -0.025em;
+    color: var(--white); margin: 0 0 24px;
+  }
+  .pl-head p { font-size: 17px; line-height: 1.65; color: var(--dim); margin: 0 0 16px; }
+  .pl-head p:last-child { margin-bottom: 0; }
+  .pl-head p strong { color: var(--white); font-weight: 500; }
+  .product-loop { width: 100%; max-width: 960px; margin: 0 auto; }
   .product-loop svg { width: 100%; height: auto; display: block; overflow: visible; }
+  @media (max-width: 720px) {
+    .pl-section { padding: 80px 22px 100px; }
+    .pl-head { margin-bottom: 48px; }
+  }
   .pl-node circle {
     fill: var(--bg);
     stroke: rgba(64,131,255,0.5);
@@ -683,7 +705,7 @@
   </div>
   <div>
     <div class="eyebrow reveal">Introducing PDLC</div>
-    <h1 class="reveal">Your team, <span class="a">AI-accelerated.</span></h1>
+    <h1 class="reveal">Towards<br><span class="a">self-improving products</span></h1>
     <p class="lede reveal">Coding agents made shipping fast. But your team is still drowning in signals — figuring out what's worth building. PDLC closes that gap so your team can ship 2–3× the PRs without lowering the bar.</p>
     <div class="hero-meta reveal">
       <div class="hero-meta-item"><span class="dot"></span>Internal at Amplitude · ~1 month in</div>
@@ -1059,25 +1081,18 @@
 </section>
 
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
-<section class="loops-sec" id="loops" style="border-top:1px solid var(--line); padding:140px 0 160px;">
-
-  <div class="story-wrap" style="align-items:center">
-
-    <div class="panels" style="min-height:auto">
-      <div class="panel active" style="min-height:auto;padding:0;opacity:1">
-        <div class="loop-pill pill-lilac">
-          <span class="pill-dot" style="background:var(--lilac);box-shadow:0 0 6px var(--lilac)"></span>
-          The product loop
-        </div>
-        <h3>One loop. Six stages.<br>Endlessly compounding.</h3>
-        <p>Every opportunity moves through the same path — <strong>Sense → Prioritize → Spec → Act → Verify → Measure</strong>. The system handles the plumbing. Your team decides what gets shipped.</p>
-        <p>Each cycle that closes makes the next one sharper. Every shipped outcome trains the ranker. Every miss feeds the spec template. <strong>The loop doesn't reset — it compounds.</strong></p>
-        <p style="color:var(--white)"><strong>The flywheel never stops. Your team just gets sharper at spinning it.</strong></p>
-      </div>
+<section class="pl-section reveal" id="loops">
+  <div class="pl-head">
+    <div class="loop-pill pill-lilac">
+      <span class="pill-dot" style="background:var(--lilac);box-shadow:0 0 6px var(--lilac)"></span>
+      The product loop
     </div>
+    <h3>One loop. Six stages.<br>Endlessly compounding.</h3>
+    <p>Every opportunity moves through the same path — <strong>Sense → Prioritize → Spec → Act → Verify → Measure</strong>. The system handles the plumbing. Your team decides what gets shipped.</p>
+    <p style="color:var(--white);margin-top:14px"><strong>The flywheel never stops. Your team just gets sharper at spinning it.</strong></p>
+  </div>
 
-    <div class="diagram-col" style="position:relative;top:0">
-      <div class="product-loop">
+  <div class="product-loop">
         <svg viewBox="0 0 700 560" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="pl-ring-grad" x1="0" y1="0" x2="0" y2="1">
@@ -1209,9 +1224,6 @@
           <text x="160" y="196" text-anchor="end" class="pl-desc">Track outcomes</text>
           <text x="160" y="210" text-anchor="end" class="pl-desc">and impact</text>
         </svg>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -1275,5 +1287,154 @@
   }).catch(function(){});
 })();
 </script>
+
+<!-- ── CMD+K version switcher ─────────────────────── -->
+<style id="cmdk-style">
+  .cmdk-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 16vh;
+    animation: cmdk-fade .15s ease;
+  }
+  .cmdk-overlay[hidden] { display: none; }
+  @keyframes cmdk-fade { from { opacity: 0; } }
+  .cmdk-modal {
+    width: 100%; max-width: 560px;
+    background: #0F1219; border: 1px solid rgba(255,255,255,.18);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 40px 120px rgba(0,0,0,.7);
+    animation: cmdk-rise .2s ease;
+    font-family: 'Poppins', system-ui, sans-serif;
+  }
+  @keyframes cmdk-rise { from { transform: translateY(10px); opacity: 0; } }
+  .cmdk-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,.08);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+  }
+  .cmdk-label { color: #4083FF; }
+  .cmdk-hint { color: rgba(255,255,255,.42); }
+  .cmdk-hint kbd {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    padding: 2px 5px; margin: 0 1px;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 3px; color: #fff;
+  }
+  .cmdk-list { padding: 6px; max-height: 60vh; overflow-y: auto; }
+  .cmdk-item {
+    display: grid; grid-template-columns: 50px 1fr auto;
+    align-items: center; gap: 14px;
+    padding: 12px 14px; margin: 2px 0;
+    border-radius: 8px;
+    text-decoration: none; color: #fff;
+    cursor: pointer; transition: background .12s;
+  }
+  .cmdk-item.selected { background: rgba(64,131,255,.12); outline: 1px solid rgba(64,131,255,.3); }
+  .cmdk-item:hover { background: rgba(255,255,255,.04); }
+  .cmdk-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .14em; color: #4083FF;
+    padding: 5px 8px; border: 1px solid rgba(64,131,255,.3);
+    border-radius: 4px; background: rgba(64,131,255,.06);
+    text-align: center;
+  }
+  .cmdk-text .cmdk-name { font-size: 14px; font-weight: 500; color: #fff; letter-spacing: -.01em; line-height: 1.35; }
+  .cmdk-text .cmdk-desc { font-size: 11px; color: rgba(255,255,255,.55); font-family: 'JetBrains Mono', monospace; letter-spacing: .03em; margin-top: 3px; }
+  .cmdk-current {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .16em;
+    color: #57E3A4; padding: 3px 7px;
+    border: 1px solid rgba(87,227,164,.3); background: rgba(87,227,164,.06);
+    border-radius: 3px;
+  }
+  .cmdk-item:not(.is-current) .cmdk-current { display: none; }
+</style>
+
+<div id="cmdk" class="cmdk-overlay" hidden role="dialog" aria-label="Switch version">
+  <div class="cmdk-modal">
+    <div class="cmdk-head">
+      <span class="cmdk-label">Switch version</span>
+      <span class="cmdk-hint">↑↓ <kbd>↵</kbd> · <kbd>Esc</kbd></span>
+    </div>
+    <div class="cmdk-list" id="cmdk-list">
+      <a class="cmdk-item" href="index.html" data-page="index.html">
+        <span class="cmdk-num">V1</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">Products that fix themselves</div>
+          <div class="cmdk-desc">Self-improving · build → ship → use → learn · 3 loops</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+      <a class="cmdk-item" href="index-v2.html" data-page="index-v2.html">
+        <span class="cmdk-num">V2</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">Live demo + waitlist</div>
+          <div class="cmdk-desc">Builder-native · 6-tab demo · honest status</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+      <a class="cmdk-item" href="index-v3.html" data-page="index-v3.html">
+        <span class="cmdk-num">V3</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">Your team, AI-accelerated</div>
+          <div class="cmdk-desc">Team velocity · 2–3× PRs · compound 3-loop end visual</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+      <a class="cmdk-item" href="index-v4.html" data-page="index-v4.html">
+        <span class="cmdk-num">V4</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">The product loop · 6 stages</div>
+          <div class="cmdk-desc">Single ring · Sense · Prioritize · Spec · Act · Verify · Measure</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const overlay = document.getElementById('cmdk');
+  if (!overlay) return;
+  const items = Array.from(overlay.querySelectorAll('.cmdk-item'));
+  const currentPath = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  items.forEach(it => { if (it.dataset.page.toLowerCase() === currentPath) it.classList.add('is-current'); });
+
+  let selected = 0;
+  function setSelected(idx) {
+    items.forEach((el, i) => el.classList.toggle('selected', i === idx));
+    selected = idx;
+    items[idx].scrollIntoView({ block: 'nearest' });
+  }
+  function open() {
+    overlay.hidden = false;
+    let startIdx = items.findIndex(it => !it.classList.contains('is-current'));
+    if (startIdx < 0) startIdx = 0;
+    setSelected(startIdx);
+  }
+  function close() { overlay.hidden = true; }
+
+  document.addEventListener('keydown', (e) => {
+    const isMod = e.metaKey || e.ctrlKey;
+    if (isMod && (e.key === 'k' || e.key === 'K')) {
+      e.preventDefault();
+      overlay.hidden ? open() : close();
+      return;
+    }
+    if (overlay.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); setSelected((selected + 1) % items.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setSelected((selected - 1 + items.length) % items.length); }
+    else if (e.key === 'Enter') { e.preventDefault(); items[selected].click(); }
+  });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  items.forEach((it, i) => it.addEventListener('mouseenter', () => setSelected(i)));
+})();
+</script>
+<!-- ── /CMD+K version switcher ────────────────────── -->
+
 </body>
 </html>
