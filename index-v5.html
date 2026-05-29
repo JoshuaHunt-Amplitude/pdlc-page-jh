@@ -725,6 +725,18 @@
   }
   .aha-foot .pin .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue-d); box-shadow: 0 0 6px var(--blue-d); }
 
+  /* ── DIAGRAM POLISH (shared) ────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .lr, .lc, .lv-particle, .lv-flow, .lv-comet,
+    .pmap-pulse, .pmap-ripple, .pl-flow, .pl-comet, .pl-halo,
+    .lv-jam, .pl-particle { animation: none !important; }
+    [class*="anim"] { animation: none !important; }
+  }
+  @keyframes dash-flow  { to { stroke-dashoffset: -240; } }
+  @keyframes dash-flow-slow { 0%,72%,100% { stroke-dashoffset: 0; } 86% { stroke-dashoffset: -14; } }
+  @keyframes ring-flow  { to { stroke-dashoffset: -534; } }
+  @keyframes soft-pulse { 0%,100% { opacity:.35; } 50% { opacity:.85; } }
+
   /* ── REVEAL ─────────────────────────── */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
   .reveal.in { opacity: 1; transform: none; }
@@ -801,95 +813,128 @@
     <div class="loop-viz reveal" aria-hidden="true">
       <svg viewBox="0 0 760 440" preserveAspectRatio="xMidYMid meet">
         <defs>
-          <linearGradient id="lv-fast" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#4083FF"/>
-            <stop offset="100%" stop-color="#0052F2"/>
+          <linearGradient id="lv-fast" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#0052F2"/>
+            <stop offset="55%" stop-color="#4083FF"/>
+            <stop offset="100%" stop-color="#9FC0FF"/>
           </linearGradient>
           <linearGradient id="lv-slow" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#A373FF"/>
             <stop offset="100%" stop-color="#FF7D78"/>
           </linearGradient>
-          <filter id="lv-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4"/>
+          <radialGradient id="lv-node-fill" cx="50%" cy="38%" r="70%">
+            <stop offset="0%" stop-color="#16233f"/>
+            <stop offset="100%" stop-color="#0A0A0F"/>
+          </radialGradient>
+          <radialGradient id="lv-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#cfe0ff"/>
+            <stop offset="45%" stop-color="#4083FF" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="lv-glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="7"/>
+          </filter>
+          <filter id="lv-glow-sm" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3"/>
           </filter>
         </defs>
 
+        <!-- Soft core glow behind center -->
+        <circle cx="380" cy="220" r="120" fill="url(#lv-core)" opacity="0.5"/>
+
         <!-- Subtle base ring -->
-        <circle cx="380" cy="220" r="150" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="26"/>
+        <circle cx="380" cy="220" r="150" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="26"/>
 
-        <!-- Left half: FAST — solid bright blue -->
-        <path d="M 380 70 A 150 150 0 0 0 380 370"
-              stroke="url(#lv-fast)" stroke-width="24"
+        <!-- BOTTLENECK — only the short USE → LEARN arc (right side): thin, dim, stalled -->
+        <path d="M 486 114 A 150 150 0 0 1 486 326"
+              stroke="url(#lv-slow)" stroke-width="13"
+              fill="none" stroke-linecap="round"
+              stroke-dasharray="1.5 21" opacity="0.6"
+              style="animation: dash-flow-slow 5s ease-in-out infinite;"/>
+
+        <!-- FAST — the other 3/4 (LEARN → BUILD → SHIP → USE), glow underlay -->
+        <path d="M 486 326 A 150 150 0 1 1 486 114"
+              stroke="#4083FF" stroke-width="22"
+              fill="none" stroke-linecap="round"
+              opacity="0.4" filter="url(#lv-glow)"/>
+        <!-- FAST — solid bright gradient -->
+        <path d="M 486 326 A 150 150 0 1 1 486 114"
+              stroke="url(#lv-fast)" stroke-width="22"
               fill="none" stroke-linecap="round"/>
-        <!-- Glow under left half -->
-        <path d="M 380 70 A 150 150 0 0 0 380 370"
-              stroke="#4083FF" stroke-width="24"
-              fill="none" stroke-linecap="round"
-              opacity="0.35" filter="url(#lv-glow)"/>
 
-        <!-- Right half: BOTTLENECK — dashed dim violet→pink -->
-        <path d="M 380 70 A 150 150 0 0 1 380 370"
-              stroke="url(#lv-slow)" stroke-width="24"
-              fill="none" stroke-linecap="round"
-              stroke-dasharray="2 10" opacity="0.55"/>
+        <!-- Clockwise motion path: full circle starting at LEARN -->
+        <path id="lv-loop-path" d="M 486 326 A 150 150 0 1 1 486 114 A 150 150 0 0 1 486 326" fill="none" stroke="none"/>
 
-        <!-- Animated particle on the fast (left) half -->
-        <g class="lv-particle">
-          <circle cx="230" cy="220" r="4" fill="#fff">
-            <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
-          </circle>
+        <!-- Multiple pulses: fast for 3/4 (keyPoints 0→0.75), slow through USE→LEARN (0.75→1) -->
+        <g class="lv-pulses" fill="#fff">
+          <g>
+            <circle r="8" fill="#cfe0ff" opacity="0.4" filter="url(#lv-glow-sm)"/>
+            <circle r="3.5"/>
+            <animateMotion dur="7s" begin="0s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion>
+          </g>
+          <g>
+            <circle r="8" fill="#cfe0ff" opacity="0.4" filter="url(#lv-glow-sm)"/>
+            <circle r="3.5"/>
+            <animateMotion dur="7s" begin="-1.75s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion>
+          </g>
+          <g>
+            <circle r="8" fill="#cfe0ff" opacity="0.4" filter="url(#lv-glow-sm)"/>
+            <circle r="3.5"/>
+            <animateMotion dur="7s" begin="-3.5s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion>
+          </g>
+          <g>
+            <circle r="8" fill="#cfe0ff" opacity="0.4" filter="url(#lv-glow-sm)"/>
+            <circle r="3.5"/>
+            <animateMotion dur="7s" begin="-5.25s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion>
+          </g>
         </g>
 
         <!-- 4 nodes at diagonals -->
-        <!-- SHIP top-left -->
-        <g>
-          <circle cx="274" cy="114" r="44" class="lv-node-bg"/>
-          <text x="274" y="120" class="lv-node-label" text-anchor="middle">SHIP</text>
-        </g>
-        <!-- USE top-right -->
-        <g>
-          <circle cx="486" cy="114" r="44" class="lv-node-bg"/>
-          <text x="486" y="120" class="lv-node-label" text-anchor="middle">USE</text>
-        </g>
-        <!-- LEARN bottom-right -->
-        <g>
-          <circle cx="486" cy="326" r="44" class="lv-node-bg"/>
-          <text x="486" y="332" class="lv-node-label" text-anchor="middle">LEARN</text>
-        </g>
-        <!-- BUILD bottom-left -->
-        <g>
-          <circle cx="274" cy="326" r="44" class="lv-node-bg"/>
+        <!-- BUILD bottom-left (fast) -->
+        <g class="lv-node fast">
+          <circle cx="274" cy="326" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/>
+          <circle cx="274" cy="326" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/>
           <text x="274" y="332" class="lv-node-label" text-anchor="middle">BUILD</text>
         </g>
-
-        <!-- Center label -->
-        <text x="380" y="216" class="lv-center" text-anchor="middle">the loop</text>
-        <text x="380" y="236" class="lv-center-sub" text-anchor="middle">build → ship · use → learn</text>
+        <!-- SHIP top-left (fast) -->
+        <g class="lv-node fast">
+          <circle cx="274" cy="114" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/>
+          <circle cx="274" cy="114" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/>
+          <text x="274" y="120" class="lv-node-label" text-anchor="middle">SHIP</text>
+        </g>
+        <!-- USE top-right (slow) -->
+        <g class="lv-node slow">
+          <circle cx="486" cy="114" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/>
+          <text x="486" y="120" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">USE</text>
+        </g>
+        <!-- LEARN bottom-right (slow) -->
+        <g class="lv-node slow">
+          <circle cx="486" cy="326" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/>
+          <text x="486" y="332" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">LEARN</text>
+        </g>
 
         <!-- LEFT side caption: FAST -->
         <g>
-          <circle cx="118" cy="218" r="3" fill="#4083FF"/>
+          <circle cx="118" cy="218" r="3.5" fill="#4083FF"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
           <line x1="130" y1="218" x2="172" y2="218" stroke="rgba(64,131,255,0.5)" stroke-width="1"/>
           <text x="118" y="200" class="lv-side fast" text-anchor="start">Fast</text>
         </g>
 
         <!-- RIGHT side caption: BOTTLENECK -->
         <g>
-          <circle cx="642" cy="218" r="3" fill="#FF7D78"/>
+          <circle cx="642" cy="218" r="3.5" fill="#FF7D78" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
           <line x1="588" y1="218" x2="630" y2="218" stroke="rgba(255,125,120,0.5)" stroke-width="1"/>
           <text x="642" y="200" class="lv-side slow" text-anchor="end">Bottleneck</text>
         </g>
 
-        <!-- Pinch marker on right edge of ring -->
+        <!-- Pinch / blockage marker on right edge of ring -->
         <g transform="translate(530, 220)">
-          <circle r="11" fill="#0A0A0F" stroke="rgba(255,125,120,0.4)" stroke-width="1"/>
-          <line x1="-5" y1="-5" x2="5" y2="5" stroke="#FF7D78" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="-5" y1="5" x2="5" y2="-5" stroke="#FF7D78" stroke-width="1.5" stroke-linecap="round"/>
+          <circle r="13" fill="#FF7D78" opacity="0.18" filter="url(#lv-glow-sm)" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
+          <circle r="11" fill="#0A0A0F" stroke="rgba(255,125,120,0.55)" stroke-width="1.2"/>
+          <line x1="-5" y1="-5" x2="5" y2="5" stroke="#FF7D78" stroke-width="1.6" stroke-linecap="round"/>
+          <line x1="-5" y1="5" x2="5" y2="-5" stroke="#FF7D78" stroke-width="1.6" stroke-linecap="round"/>
         </g>
 
-        <!-- Bottom captions under each half -->
-        <text x="220" y="410" class="lv-side-sub" text-anchor="middle" style="opacity:.55">programming · agile · cloud · agents</text>
-        <text x="540" y="410" class="lv-side-sub" text-anchor="middle" style="opacity:.55">slack · replays · logs · guesswork</text>
       </svg>
     </div>
 
@@ -979,50 +1024,97 @@
       <div class="pmap">
         <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
           <defs>
-            <radialGradient id="pmap-node" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#4083FF" stop-opacity="1"/>
-              <stop offset="60%" stop-color="#0052F2" stop-opacity="0.95"/>
-              <stop offset="100%" stop-color="#0036A8" stop-opacity="0.8"/>
+            <radialGradient id="pmap-node" cx="50%" cy="38%" r="60%">
+              <stop offset="0%" stop-color="#7CAAFF" stop-opacity="1"/>
+              <stop offset="55%" stop-color="#0052F2" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#0036A8" stop-opacity="0.85"/>
             </radialGradient>
-            <filter id="pmap-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="6"/>
+            <radialGradient id="pmap-node-drop" cx="50%" cy="38%" r="60%">
+              <stop offset="0%" stop-color="#FFB0AC" stop-opacity="1"/>
+              <stop offset="60%" stop-color="#FF7D78" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#B33732" stop-opacity="0.85"/>
+            </radialGradient>
+            <linearGradient id="pmap-link" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#3b6bff" stop-opacity="0.15"/>
+              <stop offset="50%" stop-color="#5d86ff" stop-opacity="0.85"/>
+              <stop offset="100%" stop-color="#3b6bff" stop-opacity="0.15"/>
+            </linearGradient>
+            <filter id="pmap-glow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="7"/>
+            </filter>
+            <filter id="pmap-glow-sm" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="3"/>
             </filter>
           </defs>
 
-          <!-- Dashed connector paths -->
-          <g stroke="#3b6bff" stroke-width="1.5" stroke-dasharray="6 6" fill="none" opacity="0.7">
-            <path d="M -20 180 C 100 180, 180 180, 260 200"/>
-            <path d="M -20 280 C 120 320, 240 340, 360 290"/>
-            <path d="M 260 200 C 320 220, 380 240, 420 280"/>
-            <path d="M 360 290 C 380 300, 400 295, 420 280"/>
-            <path d="M 420 280 C 480 220, 530 170, 580 130"/>
-            <path d="M 420 280 C 460 230, 520 195, 600 220"/>
-            <path d="M 420 280 C 440 340, 470 380, 520 410"/>
-            <path d="M 520 410 C 580 420, 620 425, 680 460"/>
+          <!-- Connector base (dim) -->
+          <g stroke="rgba(91,134,255,0.22)" stroke-width="1.5" fill="none">
+            <path id="pm1" d="M -20 180 C 100 180, 180 180, 260 200"/>
+            <path id="pm2" d="M -20 280 C 120 320, 240 340, 360 290"/>
+            <path id="pm3" d="M 260 200 C 320 220, 380 240, 420 280"/>
+            <path id="pm4" d="M 360 290 C 380 300, 400 295, 420 280"/>
+            <path id="pm5" d="M 420 280 C 480 220, 530 170, 580 130"/>
+            <path id="pm6" d="M 420 280 C 460 230, 520 195, 600 220"/>
+            <path id="pm7" d="M 420 280 C 440 340, 470 380, 520 410"/>
+            <path id="pm8" d="M 520 410 C 580 420, 620 425, 680 460"/>
           </g>
 
+          <!-- Connector flow (animated bright dashes) -->
+          <g stroke-width="1.6" fill="none" stroke-linecap="round" style="animation: dash-flow 1.4s linear infinite;">
+            <use href="#pm1" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
+            <use href="#pm2" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
+            <use href="#pm3" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
+            <use href="#pm5" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
+            <use href="#pm6" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
+          </g>
+          <!-- Drop-off path: red, sparse, sluggish flow -->
+          <use href="#pm7" stroke="#FF7D78" stroke-width="1.6" fill="none" stroke-dasharray="3 14" opacity="0.7" style="animation: dash-flow 3.4s linear infinite;"/>
+          <use href="#pm8" stroke="#FF7D78" stroke-width="1.6" fill="none" stroke-dasharray="3 14" opacity="0.45" style="animation: dash-flow 3.4s linear infinite;"/>
+
+          <!-- Traveling data pulses along the happy path -->
+          <circle r="3.2" fill="#fff" filter="url(#pmap-glow-sm)">
+            <animateMotion dur="3.2s" repeatCount="indefinite" path="M -20 180 C 100 180, 180 180, 260 200"/>
+          </circle>
+          <circle r="3.2" fill="#fff" filter="url(#pmap-glow-sm)">
+            <animateMotion dur="2.4s" begin="0.4s" repeatCount="indefinite" path="M 260 200 C 320 220, 380 240, 420 280"/>
+          </circle>
+          <circle r="3.2" fill="#fff" filter="url(#pmap-glow-sm)">
+            <animateMotion dur="2.8s" begin="1s" repeatCount="indefinite" path="M 420 280 C 480 220, 530 170, 580 130"/>
+          </circle>
+
           <!-- Nodes (background glow) -->
-          <g filter="url(#pmap-glow)" opacity="0.6">
+          <g filter="url(#pmap-glow)" opacity="0.55">
             <circle cx="260" cy="200" r="22" fill="#1a4fd6"/>
-            <circle cx="420" cy="280" r="30" fill="#1a4fd6"/>
+            <circle cx="420" cy="280" r="30" fill="#2a5cff"/>
             <circle cx="580" cy="130" r="20" fill="#1a4fd6"/>
             <circle cx="600" cy="220" r="18" fill="#1a4fd6"/>
-            <circle cx="520" cy="410" r="18" fill="#1a4fd6"/>
+            <circle cx="520" cy="410" r="18" fill="#FF7D78"/>
             <circle cx="680" cy="460" r="16" fill="#1a4fd6"/>
           </g>
 
+          <!-- Ripple on the primary Chart node -->
+          <circle cx="420" cy="280" r="30" fill="none" stroke="#7CAAFF" stroke-width="1.5">
+            <animate attributeName="r" values="30;58" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <!-- Ripple on the drop-off node (red, slower) -->
+          <circle cx="520" cy="410" r="18" fill="none" stroke="#FF7D78" stroke-width="1.5">
+            <animate attributeName="r" values="18;42" dur="2.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0" dur="2.6s" repeatCount="indefinite"/>
+          </circle>
+
           <!-- Nodes (foreground solid) -->
           <g>
-            <circle cx="260" cy="200" r="22" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
-            <circle cx="420" cy="280" r="30" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.55)" stroke-width="1.2"/>
-            <circle cx="580" cy="130" r="20" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
-            <circle cx="600" cy="220" r="18" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
-            <circle cx="520" cy="410" r="18" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
-            <circle cx="680" cy="460" r="16" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.5)" stroke-width="1"/>
+            <circle cx="260" cy="200" r="22" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.6)" stroke-width="1"/>
+            <circle cx="420" cy="280" r="30" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.65)" stroke-width="1.4"/>
+            <circle cx="580" cy="130" r="20" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.6)" stroke-width="1"/>
+            <circle cx="600" cy="220" r="18" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.6)" stroke-width="1"/>
+            <circle cx="520" cy="410" r="18" fill="url(#pmap-node-drop)" stroke="rgba(255,140,135,0.7)" stroke-width="1.2"/>
+            <circle cx="680" cy="460" r="16" fill="url(#pmap-node)" stroke="rgba(124,170,255,0.55)" stroke-width="1" opacity="0.75"/>
           </g>
 
-          <!-- Subtle inline labels on the big node -->
-          <text x="420" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="8" letter-spacing="1.4" fill="rgba(255,255,255,0.7)">CHART</text>
+          <!-- Subtle inline label on the big node -->
+          <text x="420" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="8" letter-spacing="1.4" fill="rgba(255,255,255,0.85)">CHART</text>
         </svg>
 
         <!-- Node labels (HTML for crisp text) -->
@@ -1105,48 +1197,48 @@
 <!-- ── AHA · AMPLITUDE ON AMPLITUDE ──────────────────── -->
 <section class="aha" id="example">
   <div class="aha-head reveal">
-    <div class="eyebrow">A real one, start to finish</div>
-    <h2 class="sec-title">One issue. <span class="a">Five steps.</span> Shipped.</h2>
-    <p>This is <strong>Amplitude running on Amplitude</strong> — a real bug PDLC found, scoped, and tracked through to a merged PR. <strong>A person reviewed it before it shipped.</strong></p>
+    <div class="eyebrow">How it works</div>
+    <h2 class="sec-title">From problem to <span class="a">shipped fix.</span></h2>
+    <p>Here's a real one — a bug we found in <strong>Amplitude, using Amplitude</strong>. PDLC caught it, wrote up the fix, and tracked the result. <strong>A person reviewed it before it shipped.</strong></p>
   </div>
 
   <div class="aha-track reveal">
     <div class="aha-step">
       <div class="step-head"><span class="step-ico">⌖</span><span class="step-n">01</span></div>
-      <h4>Issue detected</h4>
-      <p>PDLC spots a pattern in real usage before anyone files a ticket.</p>
-      <div class="aha-mini">Chart Agent retry loop<br><span class="c"># adds latency + duplicate URLs</span></div>
+      <h4>Notices the problem</h4>
+      <p>It spots a pattern in how people actually use your product — before anyone files a ticket.</p>
+      <div class="aha-mini">Saving a chart fails,<br><span class="c">then quietly retries</span></div>
     </div>
     <div class="aha-step">
       <div class="step-head"><span class="step-ico">▦</span><span class="step-n">02</span></div>
-      <h4>Evidence grouped</h4>
-      <p>Scattered mentions and replays cluster into one scored, grouped problem.</p>
-      <div class="aha-mini"><span class="c">5 feedback · 3 replays</span><br>score <span class="b">0.94</span> · bug</div>
+      <h4>Connects the dots</h4>
+      <p>Scattered complaints and session replays get pulled together into one clear problem.</p>
+      <div class="aha-mini">5 reports + 3 replays<br><span class="b">→ one issue</span></div>
     </div>
     <div class="aha-step">
       <div class="step-head"><span class="step-ico">▤</span><span class="step-n">03</span></div>
-      <h4>Spec generated</h4>
-      <p>A brief with hypothesis, rollout, and falsifier — routed to a coding agent.</p>
-      <div class="aha-mini">hypothesis + falsifier<br><span class="b">→ claude code</span> · spec ready</div>
+      <h4>Drafts the fix</h4>
+      <p>It writes up what's wrong, what to change, and how to check it — then hands it to a coding agent.</p>
+      <div class="aha-mini">A clear plan,<br><span class="b">ready to build</span></div>
     </div>
     <div class="aha-step human">
       <div class="step-head"><span class="step-ico">✓</span><span class="step-n">04</span></div>
-      <h4>Reviewed &amp; shipped</h4>
-      <p>An engineer reviews the PR and merges. Humans decide what ships.</p>
-      <div class="aha-mini"><span class="c">human review</span><br>PR #102090 · <span class="g">merged</span></div>
+      <h4>You review and ship</h4>
+      <p>An engineer checks the work and merges it. People still decide what ships.</p>
+      <div class="aha-mini"><span class="c">Engineer reviews</span><br><span class="g">→ merged</span></div>
     </div>
     <div class="aha-step">
       <div class="step-head"><span class="step-ico">↗</span><span class="step-n">05</span></div>
-      <h4>Metric improved</h4>
-      <p>Outcome tracked against the metric it was meant to move.</p>
-      <div class="aha-mini">activation_d7<br><span class="g">+11.4%</span></div>
+      <h4>Tracks the result</h4>
+      <p>The fix gets measured against the outcome it was meant to improve.</p>
+      <div class="aha-mini">Chart saves recovered<br><span class="g">+11%</span></div>
     </div>
   </div>
 
   <div class="aha-foot reveal">
     <span class="pin"><span class="dot"></span>Reviewed before merge</span>
-    <span class="pin"><span class="dot"></span>Humans decide what ships</span>
-    <span class="pin"><span class="dot"></span>Amplitude on Amplitude · ~1 month in</span>
+    <span class="pin"><span class="dot"></span>People decide what ships</span>
+    <span class="pin"><span class="dot"></span>Running inside Amplitude · ~1 month in</span>
   </div>
 </section>
 
@@ -1208,12 +1300,20 @@
   <div class="product-loop">
         <svg viewBox="0 0 700 560" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <linearGradient id="pl-ring-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#6980FF"/>
+            <linearGradient id="pl-ring-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#9FC0FF"/>
+              <stop offset="45%" stop-color="#6980FF"/>
               <stop offset="100%" stop-color="#4083FF"/>
             </linearGradient>
-            <filter id="pl-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="4"/>
+            <radialGradient id="pl-center-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#4083FF" stop-opacity="0.28"/>
+              <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="pl-glow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="5"/>
+            </filter>
+            <filter id="pl-glow-sm" x="-90%" y="-90%" width="280%" height="280%">
+              <feGaussianBlur stdDeviation="3"/>
             </filter>
             <marker id="pl-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
               <path d="M0,0 L8,4 L0,8 z" fill="#4083FF"/>
@@ -1225,47 +1325,84 @@
                 d="M 350 110 A 170 170 0 1 1 349.9 110"
                 fill="none" stroke="none"/>
 
+          <!-- Center ambient glow -->
+          <circle cx="350" cy="280" r="150" fill="url(#pl-center-glow)"/>
+
           <!-- Subtle base ring -->
           <circle cx="350" cy="280" r="170" fill="none"
                   stroke="rgba(255,255,255,0.06)" stroke-width="30"/>
+
+          <!-- Glow under ring -->
+          <circle cx="350" cy="280" r="170" fill="none"
+                  stroke="#4083FF" stroke-width="3"
+                  opacity="0.45" filter="url(#pl-glow)"/>
 
           <!-- Active ring -->
           <circle cx="350" cy="280" r="170" fill="none"
                   stroke="url(#pl-ring-grad)" stroke-width="2"/>
 
-          <!-- Glow under ring -->
+          <!-- Flowing light along the ring -->
           <circle cx="350" cy="280" r="170" fill="none"
-                  stroke="#4083FF" stroke-width="2"
-                  opacity="0.5" filter="url(#pl-glow)"/>
+                  stroke="#cfe0ff" stroke-width="2.5"
+                  stroke-dasharray="4 20" stroke-linecap="round"
+                  opacity="0.8" style="animation: dash-flow 3s linear infinite;"/>
 
-          <!-- 6 arrow indicators at midpoints of each segment (30°, 90°, 150°, 210°, 270°, 330°) -->
-          <!-- Computed: midpoint position on circle, with tangent direction -->
+          <!-- 6 arrow indicators at midpoints of each segment -->
           <g fill="#4083FF">
-            <!-- between SENSE (0°) and PRIORITIZE (60°), midpoint 30° -->
-            <polygon points="0,-5 8,0 0,5"
-                     transform="translate(435 133) rotate(60)"/>
-            <!-- 90° -->
-            <polygon points="0,-5 8,0 0,5"
-                     transform="translate(520 280) rotate(120)"/>
-            <!-- 150° -->
-            <polygon points="0,-5 8,0 0,5"
-                     transform="translate(435 427) rotate(180)"/>
-            <!-- 210° -->
-            <polygon points="0,-5 8,0 0,5"
-                     transform="translate(265 427) rotate(240)"/>
-            <!-- 270° -->
-            <polygon points="0,-5 8,0 0,5"
-                     transform="translate(180 280) rotate(300)"/>
-            <!-- 330° -->
-            <polygon points="0,-5 8,0 0,5"
-                     transform="translate(265 133) rotate(0)"/>
+            <polygon points="0,-5 8,0 0,5" transform="translate(435 133) rotate(60)"/>
+            <polygon points="0,-5 8,0 0,5" transform="translate(520 280) rotate(120)"/>
+            <polygon points="0,-5 8,0 0,5" transform="translate(435 427) rotate(180)"/>
+            <polygon points="0,-5 8,0 0,5" transform="translate(265 427) rotate(240)"/>
+            <polygon points="0,-5 8,0 0,5" transform="translate(180 280) rotate(300)"/>
+            <polygon points="0,-5 8,0 0,5" transform="translate(265 133) rotate(0)"/>
           </g>
 
-          <!-- Traveling particle -->
-          <circle r="5" fill="#fff">
-            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto">
-              <mpath href="#pl-path"/>
-            </animateMotion>
+          <!-- Node halos — light in sequence as the pulse passes -->
+          <g fill="none" stroke="#6980FF" stroke-width="2">
+            <!-- SENSE -->
+            <circle cx="350" cy="110" r="40">
+              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="-1.98s"/>
+              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="-1.98s"/>
+            </circle>
+            <!-- PRIORITIZE -->
+            <circle cx="497" cy="195" r="40">
+              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="1.02s"/>
+              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="1.02s"/>
+            </circle>
+            <!-- SPEC -->
+            <circle cx="497" cy="365" r="40">
+              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="4.02s"/>
+              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="4.02s"/>
+            </circle>
+            <!-- ACT -->
+            <circle cx="350" cy="450" r="40">
+              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="7.02s"/>
+              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="7.02s"/>
+            </circle>
+            <!-- VERIFY -->
+            <circle cx="203" cy="365" r="40">
+              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="10.02s"/>
+              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="10.02s"/>
+            </circle>
+            <!-- MEASURE -->
+            <circle cx="203" cy="195" r="40">
+              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="13.02s"/>
+              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="13.02s"/>
+            </circle>
+          </g>
+
+          <!-- Traveling pulse + comet trail -->
+          <circle r="11" fill="#fff" opacity="0.5" filter="url(#pl-glow-sm)">
+            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"><mpath href="#pl-path"/></animateMotion>
+          </circle>
+          <circle r="4" fill="#9FC0FF" opacity="0.5">
+            <animateMotion dur="18s" begin="0.5s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion>
+          </circle>
+          <circle r="3" fill="#9FC0FF" opacity="0.3">
+            <animateMotion dur="18s" begin="0.9s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion>
+          </circle>
+          <circle r="5.5" fill="#fff">
+            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"><mpath href="#pl-path"/></animateMotion>
           </circle>
 
           <!-- 6 nodes (radius 32, positioned clockwise from top) -->
