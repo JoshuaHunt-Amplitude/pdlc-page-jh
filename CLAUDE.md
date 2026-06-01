@@ -61,8 +61,9 @@ version.** A ⌘K modal in every file switches versions. `docs.html` is a separa
 ## Voice (detail in memory: `pdlc-page-voice`)
 Clear, operational, opinionated, human — not "AI-keynote-y". Cut ~30%; let visuals explain. Avoid
 jargon ("sensing layer", "compound flywheel", "surfaces"). Reinforce human-in-the-loop ("reviewed
-before merge", "people decide what ships"). Frame access as exclusive ("Q3 cohort / design
-partners"). Ground claims in one real Amplitude-on-Amplitude example.
+before merge", "people decide what ships"). Frame access as exclusive — **"closed beta"** for a
+small group of teams (this replaced the earlier "Q3 cohort / design partner" language); never
+"waitlist". Ground claims in one real Amplitude-on-Amplitude example.
 
 ## Tech notes
 - Palette = CSS vars (`--blue #0052F2`, `--blue-d #4083FF`, `--lilac`, `--violet`, `--pink`,
