@@ -1314,27 +1314,27 @@
 
           <!-- Path the particle travels along (full circle starting at top, clockwise) -->
           <path id="pl-path"
-                d="M 350 110 A 170 170 0 1 1 349.9 110"
+                d="M 350 130 A 150 150 0 1 1 349.9 130"
                 fill="none" stroke="none"/>
 
           <!-- Center ambient glow -->
-          <circle cx="350" cy="280" r="150" fill="url(#pl-center-glow)"/>
+          <circle cx="350" cy="280" r="130" fill="url(#pl-center-glow)"/>
 
           <!-- Subtle base ring -->
-          <circle cx="350" cy="280" r="170" fill="none"
+          <circle cx="350" cy="280" r="150" fill="none"
                   stroke="rgba(255,255,255,0.05)" stroke-width="26"/>
 
           <!-- Glow under ring -->
-          <circle cx="350" cy="280" r="170" fill="none"
+          <circle cx="350" cy="280" r="150" fill="none"
                   stroke="#4083FF" stroke-width="3"
                   opacity="0.45" filter="url(#pl-glow)"/>
 
           <!-- Active ring -->
-          <circle cx="350" cy="280" r="170" fill="none"
+          <circle cx="350" cy="280" r="150" fill="none"
                   stroke="url(#pl-ring-grad)" stroke-width="2"/>
 
           <!-- Flowing light along the ring -->
-          <circle cx="350" cy="280" r="170" fill="none"
+          <circle cx="350" cy="280" r="150" fill="none"
                   stroke="#cfe0ff" stroke-width="2.5"
                   stroke-dasharray="4 20" stroke-linecap="round"
                   opacity="0.8" style="animation: dash-flow 3s linear infinite;"/>
@@ -1342,32 +1342,32 @@
           <!-- Node halos — light in sequence as the pulse passes -->
           <g fill="none" stroke="#6980FF" stroke-width="2">
             <!-- SENSE -->
-            <circle cx="350" cy="110" r="40">
+            <circle cx="350" cy="130" r="40">
               <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="-1.98s"/>
               <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="-1.98s"/>
             </circle>
             <!-- PRIORITIZE -->
-            <circle cx="497" cy="195" r="40">
+            <circle cx="480" cy="205" r="40">
               <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="1.02s"/>
               <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="1.02s"/>
             </circle>
             <!-- SPEC -->
-            <circle cx="497" cy="365" r="40">
+            <circle cx="480" cy="355" r="40">
               <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="4.02s"/>
               <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="4.02s"/>
             </circle>
             <!-- ACT -->
-            <circle cx="350" cy="450" r="40">
+            <circle cx="350" cy="430" r="40">
               <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="7.02s"/>
               <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="7.02s"/>
             </circle>
             <!-- VERIFY -->
-            <circle cx="203" cy="365" r="40">
+            <circle cx="220" cy="355" r="40">
               <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="10.02s"/>
               <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="10.02s"/>
             </circle>
             <!-- MEASURE -->
-            <circle cx="203" cy="195" r="40">
+            <circle cx="220" cy="205" r="40">
               <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="13.02s"/>
               <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="13.02s"/>
             </circle>
@@ -1388,10 +1388,10 @@
           </circle>
 
           <!-- 6 nodes (radius 32, positioned clockwise from top) -->
-          <!-- 1: SENSE — top (350, 110) -->
+          <!-- 1: SENSE — top -->
           <g class="pl-node">
-            <circle cx="350" cy="110" r="32"/>
-            <g class="pl-ico" transform="translate(338,98)">
+            <circle cx="350" cy="130" r="32"/>
+            <g class="pl-ico" transform="translate(338,118)">
               <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
               <path d="M4 6h.01"/>
               <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
@@ -1402,10 +1402,10 @@
               <path d="m13.41 10.59 5.66-5.66"/>
             </g>
           </g>
-          <!-- 2: PRIORITIZE — top-right (497, 195) -->
+          <!-- 2: PRIORITIZE — top-right -->
           <g class="pl-node">
-            <circle cx="497" cy="195" r="32"/>
-            <g class="pl-ico" transform="translate(485,183)">
+            <circle cx="480" cy="205" r="32"/>
+            <g class="pl-ico" transform="translate(468,193)">
               <path d="M11 5h10"/>
               <path d="M11 12h10"/>
               <path d="M11 19h10"/>
@@ -1414,10 +1414,10 @@
               <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/>
             </g>
           </g>
-          <!-- 3: SPEC — bottom-right (497, 365) -->
+          <!-- 3: SPEC — bottom-right -->
           <g class="pl-node">
-            <circle cx="497" cy="365" r="32"/>
-            <g class="pl-ico" transform="translate(485,353)">
+            <circle cx="480" cy="355" r="32"/>
+            <g class="pl-ico" transform="translate(468,343)">
               <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
               <path d="M12 11h4"/>
@@ -1426,68 +1426,62 @@
               <path d="M8 16h.01"/>
             </g>
           </g>
-          <!-- 4: ACT — bottom (350, 450) -->
+          <!-- 4: ACT — bottom -->
           <g class="pl-node">
-            <circle cx="350" cy="450" r="32"/>
-            <g class="pl-ico" transform="translate(338,438)">
+            <circle cx="350" cy="430" r="32"/>
+            <g class="pl-ico" transform="translate(338,418)">
               <path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9"/>
               <path d="m18 15 4-4"/>
               <path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/>
             </g>
           </g>
-          <!-- 5: VERIFY — bottom-left (203, 365) -->
+          <!-- 5: VERIFY — bottom-left -->
           <g class="pl-node">
-            <circle cx="203" cy="365" r="32"/>
-            <g class="pl-ico" transform="translate(191,353)">
+            <circle cx="220" cy="355" r="32"/>
+            <g class="pl-ico" transform="translate(208,343)">
               <path d="M18 6 7 17l-5-5"/>
               <path d="m22 10-7.5 7.5L13 16"/>
             </g>
           </g>
-          <!-- 6: MEASURE — top-left (203, 195) -->
+          <!-- 6: MEASURE — top-left -->
           <g class="pl-node">
-            <circle cx="203" cy="195" r="32"/>
-            <g class="pl-ico" transform="translate(191,183)">
+            <circle cx="220" cy="205" r="32"/>
+            <g class="pl-ico" transform="translate(208,193)">
               <path d="M16 7h6v6"/>
               <path d="m22 7-8.5 8.5-5-5L2 17"/>
             </g>
           </g>
 
-          <!-- Center text -->
-          <text x="350" y="275" text-anchor="middle"
-                class="pl-center-title">The Product Loop</text>
-          <text x="350" y="298" text-anchor="middle"
-                class="pl-center-sub">Sense. Build. Measure. Learn.</text>
-
           <!-- Labels for each node -->
           <!-- SENSE (top) -->
-          <text x="350" y="50" text-anchor="middle" class="pl-label">SENSE</text>
-          <text x="350" y="68" text-anchor="middle" class="pl-desc">Find problems</text>
-          <text x="350" y="82" text-anchor="middle" class="pl-desc">worth solving</text>
+          <text x="350" y="44" text-anchor="middle" class="pl-label">SENSE</text>
+          <text x="350" y="62" text-anchor="middle" class="pl-desc">Find problems</text>
+          <text x="350" y="76" text-anchor="middle" class="pl-desc">worth solving</text>
 
           <!-- PRIORITIZE (top-right) -->
-          <text x="540" y="178" text-anchor="start" class="pl-label">PRIORITIZE</text>
-          <text x="540" y="196" text-anchor="start" class="pl-desc">Rank by impact</text>
-          <text x="540" y="210" text-anchor="start" class="pl-desc">and confidence</text>
+          <text x="548" y="188" text-anchor="start" class="pl-label">PRIORITIZE</text>
+          <text x="548" y="206" text-anchor="start" class="pl-desc">Rank by impact</text>
+          <text x="548" y="220" text-anchor="start" class="pl-desc">and confidence</text>
 
           <!-- SPEC (bottom-right) -->
-          <text x="540" y="348" text-anchor="start" class="pl-label">SPEC</text>
-          <text x="540" y="366" text-anchor="start" class="pl-desc">Define the solution</text>
-          <text x="540" y="380" text-anchor="start" class="pl-desc">and acceptance criteria</text>
+          <text x="548" y="338" text-anchor="start" class="pl-label">SPEC</text>
+          <text x="548" y="356" text-anchor="start" class="pl-desc">Define the solution</text>
+          <text x="548" y="370" text-anchor="start" class="pl-desc">and acceptance criteria</text>
 
           <!-- ACT (bottom) -->
-          <text x="350" y="510" text-anchor="middle" class="pl-label">ACT</text>
-          <text x="350" y="528" text-anchor="middle" class="pl-desc">Build the right</text>
-          <text x="350" y="542" text-anchor="middle" class="pl-desc">thing</text>
+          <text x="350" y="492" text-anchor="middle" class="pl-label">ACT</text>
+          <text x="350" y="510" text-anchor="middle" class="pl-desc">Build the right</text>
+          <text x="350" y="524" text-anchor="middle" class="pl-desc">thing</text>
 
           <!-- VERIFY (bottom-left) -->
-          <text x="160" y="348" text-anchor="end" class="pl-label">VERIFY</text>
-          <text x="160" y="366" text-anchor="end" class="pl-desc">Check the work</text>
-          <text x="160" y="380" text-anchor="end" class="pl-desc">and capture replay</text>
+          <text x="152" y="338" text-anchor="end" class="pl-label">VERIFY</text>
+          <text x="152" y="356" text-anchor="end" class="pl-desc">Check the work</text>
+          <text x="152" y="370" text-anchor="end" class="pl-desc">and capture replay</text>
 
           <!-- MEASURE (top-left) -->
-          <text x="160" y="178" text-anchor="end" class="pl-label">MEASURE</text>
-          <text x="160" y="196" text-anchor="end" class="pl-desc">Track outcomes</text>
-          <text x="160" y="210" text-anchor="end" class="pl-desc">and impact</text>
+          <text x="152" y="188" text-anchor="end" class="pl-label">MEASURE</text>
+          <text x="152" y="206" text-anchor="end" class="pl-desc">Track outcomes</text>
+          <text x="152" y="220" text-anchor="end" class="pl-desc">and impact</text>
         </svg>
   </div>
 </section>
