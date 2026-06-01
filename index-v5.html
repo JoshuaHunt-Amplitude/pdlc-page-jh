@@ -608,7 +608,7 @@
   @media (max-width: 760px) { .sig-card.byo { grid-template-columns: 1fr; } }
 
   /* ── FUNNEL TRANSITION (signals collapse to one ranked point) ─── */
-  .funnel { position: relative; z-index: 1; max-width: 1180px; margin: -56px auto -40px; padding: 0 32px; pointer-events: none; }
+  .funnel { position: relative; z-index: 1; max-width: 1180px; margin: -84px auto -40px; padding: 0 32px; pointer-events: none; }
   .funnel svg { width: 100%; height: auto; display: block; overflow: visible; }
   @media (max-width: 720px) { .funnel { margin: -24px auto -24px; } }
 
@@ -1417,39 +1417,6 @@
   </div>
 </section>
 
-<!-- ── WAYS IN ───────────────────────────────────────── -->
-<section class="surfaces" id="ways-in">
-  <div class="surfaces-head reveal">
-    <div class="eyebrow">EFFORTLESS TO USE</div>
-    <h2 class="sec-title">Leverage where your team&nbsp;<span class="a">already works.</span></h2>
-    <p>Same data, same ranked list — in your coding agent or in Amplitude.</p>
-  </div>
-
-  <div class="surfaces-grid">
-    <div class="surface-card reveal">
-      <div class="surface-tag"><span class="material-symbols-rounded">hub</span>MCP</div>
-      <h4>For builders and coding agents</h4>
-      <p>Cursor, Claude Code, Codex, or your own harness asks Amplitude what to work on — and gets a ranked list with full evidence: chart, replay, and feedback IDs to ground its work.</p>
-      <pre class="surface-code"><span class="c"># Cursor / Claude Code</span>
-<span class="k">→</span> <span class="s">amplitude.opportunities</span>(
-    area: <span class="v">"chart-creation"</span>,
-    limit: <span class="v">5</span>
-  )</pre>
-    </div>
-
-    <div class="surface-card reveal">
-      <div class="surface-tag"><span class="material-symbols-rounded">dashboard</span>In-app</div>
-      <h4>For PMs and leads</h4>
-      <p>A ranked queue per product area — open it instead of five dashboards. Each item carries the problem, the evidence, a proposed spec, and a status: <em>Planned · In Review · Shipped · Tracked</em>. PDLC connects to the tools you already know and use like Jira and Linear.</p>
-      <pre class="surface-code"><span class="c">// Opportunity Feed</span>
-<span class="k">▸</span> Stop Response cancels session
-   <span class="c">5+ feedback mentions · PR #102090</span>
-<span class="k">▸</span> Checkout silent-fail on Safari
-   <span class="c">rage clicks · spec ready</span></pre>
-    </div>
-  </div>
-</section>
-
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
   <div class="pl-head">
@@ -1655,6 +1622,39 @@
           <text x="152" y="206" text-anchor="end" class="pl-desc">Track outcomes</text>
           <text x="152" y="220" text-anchor="end" class="pl-desc">and impact</text>
         </svg>
+  </div>
+</section>
+
+<!-- ── WAYS IN ───────────────────────────────────────── -->
+<section class="surfaces" id="ways-in">
+  <div class="surfaces-head reveal">
+    <div class="eyebrow">EFFORTLESS TO USE</div>
+    <h2 class="sec-title">Leverage where your team&nbsp;<span class="a">already works.</span></h2>
+    <p>Same data, same ranked list — in your coding agent or in Amplitude.</p>
+  </div>
+
+  <div class="surfaces-grid">
+    <div class="surface-card reveal">
+      <div class="surface-tag"><span class="material-symbols-rounded">hub</span>MCP</div>
+      <h4>For builders and coding agents</h4>
+      <p>Cursor, Claude Code, Codex, or your own harness asks Amplitude what to work on — and gets a ranked list with full evidence: chart, replay, and feedback IDs to ground its work.</p>
+      <pre class="surface-code"><span class="c"># Cursor / Claude Code</span>
+<span class="k">→</span> <span class="s">amplitude.opportunities</span>(
+    area: <span class="v">"chart-creation"</span>,
+    limit: <span class="v">5</span>
+  )</pre>
+    </div>
+
+    <div class="surface-card reveal">
+      <div class="surface-tag"><span class="material-symbols-rounded">dashboard</span>In-app</div>
+      <h4>For PMs and leads</h4>
+      <p>A ranked queue per product area — open it instead of five dashboards. Each item carries the problem, the evidence, a proposed spec, and a status: <em>Planned · In Review · Shipped · Tracked</em>. PDLC connects to the tools you already know and use like Jira and Linear.</p>
+      <pre class="surface-code"><span class="c">// Opportunity Feed</span>
+<span class="k">▸</span> Stop Response cancels session
+   <span class="c">5+ feedback mentions · PR #102090</span>
+<span class="k">▸</span> Checkout silent-fail on Safari
+   <span class="c">rage clicks · spec ready</span></pre>
+    </div>
   </div>
 </section>
 
