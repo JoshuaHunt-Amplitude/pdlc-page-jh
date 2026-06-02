@@ -826,6 +826,24 @@
   /* ── REVEAL ─────────────────────────── */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
   .reveal.in { opacity: 1; transform: none; }
+
+  /* ── Mobile pass (parity with v9): stack signup, tighter rhythm, larger graphics ── */
+  @media (max-width: 560px) {
+    .waitlist { flex-direction: column; align-items: stretch; gap: 6px; }
+    .waitlist input, .hero .waitlist input { padding: 13px 14px; font-size: 15px; }
+    .waitlist button, .hero .waitlist button { width: 100%; justify-content: center; padding: 14px 18px; font-size: 11px; }
+  }
+  @media (max-width: 720px) {
+    .manifesto { padding: 64px 20px; }
+    .signals { padding: 56px 16px; }
+    .funnel { padding: 0 6px; }
+    .pshot { padding: 52px 0; }
+    .pshot-in { padding: 0 16px; }
+    .pl-section { padding: 56px 14px 64px; }
+    .surfaces { padding: 64px 20px; }
+    .closer { padding: 72px 20px 80px; }
+    .hero { padding: 0 22px; }
+  }
 </style>
 </head>
 <body>
