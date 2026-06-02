@@ -110,7 +110,7 @@
   @keyframes pulse { 0%,100%{opacity:.7;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
 
   /* ── MANIFESTO ──────────────────────── */
-  .manifesto { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 140px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
+  .manifesto { border-top: 1px solid var(--line); padding: 140px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 64px; }
 
   /* Loop visual */
@@ -130,7 +130,7 @@
   @keyframes lv-spin { to { transform: rotate(360deg); } }
 
   /* Product loop (v4 end visual) */
-  .pl-section { padding: 140px 32px 160px; max-width: 1320px; margin: 0 auto; border-top: 1px solid var(--line); }
+  .pl-section { padding: 140px 32px 160px; max-width: 1320px; margin: 0 auto; }
   .pl-head { max-width: 720px; margin: 0 auto 80px; text-align: center; }
   .pl-head .loop-pill { display: inline-flex; margin: 0 auto 24px; }
   .pl-head h3 {
@@ -651,9 +651,10 @@
   @media (max-width: 760px) { .sig-card.byo { grid-template-columns: 1fr; } }
 
   /* ── FUNNEL TRANSITION (signals collapse to one ranked point) ─── */
-  .funnel { position: relative; z-index: 1; max-width: 1180px; margin: 8px auto 0; padding: 0 32px; pointer-events: none; }
+  .funnel-band { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 96px 0 64px; }
+  .funnel { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 32px; pointer-events: none; }
   .funnel svg { width: 100%; height: auto; display: block; overflow: visible; }
-  @media (max-width: 720px) { .funnel { margin: -24px auto -24px; } }
+  @media (max-width: 720px) { .funnel-band { padding: 56px 0 40px; } }
 
   /* ── COMPONENTS (Beat 7) ───────────── */
   .cmps { border-top: 1px solid var(--line); padding: 140px 32px; }
@@ -669,7 +670,7 @@
 
   /* ── CTA ────────────────────────────── */
   .closer {
-    text-align: center; padding: 140px 32px 160px;
+    text-align: center; padding: 140px 32px 240px;
     max-width: 1320px; margin: 0 auto; position: relative;
   }
   /* Full-bleed product shots that run off both screen edges and peek up behind the
@@ -677,14 +678,14 @@
      shots bleed past the viewport edges and cut off cleanly at the footer line. The
      wrapper sits first in the DOM so the CTA content paints on top; mask fades tops. */
   .cta-shots { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100vw; height: 300px; overflow: hidden; z-index: 0; pointer-events: none; }
-  .cta-shot { position: absolute; bottom: -30px; width: clamp(400px, 32vw, 580px); height: 330px;
+    width: 100vw; height: 340px; overflow: hidden; z-index: 0; pointer-events: none; text-align: left; }
+  .cta-shot { position: absolute; bottom: -30px; width: clamp(440px, 34vw, 640px); height: 380px;
     overflow: hidden; border-radius: 12px; opacity: .8;
     box-shadow: 0 20px 50px rgba(0,0,0,.5);
     -webkit-mask-image: linear-gradient(to top, #000 46%, transparent 98%);
     mask-image: linear-gradient(to top, #000 46%, transparent 98%); }
-  .cta-shot.left  { left: -50px;  transform: perspective(2400px) rotateY(7deg) rotate(-1deg);  transform-origin: bottom left; }
-  .cta-shot.right { right: -50px; transform: perspective(2400px) rotateY(-7deg) rotate(1deg);  transform-origin: bottom right; }
+  .cta-shot.left  { left: -60px;  transform: perspective(2400px) rotateY(7deg) rotate(-1deg);  transform-origin: bottom left; }
+  .cta-shot.right { right: -60px; transform: perspective(2400px) rotateY(-7deg) rotate(1deg);  transform-origin: bottom right; }
   .cta-shot .opp-feed, .cta-shot .pmap { transform: none; width: 100%; border-radius: 12px; }
   .cta-shot .pmap { aspect-ratio: auto; height: 100%; }
   @media (max-width: 1080px) { .cta-shots { display: none; } }
@@ -1112,6 +1113,7 @@
          (opacity keyTimes 0;.15;.8;1).
      TUNING: orb COUNT = signal volume; DUR/begin spread = how busy the stream feels;
              diagonal top-y (−70) = how far they reach up into the section above. -->
+<section class="funnel-band">
 <div class="funnel reveal" aria-hidden="true">
   <svg viewBox="0 0 1200 320" preserveAspectRatio="xMidYMid meet">
     <defs>
@@ -1169,6 +1171,7 @@
     </circle>
   </svg>
 </div>
+</section>
 
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
