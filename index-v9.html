@@ -670,21 +670,24 @@
   /* ── CTA ────────────────────────────── */
   .closer {
     text-align: center; padding: 140px 32px 160px;
-    max-width: 1320px; margin: 0 auto; position: relative; overflow: hidden;
+    max-width: 1320px; margin: 0 auto; position: relative;
   }
-  /* Product shots peeking up at the bottom corners, behind the CTA. They sit
-     first in the DOM so the CTA content paints on top; .closer's overflow:hidden
-     clips them at the footer line, and a top mask fades them in. */
-  .cta-shot { position: absolute; bottom: -26px; width: clamp(250px, 23vw, 360px); height: 200px;
-    overflow: hidden; border-radius: 12px; z-index: 0; opacity: .8; pointer-events: none;
-    box-shadow: 0 18px 44px rgba(0,0,0,.5);
+  /* Full-bleed product shots that run off both screen edges and peek up behind the
+     CTA. A 100vw wrapper (clipped here + by the body's overflow-x:hidden) lets the
+     shots bleed past the viewport edges and cut off cleanly at the footer line. The
+     wrapper sits first in the DOM so the CTA content paints on top; mask fades tops. */
+  .cta-shots { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100vw; height: 300px; overflow: hidden; z-index: 0; pointer-events: none; }
+  .cta-shot { position: absolute; bottom: -30px; width: clamp(400px, 32vw, 580px); height: 330px;
+    overflow: hidden; border-radius: 12px; opacity: .8;
+    box-shadow: 0 20px 50px rgba(0,0,0,.5);
     -webkit-mask-image: linear-gradient(to top, #000 46%, transparent 98%);
     mask-image: linear-gradient(to top, #000 46%, transparent 98%); }
-  .cta-shot.left  { left: 0;  transform: perspective(2000px) rotateY(8deg) rotate(-1deg);  transform-origin: bottom left; }
-  .cta-shot.right { right: 0; transform: perspective(2000px) rotateY(-8deg) rotate(1deg);  transform-origin: bottom right; }
-  .cta-shot .opp-feed, .cta-shot .pmap { transform: none; width: 100%; border-radius: 14px; }
+  .cta-shot.left  { left: -50px;  transform: perspective(2400px) rotateY(7deg) rotate(-1deg);  transform-origin: bottom left; }
+  .cta-shot.right { right: -50px; transform: perspective(2400px) rotateY(-7deg) rotate(1deg);  transform-origin: bottom right; }
+  .cta-shot .opp-feed, .cta-shot .pmap { transform: none; width: 100%; border-radius: 12px; }
   .cta-shot .pmap { aspect-ratio: auto; height: 100%; }
-  @media (max-width: 1080px) { .cta-shot { display: none; } }
+  @media (max-width: 1080px) { .cta-shots { display: none; } }
   .closer::before {
     content: ""; position: absolute; top: 42%; left: 50%;
     transform: translate(-50%, -50%);
@@ -1377,7 +1380,8 @@
 
 <!-- ── CTA ────────────────────────────────────────────── -->
 <section id="cta" class="closer">
-  <!-- Product shots peeking up to frame the CTA: prioritized list (left) + product map (right) -->
+  <!-- Full-bleed product shots running off both screen edges, peeking behind the CTA -->
+  <div class="cta-shots" aria-hidden="true">
   <div class="cta-shot right" aria-hidden="true">
     <div class="opp-feed">
       <div class="opp-feed-head">
@@ -1519,6 +1523,7 @@
         <div class="pmc-title">Session Exit Without Save</div>
       </div>
     </div>
+  </div>
   </div>
   <h2 class="reveal">Build products that<br><span class="a">improve themselves.</span></h2>
   <p class="reveal">A closed beta, for a small group of teams. Be first to sense what your users want, decide what to build, and act on it — with your team in control. We work hand in hand with everyone we bring on.</p>
