@@ -675,13 +675,13 @@
   /* Product shots peeking up at the bottom corners, behind the CTA. They sit
      first in the DOM so the CTA content paints on top; .closer's overflow:hidden
      clips them at the footer line, and a top mask fades them in. */
-  .cta-shot { position: absolute; bottom: -20px; width: clamp(330px, 30vw, 460px); height: 300px;
-    overflow: hidden; border-radius: 14px; z-index: 0; opacity: .88; pointer-events: none;
-    box-shadow: 0 24px 60px rgba(0,0,0,.55);
-    -webkit-mask-image: linear-gradient(to top, #000 50%, transparent 98%);
-    mask-image: linear-gradient(to top, #000 50%, transparent 98%); }
-  .cta-shot.left  { left: 0;  transform: perspective(1700px) rotateY(13deg) rotate(-2deg);  transform-origin: bottom left; }
-  .cta-shot.right { right: 0; transform: perspective(1700px) rotateY(-13deg) rotate(2deg);  transform-origin: bottom right; }
+  .cta-shot { position: absolute; bottom: -26px; width: clamp(250px, 23vw, 360px); height: 200px;
+    overflow: hidden; border-radius: 12px; z-index: 0; opacity: .8; pointer-events: none;
+    box-shadow: 0 18px 44px rgba(0,0,0,.5);
+    -webkit-mask-image: linear-gradient(to top, #000 46%, transparent 98%);
+    mask-image: linear-gradient(to top, #000 46%, transparent 98%); }
+  .cta-shot.left  { left: 0;  transform: perspective(2000px) rotateY(8deg) rotate(-1deg);  transform-origin: bottom left; }
+  .cta-shot.right { right: 0; transform: perspective(2000px) rotateY(-8deg) rotate(1deg);  transform-origin: bottom right; }
   .cta-shot .opp-feed, .cta-shot .pmap { transform: none; width: 100%; border-radius: 14px; }
   .cta-shot .pmap { aspect-ratio: auto; height: 100%; }
   @media (max-width: 1080px) { .cta-shot { display: none; } }
@@ -1378,7 +1378,7 @@
 <!-- ── CTA ────────────────────────────────────────────── -->
 <section id="cta" class="closer">
   <!-- Product shots peeking up to frame the CTA: prioritized list (left) + product map (right) -->
-  <div class="cta-shot left" aria-hidden="true">
+  <div class="cta-shot right" aria-hidden="true">
     <div class="opp-feed">
       <div class="opp-feed-head">
         <div class="opp-feed-title">Opportunities <span class="badge">CHART CREATION</span></div>
@@ -1421,7 +1421,7 @@
       </div>
     </div>
   </div>
-  <div class="cta-shot right" aria-hidden="true">
+  <div class="cta-shot left" aria-hidden="true">
     <div class="pmap">
       <svg class="pmap-edges" viewBox="0 0 800 500" preserveAspectRatio="none">
         <defs>
@@ -1520,8 +1520,8 @@
       </div>
     </div>
   </div>
-  <h2 class="reveal">Ready to<br><span class="a">accelerate your team?</span></h2>
-  <p class="reveal">We're opening a closed beta to a small group of teams to co-build the best AI-enabled product development platform. We work directly with everyone we bring on.</p>
+  <h2 class="reveal">Build products that<br><span class="a">improve themselves.</span></h2>
+  <p class="reveal">A closed beta, for a small group of teams. Be first to sense what your users want, decide what to build, and act on it — with your team in control. We work hand in hand with everyone we bring on.</p>
   <form class="waitlist reveal" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
     <input type="email" placeholder="you@company.com" required aria-label="Email address">
     <button type="submit">Join our closed Beta →</button>
