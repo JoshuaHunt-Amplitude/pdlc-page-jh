@@ -4,7 +4,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>[Name test] Opportunities · v8 — Amplitude</title>
+<title>[Vision] PDLC · v9 — Amplitude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -411,7 +411,7 @@
   .manifesto-head h2 { font-family: var(--sans); font-size: clamp(40px, 5.4vw, 76px); font-weight: 600; letter-spacing: -0.04em; line-height: .98; margin: 0; max-width: 22ch; }
   .manifesto-head h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
 
-  .manifesto-body { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .manifesto-body { display: grid; grid-template-columns: 1fr; gap: 30px; align-items: start; }
   @media (max-width: 880px) { .manifesto-body { grid-template-columns: 1fr; gap: 40px; } }
   .manifesto-body p { font-size: 17px; line-height: 1.72; color: var(--dim); margin: 0 0 18px; }
   .manifesto-body p:last-child { margin-bottom: 0; }
@@ -645,7 +645,7 @@
   @media (max-width: 760px) { .sig-card.byo { grid-template-columns: 1fr; } }
 
   /* ── FUNNEL TRANSITION (signals collapse to one ranked point) ─── */
-  .funnel { position: relative; z-index: 1; max-width: 1180px; margin: -84px auto -40px; padding: 0 32px; pointer-events: none; }
+  .funnel { position: relative; z-index: 1; max-width: 1180px; margin: 8px auto 0; padding: 0 32px; pointer-events: none; }
   .funnel svg { width: 100%; height: auto; display: block; overflow: visible; }
   @media (max-width: 720px) { .funnel { margin: -24px auto -24px; } }
 
@@ -836,12 +836,11 @@
     <div class="brand">
       <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="120" height="22">
       <span class="brand-sep"></span>
-      <span class="brand-sub">Opportunities</span>
+      <span class="brand-sub">PDLC</span>
     </div>
     <div class="nav-links">
       <a href="#why">Why</a>
-      <a href="#backlog">See it work</a>
-      <a href="#ways-in">Ways in</a>
+      <a href="#loops">The loop</a>
       <a href="docs.html">Docs</a>
     </div>
     <a href="#cta" class="nav-btn">Join our closed Beta</a>
@@ -858,9 +857,9 @@
     <div class="lc"></div>
   </div>
   <div>
-    <div class="eyebrow reveal">Introducing Opportunities</div>
+    <div class="eyebrow reveal">Introducing PDLC</div>
     <h1 class="reveal">Towards<br><span class="a">self-improving products</span></h1>
-    <p class="lede reveal">Speed is solved. Direction isn't. Opportunities reads your product data and tells your team what's worth building — so you ship work that makes the product better, release after release.</p>
+    <p class="lede reveal">Speed is solved. Direction isn't. PDLC reads your product data and tells your team what's worth building — so you ship work that makes the product better, release after release.</p>
 
     <div class="hero-cta reveal" style="margin-top:40px">
       <form class="waitlist" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
@@ -872,22 +871,11 @@
   </div>
 </section>
 
-<!-- ── WHAT THIS IS (under-hero strip) ───────────────── -->
-<section class="whatis" aria-label="What Opportunities does">
-  <div class="whatis-in reveal">
-    <span class="whatis-step"><span class="n">01</span> Surface signals</span>
-    <span class="whatis-arrow">→</span>
-    <span class="whatis-step"><span class="n">02</span> Prioritize plans</span>
-    <span class="whatis-arrow">→</span>
-    <span class="whatis-step"><span class="n">03</span> Ship what matters</span>
-  </div>
-</section>
-
 <!-- ── WHY ───────────────────────────────────────────── -->
 <section class="manifesto" id="why">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <div class="eyebrow">Why Opportunities</div>
+      <div class="eyebrow">Why PDLC</div>
       <h2>Deciding what to build is <span class="a">the new bottleneck.</span></h2>
     </div>
 
@@ -1067,83 +1055,9 @@
       </div>
       <div class="reveal">
         <p>We've always believed that insights from behavioral data can help unlock growth for products. Now that matters more than ever. When you can build anything, what <b>should</b> you build?</p>
-        <p>Opportunities analyzes all the signals Amplitude already has, and tells your team what matters most, drafts a plan, and tracks the outcome. All the measuring and cross-checking happens in the background automatically.&nbsp;</p>
+        <p>PDLC analyzes all the signals Amplitude already has, and tells your team what matters most, drafts a plan, and tracks the outcome. All the measuring and cross-checking happens in the background automatically.&nbsp;</p>
         <p style="color:var(--white);font-size:18px;line-height:1.55"><strong>Unleash your team to build better products.</strong></p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── SIGNALS · the agent fleet behind Sense ─────────── -->
-<section class="signals" id="signals">
-  <div class="signals-head reveal">
-    <div class="eyebrow">Under the hood</div>
-    <h2 class="sec-title">One agent for <span class="a">every signal.</span></h2>
-    <p>Opportunities runs on a fleet of focused agents — each reads a different slice of your product. And you can plug in your own.</p>
-  </div>
-
-  <div class="signals-grid">
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg></span>
-        <h4>Session Replay Agent</h4>
-      </div>
-      <p>Finds UX friction and journey breakdowns.</p>
-      <div class="sig-tags"><span>Session replays</span><span>Funnels</span><span>Click paths</span><span>Drop-offs</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
-        <h4>Dashboard Agent</h4>
-      </div>
-      <p>Explains metric movement, anomalies, and trends.</p>
-      <div class="sig-tags"><span>Charts</span><span>Dashboards</span><span>Events</span><span>Cohorts</span><span>Metrics</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1"/></svg></span>
-        <h4>Feedback Agent</h4>
-      </div>
-      <p>Synthesizes feedback from users and customers.</p>
-      <div class="sig-tags"><span>Feedback</span><span>Support themes</span><span>Customer comments</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg></span>
-        <h4>Web Vitals &amp; Network Agent</h4>
-      </div>
-      <p>Investigates performance, latency, and errors.</p>
-      <div class="sig-tags"><span>Web Vitals</span><span>Network requests</span><span>Latency</span><span>Errors</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"/><path d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"/><path d="M18 9h1.5a1 1 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6 9H4.5a1 1 0 0 1 0-5H6"/></svg></span>
-        <h4>Competitive Analysis Agent</h4>
-      </div>
-      <p>Finds market gaps, positioning, and trends.</p>
-      <div class="sig-tags"><span>Competitors</span><span>Pricing</span><span>Reviews</span><span>Market trends</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></span>
-        <h4>Agent Trace Quality Agent</h4>
-      </div>
-      <p>Analyzes AI traces, tool usage, and failure modes.</p>
-      <div class="sig-tags"><span>Agent traces</span><span>Tool usage</span><span>Failures</span><span>Quality patterns</span></div>
-    </div>
-
-    <div class="sig-card byo reveal">
-      <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/></svg></span>
-      <div class="byo-body">
-        <h4>Bring your own — Custom Agents with your MCPs</h4>
-        <p>Plug Opportunities into your own systems and proprietary data through your MCP servers. Available today.</p>
-      </div>
-      <div class="sig-tags"><span>Proprietary data</span><span>Internal tools</span><span>Workflows</span></div>
     </div>
   </div>
 </section>
@@ -1222,259 +1136,6 @@
     </circle>
   </svg>
 </div>
-
-<!-- ── PRODUCT SHOWCASE 1 · Opportunity Feed ────────── -->
-<section class="pshot" id="backlog">
-  <div class="pshot-in">
-    <div class="pshot-copy reveal">
-      <div class="eyebrow">A ranked backlog</div>
-      <h2>Friction points, <span class="a">scored and grouped.</span></h2>
-      <p><strong>From Strategic Bets&nbsp;and New Features to Bugs...</strong></p>
-      <p>Each opportunity is backed by qualitative and quantitative evidence, sized, and ready for review. Your team spends time deciding, not digging.</p>
-    </div>
-    <div class="pshot-visual bleed-r reveal">
-      <div class="opp-feed">
-        <div class="opp-feed-head">
-          <div class="opp-feed-title">Opportunities <span class="badge">CHART CREATION</span></div>
-          <div class="opp-feed-controls">
-            <span class="opp-feed-btn">Filter</span>
-            <span class="opp-feed-btn primary">Discover</span>
-          </div>
-        </div>
-
-        <div class="opp-section">
-          <span>Starred</span>
-          <span class="count">3</span>
-        </div>
-
-        <div class="opp-row" style="--bar:#4083FF">
-          <div class="bar"></div>
-          <div class="title">Chart Agent retry loop adds latency and duplicate URLs</div>
-          <span class="score">0.94</span>
-          <span class="tag">Bug</span>
-        </div>
-        <div class="opp-row" style="--bar:#4083FF">
-          <div class="bar"></div>
-          <div class="title">Chart Builder name/description inputs block first-time saves</div>
-          <span class="score">0.91</span>
-          <span class="tag">Bug</span>
-        </div>
-        <div class="opp-row" style="--bar:#57E3A4">
-          <div class="bar"></div>
-          <div class="title">Slow chart queries leave users without progress or cancel</div>
-          <span class="score">0.88</span>
-          <span class="tag">Strategic</span>
-        </div>
-
-        <div class="opp-section">
-          <span>Quick Win</span>
-          <span class="count">2</span>
-        </div>
-
-        <div class="opp-row" style="--bar:#4083FF">
-          <div class="bar"></div>
-          <div class="title">Add 'Save as new chart' recovery when a teammate deletes mid-edit</div>
-          <span class="score">0.82</span>
-          <span class="tag">Quick Win</span>
-        </div>
-        <div class="opp-row" style="--bar:#4083FF">
-          <div class="bar"></div>
-          <div class="title">Removing a formula-referenced event silently breaks the chart</div>
-          <span class="score">0.79</span>
-          <span class="tag">Quick Win</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── PRODUCT SHOWCASE 2 · Live Product Map ────────── -->
-<section class="pshot alt">
-  <div class="pshot-in">
-    <div class="pshot-visual bleed-l reveal" style="order:-1">
-      <div class="pmap">
-        <!-- Connectors between screens (LEADS TO / ABANDONS TO) -->
-        <svg class="pmap-edges" viewBox="0 0 800 500" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="pmap-link" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#3b6bff" stop-opacity="0.15"/>
-              <stop offset="50%" stop-color="#5d86ff" stop-opacity="0.85"/>
-              <stop offset="100%" stop-color="#3b6bff" stop-opacity="0.15"/>
-            </linearGradient>
-            <filter id="pmap-glow-sm" x="-80%" y="-80%" width="260%" height="260%">
-              <feGaussianBlur stdDeviation="3"/>
-            </filter>
-          </defs>
-
-          <!-- Base (dim) edges -->
-          <g stroke="rgba(91,134,255,0.20)" stroke-width="2" fill="none">
-            <path id="pe1" d="M 120 250 C 200 200, 250 145, 340 105"/>
-            <path id="pe2" d="M 120 250 C 220 290, 300 300, 400 300"/>
-            <path id="pe3" d="M 340 105 C 392 170, 396 240, 400 300"/>
-            <path id="pe4" d="M 400 300 C 520 280, 560 150, 660 110"/>
-            <path id="pe5" d="M 400 300 C 510 340, 580 380, 680 410"/>
-          </g>
-
-          <!-- Live happy-path flow -->
-          <g stroke-width="2" fill="none" stroke-linecap="round" style="animation: dash-flow 1.4s linear infinite;">
-            <use href="#pe1" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
-            <use href="#pe2" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
-            <use href="#pe3" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
-            <use href="#pe4" stroke="url(#pmap-link)" stroke-dasharray="3 16"/>
-          </g>
-          <!-- Abandon path: red, sparse, sluggish -->
-          <use href="#pe5" stroke="#FF7D78" stroke-width="2" fill="none" stroke-dasharray="3 14" opacity="0.65" style="animation: dash-flow 3.4s linear infinite;"/>
-
-          <!-- Traveling data pulses -->
-          <circle r="3" fill="#fff" filter="url(#pmap-glow-sm)">
-            <animateMotion dur="3.2s" repeatCount="indefinite" path="M 120 250 C 200 200, 250 145, 340 105"/>
-          </circle>
-          <circle r="3" fill="#fff" filter="url(#pmap-glow-sm)">
-            <animateMotion dur="2.8s" begin="0.6s" repeatCount="indefinite" path="M 340 105 C 392 170, 396 240, 400 300"/>
-          </circle>
-          <circle r="3" fill="#fff" filter="url(#pmap-glow-sm)">
-            <animateMotion dur="2.6s" begin="1.1s" repeatCount="indefinite" path="M 400 300 C 520 280, 560 150, 660 110"/>
-          </circle>
-        </svg>
-
-        <!-- Edge labels (float above cards) -->
-        <div class="pmap-edge" style="left:28.75%; top:33%">Leads to</div>
-        <div class="pmap-edge" style="left:31.9%; top:58%">Leads to</div>
-        <div class="pmap-edge" style="left:47.75%; top:41%">Leads to</div>
-        <div class="pmap-edge" style="left:67.5%; top:38%">Leads to</div>
-        <div class="pmap-edge abandon" style="left:68.1%; top:73%">Abandons to</div>
-
-        <!-- Screen cards -->
-        <div class="pmap-card" style="left:15%; top:50%">
-          <div class="pmc-screen col">
-            <div class="pmc-line" style="width:50%"></div>
-            <div class="pmc-fill"></div>
-          </div>
-          <div class="pmc-title">Dashboard View</div>
-          <div class="pmc-path">analytics/Dashboard</div>
-        </div>
-
-        <div class="pmap-card" style="left:42.5%; top:21%">
-          <div class="pmc-screen">
-            <div class="pmc-bar" style="height:40%"></div>
-            <div class="pmc-bar on" style="height:70%"></div>
-            <div class="pmc-bar" style="height:55%"></div>
-            <div class="pmc-bar on" style="height:88%"></div>
-            <div class="pmc-bar" style="height:30%"></div>
-            <div class="pmc-bar" style="height:60%"></div>
-          </div>
-          <div class="pmc-title">Saved Chart Consumption</div>
-          <div class="pmc-path">analytics/[chart]</div>
-        </div>
-
-        <div class="pmap-card primary" style="left:50%; top:60%">
-          <div class="pmc-screen row">
-            <div class="pmc-side">
-              <div class="pmc-line" style="width:80%"></div>
-              <div class="pmc-line" style="width:60%;background:rgba(255,255,255,.07)"></div>
-              <div class="pmc-line" style="width:70%;background:rgba(255,255,255,.07)"></div>
-            </div>
-            <div class="pmc-plot">
-              <div class="pmc-bar on" style="height:50%"></div>
-              <div class="pmc-bar on" style="height:82%"></div>
-              <div class="pmc-bar on" style="height:40%"></div>
-              <div class="pmc-bar on" style="height:70%"></div>
-            </div>
-          </div>
-          <div class="pmc-title">Chart Builder</div>
-          <div class="pmc-path">analytics/[chart]/edit</div>
-        </div>
-
-        <div class="pmap-card" style="left:82.5%; top:22%">
-          <div class="pmc-screen">
-            <div class="pmc-bar" style="height:55%"></div>
-            <div class="pmc-bar on" style="height:38%"></div>
-            <div class="pmc-bar" style="height:80%"></div>
-            <div class="pmc-bar on" style="height:30%"></div>
-            <div class="pmc-bar" style="height:62%"></div>
-          </div>
-          <div class="pmc-title">Chart Saved</div>
-        </div>
-
-        <div class="pmap-card drop" style="left:85%; top:82%">
-          <div class="pmc-screen col">
-            <div class="pmc-line" style="width:90%"></div>
-            <div class="pmc-line" style="width:65%;background:rgba(255,255,255,.07)"></div>
-            <div class="pmc-fill" style="background:rgba(255,255,255,.02);border-color:var(--line)"></div>
-          </div>
-          <div class="pmc-title">Session Exit Without Save</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="pshot-copy reveal">
-      <div class="eyebrow">A live product map</div>
-      <h2>Your product is the&nbsp; <span class="a">context graph.</span></h2>
-      <p>Amplitude maps your product as users actually use it — every entry, every detour, every drop-off. This helps contextualize individual data points in the context of the entire user journey. The map updates itself as your product changes.</p>
-      <div class="pshot-chips">
-        <span class="pchip">Auto-generated</span>
-        <span class="pchip">Session-grounded</span>
-        <span class="pchip">Drop-off detection</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── PRODUCT SHOWCASE 3 · Opportunity Brief ───────── -->
-<section class="pshot">
-  <div class="pshot-in">
-    <div class="pshot-copy reveal">
-      <div class="eyebrow">The brief</div>
-      <h2>Problems summarized, <span class="a">before the meeting.</span></h2>
-      <p>Every item opens to a full brief: the data, the replays, the feedback, the high level proposed fix, the expected impact. Send it directly to coding agents to execute against.&nbsp;</p>
-      <ul class="pshot-checks">
-        <li><span class="ck">✓</span>Evidence linked from real sessions</li>
-        <li><span class="ck">✓</span>Rollout, instrumentation, falsifiers included</li>
-        <li><span class="ck">✓</span>Nothing merges without a human review</li>
-      </ul>
-    </div>
-
-    <div class="pshot-visual bleed-r reveal">
-      <div class="brief">
-        <div class="brief-head">
-          <span class="lbl">Problem summary</span>
-          <span class="pill">Spec ready</span>
-        </div>
-        <div class="brief-body">
-          <h3 class="brief-title">Chart Agent retry loop adds latency and duplicate URLs</h3>
-          <p class="brief-sub">Sourced from 5 customer feedback mentions and 3 session replays. Confidence <strong style="color:var(--blue-d)">0.94</strong> · area <strong style="color:var(--white)">chart-creation</strong>.</p>
-
-          <div class="brief-meta-row">
-            <span class="ico">⌖</span>
-            <span class="lbl">Evidence</span>
-            <span class="val">5 feedback mentions · 3 replays · <em>fb_8421, rep_3318</em></span>
-          </div>
-          <div class="brief-meta-row">
-            <span class="ico">▶</span>
-            <span class="lbl">Rollout</span>
-            <span class="val">Behind feature flag · falsifier: <em>retry_count &gt; 1 within 2s</em></span>
-          </div>
-          <div class="brief-meta-row">
-            <span class="ico">📈</span>
-            <span class="lbl">Metric</span>
-            <span class="val">activation_d7 · expected <em>+8–14%</em></span>
-          </div>
-
-          <div class="brief-grid">
-            <div class="brief-card">
-              <div class="h">Hypothesis</div>
-              <div class="v">Removing retry on <span class="em">200</span> stops duplicate URL writes.</div>
-            </div>
-            <div class="brief-card">
-              <div class="h">Expected impact</div>
-              <div class="v"><span class="delta">+11.4%</span> on activation_d7</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
@@ -1684,39 +1345,6 @@
   </div>
 </section>
 
-<!-- ── WAYS IN ───────────────────────────────────────── -->
-<section class="surfaces" id="ways-in">
-  <div class="surfaces-head reveal">
-    <div class="eyebrow">EFFORTLESS TO USE</div>
-    <h2 class="sec-title">Leverage where your team&nbsp;<span class="a">already works.</span></h2>
-    <p>Same data, same ranked list — in your coding agent or in Amplitude.</p>
-  </div>
-
-  <div class="surfaces-grid">
-    <div class="surface-card reveal">
-      <div class="surface-tag"><span class="material-symbols-rounded">hub</span>MCP</div>
-      <h4>For builders and coding agents</h4>
-      <p>Cursor, Claude Code, Codex, or your own harness asks Amplitude what to work on — and gets a ranked list with full evidence: chart, replay, and feedback IDs to ground its work.</p>
-      <pre class="surface-code"><span class="c"># Cursor / Claude Code</span>
-<span class="k">→</span> <span class="s">amplitude.opportunities</span>(
-    area: <span class="v">"chart-creation"</span>,
-    limit: <span class="v">5</span>
-  )</pre>
-    </div>
-
-    <div class="surface-card reveal">
-      <div class="surface-tag"><span class="material-symbols-rounded">dashboard</span>In-app</div>
-      <h4>For PMs and leads</h4>
-      <p>A ranked queue per product area — open it instead of five dashboards. Each item carries the problem, the evidence, a proposed spec, and a status: <em>Planned · In Review · Shipped · Tracked</em>. Opportunities connects to the tools you already know and use like Jira and Linear.</p>
-      <pre class="surface-code"><span class="c">// Opportunity Feed</span>
-<span class="k">▸</span> Stop Response cancels session
-   <span class="c">5+ feedback mentions · PR #102090</span>
-<span class="k">▸</span> Checkout silent-fail on Safari
-   <span class="c">rage clicks · spec ready</span></pre>
-    </div>
-  </div>
-</section>
-
 <!-- ── CTA ────────────────────────────────────────────── -->
 <section id="cta" class="closer">
   <h2 class="reveal">Ready to<br><span class="a">accelerate your team?</span></h2>
@@ -1734,7 +1362,7 @@
 
 <footer>
   <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" style="width:100px;height:20px;opacity:.4">
-  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; Opportunities</span>
+  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; PDLC</span>
 </footer>
 
 <script>

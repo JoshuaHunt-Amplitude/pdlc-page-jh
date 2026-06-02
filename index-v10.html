@@ -4,7 +4,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>[Name test] Opportunities · v8 — Amplitude</title>
+<title>[Product] PDLC · v10 — Amplitude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -836,12 +836,12 @@
     <div class="brand">
       <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="120" height="22">
       <span class="brand-sep"></span>
-      <span class="brand-sub">Opportunities</span>
+      <span class="brand-sub">PDLC</span>
     </div>
     <div class="nav-links">
-      <a href="#why">Why</a>
       <a href="#backlog">See it work</a>
       <a href="#ways-in">Ways in</a>
+      <a href="#loops">The loop</a>
       <a href="docs.html">Docs</a>
     </div>
     <a href="#cta" class="nav-btn">Join our closed Beta</a>
@@ -858,9 +858,9 @@
     <div class="lc"></div>
   </div>
   <div>
-    <div class="eyebrow reveal">Introducing Opportunities</div>
+    <div class="eyebrow reveal">Introducing PDLC</div>
     <h1 class="reveal">Towards<br><span class="a">self-improving products</span></h1>
-    <p class="lede reveal">Speed is solved. Direction isn't. Opportunities reads your product data and tells your team what's worth building — so you ship work that makes the product better, release after release.</p>
+    <p class="lede reveal">Speed is solved. Direction isn't. PDLC reads your product data and tells your team what's worth building — so you ship work that makes the product better, release after release.</p>
 
     <div class="hero-cta reveal" style="margin-top:40px">
       <form class="waitlist" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
@@ -871,357 +871,6 @@
     </div>
   </div>
 </section>
-
-<!-- ── WHAT THIS IS (under-hero strip) ───────────────── -->
-<section class="whatis" aria-label="What Opportunities does">
-  <div class="whatis-in reveal">
-    <span class="whatis-step"><span class="n">01</span> Surface signals</span>
-    <span class="whatis-arrow">→</span>
-    <span class="whatis-step"><span class="n">02</span> Prioritize plans</span>
-    <span class="whatis-arrow">→</span>
-    <span class="whatis-step"><span class="n">03</span> Ship what matters</span>
-  </div>
-</section>
-
-<!-- ── WHY ───────────────────────────────────────────── -->
-<section class="manifesto" id="why">
-  <div class="manifesto-in">
-    <div class="manifesto-head reveal">
-      <div class="eyebrow">Why Opportunities</div>
-      <h2>Deciding what to build is <span class="a">the new bottleneck.</span></h2>
-    </div>
-
-    <div class="loop-viz reveal" aria-hidden="true">
-      <svg viewBox="0 0 760 440" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="lv-fast" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#0052F2"/>
-            <stop offset="55%" stop-color="#4083FF"/>
-            <stop offset="100%" stop-color="#9FC0FF"/>
-          </linearGradient>
-          <linearGradient id="lv-slow" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#A373FF"/>
-            <stop offset="100%" stop-color="#FF7D78"/>
-          </linearGradient>
-          <radialGradient id="lv-node-fill" cx="50%" cy="38%" r="70%">
-            <stop offset="0%" stop-color="#16233f"/>
-            <stop offset="100%" stop-color="#0A0A0F"/>
-          </radialGradient>
-          <radialGradient id="lv-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#cfe0ff"/>
-            <stop offset="45%" stop-color="#4083FF" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-          </radialGradient>
-          <filter id="lv-glow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="7"/>
-          </filter>
-          <filter id="lv-glow-sm" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="3"/>
-          </filter>
-        </defs>
-
-        <!-- Soft core glow behind center -->
-        <circle cx="380" cy="220" r="120" fill="url(#lv-core)" opacity="0.5"/>
-
-        <!-- Subtle base ring -->
-        <circle cx="380" cy="220" r="150" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="26"/>
-
-        <!-- BOTTLENECK — only the short USE → LEARN arc (right side): thin, dim, stalled -->
-        <path d="M 486 114 A 150 150 0 0 1 486 326"
-              stroke="url(#lv-slow)" stroke-width="13"
-              fill="none" stroke-linecap="round"
-              stroke-dasharray="1.5 21" opacity="0.6"
-              style="animation: dash-flow-slow 5s ease-in-out infinite;"/>
-
-        <!-- FAST — the other 3/4 (LEARN → BUILD → SHIP → USE), glow underlay -->
-        <path d="M 486 326 A 150 150 0 1 1 486 114"
-              stroke="#4083FF" stroke-width="22"
-              fill="none" stroke-linecap="round"
-              opacity="0.4" filter="url(#lv-glow)"/>
-        <!-- FAST — solid bright gradient -->
-        <path d="M 486 326 A 150 150 0 1 1 486 114"
-              stroke="url(#lv-fast)" stroke-width="22"
-              fill="none" stroke-linecap="round"/>
-
-        <!-- Clockwise motion path: full circle starting at LEARN -->
-        <path id="lv-loop-path" d="M 486 326 A 150 150 0 1 1 486 114 A 150 150 0 0 1 486 326" fill="none" stroke="none"/>
-
-        <!-- ──────────────────────────────────────────────────────────────────────
-             THROUGHPUT PARTICLES — the "work items" streaming through the loop.
-
-             GEOMETRY
-               Ring is centred at (380,220), radius 150. The four nodes sit at the
-               corners: BUILD + SHIP on the LEFT (the FAST half), USE + LEARN on the
-               RIGHT (the BOTTLENECK quarter). The pinch / ✕ marker sits at (530,220).
-
-             MOTION PATH  (#lv-loop-path)
-               One full circle, clockwise, starting at LEARN, built from two arcs:
-                 • arc 1  LEARN→BUILD→SHIP→USE  = 270°  = 0.75 of the path length  (FAST)
-                 • arc 2  USE→LEARN             =  90°  = 0.25 of the path length  (BOTTLENECK)
-
-             SPEED PROFILE  (this is the part that sells the metaphor)
-               EVERY particle shares ONE dur and ONE speed curve, so they all behave
-               identically — only their `begin` offset and size differ:
-                 dur       = 7s
-                 keyPoints = 0 ; 0.75 ; 1     ← fraction of DISTANCE covered
-                 keyTimes  = 0 ; 0.35 ; 1     ← fraction of TIME elapsed
-               i.e. a dot races the fast 3/4 in 35% of the cycle, then CRAWLS the final
-               quarter (use→learn) over the remaining 65%. Because that slow leg runs at
-               one identical rate for all dots, they queue up and bunch through the
-               bottleneck while staying spread out on the fast arc → high throughput
-               meeting a constraint. (calcMode="linear" is required for keyPoints.)
-
-             TUNING KNOBS (what makes it look great)
-               • COUNT ......... number of dots = perceived VOLUME of work (here ~16).
-               • SIZE MIX ...... mostly small (r≈1.3–2.6) + 3 "lead" dots (r≈3–3.5 with a
-                                 soft glow). Small + lower-opacity dots read as depth.
-               • keyTimes split  0.35 = how brisk the fast arc is. Raise toward 0.5 to
-                                 ease the pile-up; lower it to deepen the queue.
-               • DUR (7s) ...... overall tempo of the whole system.
-               • begin[] ....... staggered and deliberately IRREGULAR so the flow looks
-                                 organic, not metronomic. All negative → field is full on load.
-        ────────────────────────────────────────────────────────────────────────── -->
-        <g class="lv-pulses" fill="#fff">
-          <!-- 3 "lead" dots — largest, with a soft glow halo -->
-          <g>
-            <circle r="8" fill="#cfe0ff" opacity="0.4" filter="url(#lv-glow-sm)"/><circle r="3.5"/>
-            <animateMotion dur="7s" begin="0s"    repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion>
-          </g>
-          <g>
-            <circle r="7" fill="#cfe0ff" opacity="0.38" filter="url(#lv-glow-sm)"/><circle r="3.2"/>
-            <animateMotion dur="7s" begin="-2.6s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion>
-          </g>
-          <g>
-            <circle r="7" fill="#cfe0ff" opacity="0.38" filter="url(#lv-glow-sm)"/><circle r="3"/>
-            <animateMotion dur="7s" begin="-4.9s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion>
-          </g>
-          <!-- ~13 smaller dots — varied radius + opacity (and a couple tinted) for volume & depth -->
-          <circle r="2.4" opacity="0.90"               ><animateMotion dur="7s" begin="-0.45s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="1.6" opacity="0.60"               ><animateMotion dur="7s" begin="-0.85s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="2.0" opacity="0.80"               ><animateMotion dur="7s" begin="-1.25s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="1.3" opacity="0.50"               ><animateMotion dur="7s" begin="-1.6s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="2.6" opacity="0.95" fill="#cfe0ff"><animateMotion dur="7s" begin="-2.0s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="1.5" opacity="0.60"               ><animateMotion dur="7s" begin="-3.05s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="2.2" opacity="0.85"               ><animateMotion dur="7s" begin="-3.4s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="1.4" opacity="0.50"               ><animateMotion dur="7s" begin="-3.8s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="1.9" opacity="0.75" fill="#cfe0ff"><animateMotion dur="7s" begin="-4.2s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="2.5" opacity="0.90"               ><animateMotion dur="7s" begin="-5.3s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="1.4" opacity="0.55"               ><animateMotion dur="7s" begin="-5.7s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="2.0" opacity="0.80"               ><animateMotion dur="7s" begin="-6.1s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-          <circle r="1.6" opacity="0.60"               ><animateMotion dur="7s" begin="-6.5s"  repeatCount="indefinite" calcMode="linear" keyPoints="0;0.75;1" keyTimes="0;0.35;1"><mpath href="#lv-loop-path"/></animateMotion></circle>
-        </g>
-
-        <!-- 4 nodes at diagonals -->
-        <!-- BUILD bottom-left (fast) -->
-        <g class="lv-node fast">
-          <circle cx="274" cy="326" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/>
-          <circle cx="274" cy="326" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/>
-          <text x="274" y="332" class="lv-node-label" text-anchor="middle">BUILD</text>
-        </g>
-        <!-- SHIP top-left (fast) -->
-        <g class="lv-node fast">
-          <circle cx="274" cy="114" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/>
-          <circle cx="274" cy="114" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/>
-          <text x="274" y="120" class="lv-node-label" text-anchor="middle">SHIP</text>
-        </g>
-        <!-- USE top-right (slow) -->
-        <g class="lv-node slow">
-          <circle cx="486" cy="114" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/>
-          <text x="486" y="120" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">USE</text>
-        </g>
-        <!-- LEARN bottom-right (slow) -->
-        <g class="lv-node slow">
-          <circle cx="486" cy="326" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/>
-          <text x="486" y="332" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">LEARN</text>
-        </g>
-
-        <!-- LEFT side caption: FAST -->
-        <g>
-          <circle cx="118" cy="218" r="3.5" fill="#4083FF"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
-          <line x1="130" y1="218" x2="172" y2="218" stroke="rgba(64,131,255,0.5)" stroke-width="1"/>
-          <text x="118" y="200" class="lv-side fast" text-anchor="start">Fast</text>
-        </g>
-
-        <!-- RIGHT side caption: BOTTLENECK — shifted right (642→700) to clear the queued dots -->
-        <g>
-          <circle cx="700" cy="218" r="3.5" fill="#FF7D78" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
-          <line x1="646" y1="218" x2="688" y2="218" stroke="rgba(255,125,120,0.5)" stroke-width="1"/>
-          <text x="700" y="200" class="lv-side slow" text-anchor="end">Bottleneck</text>
-        </g>
-
-        <!-- Pinch / blockage marker on right edge of ring -->
-        <g transform="translate(530, 220)">
-          <circle r="13" fill="#FF7D78" opacity="0.18" filter="url(#lv-glow-sm)" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
-          <circle r="11" fill="#0A0A0F" stroke="rgba(255,125,120,0.55)" stroke-width="1.2"/>
-          <line x1="-5" y1="-5" x2="5" y2="5" stroke="#FF7D78" stroke-width="1.6" stroke-linecap="round"/>
-          <line x1="-5" y1="5" x2="5" y2="-5" stroke="#FF7D78" stroke-width="1.6" stroke-linecap="round"/>
-        </g>
-
-      </svg>
-    </div>
-
-    <div class="manifesto-body">
-      <div class="reveal">
-        <p>Every team runs a version the same fundamental loop: <strong>build → ship → use → learn</strong>. Coding agents have dramatically accelerated the "building" half of that loop.</p>
-        <p>The other half hasn't moved. Your team still digs through data, replays, and feedback to answer one question: <strong>what's worth building next?</strong> Engineers can ship faster than ever, but&nbsp;<strong>the roadmap can't keep up.</strong></p>
-      </div>
-      <div class="reveal">
-        <p>We've always believed that insights from behavioral data can help unlock growth for products. Now that matters more than ever. When you can build anything, what <b>should</b> you build?</p>
-        <p>Opportunities analyzes all the signals Amplitude already has, and tells your team what matters most, drafts a plan, and tracks the outcome. All the measuring and cross-checking happens in the background automatically.&nbsp;</p>
-        <p style="color:var(--white);font-size:18px;line-height:1.55"><strong>Unleash your team to build better products.</strong></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── SIGNALS · the agent fleet behind Sense ─────────── -->
-<section class="signals" id="signals">
-  <div class="signals-head reveal">
-    <div class="eyebrow">Under the hood</div>
-    <h2 class="sec-title">One agent for <span class="a">every signal.</span></h2>
-    <p>Opportunities runs on a fleet of focused agents — each reads a different slice of your product. And you can plug in your own.</p>
-  </div>
-
-  <div class="signals-grid">
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg></span>
-        <h4>Session Replay Agent</h4>
-      </div>
-      <p>Finds UX friction and journey breakdowns.</p>
-      <div class="sig-tags"><span>Session replays</span><span>Funnels</span><span>Click paths</span><span>Drop-offs</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
-        <h4>Dashboard Agent</h4>
-      </div>
-      <p>Explains metric movement, anomalies, and trends.</p>
-      <div class="sig-tags"><span>Charts</span><span>Dashboards</span><span>Events</span><span>Cohorts</span><span>Metrics</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1"/></svg></span>
-        <h4>Feedback Agent</h4>
-      </div>
-      <p>Synthesizes feedback from users and customers.</p>
-      <div class="sig-tags"><span>Feedback</span><span>Support themes</span><span>Customer comments</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg></span>
-        <h4>Web Vitals &amp; Network Agent</h4>
-      </div>
-      <p>Investigates performance, latency, and errors.</p>
-      <div class="sig-tags"><span>Web Vitals</span><span>Network requests</span><span>Latency</span><span>Errors</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"/><path d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"/><path d="M18 9h1.5a1 1 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6 9H4.5a1 1 0 0 1 0-5H6"/></svg></span>
-        <h4>Competitive Analysis Agent</h4>
-      </div>
-      <p>Finds market gaps, positioning, and trends.</p>
-      <div class="sig-tags"><span>Competitors</span><span>Pricing</span><span>Reviews</span><span>Market trends</span></div>
-    </div>
-
-    <div class="sig-card reveal">
-      <div class="sig-head">
-        <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></span>
-        <h4>Agent Trace Quality Agent</h4>
-      </div>
-      <p>Analyzes AI traces, tool usage, and failure modes.</p>
-      <div class="sig-tags"><span>Agent traces</span><span>Tool usage</span><span>Failures</span><span>Quality patterns</span></div>
-    </div>
-
-    <div class="sig-card byo reveal">
-      <span class="sig-ico"><svg viewBox="0 0 24 24"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/></svg></span>
-      <div class="byo-body">
-        <h4>Bring your own — Custom Agents with your MCPs</h4>
-        <p>Plug Opportunities into your own systems and proprietary data through your MCP servers. Available today.</p>
-      </div>
-      <div class="sig-tags"><span>Proprietary data</span><span>Internal tools</span><span>Workflows</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ── FUNNEL TRANSITION · signals collapse into one ranked point ───────────────
-     Decorative bridge between "every signal" (above) and the ranked backlog (below).
-     Orbs (signals) rain down and funnel along two long diagonals into a single
-     glowing focal point. Pure decoration (aria-hidden, pointer-events:none).
-
-     KEY DIMENSIONS
-       • viewBox 1200×320; the SVG has overflow:visible, so content above y=0 spills
-         up into the section above (with .funnel's negative top margin) — that is how
-         the diagonals "underlap" the element above. No bottom line / beam.
-       • Two long diagonals (no horizontal flags): mouth at (150,-70) & (1050,-70),
-         both meeting the focal point at (600,246).
-       • Focal point (600,250): pulsing glow (r 18→28, 3s) + bright core. No beam.
-       • Orbs travel a quadratic path  M ox -8  Q cx 140  600 244  (control y=140),
-         cx=(ox+600)/2 bends them inward. They fade in at top, fade out as "absorbed"
-         (opacity keyTimes 0;.15;.8;1).
-     TUNING: orb COUNT = signal volume; DUR/begin spread = how busy the stream feels;
-             diagonal top-y (−70) = how far they reach up into the section above. -->
-<div class="funnel reveal" aria-hidden="true">
-  <svg viewBox="0 0 1200 320" preserveAspectRatio="xMidYMid meet">
-    <defs>
-      <linearGradient id="fn-wall" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"  stop-color="#4083FF" stop-opacity="0.10"/>
-        <stop offset="100%" stop-color="#4083FF" stop-opacity="0.9"/>
-      </linearGradient>
-      <radialGradient id="fn-core" cx="50%" cy="50%" r="50%">
-        <stop offset="0%"  stop-color="#cfe0ff"/>
-        <stop offset="45%" stop-color="#4083FF" stop-opacity="0.55"/>
-        <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-      </radialGradient>
-      <filter id="fn-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
-    </defs>
-
-    <!-- Two long converging diagonals (no horizontal flags); extend above y=0 to
-         underlap the section above. -->
-    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M 150 -70 L 600 246" stroke="#4083FF" stroke-width="3" opacity="0.32" filter="url(#fn-glow)"/>
-      <path d="M 1050 -70 L 600 246" stroke="#4083FF" stroke-width="3" opacity="0.32" filter="url(#fn-glow)"/>
-      <path d="M 150 -70 L 600 246" stroke="url(#fn-wall)" stroke-width="1.6"/>
-      <path d="M 1050 -70 L 600 246" stroke="url(#fn-wall)" stroke-width="1.6"/>
-    </g>
-
-    <!-- Orbs: signals raining down and funnelling to the point.
-         Each group carries both the motion path and a synced opacity fade. -->
-    <g fill="#fff">
-      <g opacity="0"><circle r="2.6" fill="#cfe0ff"/><animateMotion dur="4.0s" begin="0s"    repeatCount="indefinite" path="M 160 -8 Q 380 140 600 244"/><animate attributeName="opacity" dur="4.0s" begin="0s"    repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.0" fill="#fff"/><animateMotion    dur="4.6s" begin="-0.5s" repeatCount="indefinite" path="M 250 -8 Q 425 140 600 244"/><animate attributeName="opacity" dur="4.6s" begin="-0.5s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.8" fill="#9FC0FF"/><animateMotion dur="3.6s" begin="-1.0s" repeatCount="indefinite" path="M 330 -8 Q 465 140 600 244"/><animate attributeName="opacity" dur="3.6s" begin="-1.0s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.8" fill="#fff"/><animateMotion    dur="5.0s" begin="-1.5s" repeatCount="indefinite" path="M 410 -8 Q 505 140 600 244"/><animate attributeName="opacity" dur="5.0s" begin="-1.5s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.4" fill="#cfe0ff"/><animateMotion dur="3.9s" begin="-2.0s" repeatCount="indefinite" path="M 480 -8 Q 540 140 600 244"/><animate attributeName="opacity" dur="3.9s" begin="-2.0s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.8" fill="#fff"/><animateMotion    dur="4.4s" begin="-2.6s" repeatCount="indefinite" path="M 540 -8 Q 570 140 600 244"/><animate attributeName="opacity" dur="4.4s" begin="-2.6s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="3.0" fill="#cfe0ff"/><animateMotion dur="3.5s" begin="-3.1s" repeatCount="indefinite" path="M 600 -8 Q 600 140 600 244"/><animate attributeName="opacity" dur="3.5s" begin="-3.1s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.0" fill="#fff"/><animateMotion    dur="4.7s" begin="-0.8s" repeatCount="indefinite" path="M 660 -8 Q 630 140 600 244"/><animate attributeName="opacity" dur="4.7s" begin="-0.8s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.6" fill="#9FC0FF"/><animateMotion dur="3.3s" begin="-1.3s" repeatCount="indefinite" path="M 720 -8 Q 660 140 600 244"/><animate attributeName="opacity" dur="3.3s" begin="-1.3s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.8" fill="#fff"/><animateMotion    dur="4.9s" begin="-1.9s" repeatCount="indefinite" path="M 790 -8 Q 695 140 600 244"/><animate attributeName="opacity" dur="4.9s" begin="-1.9s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.4" fill="#cfe0ff"/><animateMotion dur="3.7s" begin="-2.4s" repeatCount="indefinite" path="M 860 -8 Q 730 140 600 244"/><animate attributeName="opacity" dur="3.7s" begin="-2.4s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.0" fill="#fff"/><animateMotion    dur="4.5s" begin="-3.0s" repeatCount="indefinite" path="M 930 -8 Q 765 140 600 244"/><animate attributeName="opacity" dur="4.5s" begin="-3.0s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.8" fill="#cfe0ff"/><animateMotion dur="3.8s" begin="-3.6s" repeatCount="indefinite" path="M 1000 -8 Q 800 140 600 244"/><animate attributeName="opacity" dur="3.8s" begin="-3.6s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.8" fill="#9FC0FF"/><animateMotion dur="4.3s" begin="-4.1s" repeatCount="indefinite" path="M 1040 -8 Q 820 140 600 244"/><animate attributeName="opacity" dur="4.3s" begin="-4.1s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.6" fill="#fff"/><animateMotion    dur="5.0s" begin="-2.8s" repeatCount="indefinite" path="M 290 -8 Q 445 140 600 244"/><animate attributeName="opacity" dur="5.0s" begin="-2.8s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.6" fill="#fff"/><animateMotion    dur="4.8s" begin="-3.9s" repeatCount="indefinite" path="M 700 -8 Q 650 140 600 244"/><animate attributeName="opacity" dur="4.8s" begin="-3.9s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.6" fill="#cfe0ff"/><animateMotion dur="4.6s" begin="-4.6s" repeatCount="indefinite" path="M 880 -8 Q 740 140 600 244"/><animate attributeName="opacity" dur="4.6s" begin="-4.6s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.2" fill="#9FC0FF"/><animateMotion dur="4.0s" begin="-4.3s" repeatCount="indefinite" path="M 470 -8 Q 535 140 600 244"/><animate attributeName="opacity" dur="4.0s" begin="-4.3s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-    </g>
-
-    <!-- Single focal point (no beam) -->
-    <circle cx="600" cy="250" r="22" fill="url(#fn-core)">
-      <animate attributeName="r"       values="18;28;18"   dur="3s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.7;1;0.7"  dur="3s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="600" cy="250" r="4.5" fill="#fff">
-      <animate attributeName="r" values="4;5.5;4" dur="3s" repeatCount="indefinite"/>
-    </circle>
-  </svg>
-</div>
 
 <!-- ── PRODUCT SHOWCASE 1 · Opportunity Feed ────────── -->
 <section class="pshot" id="backlog">
@@ -1476,6 +1125,39 @@
   </div>
 </section>
 
+<!-- ── WAYS IN ───────────────────────────────────────── -->
+<section class="surfaces" id="ways-in">
+  <div class="surfaces-head reveal">
+    <div class="eyebrow">EFFORTLESS TO USE</div>
+    <h2 class="sec-title">Leverage where your team&nbsp;<span class="a">already works.</span></h2>
+    <p>Same data, same ranked list — in your coding agent or in Amplitude.</p>
+  </div>
+
+  <div class="surfaces-grid">
+    <div class="surface-card reveal">
+      <div class="surface-tag"><span class="material-symbols-rounded">hub</span>MCP</div>
+      <h4>For builders and coding agents</h4>
+      <p>Cursor, Claude Code, Codex, or your own harness asks Amplitude what to work on — and gets a ranked list with full evidence: chart, replay, and feedback IDs to ground its work.</p>
+      <pre class="surface-code"><span class="c"># Cursor / Claude Code</span>
+<span class="k">→</span> <span class="s">amplitude.opportunities</span>(
+    area: <span class="v">"chart-creation"</span>,
+    limit: <span class="v">5</span>
+  )</pre>
+    </div>
+
+    <div class="surface-card reveal">
+      <div class="surface-tag"><span class="material-symbols-rounded">dashboard</span>In-app</div>
+      <h4>For PMs and leads</h4>
+      <p>A ranked queue per product area — open it instead of five dashboards. Each item carries the problem, the evidence, a proposed spec, and a status: <em>Planned · In Review · Shipped · Tracked</em>. PDLC connects to the tools you already know and use like Jira and Linear.</p>
+      <pre class="surface-code"><span class="c">// Opportunity Feed</span>
+<span class="k">▸</span> Stop Response cancels session
+   <span class="c">5+ feedback mentions · PR #102090</span>
+<span class="k">▸</span> Checkout silent-fail on Safari
+   <span class="c">rage clicks · spec ready</span></pre>
+    </div>
+  </div>
+</section>
+
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
   <div class="pl-head">
@@ -1684,39 +1366,6 @@
   </div>
 </section>
 
-<!-- ── WAYS IN ───────────────────────────────────────── -->
-<section class="surfaces" id="ways-in">
-  <div class="surfaces-head reveal">
-    <div class="eyebrow">EFFORTLESS TO USE</div>
-    <h2 class="sec-title">Leverage where your team&nbsp;<span class="a">already works.</span></h2>
-    <p>Same data, same ranked list — in your coding agent or in Amplitude.</p>
-  </div>
-
-  <div class="surfaces-grid">
-    <div class="surface-card reveal">
-      <div class="surface-tag"><span class="material-symbols-rounded">hub</span>MCP</div>
-      <h4>For builders and coding agents</h4>
-      <p>Cursor, Claude Code, Codex, or your own harness asks Amplitude what to work on — and gets a ranked list with full evidence: chart, replay, and feedback IDs to ground its work.</p>
-      <pre class="surface-code"><span class="c"># Cursor / Claude Code</span>
-<span class="k">→</span> <span class="s">amplitude.opportunities</span>(
-    area: <span class="v">"chart-creation"</span>,
-    limit: <span class="v">5</span>
-  )</pre>
-    </div>
-
-    <div class="surface-card reveal">
-      <div class="surface-tag"><span class="material-symbols-rounded">dashboard</span>In-app</div>
-      <h4>For PMs and leads</h4>
-      <p>A ranked queue per product area — open it instead of five dashboards. Each item carries the problem, the evidence, a proposed spec, and a status: <em>Planned · In Review · Shipped · Tracked</em>. Opportunities connects to the tools you already know and use like Jira and Linear.</p>
-      <pre class="surface-code"><span class="c">// Opportunity Feed</span>
-<span class="k">▸</span> Stop Response cancels session
-   <span class="c">5+ feedback mentions · PR #102090</span>
-<span class="k">▸</span> Checkout silent-fail on Safari
-   <span class="c">rage clicks · spec ready</span></pre>
-    </div>
-  </div>
-</section>
-
 <!-- ── CTA ────────────────────────────────────────────── -->
 <section id="cta" class="closer">
   <h2 class="reveal">Ready to<br><span class="a">accelerate your team?</span></h2>
@@ -1734,7 +1383,7 @@
 
 <footer>
   <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" style="width:100px;height:20px;opacity:.4">
-  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; Opportunities</span>
+  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; PDLC</span>
 </footer>
 
 <script>
