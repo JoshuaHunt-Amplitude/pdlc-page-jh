@@ -407,15 +407,21 @@
     font-weight: 500; letter-spacing: -0.01em;
   }
 
+  .manifesto-head { max-width: 760px; margin: 0 auto; }
   .manifesto-head .eyebrow { margin-bottom: 24px; }
-  .manifesto-head h2 { font-family: var(--sans); font-size: clamp(40px, 5.4vw, 76px); font-weight: 600; letter-spacing: -0.04em; line-height: .98; margin: 0; max-width: 22ch; }
+  .manifesto-head h2 { font-family: var(--sans); font-size: clamp(34px, 4.4vw, 54px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.04; margin: 0; max-width: 720px; }
   .manifesto-head h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
 
-  .manifesto-body { display: grid; grid-template-columns: 1fr; gap: 30px; align-items: start; }
+  .manifesto-body { max-width: 760px; margin: 0 auto; }
   @media (max-width: 880px) { .manifesto-body { grid-template-columns: 1fr; gap: 40px; } }
   .manifesto-body p { font-size: 17px; line-height: 1.72; color: var(--dim); margin: 0 0 18px; }
   .manifesto-body p:last-child { margin-bottom: 0; }
   .manifesto-body strong { color: var(--white); font-weight: 500; }
+  .manifesto-head p { font-size: 19px; line-height: 1.6; color: var(--dim); margin: 22px 0 0; }
+  .manifesto-head p strong { color: var(--white); font-weight: 500; }
+  .manifesto-body em { color: var(--dim); font-style: italic; }
+  .manifesto-mv { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--blue-d); margin: 42px 0 6px; }
+  .manifesto-body h3 { font-family: var(--sans); font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; color: var(--white); margin: 0 0 12px; }
 
   /* Stats strip */
   .stats-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 32px; }
@@ -875,8 +881,10 @@
 <section class="manifesto" id="why">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <div class="eyebrow">Why PDLC</div>
-      <h2>Deciding what to build is <span class="a">the new bottleneck.</span></h2>
+      <div class="eyebrow">Manifesto</div>
+      <h2>The best predictor of quality is the number of <span class="a">iterations.</span></h2>
+      <p>It holds for code, for writing, for an AI model, for any system. The strategist John Boyd showed that the pilot who cycles their decision loop faster wins the dogfight; evolution's results are staggering only because it has had so long to iterate. Products are no different — to build a great one is to tighten the loop and fit in more iterations.</p>
+      <p>Every product development team runs the same loop: <strong>build, ship, use, learn.</strong></p>
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
@@ -1048,16 +1056,25 @@
       </svg>
     </div>
 
-    <div class="manifesto-body">
-      <div class="reveal">
-        <p>Every team runs a version the same fundamental loop: <strong>build → ship → use → learn</strong>. Coding agents have dramatically accelerated the "building" half of that loop.</p>
-        <p>The other half hasn't moved. Your team still digs through data, replays, and feedback to answer one question: <strong>what's worth building next?</strong> Engineers can ship faster than ever, but&nbsp;<strong>the roadmap can't keep up.</strong></p>
-      </div>
-      <div class="reveal">
-        <p>We've always believed that insights from behavioral data can help unlock growth for products. Now that matters more than ever. When you can build anything, what <b>should</b> you build?</p>
-        <p>PDLC analyzes all the signals Amplitude already has, and tells your team what matters most, drafts a plan, and tracks the outcome. All the measuring and cross-checking happens in the background automatically.&nbsp;</p>
-        <p style="color:var(--white);font-size:18px;line-height:1.55"><strong>Unleash your team to build better products.</strong></p>
-      </div>
+    <div class="manifesto-body reveal">
+      <p>The left side — <strong>build and ship</strong> — is now incredibly fast, after fifty years of progress: programming languages, agile, the internet, the cloud, and now AI coding. The distance between an idea and millions of people using it is going to zero. A single person can ship a product used by millions overnight.</p>
+      <p>The right side — <strong>use and learn</strong> — still sits in the stone ages. Understanding what people want is extraordinarily hard. It is the limiting reagent for great product development.</p>
+      <p>And nobody truly knows what people want — not companies, not markets, not the experts. The state of the art is to ask: interviews, studies, surveys, feedback. But people don't know what they want. They're good at naming problems and frustrations; the solution stays elusive. <em>"If I had asked people what they wanted, they would have said faster horses."</em></p>
+      <p>So look at what people <strong>do</strong>. Actions speak louder than words. If someone keeps coming back, that's a signal. If they bring others, a better one. If they'd be upset to lose it, better still. This isn't about blindly chasing a metric — it's that behavior reveals intent. Automate and scale this half of the loop and you unlock the next step change in building great products.</p>
+
+      <p class="manifesto-mv">Sense</p>
+      <h3>Feel your users.</h3>
+      <p>More than 95% of product data goes unlooked at. For every issue someone happens to catch, hundreds sit undetected — bugs that linger for months, frustration that quietly piles up, moments the product fails to meet someone where they are. Picture a room full of analysts trawling every event, surfacing what you need to know and explaining <em>why</em> it's happening, in real time, for everyone who touches the experience. Facebook found — just by reading the data — that a new user adding seven friends in ten days predicted long-term engagement; that one insight carried them past every other social network. The bottleneck has always been human attention. Remove it and we go from data breadlines to data abundance.</p>
+
+      <p class="manifesto-mv">Decide</p>
+      <h3>Adapt to every user.</h3>
+      <p>Today everyone gets the same static product. Next, every user gets an experience shaped by their behavior. See someone struggling and offer help in the moment; trigger a guide; connect your highest-value users to a person instantly. Run many variants of a campaign and lean into what works. The same intelligence reaches back into the work itself — recommending what to build, and previewing how a change will land before you ship it.</p>
+
+      <p class="manifesto-mv">Act</p>
+      <h3>Products that improve themselves.</h3>
+      <p>Products will heal themselves. A release that breaks the experience can roll itself back. Subtle papercuts get found — often with a fix already waiting. You'll get suggestions for what to improve, the experiments to prove them, and the segments to tailor to — continuously, without waiting on a roadmap. Every part of the product gets better, all the time.</p>
+
+      <p style="color:var(--white);font-size:20px;line-height:1.5;margin-top:14px"><strong>We'll live in a world of self-improving products.</strong> The companies that win the next decade will master this loop — and Amplitude gives every company the advantage only the world's best product teams have had: to <span class="a" style="font-style:normal">sense, decide, and act.</span></p>
     </div>
   </div>
 </section>
