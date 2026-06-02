@@ -1,15 +1,26 @@
 # PDLC landing page — working guide
 
 ## What this is
-Marketing landing page for **PDLC** (Amplitude). Static HTML, no build step. Several design
-versions live side by side: `index.html` (V1) … `index-v5.html` (V5). **V5 is the active
-version.** A ⌘K modal in every file switches versions. `docs.html` is a separate page.
+A **playground** for designing the website that re-announces Amplitude's **future product
+vision** and the **PDLC product surface** — both of which we're still figuring out as we go.
+Static HTML, no build step. Many full-page design variants live side by side
+(`index.html` = V1 … `index-v10.html` = V10); a ⌘K modal in every file switches between them.
+There is no single "final" page yet — we fork freely and compare directions. "PDLC" is a
+**placeholder product name** (V6–V8 test alternatives). `docs.html` is a separate page.
+
+Version families (current):
+- **V1–V5** — the evolving full landing page; **V5** is the canonical / most-complete one.
+- **V6–V8** — name-test forks of V5: **Loop** / **Product OS** / **Opportunities**.
+- **V9 — Vision** — pared to the narrative: hero → manifesto → funnel → loop → CTA.
+- **V10 — Product** — pared to the product: feed → map → brief → ways-in → loop → CTA.
 
 ## How we work on it
-- **Make structural & diagram changes by editing `index-v5.html` directly.** It's hand-authored —
-  match the surrounding formatting (indentation, attribute style); don't reformat.
+- **Make structural & diagram changes by editing the relevant version file directly** (whichever
+  Vn the thread is about). The files are hand-authored — match the surrounding formatting
+  (indentation, attribute style); don't reformat. Changes to one version don't propagate — apply
+  to others explicitly when asked.
 - **The user refines copy inline** via a local editor: `node edit-server.js` →
-  `http://localhost:4321/index-v5.html`. The editor is **injected only when served** (the file on
+  `http://localhost:4321/index-v5.html` (swap in any `index-vN.html`). The editor is **injected only when served** (the file on
   disk stays clean) and **each save writes the file + a git commit**. Therefore:
   - **Re-read the file before editing** — copy may have changed inline since you last saw it.
     Never clobber the user's inline copy edits.
