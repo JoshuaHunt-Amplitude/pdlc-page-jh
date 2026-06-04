@@ -71,13 +71,14 @@
   /* poster: natural height from content (no aspect-ratio fighting flex), gap
      between rows. width:100% + container-type → every cqw size scales 1:1. */
   .poster{position:relative;width:100%;container-type:inline-size;overflow:hidden;color:var(--white);
-    display:flex;flex-direction:column;gap:3.6cqw;padding:6cqw 6cqw;}
+    display:flex;flex-direction:column;gap:1cqw;padding:6cqw 6cqw;}
+    /* This gap in the poster element spaces out the compositions and is important. */
   .poster .pbg{position:absolute;inset:0;z-index:0;}
   .poster::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background-image:var(--grain);background-size:150px 150px;opacity:.05;mix-blend-mode:overlay;}
   .poster.duo::after{opacity:.1;}
   .poster > .row{position:relative;z-index:2;}
   /* header: stamp + marks/glyph */
-  .po-head{display:flex;align-items:center;gap:2.6cqw;}
+  .po-head{display:flex;align-items:center;gap:2.2cqw;}
   .po-stamp{font-family:var(--mono);font-weight:500;font-size:2.7cqw;letter-spacing:.14em;}
   .po-head .sp{flex:1;}
   .po-head svg{height:3.8cqw;width:auto;overflow:visible;}
