@@ -135,6 +135,8 @@
   .mf-col h2 .lt{color:rgba(243,243,248,.5);font-weight:400;}
   .mf-col p{font-size:17px;line-height:1.78;color:var(--dim);margin:22px 0 0;}
   .mf-col p strong{color:var(--white);font-weight:500;} .mf-col p em{color:var(--dim);font-style:italic;}
+  /* prominent closing paragraph — keeps the essay flowing but lands the thesis */
+  .mf-col p.lead{color:var(--white);font-size:clamp(19px,2vw,23px);line-height:1.5;margin-top:34px;}
   .mf-close{font-family:var(--mono);font-weight:500;font-size:clamp(18px,2vw,24px);line-height:1.4;text-transform:uppercase;letter-spacing:.02em;color:var(--white);margin:56px auto 0;max-width:760px;}
 
   /* inline diagram plate — full-width within section, diagram + HUD annotations inline */
@@ -266,12 +268,12 @@
     </div>
 
     <div class="mf-col">
-      <h2 class="reveal">Build · Ship<br><span class="lt">Use · Learn</span></h2>
-      <p class="reveal">Every product team runs the same loop: <strong>build → ship → use → learn</strong>. After fifty years of progress — and now AI coding — the <strong>build</strong> half is instant. The <strong>use → learn</strong> half still sits in the stone ages.</p>
-      <p class="reveal">Understanding what people want is the limiting reagent. And nobody can tell you what they want — <em>"if I had asked people what they wanted, they would have said faster horses."</em> So look at what people <strong>do</strong>. Behavior reveals intent.</p>
+      <h2 class="reveal">The best predictor of quality<br><span class="lt">is the number of iterations.</span></h2>
+      <p class="reveal">It holds for code, for writing, for an AI model, for any system. The strategist John Boyd showed that the pilot who cycles their decision loop faster wins the dogfight; evolution's results are staggering only because it has had so long to iterate. Products are no different — to build a great one is to <strong>tighten the loop and fit in more iterations.</strong></p>
+      <p class="reveal">Every product development team runs the same loop: <strong>build, ship, use, learn.</strong></p>
     </div>
 
-    <!-- inline plate 1 — the product loop -->
+    <!-- inline plate 1 — the product loop (animated: particles flow clockwise) -->
     <figure class="plate reveal">
       <span class="pglow" aria-hidden="true"></span>
       <div class="plate-head">
@@ -283,13 +285,45 @@
         <span class="pdots"><i></i><i class="off"></i><i class="off"></i><i class="off"></i></span>
       </div>
       <div class="plate-fig">
-        <!-- orbital loop: concentric tilted ellipses + crosshair + 4 nodes + active arc -->
+        <!-- ORBITAL LOOP · center (190,115) · outer ellipse rx155 ry80 · inner rx82 ry42
+             Animation: white particles travel clockwise along the outer ellipse,
+             so the loop visibly "turns" / iterates. Motion path #v13-orbit traces
+             the full outer ellipse (top→right→bottom→left→top, sweep-flag 1 = CW).
+             Design: many small particles (volume) + two larger glowing leads.
+             Tuning knobs:
+               • dur="3.4s" on every animateMotion  → loop speed (lower = faster)
+               • begin="-Ns" (negative, staggered irregularly) → stream offset/density
+               • circle r  → particle size (keep most ≤1.6; leads ~2.1–2.4 + glow)
+               • #v13-lead radial + #v13-soft blur → the glow on the two leads -->
         <svg class="mg" viewBox="0 0 380 230" aria-hidden="true">
+          <defs>
+            <radialGradient id="v13-lead" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+            </radialGradient>
+            <!-- full outer ellipse, clockwise from the top node -->
+            <path id="v13-orbit" d="M190 35 A155 80 0 0 1 345 115 A155 80 0 0 1 190 195 A155 80 0 0 1 35 115 A155 80 0 0 1 190 35" fill="none"/>
+          </defs>
           <ellipse class="ln" cx="190" cy="115" rx="155" ry="80"/>
           <ellipse class="l2" cx="190" cy="115" rx="82" ry="42"/>
+          <!-- active arc (top → right): current focus of the loop -->
           <path d="M190 35 A 155 80 0 0 1 345 115" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- four loop nodes -->
           <g class="nd"><circle cx="190" cy="35" r="5"/><circle cx="345" cy="115" r="5"/><circle cx="190" cy="195" r="5"/><circle cx="35" cy="115" r="5"/></g>
+          <!-- center crosshair -->
           <path class="l2" d="M183 109 h7 M190 109 v7"/>
+          <!-- flowing particles (clockwise) -->
+          <g fill="#fff">
+            <circle r="1.4"><animateMotion dur="3.4s" begin="0s"     repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.0"><animateMotion dur="3.4s" begin="-0.52s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.6"><animateMotion dur="3.4s" begin="-0.97s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.1"><animateMotion dur="3.4s" begin="-1.43s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.0"><animateMotion dur="3.4s" begin="-1.88s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.3"><animateMotion dur="3.4s" begin="-2.36s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.1"><animateMotion dur="3.4s" begin="-2.91s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <!-- two glowing leads -->
+            <g><circle r="5.5" fill="url(#v13-lead)"/><circle r="2.4"/><animateMotion dur="3.4s" begin="-0.28s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></g>
+            <g><circle r="5" fill="url(#v13-lead)"/><circle r="2.1"/><animateMotion dur="3.4s" begin="-1.74s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></g>
+          </g>
         </svg>
       </div>
       <div class="plate-foot">
@@ -308,9 +342,10 @@
     </figure>
 
     <div class="mf-col">
-      <h2 class="reveal">Watch what<br><span class="lt">people do</span></h2>
-      <p class="reveal">Amplitude Wave runs a fleet of agents over the data Amplitude already has — replays, funnels, feedback, performance — and turns scattered signal into <strong>one ranked list of what's worth building next.</strong></p>
-      <p class="reveal">Automate and scale that half of the loop, and you unlock the next step-change in building great products. Humans stay in control of what ships.</p>
+      <p class="reveal">The left side — <strong>build and ship</strong> — is now incredibly fast, after fifty years of progress: programming languages, agile, the internet, the cloud, and now AI coding. The distance between an idea and millions of people using it is going to zero. A single person can ship a product used by millions overnight.</p>
+      <p class="reveal">The right side — <strong>use and learn</strong> — still sits in the stone ages. Understanding what people want is extraordinarily hard. It is the limiting reagent for great product development.</p>
+      <p class="reveal">And nobody truly knows what people want — not companies, not markets, not the experts. The state of the art is to ask: interviews, studies, surveys, feedback. But people don't know what they want. They're good at naming problems and frustrations; the solution stays elusive. <em>"If I had asked people what they wanted, they would have said faster horses."</em></p>
+      <p class="reveal">So look at what people <strong>do</strong>. Actions speak louder than words. If someone keeps coming back, that's a signal. If they bring others, a better one. If they'd be upset to lose it, better still. This isn't about blindly chasing a metric — it's that behavior reveals intent. Automate and scale this half of the loop and you unlock the next step change in building great products.</p>
     </div>
 
     <!-- inline plate 2 — signal → decision -->
@@ -352,7 +387,9 @@
       <div class="plate-cap">Many signals. One ranked decision.</div>
     </figure>
 
-    <p class="mf-close reveal">We'll live in a world of self-improving products.</p>
+    <div class="mf-col">
+      <p class="lead reveal">We'll live in a world of self-improving products. The companies that win the next decade will master this loop — and Amplitude Wave gives every company the advantage only the world's best product teams have had: to <strong>sense, decide, and act.</strong></p>
+    </div>
   </div>
 </section>
 
@@ -422,6 +459,7 @@
       <a class="cmdk-item" href="index-v11.html" data-page="index-v11.html"><span class="cmdk-num">V11</span><span class="cmdk-text"><div class="cmdk-name">Vision · rotated loop</div><div class="cmdk-desc">Cardinal nodes; video hero</div></span><span class="cmdk-current">Current</span></a>
       <a class="cmdk-item" href="index-v12.html" data-page="index-v12.html"><span class="cmdk-num">V12</span><span class="cmdk-text"><div class="cmdk-name">Amplitude Wave (named)</div><div class="cmdk-desc">v11 + product named Amplitude Wave</div></span><span class="cmdk-current">Current</span></a>
       <a class="cmdk-item" href="index-v13.html" data-page="index-v13.html"><span class="cmdk-num">V13</span><span class="cmdk-text"><div class="cmdk-name">HUD / technical-poster treatment</div><div class="cmdk-desc">Micrographic system · grainy gradients · inline plates</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="micrographics.html" data-page="micrographics.html"><span class="cmdk-num">MG</span><span class="cmdk-text"><div class="cmdk-name">Micrographics system</div><div class="cmdk-desc">32 custom SVG HUD elements to mix &amp; match</div></span><span class="cmdk-current">Current</span></a>
     </div>
   </div>
 </div>
