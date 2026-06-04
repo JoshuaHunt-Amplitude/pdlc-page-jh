@@ -18,7 +18,7 @@
   *,*::before,*::after{box-sizing:border-box;}
   body{margin:0;background:var(--ink);color:var(--white);font-family:var(--sans);overflow-x:hidden;
     background-image:radial-gradient(80% 60% at 80% 0%,rgba(110,86,200,.12),transparent 55%),radial-gradient(70% 60% at 0% 100%,rgba(66,87,224,.08),transparent 55%);}
-  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:80;background-image:var(--grain);background-size:160px 160px;opacity:.1;mix-blend-mode:overlay;}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:80;background-image:var(--grain);background-size:160px 160px;opacity:.04;mix-blend-mode:overlay;}
   a{color:inherit;text-decoration:none;}
   .wrap{max-width:1500px;margin:0 auto;padding:44px 32px 110px;}
 
@@ -73,8 +73,8 @@
   .poster{position:relative;width:100%;container-type:inline-size;overflow:hidden;color:var(--white);
     display:flex;flex-direction:column;gap:3.6cqw;padding:6cqw 6cqw;}
   .poster .pbg{position:absolute;inset:0;z-index:0;}
-  .poster::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background-image:var(--grain);background-size:150px 150px;opacity:.13;mix-blend-mode:overlay;}
-  .poster.duo::after{opacity:.4;}
+  .poster::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background-image:var(--grain);background-size:150px 150px;opacity:.05;mix-blend-mode:overlay;}
+  .poster.duo::after{opacity:.1;}
   .poster > .row{position:relative;z-index:2;}
   /* header: stamp + marks/glyph */
   .po-head{display:flex;align-items:center;gap:2.6cqw;}
@@ -139,7 +139,7 @@
   </div>
 
   <!-- ════════ COMPOSITIONS ════════ -->
-  <div class="cat"><span class="ix">✦</span><h2>Compositions</h2><div class="rule"></div><span class="n">06</span></div>
+  <div class="cat"><span class="ix">✦</span><h2>Compositions</h2><div class="rule"></div><span class="n">08</span></div>
   <div class="comps">
 
     <!-- ── COMP 01 · Autonomous Orchestration ──────────────────
@@ -411,6 +411,140 @@
         </div>
       </div>
       <figcaption class="cap"><span class="nm">Cohort Memory</span><span class="code">COMP 06</span></figcaption>
+    </figure>
+
+    <!-- ── COMP 07 · The Product Loop ───────────────────────────
+         Extracted from index-v13 (inline plate 1). Dense animated orbital
+         instrument: graduation rings, cardinal stage nodes, center reticle,
+         clockwise particle stream + radar sweep (SMIL). Living decoration. -->
+    <figure class="comp">
+      <div class="poster">
+        <div class="pbg" style="background:
+            radial-gradient(70% 95% at 58% 92%, rgba(110,86,200,.18), transparent 60%),
+            linear-gradient(160deg,#0f0d1a 0%,#0a0913 60%,#08070d 100%);"></div>
+
+        <div class="row po-head">
+          <span class="po-stamp">LOOP 4.0</span><span class="sp"></span>
+          <svg viewBox="0 0 90 18" fill="none">
+            <circle cx="9" cy="9" r="6" fill="#fff"/><circle cx="31" cy="9" r="6" stroke="#fff" stroke-width="1.4"/><circle cx="53" cy="9" r="6" stroke="#fff" stroke-width="1.4"/><circle cx="75" cy="9" r="6" stroke="#fff" stroke-width="1.4"/>
+          </svg>
+        </div>
+
+        <div class="row po-tt">
+          <div class="po-title">The Product Loop</div>
+          <div class="po-sub">Build<span class="gt">·</span>Ship<span class="gt">·</span>Use<span class="gt">·</span>Learn</div>
+        </div>
+
+        <div class="row po-mid ctr">
+          <svg class="mg" viewBox="0 0 300 240" style="width:48cqw" aria-hidden="true">
+            <defs>
+              <radialGradient id="c7-lead" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="c7-sweep" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="100%" stop-color="#fff" stop-opacity=".16"/>
+              </linearGradient>
+              <path id="c7-orbit" d="M150 24 A96 96 0 0 1 246 120 A96 96 0 0 1 150 216 A96 96 0 0 1 54 120 A96 96 0 0 1 150 24" fill="none"/>
+            </defs>
+            <circle class="l2 thin" cx="150" cy="120" r="116" stroke-dasharray="1 9" opacity=".42"/>
+            <circle class="ln thin" cx="150" cy="120" r="110" stroke-dasharray="2 7" opacity=".5"/>
+            <path class="l2 thin" d="M236.6 70 L243.5 66 M200 33.4 L204 26.5 M100 33.4 L96 26.5 M63.4 70 L56.5 66 M63.4 170 L56.5 174 M100 206.6 L96 213.5 M200 206.6 L204 213.5 M236.6 170 L243.5 174"/>
+            <path class="ln thin" d="M150 16 L150 6 M254 120 L264 120 M150 224 L150 234 M46 120 L36 120"/>
+            <circle class="l2" cx="150" cy="120" r="96"/>
+            <circle class="l2 thin" cx="150" cy="120" r="70" stroke-dasharray="3 7" opacity=".7"/>
+            <circle class="l2" cx="150" cy="120" r="44"/>
+            <path d="M150 24 A96 96 0 0 1 246 120" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+            <g>
+              <path d="M150 120 L150 24 A96 96 0 0 1 173 27 Z" fill="url(#c7-sweep)"/>
+              <path class="ln thin" d="M150 120 L150 24" opacity=".5"/>
+              <animateTransform attributeName="transform" type="rotate" from="0 150 120" to="360 150 120" dur="9s" repeatCount="indefinite"/>
+            </g>
+            <g class="nd"><circle cx="217.9" cy="52.1" r="1.6"/><circle cx="82.1" cy="52.1" r="1.6"/><circle cx="82.1" cy="187.9" r="1.6"/><circle cx="217.9" cy="187.9" r="1.6"/></g>
+            <g class="nd" opacity=".65"><circle cx="150" cy="50" r="1.1"/><circle cx="220" cy="120" r="1.1"/><circle cx="150" cy="190" r="1.1"/><circle cx="80" cy="120" r="1.1"/></g>
+            <g><circle class="no" cx="150" cy="24" r="6.5"/><circle class="nd" cx="150" cy="24" r="2.4"/>
+               <circle class="no" cx="246" cy="120" r="6.5"/><circle class="nd" cx="246" cy="120" r="2.4"/>
+               <circle class="no" cx="150" cy="216" r="6.5"/><circle class="nd" cx="150" cy="216" r="2.4"/>
+               <circle class="no" cx="54" cy="120" r="6.5"/><circle class="nd" cx="54" cy="120" r="2.4"/></g>
+            <circle class="acc thin" cx="246" cy="120" r="10" fill="none" opacity=".7"/>
+            <circle class="ln" cx="150" cy="120" r="9" fill="none"/>
+            <path class="l2 thin" d="M150 105 v8 M150 127 v8 M135 120 h8 M157 120 h8"/>
+            <circle class="nd" cx="150" cy="120" r="2.2"/>
+            <g fill="#fff">
+              <circle r="1.3"><animateMotion dur="3.6s" begin="0s"     repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+              <circle r="1.0"><animateMotion dur="3.6s" begin="-0.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+              <circle r="1.5"><animateMotion dur="3.6s" begin="-0.95s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+              <circle r="1.0"><animateMotion dur="3.6s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+              <circle r="1.2"><animateMotion dur="3.6s" begin="-2.0s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+              <circle r="1.0"><animateMotion dur="3.6s" begin="-2.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+              <circle r="1.2"><animateMotion dur="3.6s" begin="-3.05s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+              <g><circle r="4.5" fill="url(#c7-lead)"/><circle r="2"/><animateMotion dur="3.6s" begin="-0.3s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
+              <g><circle r="4" fill="url(#c7-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="row po-foot">
+          <span class="po-note">Speed is solved. Direction is the bottleneck.</span>
+          <span class="po-yr">[ 2026 ]</span>
+        </div>
+      </div>
+      <figcaption class="cap"><span class="nm">The Product Loop</span><span class="code">COMP 07</span></figcaption>
+    </figure>
+
+    <!-- ── COMP 08 · Signal → Decision ──────────────────────────
+         Extracted from index-v13 (inline plate 2). Eight raw signals fan in
+         to a two-node rank pipeline, diverge to three candidates; top pick
+         is violet-accented. HUD corner frame + ticked baseline. -->
+    <figure class="comp">
+      <div class="poster">
+        <div class="pbg" style="background:
+            radial-gradient(70% 95% at 22% 90%, rgba(110,86,200,.16), transparent 60%),
+            linear-gradient(160deg,#0f0d1a 0%,#0a0913 60%,#08070d 100%);"></div>
+
+        <div class="row po-head">
+          <span class="po-stamp">SENSE 1.0</span><span class="sp"></span>
+          <svg viewBox="0 0 92 18" fill="none">
+            <circle cx="9" cy="9" r="6" fill="#fff"/>
+            <circle cx="32" cy="9" r="7" stroke="#fff" stroke-width="1.4"/><circle cx="32" cy="9" r="3" fill="#fff"/>
+            <circle cx="56" cy="9" r="6" stroke="#fff" stroke-width="1.4"/><circle cx="78" cy="9" r="6" stroke="#fff" stroke-width="1.4"/>
+          </svg>
+        </div>
+
+        <div class="row po-tt">
+          <div class="po-title">Signal → Decision</div>
+          <div class="po-sub">Observe<span class="gt">·</span>Cluster<span class="gt">·</span>Rank<span class="gt">·</span>Act</div>
+        </div>
+
+        <div class="row po-mid ctr">
+          <svg class="mg" viewBox="0 0 300 170" style="width:70cqw" aria-hidden="true">
+            <path class="l2 thin" opacity=".6" d="M10 14 H24 M10 14 V28 M290 14 H276 M290 14 V28 M10 156 H24 M10 156 V142 M290 156 H276 M290 156 V142"/>
+            <path class="l2 thin" opacity=".5" d="M26 150 H274 M40 150 v5 M72 150 v5 M104 150 v5 M136 150 v5 M168 150 v5 M200 150 v5 M232 150 v5 M264 150 v5"/>
+            <g class="l2 thin">
+              <path d="M30 20 L142 86"/><path d="M30 44 L142 86"/><path d="M30 68 L142 86"/><path d="M30 92 L142 86"/><path d="M30 116 L142 86"/><path d="M30 140 L142 86"/>
+              <path d="M58 14 L142 86"/><path d="M58 146 L142 86"/>
+            </g>
+            <g class="no thin"><circle cx="30" cy="20" r="4"/><circle cx="30" cy="44" r="4"/><circle cx="30" cy="68" r="4"/><circle cx="30" cy="92" r="4"/><circle cx="30" cy="116" r="4"/><circle cx="30" cy="140" r="4"/><circle cx="58" cy="14" r="4"/><circle cx="58" cy="146" r="4"/></g>
+            <path class="ln" stroke-linecap="round" d="M146 86 L172 86"/>
+            <circle class="l2 thin" cx="146" cy="86" r="9" fill="none" opacity=".6"/>
+            <g class="nd"><circle cx="146" cy="86" r="5.5"/><circle cx="172" cy="86" r="5.5"/></g>
+            <g class="ln thin" stroke-linecap="round">
+              <path d="M178 86 L268 42" marker-end="url(#ar)"/>
+              <path d="M178 86 L268 86" marker-end="url(#ar)"/>
+              <path d="M178 86 L268 130" marker-end="url(#ar)"/>
+            </g>
+            <g class="no thin"><circle cx="272" cy="42" r="5"/><circle cx="272" cy="86" r="5"/><circle cx="272" cy="130" r="5"/></g>
+            <circle class="accf" cx="272" cy="42" r="2.6"/>
+            <circle class="acc thin" cx="272" cy="42" r="9" fill="none" opacity=".75"/>
+            <g class="nd" opacity=".5"><circle cx="100" cy="40" r="1"/><circle cx="118" cy="120" r="1"/><circle cx="92" cy="104" r="1"/></g>
+          </svg>
+        </div>
+
+        <div class="row po-foot">
+          <span class="po-note">Many signals. One ranked decision.</span>
+          <span class="po-yr">[ 2026 ]</span>
+        </div>
+      </div>
+      <figcaption class="cap"><span class="nm">Signal → Decision</span><span class="code">COMP 08</span></figcaption>
     </figure>
 
   </div>
