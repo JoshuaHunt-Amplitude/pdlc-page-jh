@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%238a6bff'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%234083FF'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Amplitude Wave · v13 — HUD treatment | Amplitude</title>
@@ -11,7 +11,8 @@
 <style>
   :root{
     --ink:#08080e; --ink2:#0e0d18;
-    --violet:#8a6bff; --indigo:#5a4fd0; --blue:#4257e0; --amber:#d8c06a;
+    /* brand-blue accent (repointed off violet → #4083FF). var name kept for reach. */
+    --violet:#4083FF; --indigo:#2f6ae6; --blue:#0052F2; --amber:#d8c06a;
     --white:#f3f3f8; --dim:rgba(243,243,248,.6); --dim2:rgba(243,243,248,.38);
     --line:rgba(243,243,248,.82); --line2:rgba(243,243,248,.45); --hair:rgba(243,243,248,.13);
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -69,6 +70,9 @@
   .mg .l2{fill:none;stroke:var(--line2);stroke-width:1.4;}
   .mg .no{fill:none;stroke:var(--line);stroke-width:1.4;}
   .mg .nd{fill:var(--white);}
+  .mg .thin{stroke-width:1;} .mg .hair{stroke:var(--hair);stroke-width:1;}
+  .mg .acc{stroke:var(--violet);} .mg .accf{fill:var(--violet);}
+  .mg text{font-family:var(--mono);fill:var(--dim2);}
 
   /* ── NAV ───────────────────────────────────── */
   nav{position:sticky;top:0;z-index:60;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(8,8,14,.55);border-bottom:1px solid var(--hair);}
@@ -90,20 +94,21 @@
   @media(max-width:760px){.panel-in{padding:80px 22px;}}
   .grad{position:absolute;inset:0;z-index:0;}
   .grad::after{content:"";position:absolute;inset:0;background-image:var(--grain);background-size:160px 160px;opacity:.16;mix-blend-mode:overlay;}
-  /* muted, dark, soft glows — not vivid */
+  /* muted, dark, soft glows — not vivid · BLUE (brand #0052F2 / #4083FF), not purple.
+     dark linear bases are blue-tinted (green ≥ red) so they never read violet. */
   .grad-hero{background:
-      radial-gradient(85% 70% at 50% 40%, rgba(110,86,200,.26) 0%, transparent 60%),
-      radial-gradient(60% 50% at 84% 6%, rgba(150,120,210,.12) 0%, transparent 55%),
+      radial-gradient(85% 70% at 50% 40%, rgba(36,96,238,.26) 0%, transparent 60%),
+      radial-gradient(60% 50% at 84% 6%, rgba(80,140,240,.12) 0%, transparent 55%),
       radial-gradient(55% 50% at 6% 92%, rgba(216,192,106,.06) 0%, transparent 55%),
-      linear-gradient(180deg,#0e0c1a 0%,#0a0912 58%,#08080e 100%);}
+      linear-gradient(180deg,#0a0f1e 0%,#080c16 58%,#08080e 100%);}
   .grad-soft{background:
-      radial-gradient(90% 70% at 88% 86%, rgba(110,86,200,.16) 0%, transparent 58%),
-      radial-gradient(70% 60% at 8% 8%, rgba(66,87,224,.08) 0%, transparent 55%),
-      linear-gradient(180deg,#08080e 0%,#0b0a15 100%);}
+      radial-gradient(90% 70% at 88% 86%, rgba(36,96,238,.16) 0%, transparent 58%),
+      radial-gradient(70% 60% at 8% 8%, rgba(40,110,245,.08) 0%, transparent 55%),
+      linear-gradient(180deg,#08080e 0%,#080d1a 100%);}
   .grad-closer{background:
-      radial-gradient(95% 90% at 22% 100%, rgba(138,107,255,.24) 0%, transparent 58%),
+      radial-gradient(95% 90% at 22% 100%, rgba(48,118,250,.24) 0%, transparent 58%),
       radial-gradient(70% 60% at 88% 8%, rgba(216,192,106,.08) 0%, transparent 52%),
-      linear-gradient(165deg,#100e22 0%,#0a0917 60%,#08080e 100%);}
+      linear-gradient(165deg,#0a1126 0%,#08101e 60%,#08080e 100%);}
   .vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(8,8,14,.35),transparent 16%,transparent 74%,rgba(8,8,14,.6));}
 
   /* ── HERO ──────────────────────────────────── */
@@ -141,11 +146,12 @@
 
   /* inline diagram plate — full-width within section, diagram + HUD annotations inline */
   .plate{position:relative;overflow:hidden;margin:56px 0 0;border:1px solid var(--hair);border-radius:16px;background:var(--ink2);padding:30px 34px 26px;}
-  .plate .pglow{position:absolute;inset:auto -10% -50% 30%;height:80%;background:radial-gradient(ellipse at 50% 100%,rgba(138,107,255,.32),transparent 70%);filter:blur(26px);z-index:0;}
+  .plate .pglow{position:absolute;inset:auto -10% -50% 30%;height:80%;background:radial-gradient(ellipse at 50% 100%,rgba(64,131,255,.32),transparent 70%);filter:blur(26px);z-index:0;}
   .plate > *{position:relative;z-index:1;}
   .plate-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
-  .plate-fig{display:flex;justify-content:center;padding:26px 0 22px;}
-  .plate-fig .mg{width:min(560px,100%);height:auto;}
+  .plate-fig{display:flex;justify-content:center;padding:30px 0 26px;}
+  /* keep the instrument SMALL & dense — detail reads better at this scale */
+  .plate-fig .mg{width:min(330px,84%);height:auto;}
   .plate-foot{display:flex;align-items:flex-end;gap:30px;flex-wrap:wrap;}
   .plate-foot .sp{margin-left:auto;}
   .plate-cap{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--dim);margin-top:20px;}
@@ -285,44 +291,81 @@
         <span class="pdots"><i></i><i class="off"></i><i class="off"></i><i class="off"></i></span>
       </div>
       <div class="plate-fig">
-        <!-- ORBITAL LOOP · center (190,115) · outer ellipse rx155 ry80 · inner rx82 ry42
-             Animation: white particles travel clockwise along the outer ellipse,
-             so the loop visibly "turns" / iterates. Motion path #v13-orbit traces
-             the full outer ellipse (top→right→bottom→left→top, sweep-flag 1 = CW).
-             Design: many small particles (volume) + two larger glowing leads.
+        <!-- THE PRODUCT LOOP · dense micrographic instrument · viewBox 300×240, center (150,120)
+             Layers, outermost→in: fine graduation rings (r116 dotted, r110 dashed) ·
+             8 minor radial ticks (30° apart) + 4 cardinal major ticks · main orbit (r96) ·
+             dashed inner ring (r70) · solid inner ring (r44) · center reticle.
+             4 stage nodes sit on the orbit at the cardinals; small satellites at the 45°s.
+             MOTION: (1) white particles stream clockwise along #v13-orbit (the loop turns);
+                     (2) a faint radar wedge sweeps the whole field once / 9s.
              Tuning knobs:
-               • dur="3.4s" on every animateMotion  → loop speed (lower = faster)
-               • begin="-Ns" (negative, staggered irregularly) → stream offset/density
-               • circle r  → particle size (keep most ≤1.6; leads ~2.1–2.4 + glow)
-               • #v13-lead radial + #v13-soft blur → the glow on the two leads -->
-        <svg class="mg" viewBox="0 0 380 230" aria-hidden="true">
+               • particle dur 3.6s → loop speed   • begin="-Ns" staggered → stream density
+               • circle r → particle size (most ≤1.5; two glowing leads ~1.8–2 + #v13-lead glow)
+               • radar dur 9s → sweep speed        • #v13-sweep gradient → wedge intensity -->
+        <svg class="mg" viewBox="0 0 300 240" aria-hidden="true">
           <defs>
             <radialGradient id="v13-lead" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
             </radialGradient>
-            <!-- full outer ellipse, clockwise from the top node -->
-            <path id="v13-orbit" d="M190 35 A155 80 0 0 1 345 115 A155 80 0 0 1 190 195 A155 80 0 0 1 35 115 A155 80 0 0 1 190 35" fill="none"/>
+            <linearGradient id="v13-sweep" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="100%" stop-color="#fff" stop-opacity=".16"/>
+            </linearGradient>
+            <!-- clockwise orbit (r96) — motion path for the flowing particles -->
+            <path id="v13-orbit" d="M150 24 A96 96 0 0 1 246 120 A96 96 0 0 1 150 216 A96 96 0 0 1 54 120 A96 96 0 0 1 150 24" fill="none"/>
           </defs>
-          <ellipse class="ln" cx="190" cy="115" rx="155" ry="80"/>
-          <ellipse class="l2" cx="190" cy="115" rx="82" ry="42"/>
-          <!-- active arc (top → right): current focus of the loop -->
-          <path d="M190 35 A 155 80 0 0 1 345 115" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-          <!-- four loop nodes -->
-          <g class="nd"><circle cx="190" cy="35" r="5"/><circle cx="345" cy="115" r="5"/><circle cx="190" cy="195" r="5"/><circle cx="35" cy="115" r="5"/></g>
-          <!-- center crosshair -->
-          <path class="l2" d="M183 109 h7 M190 109 v7"/>
+
+          <!-- graduation rings (fine, dense) -->
+          <circle class="l2 thin" cx="150" cy="120" r="116" stroke-dasharray="1 9" opacity=".42"/>
+          <circle class="ln thin" cx="150" cy="120" r="110" stroke-dasharray="2 7" opacity=".5"/>
+          <!-- 8 minor radial ticks (30°) -->
+          <path class="l2 thin" d="M236.6 70 L243.5 66 M200 33.4 L204 26.5 M100 33.4 L96 26.5 M63.4 70 L56.5 66 M63.4 170 L56.5 174 M100 206.6 L96 213.5 M200 206.6 L204 213.5 M236.6 170 L243.5 174"/>
+          <!-- 4 cardinal major ticks -->
+          <path class="ln thin" d="M150 16 L150 6 M254 120 L264 120 M150 224 L150 234 M46 120 L36 120"/>
+
+          <!-- orbit + inner rings -->
+          <circle class="l2" cx="150" cy="120" r="96"/>
+          <circle class="l2 thin" cx="150" cy="120" r="70" stroke-dasharray="3 7" opacity=".7"/>
+          <circle class="l2" cx="150" cy="120" r="44"/>
+
+          <!-- active arc (top → right): current focus -->
+          <path d="M150 24 A96 96 0 0 1 246 120" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+
+          <!-- rotating radar sweep -->
+          <g>
+            <path d="M150 120 L150 24 A96 96 0 0 1 173 27 Z" fill="url(#v13-sweep)"/>
+            <path class="ln thin" d="M150 120 L150 24" opacity=".5"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 150 120" to="360 150 120" dur="9s" repeatCount="indefinite"/>
+          </g>
+
+          <!-- satellites at the 45°s + fine data dots on the inner ring -->
+          <g class="nd"><circle cx="217.9" cy="52.1" r="1.6"/><circle cx="82.1" cy="52.1" r="1.6"/><circle cx="82.1" cy="187.9" r="1.6"/><circle cx="217.9" cy="187.9" r="1.6"/></g>
+          <g class="nd" opacity=".65"><circle cx="150" cy="50" r="1.1"/><circle cx="220" cy="120" r="1.1"/><circle cx="150" cy="190" r="1.1"/><circle cx="80" cy="120" r="1.1"/></g>
+
+          <!-- four stage nodes (ringed) -->
+          <g><circle class="no" cx="150" cy="24" r="6.5"/><circle class="nd" cx="150" cy="24" r="2.4"/>
+             <circle class="no" cx="246" cy="120" r="6.5"/><circle class="nd" cx="246" cy="120" r="2.4"/>
+             <circle class="no" cx="150" cy="216" r="6.5"/><circle class="nd" cx="150" cy="216" r="2.4"/>
+             <circle class="no" cx="54" cy="120" r="6.5"/><circle class="nd" cx="54" cy="120" r="2.4"/></g>
+          <!-- sparing blue accent: ring on the active (right) node -->
+          <circle class="acc thin" cx="246" cy="120" r="10" fill="none" opacity=".7"/>
+
+          <!-- center reticle -->
+          <circle class="ln" cx="150" cy="120" r="9" fill="none"/>
+          <path class="l2 thin" d="M150 105 v8 M150 127 v8 M135 120 h8 M157 120 h8"/>
+          <circle class="nd" cx="150" cy="120" r="2.2"/>
+
           <!-- flowing particles (clockwise) -->
           <g fill="#fff">
-            <circle r="1.4"><animateMotion dur="3.4s" begin="0s"     repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
-            <circle r="1.0"><animateMotion dur="3.4s" begin="-0.52s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
-            <circle r="1.6"><animateMotion dur="3.4s" begin="-0.97s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
-            <circle r="1.1"><animateMotion dur="3.4s" begin="-1.43s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
-            <circle r="1.0"><animateMotion dur="3.4s" begin="-1.88s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
-            <circle r="1.3"><animateMotion dur="3.4s" begin="-2.36s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
-            <circle r="1.1"><animateMotion dur="3.4s" begin="-2.91s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.3"><animateMotion dur="3.6s" begin="0s"     repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.0"><animateMotion dur="3.6s" begin="-0.5s"  repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.5"><animateMotion dur="3.6s" begin="-0.95s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.0"><animateMotion dur="3.6s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.2"><animateMotion dur="3.6s" begin="-2.0s"  repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.0"><animateMotion dur="3.6s" begin="-2.5s"  repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
+            <circle r="1.2"><animateMotion dur="3.6s" begin="-3.05s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></circle>
             <!-- two glowing leads -->
-            <g><circle r="5.5" fill="url(#v13-lead)"/><circle r="2.4"/><animateMotion dur="3.4s" begin="-0.28s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></g>
-            <g><circle r="5" fill="url(#v13-lead)"/><circle r="2.1"/><animateMotion dur="3.4s" begin="-1.74s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></g>
+            <g><circle r="4.5" fill="url(#v13-lead)"/><circle r="2"/><animateMotion dur="3.6s" begin="-0.3s"  repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></g>
+            <g><circle r="4" fill="url(#v13-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#v13-orbit"/></animateMotion></g>
           </g>
         </svg>
       </div>
@@ -360,19 +403,43 @@
         <span class="pdots"><i></i><i class="cur"></i><i class="off"></i><i class="off"></i></span>
       </div>
       <div class="plate-fig">
-        <!-- signal funnel: many outline nodes → 2 filled → diverge -->
-        <svg class="mg" viewBox="0 0 380 160" aria-hidden="true">
-          <g class="ln" stroke-linecap="round">
-            <path d="M44 42 L160 80" marker-end="url(#mg-arrow)"/>
-            <path d="M44 118 L160 80" marker-end="url(#mg-arrow)"/>
-            <path d="M98 24 L160 80" marker-end="url(#mg-arrow)"/>
-            <path d="M98 136 L160 80" marker-end="url(#mg-arrow)"/>
-            <path d="M170 80 L206 80" marker-end="url(#mg-arrow)"/>
-            <path d="M222 80 L320 42" marker-end="url(#mg-arrow)"/>
-            <path d="M222 80 L320 118" marker-end="url(#mg-arrow)"/>
+        <!-- SIGNAL → DECISION · dense micrographic · viewBox 300×170
+             HUD corner frame + ticked baseline ruler frame the field. Eight raw signals
+             (left) fan in to a two-node rank pipeline (center), which diverges to three
+             candidate outputs (right); the top output is the blue-accented pick.
+             Wordless by design — the foot bracket list carries the labels. -->
+        <svg class="mg" viewBox="0 0 300 170" aria-hidden="true">
+          <!-- HUD corner frame -->
+          <path class="l2 thin" opacity=".6" d="M10 14 H24 M10 14 V28 M290 14 H276 M290 14 V28 M10 156 H24 M10 156 V142 M290 156 H276 M290 156 V142"/>
+          <!-- ticked baseline ruler -->
+          <path class="l2 thin" opacity=".5" d="M26 150 H274 M40 150 v5 M72 150 v5 M104 150 v5 M136 150 v5 M168 150 v5 M200 150 v5 M232 150 v5 M264 150 v5"/>
+
+          <!-- fan-in: many signals converge -->
+          <g class="l2 thin">
+            <path d="M30 20 L142 86"/><path d="M30 44 L142 86"/><path d="M30 68 L142 86"/><path d="M30 92 L142 86"/><path d="M30 116 L142 86"/><path d="M30 140 L142 86"/>
+            <path d="M58 14 L142 86"/><path d="M58 146 L142 86"/>
           </g>
-          <g class="no"><circle cx="40" cy="42" r="6"/><circle cx="40" cy="118" r="6"/><circle cx="94" cy="24" r="6"/><circle cx="94" cy="136" r="6"/><circle cx="324" cy="42" r="6"/><circle cx="324" cy="118" r="6"/></g>
-          <g class="nd"><circle cx="164" cy="80" r="7"/><circle cx="214" cy="80" r="7"/></g>
+          <!-- raw signal nodes -->
+          <g class="no thin"><circle cx="30" cy="20" r="4"/><circle cx="30" cy="44" r="4"/><circle cx="30" cy="68" r="4"/><circle cx="30" cy="92" r="4"/><circle cx="30" cy="116" r="4"/><circle cx="30" cy="140" r="4"/><circle cx="58" cy="14" r="4"/><circle cx="58" cy="146" r="4"/></g>
+
+          <!-- rank pipeline -->
+          <path class="ln" stroke-linecap="round" d="M146 86 L172 86"/>
+          <circle class="l2 thin" cx="146" cy="86" r="9" fill="none" opacity=".6"/>
+          <g class="nd"><circle cx="146" cy="86" r="5.5"/><circle cx="172" cy="86" r="5.5"/></g>
+
+          <!-- diverge to candidate outputs -->
+          <g class="ln thin" stroke-linecap="round">
+            <path d="M178 86 L268 42" marker-end="url(#mg-arrow)"/>
+            <path d="M178 86 L268 86" marker-end="url(#mg-arrow)"/>
+            <path d="M178 86 L268 130" marker-end="url(#mg-arrow)"/>
+          </g>
+          <g class="no thin"><circle cx="272" cy="42" r="5"/><circle cx="272" cy="86" r="5"/><circle cx="272" cy="130" r="5"/></g>
+          <!-- top-ranked pick (blue accent) -->
+          <circle class="accf" cx="272" cy="42" r="2.6"/>
+          <circle class="acc thin" cx="272" cy="42" r="9" fill="none" opacity=".75"/>
+
+          <!-- fine scatter detail -->
+          <g class="nd" opacity=".5"><circle cx="100" cy="40" r="1"/><circle cx="118" cy="120" r="1"/><circle cx="92" cy="104" r="1"/></g>
         </svg>
       </div>
       <div class="plate-foot">
@@ -438,13 +505,13 @@
   .cmdk-overlay[hidden]{display:none;} @keyframes cmdk-fade{from{opacity:0;}}
   .cmdk-modal{width:100%;max-width:560px;background:#0F1219;border:1px solid rgba(255,255,255,.18);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.7);font-family:'Poppins',system-ui,sans-serif;}
   .cmdk-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.08);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;}
-  .cmdk-label{color:#8a6bff;} .cmdk-hint{color:rgba(255,255,255,.42);}
+  .cmdk-label{color:#4083FF;} .cmdk-hint{color:rgba(255,255,255,.42);}
   .cmdk-hint kbd{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 5px;margin:0 1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:3px;color:#fff;}
   .cmdk-list{padding:6px;max-height:62vh;overflow-y:auto;}
   .cmdk-item{display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:14px;padding:12px 14px;margin:2px 0;border-radius:8px;color:#fff;cursor:pointer;transition:background .12s;}
-  .cmdk-item.selected{background:rgba(138,107,255,.14);outline:1px solid rgba(138,107,255,.32);}
+  .cmdk-item.selected{background:rgba(64,131,255,.14);outline:1px solid rgba(64,131,255,.32);}
   .cmdk-item:hover{background:rgba(255,255,255,.04);}
-  .cmdk-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;color:#8a6bff;padding:5px 8px;border:1px solid rgba(138,107,255,.3);border-radius:4px;background:rgba(138,107,255,.06);text-align:center;}
+  .cmdk-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;color:#4083FF;padding:5px 8px;border:1px solid rgba(64,131,255,.3);border-radius:4px;background:rgba(64,131,255,.06);text-align:center;}
   .cmdk-text .cmdk-name{font-size:14px;font-weight:500;color:#fff;line-height:1.35;}
   .cmdk-text .cmdk-desc{font-size:11px;color:rgba(255,255,255,.55);font-family:'JetBrains Mono',monospace;letter-spacing:.03em;margin-top:3px;}
   .cmdk-current{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:#57E3A4;padding:3px 7px;border:1px solid rgba(87,227,164,.3);background:rgba(87,227,164,.06);border-radius:3px;}
