@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>diagrammm — badge starter</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#08070d; --panel:#0c0b15; --acc:#8a6bff;            /* ONE accent only */
+    --white:#f3f3f8; --dim:rgba(243,243,248,.62); --dim2:rgba(243,243,248,.4);
+    --line:rgba(243,243,248,.85); --line2:rgba(243,243,248,.45); --hair:rgba(243,243,248,.13);
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    /* whisper of grain (≤.06) — optional */
+    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  body{margin:0;background:var(--ink);color:var(--white);font-family:var(--mono);overflow-x:clip;padding:40px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(460px,1fr));gap:24px;align-items:start;max-width:1500px;margin:0 auto;}
+
+  /* ── BADGE SHELL ─────────────────────────────────────────── */
+  .badge{position:relative;border:1px solid var(--hair);border-radius:14px;overflow:hidden;background:#08070d;}
+  .poster{position:relative;width:100%;container-type:inline-size;overflow:hidden;color:var(--white);
+    display:flex;flex-direction:column;gap:3.6cqw;padding:6cqw;}
+  .pbg{position:absolute;inset:0;z-index:0;}
+  .poster::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background-image:var(--grain);background-size:150px 150px;opacity:.05;mix-blend-mode:overlay;}
+  .poster>.row{position:relative;z-index:2;}
+  .po-head{display:flex;align-items:center;gap:2.6cqw;}
+  .po-stamp{font-family:var(--mono);font-weight:500;font-size:2.7cqw;letter-spacing:.14em;}
+  .po-head .sp{flex:1;} .po-head svg{height:3.8cqw;width:auto;overflow:visible;}
+  .po-tt{display:flex;flex-direction:column;gap:1.6cqw;}
+  .po-title{font-family:var(--mono);font-weight:700;font-size:5cqw;letter-spacing:.02em;text-transform:uppercase;line-height:1;white-space:nowrap;}
+  .po-sub{font-family:var(--mono);font-size:2.5cqw;letter-spacing:.04em;}
+  .po-sub .gt{opacity:.5;margin:0 .4cqw;}
+  .po-mid{display:flex;align-items:center;justify-content:space-evenly;gap:2cqw;}
+  .po-mid.ctr{justify-content:center;} .po-mid svg{overflow:visible;display:block;}
+  .po-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:2cqw;}
+  .po-note{font-family:var(--mono);font-size:2.1cqw;opacity:.85;}
+  .po-yr{font-family:var(--mono);font-size:2.1cqw;letter-spacing:.06em;opacity:.85;white-space:nowrap;}
+  /* literal [ ] bracket state list */
+  .po-brk{position:relative;display:inline-flex;flex-direction:column;gap:.3cqw;padding:1cqw 2.4cqw;font-family:var(--mono);font-size:2.5cqw;line-height:1.22;}
+  .po-brk::before,.po-brk::after{content:"";position:absolute;top:0;bottom:0;width:1.2cqw;border:.34cqw solid currentColor;}
+  .po-brk::before{left:0;border-right:0;} .po-brk::after{right:0;border-left:0;}
+  /* accents: stacked pills / filled squares / circle column */
+  .po-chips{display:flex;flex-direction:column;gap:1.4cqw;align-items:flex-end;}
+  .po-chips i{display:block;border:.34cqw solid currentColor;border-radius:1.6cqw;}
+  .po-chips i:nth-child(1),.po-chips i:nth-child(2){width:8.5cqw;height:3cqw;}
+  .po-chips i:nth-child(3){width:6.5cqw;height:5cqw;background:currentColor;}
+  .po-sq{display:inline-flex;gap:1.7cqw;align-items:center;} .po-sq i{width:3.6cqw;height:3.6cqw;background:currentColor;}
+  .po-cdots{display:inline-flex;flex-direction:column;gap:1.6cqw;} .po-cdots i{width:4.4cqw;height:4.4cqw;border-radius:50%;background:currentColor;}
+  .cap{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--hair);padding:11px 16px;position:relative;z-index:6;background:var(--panel);}
+  .cap .nm{font-size:11.5px;} .cap .code{font-size:10px;color:var(--dim2);letter-spacing:.1em;}
+
+  /* ── GLYPH BASE ──────────────────────────────────────────── */
+  .mg .ln{fill:none;stroke:var(--line);stroke-width:1.4;}
+  .mg .l2{fill:none;stroke:var(--line2);stroke-width:1.4;}
+  .mg .nd{fill:var(--white);} .mg .no{fill:none;stroke:var(--line);stroke-width:1.4;}
+  .mg .thin{stroke-width:1;} .mg .acc{stroke:var(--acc);} .mg .accf{fill:var(--acc);}
+
+  /* ── MOTION (gated behind .play; longhand so var() can't invalidate) ── */
+  .play .spin,.play .spin-r,.play .sweep,.play .pulse,.play .throb,.play .ping,.play .grow,.play .blink,.play .dash,.play .draw,.play .bob{animation-iteration-count:infinite;}
+  .play .spin  {animation-name:mg-spin; animation-duration:var(--sp,20s); animation-timing-function:linear;}
+  .play .spin-r{animation-name:mg-spin; animation-duration:var(--sp,20s); animation-timing-function:linear;animation-direction:reverse;}
+  .play .sweep {animation-name:mg-spin; animation-duration:var(--sp,3.4s);animation-timing-function:linear;}
+  .play .pulse {animation-name:mg-pulse;animation-duration:var(--sp,2.6s);animation-timing-function:ease-in-out;}
+  .play .throb {animation-name:mg-throb;animation-duration:var(--sp,2.4s);animation-timing-function:ease-in-out;transform-box:fill-box;transform-origin:center;}
+  .play .ping  {animation-name:mg-ping; animation-duration:var(--sp,2.6s);animation-timing-function:ease-out;transform-box:fill-box;transform-origin:center;}
+  .play .grow  {animation-name:mg-grow; animation-duration:var(--sp,2.4s);animation-timing-function:ease-in-out;transform-box:fill-box;transform-origin:50% 100%;}
+  .play .blink {animation-name:mg-blink;animation-duration:var(--sp,2.4s);animation-timing-function:steps(1,end);}
+  .play .dash  {animation-name:mg-dash; animation-duration:var(--sp,2.4s);animation-timing-function:linear;}
+  .play .draw  {animation-name:mg-draw; animation-duration:var(--sp,3s);  animation-timing-function:linear;}
+  .play .bob   {animation-name:mg-bob;  animation-duration:var(--sp,3.6s);animation-timing-function:ease-in-out;}
+  @keyframes mg-spin {to{transform:rotate(360deg)}}
+  @keyframes mg-pulse{0%,100%{opacity:.28}50%{opacity:1}}
+  @keyframes mg-throb{0%,100%{transform:scale(.68)}50%{transform:scale(1.22)}}
+  @keyframes mg-ping {0%{transform:scale(.35);opacity:.85}80%,100%{transform:scale(1.75);opacity:0}}
+  @keyframes mg-grow {0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+  @keyframes mg-blink{0%,52%{opacity:1}54%,100%{opacity:.12}}
+  @keyframes mg-dash {to{stroke-dashoffset:-32}}
+  @keyframes mg-draw {from{stroke-dashoffset:200}to{stroke-dashoffset:0}}
+  @keyframes mg-bob  {0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+</style>
+</head>
+<body class="play">
+
+<!-- shared arrow marker (white) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="ar" markerWidth="9" markerHeight="9" refX="6.5" refY="3.2" orient="auto"><path d="M0.6 0.6 L6.4 3.2 L0.6 5.8" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs></svg>
+
+<div class="grid">
+
+  <!-- ════ EXAMPLE · charcoal, atomic motion (orbital + bracket list + chips) ════ -->
+  <figure class="badge">
+    <div class="poster">
+      <div class="pbg" style="background:radial-gradient(60% 80% at 78% 86%,rgba(120,95,215,.16),transparent 62%),linear-gradient(155deg,#100e1c,#08070d 70%);"></div>
+      <div class="row po-head">
+        <span class="po-stamp">ORCH 2.2</span><span class="sp"></span>
+        <svg viewBox="0 0 150 26" fill="none">
+          <circle cx="10" cy="13" r="6.5" fill="#fff"/><circle cx="33" cy="13" r="6.5" stroke="#fff" stroke-width="1.6"/>
+          <g><circle cx="56" cy="13" r="6.5" stroke="#fff" stroke-width="1.6"/><path d="M56 6.5 A6.5 6.5 0 0 1 56 19.5 Z" fill="#fff"/></g>
+          <g transform="translate(120 13) rotate(-20)" stroke="#fff" stroke-width="1.6"><ellipse rx="22" ry="8.5"/><circle cx="22" cy="0" r="2.6" fill="#fff" stroke="none"/><circle cx="-22" cy="0" r="2.6" fill="#fff" stroke="none"/></g>
+        </svg>
+      </div>
+      <div class="row po-tt">
+        <div class="po-title">Autonomous Orchestration</div>
+        <div class="po-sub">Coordinate<span class="gt">·</span>Adapt<span class="gt">·</span>Recover<span class="gt">·</span>Optimize</div>
+      </div>
+      <div class="row po-mid">
+        <!-- orbital glyph: tilted ellipses slow-spin around (110,62); crosshair static -->
+        <svg class="mg" viewBox="0 0 220 120" style="width:37cqw" fill="none" stroke="#fff">
+          <g class="spin" style="transform-box:view-box;transform-origin:110px 62px;--sp:26s">
+            <g transform="rotate(-6 110 62)"><ellipse cx="110" cy="62" rx="98" ry="40" stroke-width="1.6"/><ellipse cx="110" cy="62" rx="60" ry="23" stroke-width="1.6"/>
+              <circle cx="190" cy="38" r="6" fill="#fff" stroke="none"/><circle cx="34" cy="92" r="6" fill="#fff" stroke="none"/></g></g>
+          <g stroke-width="1.6"><path d="M110 50 v9 M110 65 v9 M92 62 h9 M119 62 h9"/><circle cx="110" cy="62" r="4"/></g>
+        </svg>
+        <div class="po-brk"><span>Monitor</span><span>Adjust</span><span>Recover</span><span>Evolve</span></div>
+        <div class="po-chips"><i></i><i></i><i></i></div>
+      </div>
+      <div class="row po-foot">
+        <span class="po-note">Resilient systems. Continuous progress.</span>
+        <span class="po-yr">[ 2026 ]</span>
+      </div>
+    </div>
+    <figcaption class="cap"><span class="nm">Autonomous Orchestration</span><span class="code">BADGE 01</span></figcaption>
+  </figure>
+
+  <!-- ════ EXAMPLE · cobalt, SMIL motion (human-in-the-loop → ship) ════ -->
+  <figure class="badge">
+    <div class="poster">
+      <div class="pbg" style="background:linear-gradient(105deg,#2f4ad6,#3a52da 58%,#6b5fc4 82%,#8a6bb8);"></div>
+      <div class="row po-head">
+        <span class="po-stamp">HITL 1.2</span><span class="sp"></span>
+        <span class="po-sq"><i></i><i></i><i></i><i></i></span>
+      </div>
+      <div class="row po-tt">
+        <div class="po-title">Human-in-the-loop</div>
+        <div class="po-sub">Propose<span class="gt">·</span>Review<span class="gt">·</span>Merge</div>
+      </div>
+      <div class="row po-mid ctr">
+        <svg class="mg" viewBox="0 0 300 110" style="width:70cqw" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true">
+          <defs><path id="t-flow" d="M30 55 L150 55" fill="none"/><path id="t-ship" d="M186 55 L240 55" fill="none"/></defs>
+          <!-- bracketed person -->
+          <path d="M22 38 H14 V72 H22 M58 38 H66 V72 H58"/><circle cx="40" cy="48" r="7"/><path d="M26 70 a14 12 0 0 1 28 0"/>
+          <path d="M70 55 H150"/>
+          <!-- review gate: pulsing ring -->
+          <circle class="ln" cx="168" cy="55" r="14"/><path d="M161 55 l5 5 l9 -11" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="168" cy="55" r="20" stroke="#8a6bff" fill="none" stroke-width="1.4"><animate attributeName="opacity" values=".6;.12;.6" dur="2.2s" repeatCount="indefinite"/></circle>
+          <path d="M186 55 H240"/>
+          <!-- ship -->
+          <circle cx="262" cy="55" r="14"/>
+          <path d="M254 55 l6 6 l11 -13" stroke-linecap="round" stroke-linejoin="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"><animate attributeName="stroke-dashoffset" values="100;100;0;0;100" keyTimes="0;.45;.6;.9;1" dur="3.2s" repeatCount="indefinite"/></path>
+          <!-- particles: propose→gate, then merge -->
+          <circle r="2" fill="#fff"><animateMotion dur="1.7s" repeatCount="indefinite"><mpath href="#t-flow"/></animateMotion></circle>
+          <circle r="2" fill="#8a6bff"><animateMotion dur="3.2s" keyPoints="0;0;1;1" keyTimes="0;.6;.78;1" calcMode="linear" repeatCount="indefinite"><mpath href="#t-ship"/></animateMotion></circle>
+        </svg>
+      </div>
+      <div class="row po-foot">
+        <span class="po-note">AI proposes. People decide what ships.</span>
+        <span class="po-yr">[ 2026 ]</span>
+      </div>
+    </div>
+    <figcaption class="cap"><span class="nm">Human-in-the-loop</span><span class="code">BADGE 02</span></figcaption>
+  </figure>
+
+</div>
+
+<script>
+/* static/animated toggle — body.play default; freezes CSS + SMIL together */
+(function(){
+  const on=()=>document.body.classList.contains('play');
+  window.toggleDiagrammm=function(){const v=!on();document.body.classList.toggle('play',v);
+    document.querySelectorAll('svg').forEach(s=>{try{v?s.unpauseAnimations():s.pauseAnimations();}catch(e){}});};
+  // honor reduced-motion only if you choose to: // if(matchMedia('(prefers-reduced-motion: reduce)').matches) toggleDiagrammm();
+})();
+</script>
+</body>
+</html>
