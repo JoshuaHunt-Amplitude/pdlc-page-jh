@@ -82,8 +82,9 @@
   /* ── HERO ───────────────────────────── */
   /* content anchored to the LOWER band so it never fights the video's own
      baked-in diagram/labels in the centre & top */
-  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; padding: 0 40px 52px; max-width: 1320px; margin: 0 auto; }
-  .hero h1 { font-size: clamp(28px,3.4vw,50px); font-weight:400; line-height: 1.02; letter-spacing: -0.03em; margin: 12px 0 0; max-width: 13ch; }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; padding: 0 40px 40px; max-width: 1320px; margin: 0 auto; }
+  .hero .eyebrow { font-size: 11px; }
+  .hero h1 { font-size: clamp(19px,2vw,30px); font-weight:400; line-height: 1.12; letter-spacing: -0.01em; margin: 9px 0 0; max-width: 17ch; }
   .hero h1 .a { color: var(--blue-d); font-weight:400; font-style:normal; }
   /* Full-bleed hero background video (100vw, clipped by body overflow-x) */
   .hero-video, .hero-scrim { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; height: 100%; }
@@ -91,13 +92,14 @@
   .hero-scrim { z-index: 1; pointer-events: none; background:
       linear-gradient(0deg, rgba(8,9,14,.94) 0%, rgba(8,9,14,.6) 24%, rgba(8,9,14,0) 50%),
       radial-gradient(130% 55% at 50% 100%, rgba(8,9,14,.5), transparent 72%); }
-  .hero-content { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; width: 100%; }
+  .hero-content { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: end; width: 100%; }
   .hero-left { min-width: 0; }
-  .hero-right { min-width: 0; max-width: 520px; justify-self: end; }
+  /* hairline above the description column */
+  .hero-right { min-width: 0; max-width: 440px; justify-self: end; border-top: 1px solid rgba(243,243,248,.18); padding-top: 16px; }
   @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
-  .hero .lede { font-size: clamp(14px,1.15vw,17px); line-height: 1.55; color: var(--dim); max-width: 48ch; margin: 0 0 22px; }
-  .hero-cta { margin-top: 22px; }
-  .hero .waitlist { max-width: 440px; }
+  .hero .lede { font-size: clamp(12.5px,1vw,14px); line-height: 1.5; color: var(--dim); max-width: 44ch; margin: 0 0 16px; }
+  .hero-cta { margin-top: 16px; }
+  .hero .waitlist { max-width: 400px; }
   @media (max-width: 820px){ .hero-content { grid-template-columns: 1fr; gap: 22px; } .hero-right { justify-self: start; max-width: 100%; } .hero { padding-bottom: 40px; } }
 
   .hero-meta { display: flex; gap: 28px; flex-wrap: wrap; }
@@ -783,8 +785,8 @@
 
   /* Hero waitlist variant (smaller, left-aligned) */
   .hero .waitlist { margin: 0; max-width: 460px; }
-  .hero .waitlist input { font-size: 14px; padding: 10px 14px; }
-  .hero .waitlist button { padding: 10px 18px; font-size: 10.5px; }
+  .hero .waitlist input { font-size: 13px; padding: 9px 13px; }
+  .hero .waitlist button { padding: 9px 16px; font-size: 10px; }
   .hero .waitlist-help-wrap { margin-top: 22px; }
 
   /* Mobile: stack the signup so the button drops BELOW the input (instead of
