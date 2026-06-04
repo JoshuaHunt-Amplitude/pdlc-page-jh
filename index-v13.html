@@ -162,8 +162,21 @@
 
   /* ── CLOSER ────────────────────────────────── */
   .closer{min-height:78vh;display:flex;align-items:center;}
-  .closer h2{font-family:var(--mono);font-weight:700;font-size:clamp(30px,5vw,68px);line-height:1.0;letter-spacing:-0.01em;text-transform:uppercase;margin:20px 0 0;max-width:18ch;}
-  .closer p{color:rgba(243,243,248,.82);font-size:17px;line-height:1.6;margin:24px 0 0;max-width:48ch;}
+  /* two columns: CTA copy + a micrographic composition card to balance it */
+  .closer-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(36px,5vw,64px);align-items:center;width:100%;}
+  @media(max-width:900px){.closer-grid{grid-template-columns:1fr;gap:44px;}}
+  .closer h2{font-family:var(--mono);font-weight:700;font-size:clamp(30px,4.4vw,56px);line-height:1.02;letter-spacing:-0.01em;text-transform:uppercase;margin:20px 0 0;max-width:16ch;}
+  .closer h2 .lt{color:rgba(243,243,248,.5);font-weight:400;}
+  .closer p{color:rgba(243,243,248,.82);font-size:17px;line-height:1.6;margin:24px 0 0;max-width:46ch;}
+
+  /* composition card (right) — frosted, blue glow, dense HUD micrograph */
+  .comp{position:relative;overflow:hidden;border:1px solid var(--hair);border-radius:16px;background:var(--ink2);padding:24px 26px 22px;}
+  .comp .cglow{position:absolute;inset:auto -10% -42% 18%;height:72%;background:radial-gradient(ellipse at 50% 100%,rgba(64,131,255,.3),transparent 70%);filter:blur(26px);z-index:0;}
+  .comp>*{position:relative;z-index:1;}
+  .comp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+  .comp-fig{display:flex;justify-content:center;padding:22px 0 18px;}
+  .comp-fig .mg{width:100%;height:auto;}
+  .comp-foot{display:flex;align-items:flex-end;gap:24px;}
   .waitlist{display:flex;gap:8px;max-width:440px;margin:34px 0 0;background:rgba(8,8,14,.4);border:1px solid var(--line);border-radius:12px;padding:6px;}
   .waitlist input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--white);font-family:var(--sans);font-size:15px;padding:12px 14px;}
   .waitlist input::placeholder{color:var(--dim2);}
@@ -475,17 +488,77 @@
   <div class="grad grad-closer" aria-hidden="true"></div>
   <div class="vignette" aria-hidden="true"></div>
   <div class="panel-in" style="width:100%">
-    <div class="reveal" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-      <div class="stamp b">Wave // Closed beta</div>
-      <span class="pdots"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span>
+    <div class="closer-grid">
+
+      <!-- CTA copy (v11) -->
+      <div class="cta-copy">
+        <div class="reveal" style="display:flex;align-items:center;gap:16px">
+          <div class="stamp b">Wave // Closed beta</div>
+          <span class="pdots"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span>
+        </div>
+        <h2 class="reveal">Build products that<br><span class="lt">improve themselves.</span></h2>
+        <p class="reveal">A closed beta, for a small group of teams. Be first to sense what your users want, decide what to build, and act on it — with your team in control. We work hand in hand with everyone we bring on.</p>
+        <form class="waitlist reveal" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
+          <input type="email" placeholder="you@company.com" required aria-label="Email address">
+          <button type="submit">Join our closed Beta →</button>
+        </form>
+        <div class="reveal"><p class="note"><i></i>Please use your Amplitude account email.</p></div>
+      </div>
+
+      <!-- composition card · NEURAL ARCHITECTURE micrograph (balances the copy)
+           Dense faint mesh (4→5→5→2) + one bright routed path = signals routed to the
+           chosen decision. Animation: signal pulses run the routed path; two nodes pulse.
+           Tuning knobs: #comp-flow = the routed path · pulse dur 2.6s · accent = top output. -->
+      <figure class="comp reveal" aria-hidden="true">
+        <span class="cglow"></span>
+        <div class="comp-head">
+          <div>
+            <div class="stamp">Arch 3.5</div>
+            <div class="hud-t" style="font-size:16px;margin-top:7px">Architects of<br>the unseen data</div>
+          </div>
+          <span class="pdots"><i class="cur"></i><i></i><i></i><i class="off"></i></span>
+        </div>
+        <div class="comp-fig">
+          <svg class="mg" viewBox="0 0 300 240">
+            <defs>
+              <radialGradient id="comp-lead" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff"/><stop offset="45%" stop-color="#fff" stop-opacity=".4"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>
+              <path id="comp-flow" d="M40 93 L120 120 L200 75 L268 90" fill="none"/>
+            </defs>
+            <!-- corner brackets -->
+            <path class="l2 thin" opacity=".55" d="M8 22 V8 H22 M278 8 H292 V22 M8 218 V232 H22 M278 232 H292 V218"/>
+            <!-- dense faint mesh (every edge of a 4→5→5→2 network) -->
+            <path class="l2 thin" opacity=".24" d="M40 40 L120 30 M40 40 L120 75 M40 40 L120 120 M40 40 L120 165 M40 40 L120 210 M40 93 L120 30 M40 93 L120 75 M40 93 L120 120 M40 93 L120 165 M40 93 L120 210 M40 146 L120 30 M40 146 L120 75 M40 146 L120 120 M40 146 L120 165 M40 146 L120 210 M40 200 L120 30 M40 200 L120 75 M40 200 L120 120 M40 200 L120 165 M40 200 L120 210 M120 30 L200 30 M120 30 L200 75 M120 30 L200 120 M120 30 L200 165 M120 30 L200 210 M120 75 L200 30 M120 75 L200 75 M120 75 L200 120 M120 75 L200 165 M120 75 L200 210 M120 120 L200 30 M120 120 L200 75 M120 120 L200 120 M120 120 L200 165 M120 120 L200 210 M120 165 L200 30 M120 165 L200 75 M120 165 L200 120 M120 165 L200 165 M120 165 L200 210 M120 210 L200 30 M120 210 L200 75 M120 210 L200 120 M120 210 L200 165 M120 210 L200 210 M200 30 L268 90 M200 30 L268 150 M200 75 L268 90 M200 75 L268 150 M200 120 L268 90 M200 120 L268 150 M200 165 L268 90 M200 165 L268 150 M200 210 L268 90 M200 210 L268 150"/>
+            <!-- routed path: signals → the chosen decision -->
+            <path class="ln" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M40 93 L120 120 L200 75 L268 90"/>
+            <!-- input nodes (left) -->
+            <g class="no thin"><circle cx="40" cy="40" r="3.4"/><circle cx="40" cy="93" r="3.4"/><circle cx="40" cy="146" r="3.4"/><circle cx="40" cy="200" r="3.4"/></g>
+            <!-- hidden nodes -->
+            <g class="nd"><circle cx="120" cy="30" r="2.2"/><circle cx="120" cy="75" r="2.2"/><circle cx="120" cy="120" r="2.2"/><circle cx="120" cy="165" r="2.2"/><circle cx="120" cy="210" r="2.2"/><circle cx="200" cy="30" r="2.2"/><circle cx="200" cy="75" r="2.2"/><circle cx="200" cy="120" r="2.2"/><circle cx="200" cy="165" r="2.2"/><circle cx="200" cy="210" r="2.2"/></g>
+            <!-- two pulsing nodes on the routed path -->
+            <circle class="nd" cx="120" cy="120" r="2.8"><animate attributeName="opacity" values=".4;1;.4" dur="2.2s" repeatCount="indefinite"/></circle>
+            <circle class="nd" cx="200" cy="75" r="2.8"><animate attributeName="opacity" values="1;.4;1" dur="2.6s" repeatCount="indefinite"/></circle>
+            <!-- output nodes (right) -->
+            <g class="no thin"><circle cx="268" cy="90" r="4"/><circle cx="268" cy="150" r="4"/></g>
+            <!-- chosen output (blue accent) -->
+            <circle class="accf" cx="268" cy="90" r="2.4"/>
+            <circle class="acc thin" cx="268" cy="90" r="9" fill="none" opacity=".75"/>
+            <!-- signal pulses running the routed path -->
+            <g fill="#fff">
+              <g><circle r="4" fill="url(#comp-lead)"/><circle r="1.8"/><animateMotion dur="2.6s" begin="0s" repeatCount="indefinite"><mpath href="#comp-flow"/></animateMotion></g>
+              <circle r="1.2"><animateMotion dur="2.6s" begin="-1.3s" repeatCount="indefinite"><mpath href="#comp-flow"/></animateMotion></circle>
+            </g>
+          </svg>
+        </div>
+        <div class="comp-foot">
+          <div class="brk">Sense<br>Decide<br>Act</div>
+          <div style="margin-left:auto;text-align:right">
+            <div class="hud-s">Neural Architecture</div>
+            <div class="tag" style="margin-top:8px">[ 2026 ]</div>
+          </div>
+        </div>
+      </figure>
+
     </div>
-    <h2 class="reveal">We'll live in a world of self-improving products.</h2>
-    <p class="reveal">A closed beta, for a small group of teams. Be first to sense what your users want, decide what to build, and act on it — with your team in control.</p>
-    <form class="waitlist reveal" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
-      <input type="email" placeholder="you@company.com" required aria-label="Email address">
-      <button type="submit">Join our closed beta →</button>
-    </form>
-    <div class="reveal"><p class="note"><i></i>Please use your Amplitude account email.</p></div>
   </div>
 </section>
 
