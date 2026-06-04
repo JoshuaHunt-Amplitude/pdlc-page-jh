@@ -65,25 +65,32 @@
      a container; ALL sizes are in cqw, so a module looks identical whether
      it's dropped in at 360px or 560px. Layout structure is shared; only the
      glyphs / copy / gradient change per variation. */
-  .comps{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:20px;align-items:start;}
+  .comps{display:grid;grid-template-columns:repeat(auto-fill,minmax(490px,1fr));gap:24px;align-items:start;}
   .comp{position:relative;border:1px solid var(--hair);border-radius:14px;overflow:hidden;background:#08070d;transition:border-color .2s;}
   .comp:hover{border-color:rgba(138,107,255,.4);}
-  .poster{position:relative;width:100%;aspect-ratio:1.92/1;container-type:inline-size;overflow:hidden;color:var(--white);
-    display:flex;flex-direction:column;justify-content:space-between;padding:6.5cqw 6cqw;}
+  /* poster: natural height from content (no aspect-ratio fighting flex), gap
+     between rows. width:100% + container-type → every cqw size scales 1:1. */
+  .poster{position:relative;width:100%;container-type:inline-size;overflow:hidden;color:var(--white);
+    display:flex;flex-direction:column;gap:3.6cqw;padding:6cqw 6cqw;}
   .poster .pbg{position:absolute;inset:0;z-index:0;}
   .poster::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background-image:var(--grain);background-size:150px 150px;opacity:.13;mix-blend-mode:overlay;}
+  .poster.duo::after{opacity:.4;}
   .poster > .row{position:relative;z-index:2;}
   /* header: stamp + marks/glyph */
-  .po-head{display:flex;align-items:center;gap:2.5cqw;}
+  .po-head{display:flex;align-items:center;gap:2.6cqw;}
   .po-stamp{font-family:var(--mono);font-weight:500;font-size:2.7cqw;letter-spacing:.14em;}
   .po-head .sp{flex:1;}
-  .po-head svg{height:3.6cqw;width:auto;overflow:visible;}
+  .po-head svg{height:3.8cqw;width:auto;overflow:visible;}
   /* title + arrow/dot subtitle */
-  .po-title{font-family:var(--mono);font-weight:700;font-size:5.6cqw;letter-spacing:.01em;text-transform:uppercase;line-height:1;margin:1.5cqw 0 0;white-space:nowrap;}
-  .po-sub{font-family:var(--mono);font-size:2.5cqw;letter-spacing:.04em;margin:1.6cqw 0 0;}
+  .po-title{font-family:var(--mono);font-weight:700;font-size:5cqw;letter-spacing:.01em;text-transform:uppercase;line-height:1;white-space:nowrap;}
+  .po-sub{font-family:var(--mono);font-size:2.5cqw;letter-spacing:.04em;}
   .po-sub .gt{opacity:.5;margin:0 .4cqw;}
-  /* diagram row — the micrographics doing the work */
-  .po-mid{display:flex;align-items:center;justify-content:space-between;gap:2.5cqw;margin:2cqw 0;}
+  .po-tt{display:flex;flex-direction:column;gap:1.6cqw;}
+  .po-meta{font-family:var(--mono);font-size:2cqw;letter-spacing:.05em;line-height:1.5;text-transform:uppercase;opacity:.82;}
+  /* diagram row — the micrographics doing the work. space-evenly = equal
+     gaps between items AND at the ends → balanced, equidistant rhythm. */
+  .po-mid{display:flex;align-items:center;justify-content:space-evenly;gap:2cqw;}
+  .po-mid.ctr{justify-content:center;}
   .po-mid svg{overflow:visible;display:block;}
   /* footer */
   .po-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:2cqw;}
@@ -93,12 +100,17 @@
   .po-brk{position:relative;display:inline-flex;flex-direction:column;gap:.3cqw;padding:1cqw 2.4cqw;font-family:var(--mono);font-size:2.5cqw;line-height:1.22;letter-spacing:.02em;}
   .po-brk::before,.po-brk::after{content:"";position:absolute;top:0;bottom:0;width:1.2cqw;border:.34cqw solid currentColor;}
   .po-brk::before{left:0;border-right:0;} .po-brk::after{right:0;border-left:0;}
-  /* stacked chips */
+  /* stacked chips (rounded rects) */
   .po-chips{display:flex;flex-direction:column;gap:1.4cqw;align-items:flex-end;}
   .po-chips i{display:block;border:.34cqw solid currentColor;border-radius:1.6cqw;}
   .po-chips i:nth-child(1){width:8.5cqw;height:3cqw;}
   .po-chips i:nth-child(2){width:8.5cqw;height:3cqw;}
   .po-chips i:nth-child(3){width:6.5cqw;height:5cqw;background:currentColor;}
+  /* filled squares (header marks) + stacked filled circles */
+  .po-sq{display:inline-flex;gap:1.7cqw;align-items:center;}
+  .po-sq i{width:3.6cqw;height:3.6cqw;background:currentColor;display:block;}
+  .po-cdots{display:inline-flex;flex-direction:column;gap:1.6cqw;}
+  .po-cdots i{width:4.4cqw;height:4.4cqw;border-radius:50%;background:currentColor;display:block;}
   .comp .cap{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--hair);padding:11px 16px;position:relative;z-index:6;background:var(--panel);}
   .comp .cap .nm{font-family:var(--mono);font-size:11.5px;color:var(--white);letter-spacing:.04em;}
   .comp .cap .code{font-family:var(--mono);font-size:10px;color:var(--dim2);letter-spacing:.1em;}
@@ -109,6 +121,7 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0.5 0.5 L6 3 L0.5 5.5" fill="none" stroke="rgba(243,243,248,.85)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></marker>
   <marker id="arA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0.5 0.5 L6 3 L0.5 5.5" fill="none" stroke="#8a6bff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="arW" markerWidth="9" markerHeight="9" refX="6.5" refY="3.2" orient="auto"><path d="M0.6 0.6 L6.4 3.2 L0.6 5.8" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></marker>
 </defs></svg>
 
 <div class="wrap">
@@ -126,7 +139,7 @@
   </div>
 
   <!-- ════════ COMPOSITIONS ════════ -->
-  <div class="cat"><span class="ix">✦</span><h2>Compositions</h2><div class="rule"></div><span class="n">01</span></div>
+  <div class="cat"><span class="ix">✦</span><h2>Compositions</h2><div class="rule"></div><span class="n">06</span></div>
   <div class="comps">
 
     <!-- ── COMP 01 · Autonomous Orchestration ──────────────────
@@ -152,14 +165,14 @@
           </svg>
         </div>
 
-        <div class="row">
+        <div class="row po-tt">
           <div class="po-title">Autonomous Orchestration</div>
           <div class="po-sub">Coordinate<span class="gt">·</span>Adapt<span class="gt">·</span>Recover<span class="gt">·</span>Optimize</div>
         </div>
 
         <div class="row po-mid">
           <!-- orbital: concentric tilted ellipses + crosshair + 2 planets -->
-          <svg viewBox="0 0 220 120" style="width:42cqw" fill="none" stroke="#fff">
+          <svg viewBox="0 0 220 120" style="width:37cqw" fill="none" stroke="#fff">
             <g transform="rotate(-6 110 62)">
               <ellipse cx="110" cy="62" rx="98" ry="40" stroke-width="1.6"/>
               <ellipse cx="110" cy="62" rx="60" ry="23" stroke-width="1.6"/>
@@ -181,6 +194,223 @@
         </div>
       </div>
       <figcaption class="cap"><span class="nm">Autonomous Orchestration</span><span class="code">COMP 01</span></figcaption>
+    </figure>
+
+    <!-- ── COMP 02 · Human-in-the-loop ──────────────────────────
+         Purple field. Icon chain: bracketed person → dotted circle →
+         square → check. Header marks = filled squares; right column = dots. -->
+    <figure class="comp">
+      <div class="poster">
+        <div class="pbg" style="background:
+            radial-gradient(90% 120% at 12% 6%, #4a3a8e 0%, transparent 60%),
+            linear-gradient(125deg,#3b2c7c 0%,#5a3f9e 55%,#7a52ac 100%);"></div>
+
+        <div class="row po-head">
+          <span class="po-stamp">HITL 1.2</span>
+          <span class="po-sq"><i></i><i></i><i></i><i></i></span>
+        </div>
+
+        <div class="row po-tt">
+          <div class="po-title">Human-in-the-loop</div>
+          <div class="po-sub">Review<span class="gt">·</span>Override<span class="gt">·</span>Guide<span class="gt">·</span>Approve</div>
+        </div>
+
+        <div class="row po-mid">
+          <!-- icon chain: [person] → ◌ → ▢ → ⊘check -->
+          <svg viewBox="0 0 360 70" style="width:58cqw" fill="none" stroke="#fff" stroke-width="2">
+            <!-- bracketed person -->
+            <path d="M16 14 H8 V56 H16 M62 14 H70 V56 H62"/>
+            <circle cx="39" cy="30" r="8"/><path d="M25 52 a14 12 0 0 1 28 0"/>
+            <path d="M84 35 H112" marker-end="url(#arW)"/>
+            <!-- dotted circle -->
+            <circle cx="150" cy="35" r="20" stroke-dasharray="2.5 5.5"/>
+            <path d="M178 35 H206" marker-end="url(#arW)"/>
+            <!-- square -->
+            <rect x="222" y="17" width="36" height="36" rx="3"/>
+            <path d="M272 35 H300" marker-end="url(#arW)"/>
+            <!-- check circle -->
+            <circle cx="332" cy="35" r="20"/><path d="M322 35 l7 7 l13 -15" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="po-cdots"><i></i><i></i><i></i></span>
+        </div>
+
+        <div class="row po-foot">
+          <span class="po-note">Keep humans in control of high-impact decisions.</span>
+        </div>
+      </div>
+      <figcaption class="cap"><span class="nm">Human-in-the-loop</span><span class="code">COMP 02</span></figcaption>
+    </figure>
+
+    <!-- ── COMP 03 · Agentic Workflows ──────────────────────────
+         Blue→violet field. Header: corner-frame reticle + SYS 1.3 +
+         progress dots (one ringed). Mid: node chain + dashed reticle. -->
+    <figure class="comp">
+      <div class="poster">
+        <div class="pbg" style="background:
+            linear-gradient(105deg,#2f4ad6 0%,#3a52da 58%,#6b5fc4 80%,#8a6bb8 100%);"></div>
+
+        <div class="row po-head">
+          <!-- corner-frame reticle -->
+          <svg viewBox="0 0 34 34" style="height:5.4cqw" fill="none" stroke="#fff" stroke-width="2">
+            <path d="M4 11 V4 H11 M23 4 H30 V11 M30 23 V30 H23 M11 30 H4 V23"/>
+            <circle cx="17" cy="17" r="3.4" fill="#fff" stroke="none"/>
+          </svg>
+          <span class="po-stamp">SYS 1.3</span><span class="sp"></span>
+          <!-- progress dots: ringed current + filled -->
+          <svg viewBox="0 0 130 22" fill="none">
+            <circle cx="11" cy="11" r="9" stroke="#fff" stroke-width="1.6"/><circle cx="11" cy="11" r="4" fill="#fff"/>
+            <circle cx="40" cy="11" r="7" fill="#fff"/><circle cx="66" cy="11" r="7" fill="#fff"/><circle cx="92" cy="11" r="7" fill="#fff"/><circle cx="118" cy="11" r="7" fill="#fff"/>
+          </svg>
+        </div>
+
+        <div class="row po-tt">
+          <div class="po-title">Agentic Workflows</div>
+          <div class="po-sub">Plan<span class="gt">&gt;</span>Orchestrate<span class="gt">&gt;</span>Execute<span class="gt">&gt;</span>Learn</div>
+        </div>
+
+        <div class="row po-mid">
+          <!-- node chain: pair → filled → pair → filled → single -->
+          <svg viewBox="0 0 300 72" style="width:52cqw" fill="none" stroke="#fff" stroke-width="2">
+            <circle cx="16" cy="16" r="11"/><circle cx="16" cy="56" r="11"/>
+            <path d="M27 16 L62 36 M27 56 L62 36"/>
+            <circle cx="74" cy="36" r="10" fill="#fff"/>
+            <path d="M86 36 L116 16 M86 36 L116 56"/>
+            <circle cx="128" cy="16" r="11"/><circle cx="128" cy="56" r="11"/>
+            <path d="M139 16 L176 36 M139 56 L176 36"/>
+            <circle cx="188" cy="36" r="10" fill="#fff"/>
+            <path d="M200 36 L230 16 M200 36 L230 56"/>
+            <circle cx="242" cy="16" r="11"/><circle cx="242" cy="56" r="11"/>
+          </svg>
+          <!-- dashed reticle -->
+          <svg viewBox="0 0 70 60" style="width:14cqw" fill="none" stroke="#fff">
+            <rect x="2" y="2" width="66" height="56" rx="2" stroke-dasharray="5 5" stroke-width="1.6"/>
+            <circle cx="35" cy="30" r="11" stroke-width="2"/><path d="M35 13 v8 M35 39 v8 M18 30 h8 M44 30 h8" stroke-width="2"/><circle cx="35" cy="30" r="2.4" fill="#fff" stroke="none"/>
+          </svg>
+        </div>
+
+        <div class="row po-foot">
+          <span class="po-note">Adaptive systems for dynamic objectives.</span>
+          <span class="po-yr">[ 2026 ]</span>
+        </div>
+      </div>
+      <figcaption class="cap"><span class="nm">Agentic Workflows</span><span class="code">COMP 03</span></figcaption>
+    </figure>
+
+    <!-- ── COMP 04 · Amplitude AI Platform ──────────────────────
+         Near-black. Archetype B: 3 neural clusters on top, title below,
+         meta + signature footer. -->
+    <figure class="comp">
+      <div class="poster">
+        <div class="pbg" style="background:linear-gradient(160deg,#0f0d18 0%,#0a0912 60%,#08070d 100%);"></div>
+
+        <div class="row po-mid ctr">
+          <!-- 3 neural clusters with arrows between -->
+          <svg viewBox="0 0 360 110" style="width:66cqw" fill="none" stroke="#fff" stroke-width="1.4">
+            <!-- cluster 1 -->
+            <g><path d="M12 18 L46 55 M12 92 L46 55 M12 18 L12 92 M46 55 L80 24 M46 55 L80 86 M12 18 L46 55 M28 78 L46 55"/>
+              <g fill="#fff" stroke="none"><circle cx="12" cy="18" r="5"/><circle cx="80" cy="24" r="5"/><circle cx="46" cy="55" r="6"/></g>
+              <g fill="none"><circle cx="12" cy="92" r="5"/><circle cx="80" cy="86" r="5"/><circle cx="28" cy="78" r="4"/></g></g>
+            <path d="M92 55 H120" stroke-width="1.6" marker-end="url(#arW)"/>
+            <!-- cluster 2 (denser) -->
+            <g transform="translate(128 0)"><path d="M14 20 L46 55 L14 90 M14 20 L78 55 M14 90 L78 55 M46 55 L60 20 M46 55 L60 90 M14 20 L60 90 M14 90 L60 20 M60 20 L78 55 M60 90 L78 55"/>
+              <g fill="#fff" stroke="none"><circle cx="14" cy="20" r="6"/><circle cx="14" cy="90" r="6"/><circle cx="60" cy="20" r="5"/><circle cx="60" cy="90" r="5"/><circle cx="78" cy="55" r="6"/></g>
+              <circle cx="46" cy="55" r="7" fill="none"/></g>
+            <path d="M220 55 H248" stroke-width="1.6" marker-end="url(#arW)"/>
+            <!-- cluster 3 -->
+            <g transform="translate(256 0)"><path d="M10 22 L40 40 M10 88 L40 70 M40 40 L40 70 M40 40 L96 55 M40 70 L96 55 M40 40 L62 36 M40 70 L62 74 M62 36 L96 55 M62 74 L96 55"/>
+              <g fill="#fff" stroke="none"><circle cx="10" cy="22" r="5"/><circle cx="96" cy="55" r="6"/><circle cx="40" cy="40" r="5"/></g>
+              <g fill="none"><circle cx="10" cy="88" r="5"/><circle cx="40" cy="70" r="5"/><circle cx="62" cy="36" r="4"/><circle cx="62" cy="74" r="4"/></g></g>
+          </svg>
+        </div>
+
+        <div class="row"><div class="po-title">Amplitude AI Platform</div></div>
+        <div class="row po-meta">Neural Architecture<br>V3.5 · SD2.4 · TXT2ACTION</div>
+
+        <div class="row po-foot">
+          <span class="po-note" style="text-transform:uppercase;opacity:.6;">We are architects<br>of the unseen data</span>
+          <span class="po-yr">©2026</span>
+        </div>
+      </div>
+      <figcaption class="cap"><span class="nm">Amplitude AI Platform</span><span class="code">COMP 04</span></figcaption>
+    </figure>
+
+    <!-- ── COMP 05 · Algorithmically Generated ──────────────────
+         Duotone yellow→blue, heavy grain. Archetype B: node-graph hero
+         filling most of the card, uppercase footer caption. -->
+    <figure class="comp">
+      <div class="poster duo">
+        <div class="pbg" style="background:
+            linear-gradient(38deg,#d9c06a 0%,#9aa67e 30%,#5a72c8 62%,#3b53dc 100%);"></div>
+
+        <div class="row po-mid ctr">
+          <!-- node graph with arrows: fan-in → hub → hub → branch-out.
+               compact span (nodes 28..272) → dense, not stretched. -->
+          <svg viewBox="0 0 300 124" style="width:70cqw" fill="none" stroke="#fff" stroke-width="2">
+            <path d="M34 24 L94 58" marker-end="url(#arW)"/>
+            <path d="M34 100 L94 66" marker-end="url(#arW)"/>
+            <path d="M110 62 L158 62" marker-end="url(#arW)"/>
+            <path d="M112 54 L150 28" marker-end="url(#arW)"/>
+            <path d="M112 70 L150 96" marker-end="url(#arW)"/>
+            <path d="M160 32 L174 54" marker-end="url(#arW)"/>
+            <path d="M160 92 L174 70" marker-end="url(#arW)"/>
+            <path d="M186 58 L256 30" marker-end="url(#arW)"/>
+            <path d="M186 66 L256 94" marker-end="url(#arW)"/>
+            <g fill="#fff" stroke="none">
+              <circle cx="28" cy="20" r="7"/><circle cx="28" cy="104" r="7"/>
+              <circle cx="102" cy="62" r="8"/><circle cx="156" cy="24" r="7"/><circle cx="156" cy="100" r="7"/>
+              <circle cx="180" cy="62" r="8"/><circle cx="264" cy="26" r="7"/><circle cx="264" cy="98" r="7"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="row po-meta" style="opacity:.9;">Algorithmically Generated / AI 2026<br>Tools: Amplitude Analytics,<br>Agentic Frameworks, Generative AI</div>
+      </div>
+      <figcaption class="cap"><span class="nm">Algorithmically Generated</span><span class="code">COMP 05</span></figcaption>
+    </figure>
+
+    <!-- ── COMP 06 · Cohort Memory ──────────────────────────────
+         Purple field. Header: MEMORY 2.0 + progress dots. Mid: database
+         cylinder + bracket list + dot-matrix. -->
+    <figure class="comp">
+      <div class="poster">
+        <div class="pbg" style="background:
+            radial-gradient(90% 120% at 88% 90%, #6e4fb0 0%, transparent 60%),
+            linear-gradient(135deg,#3b2c7c 0%,#553a96 60%,#6b49a6 100%);"></div>
+
+        <div class="row po-head">
+          <span class="po-stamp">MEMORY 2.0</span><span class="sp"></span>
+          <svg viewBox="0 0 110 22" fill="none">
+            <circle cx="10" cy="11" r="7" fill="#fff"/><circle cx="34" cy="11" r="7" fill="#fff"/>
+            <circle cx="58" cy="11" r="7" stroke="#fff" stroke-width="1.6"/><circle cx="82" cy="11" r="7" stroke="#fff" stroke-width="1.6"/><circle cx="106" cy="11" r="7" stroke="#fff" stroke-width="1.6"/>
+          </svg>
+        </div>
+
+        <div class="row po-tt">
+          <div class="po-title">Cohort Memory</div>
+          <div class="po-sub">Segment<span class="gt">·</span>Aggregate<span class="gt">·</span>Recall</div>
+        </div>
+
+        <div class="row po-mid">
+          <!-- database cylinder -->
+          <svg viewBox="0 0 90 96" style="width:18cqw" fill="none" stroke="#fff" stroke-width="2">
+            <ellipse cx="45" cy="18" rx="34" ry="13"/>
+            <path d="M11 18 V70 a34 13 0 0 0 68 0 V18"/>
+            <path d="M11 44 a34 13 0 0 0 68 0" stroke-width="1.6" opacity=".7"/>
+          </svg>
+          <div class="po-brk"><span>Cohorts</span><span>Patterns</span><span>Retention</span><span>Recall</span></div>
+          <!-- dot-matrix 4×4, scattered fill -->
+          <svg viewBox="0 0 64 64" style="width:15cqw" fill="#fff">
+            <g opacity=".42"><circle cx="8" cy="8" r="3.4"/><circle cx="26" cy="8" r="3.4"/><circle cx="44" cy="8" r="3.4"/><circle cx="62" cy="8" r="3.4"/><circle cx="8" cy="26" r="3.4"/><circle cx="26" cy="26" r="3.4"/><circle cx="44" cy="26" r="3.4"/><circle cx="62" cy="26" r="3.4"/><circle cx="8" cy="44" r="3.4"/><circle cx="26" cy="44" r="3.4"/><circle cx="44" cy="44" r="3.4"/><circle cx="62" cy="44" r="3.4"/><circle cx="8" cy="62" r="3.4"/><circle cx="26" cy="62" r="3.4"/><circle cx="44" cy="62" r="3.4"/><circle cx="62" cy="62" r="3.4"/></g>
+            <circle cx="8" cy="8" r="3.4"/><circle cx="44" cy="8" r="3.4"/><circle cx="26" cy="26" r="3.4"/><circle cx="62" cy="26" r="3.4"/><circle cx="44" cy="44" r="3.4"/><circle cx="8" cy="62" r="3.4"/><circle cx="26" cy="62" r="3.4"/>
+          </svg>
+        </div>
+
+        <div class="row po-foot">
+          <span class="po-note">Long-term signals. Smarter retrieval.</span>
+          <span class="po-yr">[ 2026 ]</span>
+        </div>
+      </div>
+      <figcaption class="cap"><span class="nm">Cohort Memory</span><span class="code">COMP 06</span></figcaption>
     </figure>
 
   </div>
