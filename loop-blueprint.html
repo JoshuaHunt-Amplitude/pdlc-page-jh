@@ -10,8 +10,12 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
-  body{background:#15259a;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace}
-  .stage{position:relative;width:min(100vw,177.78vh);aspect-ratio:16/9;overflow:hidden;background:#1c34c4}
+  /* Standalone: fills the viewport. Reuse as a HEADER: drop the .stage markup
+     into any sized container (e.g. a header band) — it fills 100% of the parent
+     and the canvas/HUD scale to it. The HUD keeps its full 16:9 safe area
+     (xMidYMid meet); the torus canvas always fills the whole frame. */
+  body{background:#15259a;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace}
+  .stage{position:relative;width:100%;height:100%;overflow:hidden;background:#1c34c4}
   canvas,.hud{position:absolute;inset:0;width:100%;height:100%;display:block}
   .hud{pointer-events:none}
   .hud text{fill:#e9f0ff}
@@ -46,6 +50,8 @@
       <rect x="1632" y="190" width="11" height="5"/>
       <rect x="1632" y="200" width="16" height="5"/>
       <rect x="1632" y="210" width="9" height="5"/>
+      <!-- scanning readout -->
+      <rect x="1628" width="22" height="5" fill="#dfeaff" stroke="none"><animate attributeName="y" values="150;210;150" dur="3.2s" calcMode="linear" repeatCount="indefinite"/></rect>
     </g>
     <!-- left edge tick scale -->
     <g class="ln" stroke-width="1">
@@ -63,8 +69,9 @@
     <text class="t-title" x="92" y="150">THE LOOP</text>
     <text class="t-sub" x="95" y="184">THE BEHAVIORAL GRAPH ENGINE</text>
 
-    <!-- infinity glyph -->
+    <!-- infinity glyph (gentle pulse) -->
     <g class="ln" stroke-width="1.3" opacity="0.9">
+      <animate attributeName="opacity" values="0.9;0.5;0.9" dur="3.6s" repeatCount="indefinite"/>
       <path d="M96 262 L136 232 L176 262 L136 292 Z"/>
       <path d="M156 262 L196 232 L236 262 L196 292 Z"/>
       <path d="M96 262 L176 262 M156 262 L236 262"/>
@@ -80,7 +87,8 @@
     <text class="t-lab" x="106" y="410">DECIDE</text>
     <text class="t-lab" x="106" y="448">ACT</text>
     <text class="t-lab" x="106" y="486">LEARN</text>
-    <g class="lnf" stroke-width="1.2">
+    <g class="lnf" stroke-width="1.2" stroke-dasharray="4 6">
+      <animate attributeName="stroke-dashoffset" values="0;-20" dur="1.6s" repeatCount="indefinite"/>
       <path d="M210 366 C 244 366, 250 478, 286 478"/>
       <path d="M214 404 C 246 404, 252 442, 286 442"/>
       <path d="M198 442 C 240 442, 250 404, 286 404"/>
@@ -102,13 +110,20 @@
       <rect x="252" y="549" width="26" height="13" rx="6"/>
     </g>
 
-    <!-- callouts -->
-    <g class="lnf" stroke-width="1">
+    <!-- callouts (signals feeding the labels — dashes flow along the leaders) -->
+    <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
+      <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
       <path d="M1238 170 L1120 232"/>
       <path d="M1338 272 L1280 312"/>
       <path d="M1332 690 L1268 652"/>
       <path d="M398 672 L500 660"/>
       <path d="M392 722 L470 706"/>
+    </g>
+    <!-- callout endpoint blips -->
+    <g fill="#e9f0ff">
+      <circle cx="1120" cy="232" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+      <circle cx="1268" cy="652" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
+      <circle cx="500" cy="660" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s" repeatCount="indefinite"/></circle>
     </g>
     <text class="t-call" x="1246" y="175">USER IDENTIFICATION &amp; ATTRIBUTION</text>
     <text class="t-call" x="1346" y="277">COHORT AUDIENCE SYNC</text>
@@ -119,12 +134,11 @@
     <!-- bottom-left version -->
     <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
     <g class="ln" stroke-width="1">
-      <rect x="92" y="872" width="9" height="7"/><rect x="104" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"/><rect x="116" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"/><rect x="128" y="872" width="9" height="7"/><rect x="140" y="872" width="20" height="7" fill="#e9f0ff" stroke="none"/>
+      <rect x="92" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="0s" repeatCount="indefinite"/></rect><rect x="104" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-0.5s" repeatCount="indefinite"/></rect><rect x="116" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.0s" repeatCount="indefinite"/></rect><rect x="128" y="872" width="9" height="7"/><rect x="140" y="872" width="20" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.5s" repeatCount="indefinite"/></rect>
     </g>
 
-    <!-- bottom-right -->
+    <!-- bottom-right (star removed) -->
     <text class="t-2026" x="1448" y="848">[ 2026 ]</text>
-    <path class="ln" stroke-width="1.2" fill="#e9f0ff" d="M1562 838 L1567 857 L1586 862 L1567 867 L1562 886 L1557 867 L1538 862 L1557 857 Z"/>
     <text class="t-sm" x="1392" y="878">BEHAVIORAL GRAPH ENGINE</text>
     <text class="t-sm" x="1452" y="897">LOOP V1.0</text>
 
@@ -143,8 +157,8 @@
   const NP=3800,pts=[];
   for(let i=0;i<NP;i++)pts.push({u:Math.random()*TAU,v:Math.random()*TAU,sp:0.10+Math.random()*0.12,dv:(Math.random()-0.5)*0.05,sz:Math.random()});
   // bright comet streams (helices on the torus)
-  const NS=14,streams=[];
-  for(let i=0;i<NS;i++){const big=i<4;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:1.4+Math.random()*1.8,vturns:0.6+Math.random()*1.4,off:Math.random(),sp:0.016+Math.random()*0.02,big:big});}
+  const NS=18,streams=[];
+  for(let i=0;i<NS;i++){const big=i<5;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:1.4+Math.random()*1.8,vturns:0.6+Math.random()*1.4,off:Math.random(),sp:0.018+Math.random()*0.024,big:big});}
   let last=0;
   function frame(now){
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
@@ -153,7 +167,7 @@
     g.addColorStop(0,'#2747e6');g.addColorStop(0.55,'#1f39cf');g.addColorStop(1,'#142398');
     x.fillStyle=g;x.fillRect(0,0,W,H);
     const cx=W*0.575,cy=H*0.50,R=Math.min(W,H)*0.300,r=R*0.42,Rr=R+r;
-    const e=0.85,a=t*0.040,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=2.6*Rr;
+    const e=0.85,a=t*0.055,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=2.6*Rr;
     function proj(u,v){
       const cu=Math.cos(u),su=Math.sin(u),cv=Math.cos(v),sv=Math.sin(v);
       const X=(R+r*cv)*cu,Z=(R+r*cv)*su,Y=r*sv;
