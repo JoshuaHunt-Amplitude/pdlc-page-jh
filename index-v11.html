@@ -1001,18 +1001,6 @@
       <p>And nobody truly knows what people want — not companies, not markets, not the experts. The state of the art is to ask: interviews, studies, surveys, feedback. But people don't know what they want. They're good at naming problems and frustrations; the solution stays elusive. <em>"If I had asked people what they wanted, they would have said faster horses."</em></p>
       <p>So look at what people <strong>do</strong>. Actions speak louder than words. If someone keeps coming back, that's a signal. If they bring others, a better one. If they'd be upset to lose it, better still. This isn't about blindly chasing a metric — it's that behavior reveals intent. Automate and scale this half of the loop and you unlock the next step change in building great products.</p>
 
-      <p class="manifesto-mv">Sense</p>
-      <h3>Feel your users.</h3>
-      <p>More than 95% of product data goes unlooked at. For every issue someone happens to catch, hundreds sit undetected — bugs that linger for months, frustration that quietly piles up, moments the product fails to meet someone where they are. Picture a room full of analysts trawling every event, surfacing what you need to know and explaining <em>why</em> it's happening, in real time, for everyone who touches the experience. Facebook found — just by reading the data — that a new user adding seven friends in ten days predicted long-term engagement; that one insight carried them past every other social network. The bottleneck has always been human attention. Remove it and we go from data breadlines to data abundance.</p>
-
-      <p class="manifesto-mv">Decide</p>
-      <h3>Adapt to every user.</h3>
-      <p>Today everyone gets the same static product. Next, every user gets an experience shaped by their behavior. See someone struggling and offer help in the moment; trigger a guide; connect your highest-value users to a person instantly. Run many variants of a campaign and lean into what works. The same intelligence reaches back into the work itself — recommending what to build, and previewing how a change will land before you ship it.</p>
-
-      <p class="manifesto-mv">Act</p>
-      <h3>Products that improve themselves.</h3>
-      <p>Products will heal themselves. A release that breaks the experience can roll itself back. Subtle papercuts get found — often with a fix already waiting. You'll get suggestions for what to improve, the experiments to prove them, and the segments to tailor to — continuously, without waiting on a roadmap. Every part of the product gets better, all the time.</p>
-
       <p style="color:var(--white);font-size:20px;line-height:1.5;margin-top:14px"><strong>We'll live in a world of self-improving products.</strong> The companies that win the next decade will master this loop — and Amplitude gives every company the advantage only the world's best product teams have had: to <span class="a" style="font-style:normal">sense, decide, and act.</span></p>
     </div>
   </div>
@@ -1133,28 +1121,24 @@
           <path id="pl-path"
                 d="M 350 130 A 150 150 0 1 1 349.9 130"
                 fill="none" stroke="none"/>
+          <path id="pl-lane-144" d="M 350 136 A 144 144 0 1 1 349.9 136" fill="none" stroke="none"/>
+          <path id="pl-lane-156" d="M 350 124 A 156 156 0 1 1 349.9 124" fill="none" stroke="none"/>
 
           <!-- Center ambient glow -->
           <circle cx="350" cy="280" r="130" fill="url(#pl-center-glow)"/>
 
           <!-- Subtle base ring -->
           <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="rgba(255,255,255,0.05)" stroke-width="26"/>
+                  stroke="rgba(255,255,255,0.05)" stroke-width="36"/>
 
           <!-- Glow under ring -->
           <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="#4083FF" stroke-width="3"
-                  opacity="0.45" filter="url(#pl-glow)"/>
+                  stroke="#4083FF" stroke-width="30"
+                  opacity="0.4" filter="url(#pl-glow)"/>
 
           <!-- Active ring -->
           <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="url(#pl-ring-grad)" stroke-width="2"/>
-
-          <!-- Flowing light along the ring -->
-          <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="#cfe0ff" stroke-width="2.5"
-                  stroke-dasharray="4 20" stroke-linecap="round"
-                  opacity="0.8" style="animation: dash-flow 3s linear infinite;"/>
+                  stroke="url(#pl-ring-grad)" stroke-width="30"/>
 
           <!-- Node halos — light in sequence as the pulse passes -->
           <g fill="none" stroke="#6980FF" stroke-width="2">
@@ -1190,19 +1174,49 @@
             </circle>
           </g>
 
-          <!-- Traveling pulse + comet trail -->
-          <circle r="11" fill="#fff" opacity="0.5" filter="url(#pl-glow-sm)">
-            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"><mpath href="#pl-path"/></animateMotion>
-          </circle>
-          <circle r="4" fill="#9FC0FF" opacity="0.5">
-            <animateMotion dur="18s" begin="0.5s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion>
-          </circle>
-          <circle r="3" fill="#9FC0FF" opacity="0.3">
-            <animateMotion dur="18s" begin="0.9s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion>
-          </circle>
-          <circle r="5.5" fill="#fff">
-            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"><mpath href="#pl-path"/></animateMotion>
-          </circle>
+          <!-- Many balls circling the whole (all-blue) loop, like the top loop -->
+          <g fill="#fff">
+          <g><circle r="7.4" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.4" fill="#fff"/><animateMotion dur="9s" begin="-0.5s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></g>
+          <g><circle r="7.0" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.0" fill="#fff"/><animateMotion dur="9s" begin="-3.4s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></g>
+          <g><circle r="7.0" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.0" fill="#fff"/><animateMotion dur="9s" begin="-6.0s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></g>
+          <g><circle r="6.8" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="2.8" fill="#fff"/><animateMotion dur="9s" begin="-1.8s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></g>
+          <circle r="1.8" fill="#cfe0ff" opacity="0.69"><animateMotion dur="9s" begin="-0.04s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-0.75s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.6" fill="#cfe0ff" opacity="0.65"><animateMotion dur="9s" begin="-1.28s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.1" fill="#cfe0ff" opacity="0.54"><animateMotion dur="9s" begin="-2.32s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.2" opacity="0.78"><animateMotion dur="9s" begin="-3.22s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.5" fill="#9FC0FF" opacity="0.63"><animateMotion dur="9s" begin="-3.77s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.3" opacity="0.8"><animateMotion dur="9s" begin="-4.48s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.4" fill="#cfe0ff" opacity="0.61"><animateMotion dur="9s" begin="-5.38s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.0" fill="#9FC0FF" opacity="0.74"><animateMotion dur="9s" begin="-6.03s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.4" fill="#9FC0FF" opacity="0.61"><animateMotion dur="9s" begin="-6.72s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.5" opacity="0.63"><animateMotion dur="9s" begin="-7.64s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.6" fill="#cfe0ff" opacity="0.86"><animateMotion dur="9s" begin="-8.26s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-0.38s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.9" fill="#cfe0ff" opacity="0.71"><animateMotion dur="9s" begin="-1.23s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.3" opacity="0.8"><animateMotion dur="9s" begin="-1.94s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.4" opacity="0.82"><animateMotion dur="9s" begin="-2.48s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.0" opacity="0.74"><animateMotion dur="9s" begin="-3.36s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.4" fill="#9FC0FF" opacity="0.61"><animateMotion dur="9s" begin="-4.16s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.7" fill="#9FC0FF" opacity="0.67"><animateMotion dur="9s" begin="-4.91s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.5" fill="#9FC0FF" opacity="0.63"><animateMotion dur="9s" begin="-5.8s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.9" fill="#9FC0FF" opacity="0.71"><animateMotion dur="9s" begin="-6.55s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.4" fill="#cfe0ff" opacity="0.61"><animateMotion dur="9s" begin="-6.87s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-8.03s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.5" opacity="0.84"><animateMotion dur="9s" begin="-8.56s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.5" opacity="0.63"><animateMotion dur="9s" begin="-0.88s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="2.4" fill="#9FC0FF" opacity="0.82"><animateMotion dur="9s" begin="-1.22s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-1.95s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-3.13s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.8" opacity="0.69"><animateMotion dur="9s" begin="-3.52s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-4.3s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.1" opacity="0.54"><animateMotion dur="9s" begin="-5.07s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.1" opacity="0.54"><animateMotion dur="9s" begin="-5.75s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.4" opacity="0.61"><animateMotion dur="9s" begin="-6.74s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.6" opacity="0.65"><animateMotion dur="9s" begin="-7.29s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.9" fill="#9FC0FF" opacity="0.71"><animateMotion dur="9s" begin="-8.06s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.6" opacity="0.65"><animateMotion dur="9s" begin="-8.98s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          </g>
 
           <!-- 6 nodes (radius 32, positioned clockwise from top) -->
           <!-- 1: SENSE — top -->
