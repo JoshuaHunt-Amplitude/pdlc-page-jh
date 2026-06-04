@@ -16,19 +16,18 @@
     --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
   }
   *,*::before,*::after{box-sizing:border-box;}
-  body{margin:0;background:var(--ink);color:var(--white);font-family:var(--sans);overflow-x:hidden;
+  body{margin:0;background:var(--ink);color:var(--white);font-family:var(--sans);overflow-x:clip;
     background-image:radial-gradient(80% 60% at 80% 0%,rgba(110,86,200,.12),transparent 55%),radial-gradient(70% 60% at 0% 100%,rgba(66,87,224,.08),transparent 55%);}
   body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:80;background-image:var(--grain);background-size:160px 160px;opacity:.04;mix-blend-mode:overlay;}
   a{color:inherit;text-decoration:none;}
   .wrap{max-width:1500px;margin:0 auto;padding:44px 32px 110px;}
 
-  /* header */
-  .head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;border-bottom:1px solid var(--hair);padding-bottom:26px;flex-wrap:wrap;}
-  .head .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--acc);}
-  .head h1{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3.4vw,42px);letter-spacing:.02em;text-transform:uppercase;margin:10px 0 0;}
-  .head p{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--dim);margin:12px 0 0;max-width:70ch;}
-  .head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--dim);text-align:right;text-transform:uppercase;}
-  .head .meta .big{color:var(--white);font-size:26px;font-weight:700;letter-spacing:0;}
+  /* header — sticky so the Animate toggle stays reachable while scrolled */
+  .head{position:sticky;top:0;z-index:90;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--hair);padding:14px 0;background:rgba(8,8,14,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);flex-wrap:wrap;}
+  .head .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);}
+  .head h1{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:4px 0 0;}
+  .head .meta{display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+  .head .meta .big{color:var(--white);font-size:11px;font-weight:500;letter-spacing:.14em;}
 
   /* category bar */
   .cat{display:flex;align-items:center;gap:16px;margin:54px 0 18px;}
@@ -65,17 +64,20 @@
      Per-element knobs via inline style: --sp (speed), animation-delay
      (stagger), transform-box/transform-origin (pivot). Reduced-motion: the
      toggle defaults OFF and these never auto-run. -->
-  .play .spin   {animation:mg-spin  var(--sp,20s) linear infinite;}
-  .play .spin-r {animation:mg-spin  var(--sp,20s) linear infinite reverse;}
-  .play .sweep  {animation:mg-spin  var(--sp,3.4s) linear infinite;}
-  .play .pulse  {animation:mg-pulse var(--sp,2.6s) ease-in-out infinite;}
-  .play .throb  {animation:mg-throb var(--sp,2.4s) ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
-  .play .ping   {animation:mg-ping  var(--sp,2.6s) ease-out   infinite;transform-box:fill-box;transform-origin:center;}
-  .play .grow   {animation:mg-grow  var(--sp,2.4s) ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%;}
-  .play .blink  {animation:mg-blink var(--sp,2.4s) steps(1,end) infinite;}
-  .play .dash   {animation:mg-dash  var(--sp,2.4s) linear infinite;}
-  .play .draw   {animation:mg-draw  var(--sp,3s)   linear infinite;}
-  .play .bob    {animation:mg-bob   var(--sp,3.6s) ease-in-out infinite;}
+  /* longhand (not the shorthand) so a var() duration can never invalidate
+     the whole declaration in any engine */
+  .play .spin,.play .spin-r,.play .sweep,.play .pulse,.play .throb,.play .ping,.play .grow,.play .blink,.play .dash,.play .draw,.play .bob{animation-iteration-count:infinite;}
+  .play .spin  {animation-name:mg-spin; animation-duration:var(--sp,20s); animation-timing-function:linear;}
+  .play .spin-r{animation-name:mg-spin; animation-duration:var(--sp,20s); animation-timing-function:linear;animation-direction:reverse;}
+  .play .sweep {animation-name:mg-spin; animation-duration:var(--sp,3.4s);animation-timing-function:linear;}
+  .play .pulse {animation-name:mg-pulse;animation-duration:var(--sp,2.6s);animation-timing-function:ease-in-out;}
+  .play .throb {animation-name:mg-throb;animation-duration:var(--sp,2.4s);animation-timing-function:ease-in-out;transform-box:fill-box;transform-origin:center;}
+  .play .ping  {animation-name:mg-ping; animation-duration:var(--sp,2.6s);animation-timing-function:ease-out;transform-box:fill-box;transform-origin:center;}
+  .play .grow  {animation-name:mg-grow; animation-duration:var(--sp,2.4s);animation-timing-function:ease-in-out;transform-box:fill-box;transform-origin:50% 100%;}
+  .play .blink {animation-name:mg-blink;animation-duration:var(--sp,2.4s);animation-timing-function:steps(1,end);}
+  .play .dash  {animation-name:mg-dash; animation-duration:var(--sp,2.4s);animation-timing-function:linear;}
+  .play .draw  {animation-name:mg-draw; animation-duration:var(--sp,3s);  animation-timing-function:linear;}
+  .play .bob   {animation-name:mg-bob;  animation-duration:var(--sp,3.6s);animation-timing-function:ease-in-out;}
   @keyframes mg-spin {to{transform:rotate(360deg)}}
   @keyframes mg-pulse{0%,100%{opacity:.28}50%{opacity:1}}
   @keyframes mg-throb{0%,100%{transform:scale(.68)}50%{transform:scale(1.22)}}
@@ -86,7 +88,7 @@
   @keyframes mg-draw {from{stroke-dashoffset:200}to{stroke-dashoffset:0}}
   @keyframes mg-bob  {0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
   /* play/pause toggle */
-  .atog{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:7px 13px;border:1px solid var(--hair);border-radius:999px;background:rgba(255,255,255,.02);color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .18s;}
+  .atog{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border:1px solid var(--hair);border-radius:999px;background:rgba(255,255,255,.02);color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .18s;}
   .atog:hover{color:var(--white);border-color:rgba(138,107,255,.5);}
   .atog .dot{width:7px;height:7px;border-radius:50%;background:var(--dim2);transition:background .18s,box-shadow .18s;}
   body.play .atog{color:var(--white);border-color:rgba(138,107,255,.45);}
@@ -167,12 +169,10 @@
     <div>
       <div class="lbl">Amplitude Wave // Micrographics</div>
       <h1>Micrographic System v1</h1>
-      <p>A mix-and-match kit of custom HUD micrographics, derived from the brand references. White line-art at 1.4px, white node fills, a single violet accent used sparingly, shared arrow marker. Drop any cell's &lt;svg&gt; straight into a page.</p>
     </div>
     <div class="meta">
-      <div class="big">32</div>
-      elements · 5 sets<br>v1 · [ 2026 ]
-      <br><button class="atog" id="atog" type="button"><span class="dot"></span><span class="lbl-off">Animate</span><span class="lbl-on">Animating</span></button>
+      <span><span class="big">32</span> elements · 5 sets · [ 2026 ]</span>
+      <button class="atog" id="atog" type="button"><span class="dot"></span><span class="lbl-off">Animate</span><span class="lbl-on">Animating</span></button>
     </div>
   </div>
 
@@ -854,16 +854,20 @@
 </script>
 
 <script>
-/* Animate toggle — adds/removes body.play (gates the CSS motion layer) and
-   pauses/unpauses SMIL so "static" is a true freeze. Defaults ON, except
-   when the user prefers reduced motion. */
+/* Animate toggle — flips body.play (gates the CSS motion layer) and
+   pauses/unpauses SMIL so "static" is a true freeze. Motion is ON by default
+   via the play class on <body> in the HTML — the script does NOT disable it
+   on load, so it works even if JS is blocked. */
 (function(){
   const btn=document.getElementById('atog');if(!btn)return;
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function smil(on){document.querySelectorAll('svg').forEach(s=>{try{on?s.unpauseAnimations():s.pauseAnimations();}catch(e){}});}
-  function set(on){document.body.classList.toggle('play',on);btn.setAttribute('aria-pressed',on);smil(on);}
-  set(!reduce);
-  btn.addEventListener('click',()=>set(!document.body.classList.contains('play')));
+  btn.setAttribute('aria-pressed', document.body.classList.contains('play'));
+  btn.addEventListener('click',function(){
+    const on=!document.body.classList.contains('play');
+    document.body.classList.toggle('play',on);
+    btn.setAttribute('aria-pressed',on);
+    smil(on);
+  });
 })();
 </script>
 
