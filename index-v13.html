@@ -25,6 +25,8 @@
   body{margin:0;background:var(--ink);color:var(--white);font-family:var(--sans);font-weight:400;line-height:1.5;overflow-x:hidden;}
   body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:80;background-image:var(--grain);background-size:160px 160px;opacity:.11;mix-blend-mode:overlay;}
   a{color:inherit;text-decoration:none;}
+  /* no bold anywhere — emphasis is carried by color, not weight */
+  strong,b{font-weight:400;}
 
   /* ──────────────────────────────────────────────────────────────
      MICROGRAPHIC SYSTEM
@@ -39,7 +41,7 @@
   .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);}
   .stamp.b{color:var(--white);}
   .tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--dim);}
-  .hud-t{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;line-height:1.05;}
+  .hud-t{font-family:var(--mono);font-weight:400;letter-spacing:.05em;text-transform:uppercase;line-height:1.05;}
   .hud-s{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--dim);}
   .hud-s .x{opacity:.45;margin:0 7px;}
 
@@ -117,8 +119,8 @@
   .reticle-box{width:50px;height:40px;border:1.4px dashed var(--line2);display:flex;align-items:center;justify-content:center;}
   .hero-mid{padding:48px 0;}
   .hero-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(243,243,248,.82);display:flex;gap:14px;align-items:center;}
-  .hero h1{font-family:var(--mono);font-weight:700;font-size:clamp(40px,7vw,100px);line-height:.96;letter-spacing:-0.01em;text-transform:uppercase;margin:22px 0 0;}
-  .hero h1 .lt{font-weight:400;color:rgba(243,243,248,.5);}
+  .hero h1{font-family:var(--sans);font-weight:300;font-size:clamp(40px,7vw,100px);line-height:1.0;letter-spacing:0;text-transform:uppercase;margin:22px 0 0;}
+  .hero h1 .lt{font-weight:300;color:rgba(243,243,248,.5);}
   .hero-flow{font-family:var(--mono);font-size:clamp(13px,1.5vw,17px);letter-spacing:.18em;text-transform:uppercase;margin-top:26px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
   .hero-flow span{opacity:.5;}
   .hero-lede{font-size:clamp(15px,1.5vw,18px);line-height:1.6;color:rgba(243,243,248,.8);max-width:60ch;margin:30px 0 0;}
@@ -129,20 +131,20 @@
   .btn-ghost:hover{background:rgba(255,255,255,.07);}
   .hero-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-top:auto;padding-top:32px;}
   .hero-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;line-height:1.7;color:rgba(243,243,248,.66);text-transform:uppercase;}
-  .hero-meta b{color:var(--white);font-weight:500;}
+  .hero-meta b{color:var(--white);font-weight:400;}
 
   /* ── MANIFESTO (single section, inline plates) ─ */
   .manifesto{border-top:1px solid var(--hair);}
   .mf-head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--hair);padding-bottom:20px;}
   .mf-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--violet);}
   .mf-col{max-width:760px;margin:0 auto;}
-  .mf-col h2{font-family:var(--mono);font-weight:700;font-size:clamp(30px,4.6vw,62px);line-height:1.0;letter-spacing:-0.01em;text-transform:uppercase;margin:52px 0 0;}
-  .mf-col h2 .lt{color:rgba(243,243,248,.5);font-weight:400;}
+  .mf-col h2{font-family:var(--sans);font-weight:300;font-size:clamp(30px,4.6vw,62px);line-height:1.05;letter-spacing:0;text-transform:uppercase;margin:52px 0 0;}
+  .mf-col h2 .lt{color:rgba(243,243,248,.5);font-weight:300;}
   .mf-col p{font-size:17px;line-height:1.78;color:var(--dim);margin:22px 0 0;}
-  .mf-col p strong{color:var(--white);font-weight:500;} .mf-col p em{color:var(--dim);font-style:italic;}
+  .mf-col p strong{color:var(--white);font-weight:400;} .mf-col p em{color:var(--dim);font-style:italic;}
   /* prominent closing paragraph — keeps the essay flowing but lands the thesis */
   .mf-col p.lead{color:var(--white);font-size:clamp(19px,2vw,23px);line-height:1.5;margin-top:34px;}
-  .mf-close{font-family:var(--mono);font-weight:500;font-size:clamp(18px,2vw,24px);line-height:1.4;text-transform:uppercase;letter-spacing:.02em;color:var(--white);margin:56px auto 0;max-width:760px;}
+  .mf-close{font-family:var(--mono);font-weight:400;font-size:clamp(18px,2vw,24px);line-height:1.4;text-transform:uppercase;letter-spacing:.02em;color:var(--white);margin:56px auto 0;max-width:760px;}
 
   /* inline diagram plate — aligned to the 760px reading column (not full-bleed),
      so the composition cards line up with the essay text and never spill outside
@@ -165,7 +167,7 @@
   /* two columns: CTA copy + a micrographic composition card to balance it */
   .closer-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(36px,5vw,64px);align-items:center;width:100%;}
   @media(max-width:900px){.closer-grid{grid-template-columns:1fr;gap:44px;}}
-  .closer h2{font-family:var(--mono);font-weight:700;font-size:clamp(30px,4.4vw,56px);line-height:1.02;letter-spacing:-0.01em;text-transform:uppercase;margin:20px 0 0;max-width:16ch;}
+  .closer h2{font-family:var(--sans);font-weight:300;font-size:clamp(30px,4.4vw,56px);line-height:1.05;letter-spacing:0;text-transform:uppercase;margin:20px 0 0;max-width:16ch;}
   .closer h2 .lt{color:rgba(243,243,248,.5);font-weight:400;}
   .closer p{color:rgba(243,243,248,.82);font-size:17px;line-height:1.6;margin:24px 0 0;max-width:46ch;}
 
