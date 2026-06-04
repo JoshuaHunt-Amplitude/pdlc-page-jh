@@ -566,6 +566,108 @@
 
 </main>
 
+<!-- ════════ diagrammm badge · The Self-Improving Loop (v11-style loop) ════════ -->
+<style>
+  .dgm-wrap{padding:8px 32px 110px;}
+  .dgm{position:relative;max-width:1000px;margin:0 auto;border:1px solid var(--hair);border-radius:18px;overflow:hidden;}
+  .dgm .pf{position:absolute;inset:0;z-index:0;background:
+      radial-gradient(70% 90% at 22% 12%, rgba(120,150,255,.22), transparent 60%),
+      radial-gradient(60% 80% at 92% 96%, rgba(110,86,200,.30), transparent 60%),
+      linear-gradient(120deg,#1b38c6 0%,#2a49db 52%,#4453e2 100%);}
+  .dgm .in{position:relative;z-index:2;container-type:inline-size;display:flex;flex-direction:column;gap:3.4cqw;padding:5.5cqw 6cqw;color:#f3f3f8;}
+  .dgm .hd{display:flex;align-items:center;gap:2.4cqw;}
+  .dgm .stamp{font-family:var(--mono);font-weight:400;font-size:2.4cqw;letter-spacing:.16em;}
+  .dgm .sp{flex:1;}
+  .dgm .tt{display:flex;flex-direction:column;gap:1.5cqw;}
+  .dgm .ti{font-family:var(--mono);font-weight:400;font-size:4.7cqw;letter-spacing:.05em;text-transform:uppercase;line-height:1;white-space:nowrap;}
+  .dgm .su{font-family:var(--mono);font-size:2.2cqw;letter-spacing:.06em;}
+  .dgm .su .x{opacity:.5;margin:0 .5cqw;}
+  .dgm .mid{display:flex;align-items:center;justify-content:space-evenly;gap:2.5cqw;}
+  .dgm .mid svg{overflow:visible;display:block;}
+  .dgm .ft{display:flex;align-items:flex-end;justify-content:space-between;gap:2cqw;}
+  .dgm .nt,.dgm .yr{font-family:var(--mono);font-size:1.95cqw;opacity:.85;}
+  .dgm .brk{position:relative;display:inline-flex;flex-direction:column;gap:.3cqw;padding:1cqw 2.2cqw;font-family:var(--mono);font-size:2.2cqw;line-height:1.3;}
+  .dgm .brk::before,.dgm .brk::after{content:"";position:absolute;top:0;bottom:0;width:1.1cqw;border:.32cqw solid #fff;}
+  .dgm .brk::before{left:0;border-right:0;} .dgm .brk::after{right:0;border-left:0;}
+  .dgm .chips{display:flex;flex-direction:column;gap:1.3cqw;align-items:flex-end;}
+  .dgm .chips i{display:block;border:.32cqw solid #fff;border-radius:1.5cqw;}
+  .dgm .chips i:nth-child(1),.dgm .chips i:nth-child(2){width:8cqw;height:2.8cqw;}
+  .dgm .chips i:nth-child(3){width:6cqw;height:4.6cqw;background:#fff;}
+</style>
+<section class="dgm-wrap">
+  <figure class="dgm reveal">
+    <div class="pf" aria-hidden="true"></div>
+    <div class="in">
+      <div class="hd">
+        <span class="stamp">LOOP 4.0</span><span class="sp"></span>
+        <svg viewBox="0 0 92 18" fill="none">
+          <circle cx="9" cy="9" r="6" fill="#fff"/>
+          <circle cx="32" cy="9" r="7" stroke="#fff" stroke-width="1.4"/><circle cx="32" cy="9" r="3" fill="#fff"/>
+          <circle cx="56" cy="9" r="6" stroke="#fff" stroke-width="1.4"/><circle cx="78" cy="9" r="6" stroke="#fff" stroke-width="1.4"/>
+        </svg>
+      </div>
+
+      <div class="tt">
+        <div class="ti">The Self-Improving Loop</div>
+        <div class="su">Build<span class="x">·</span>Ship<span class="x">·</span>Use<span class="x">·</span>Learn</div>
+      </div>
+
+      <div class="mid">
+        <!-- v11-style loop: ellipse ring + many large white orbs streaming around -->
+        <svg viewBox="0 0 360 224" style="width:46cqw" aria-hidden="true">
+          <defs>
+            <radialGradient id="dgm-lead" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".5"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+            </radialGradient>
+            <path id="dgm-orbit" d="M180 32 A130 80 0 0 1 310 112 A130 80 0 0 1 180 192 A130 80 0 0 1 50 112 A130 80 0 0 1 180 32" fill="none"/>
+          </defs>
+          <!-- rings -->
+          <ellipse cx="180" cy="112" rx="130" ry="80" fill="none" stroke="#fff" stroke-width="1.6"/>
+          <ellipse cx="180" cy="112" rx="88" ry="54" fill="none" stroke="#fff" stroke-width="1.4" stroke-dasharray="3 7" opacity=".5"/>
+          <ellipse cx="180" cy="112" rx="52" ry="32" fill="none" stroke="#fff" stroke-width="1.4" opacity=".7"/>
+          <!-- four stage nodes (Build/Ship/Use/Learn) -->
+          <g><circle cx="180" cy="32" r="6.5" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="180" cy="32" r="2.4" fill="#fff"/>
+             <circle cx="310" cy="112" r="6.5" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="310" cy="112" r="2.4" fill="#fff"/>
+             <circle cx="180" cy="192" r="6.5" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="180" cy="192" r="2.4" fill="#fff"/>
+             <circle cx="50" cy="112" r="6.5" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="50" cy="112" r="2.4" fill="#fff"/></g>
+          <!-- center reticle -->
+          <circle cx="180" cy="112" r="9" fill="none" stroke="#fff" stroke-width="1.4"/>
+          <path d="M180 97 v8 M180 119 v8 M165 112 h8 M187 112 h8" stroke="#fff" stroke-width="1.4" opacity=".6" fill="none"/>
+          <circle cx="180" cy="112" r="2.2" fill="#fff"/>
+          <!-- many large orbs streaming clockwise (uniform, whole loop) -->
+          <g fill="#fff">
+            <circle r="3.4"><animateMotion dur="9s" begin="0s"    repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="2.8"><animateMotion dur="9s" begin="-0.6s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="3.8"><animateMotion dur="9s" begin="-1.2s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="2.8"><animateMotion dur="9s" begin="-1.8s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="3.4"><animateMotion dur="9s" begin="-2.4s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="2.6"><animateMotion dur="9s" begin="-3.0s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="3.6"><animateMotion dur="9s" begin="-3.6s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="2.8"><animateMotion dur="9s" begin="-4.2s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="3.4"><animateMotion dur="9s" begin="-4.8s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="2.8"><animateMotion dur="9s" begin="-5.4s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="3.6"><animateMotion dur="9s" begin="-6.0s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="2.8"><animateMotion dur="9s" begin="-6.6s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="3.2"><animateMotion dur="9s" begin="-7.2s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <circle r="2.8"><animateMotion dur="9s" begin="-7.8s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></circle>
+            <!-- two glowing leads -->
+            <g><circle r="10" fill="url(#dgm-lead)"/><circle r="4.5"/><animateMotion dur="9s" begin="-0.3s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></g>
+            <g><circle r="9"  fill="url(#dgm-lead)"/><circle r="4"/><animateMotion dur="9s" begin="-4.5s" repeatCount="indefinite"><mpath href="#dgm-orbit"/></animateMotion></g>
+          </g>
+        </svg>
+
+        <div class="brk"><span>Build</span><span>Ship</span><span>Use</span><span>Learn</span></div>
+        <div class="chips"><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="ft">
+        <span class="nt">Products that improve themselves, release after release.</span>
+        <span class="yr">[ 2026 ]</span>
+      </div>
+    </div>
+  </figure>
+</section>
+
 <footer>
   <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" style="height:18px;opacity:.5">
   <span class="m">© 2026 Amplitude, Inc. · Amplitude Wave · We are architects of the unseen data</span>
