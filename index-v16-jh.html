@@ -162,7 +162,7 @@
   .pl-head p { font-size: 17px; line-height: 1.65; color: var(--dim); margin: 0 0 16px; }
   .pl-head p:last-child { margin-bottom: 0; }
   .pl-head p strong { color: var(--white); font-weight: 500; }
-  .product-loop { width: 75%; max-width: 840px; margin: 0 auto; }
+  .product-loop { width: 92%; max-width: 1000px; margin: 0 auto; }
   .product-loop svg { width: 100%; height: auto; display: block; overflow: visible; }
   @media (min-width: 768px) { .pl-head h3 { white-space: nowrap; } }
   @media (max-width: 720px) {
@@ -1168,229 +1168,325 @@
   </div>
 
   <div class="product-loop">
-        <svg viewBox="0 0 700 560" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="pl-ring-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#9FC0FF"/>
-              <stop offset="45%" stop-color="#6980FF"/>
-              <stop offset="100%" stop-color="#4083FF"/>
-            </linearGradient>
-            <radialGradient id="pl-center-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#4083FF" stop-opacity="0.28"/>
-              <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-            </radialGradient>
-            <radialGradient id="pl-node-grad" cx="50%" cy="34%" r="68%">
-              <stop offset="0%" stop-color="#15233f"/>
-              <stop offset="100%" stop-color="#090910"/>
-            </radialGradient>
-            <filter id="pl-glow" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="5"/>
-            </filter>
-            <filter id="pl-glow-sm" x="-90%" y="-90%" width="280%" height="280%">
-              <feGaussianBlur stdDeviation="3"/>
-            </filter>
-            <marker id="pl-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-              <path d="M0,0 L8,4 L0,8 z" fill="#4083FF"/>
-            </marker>
-          </defs>
+    <!-- ─────────────────────────────────────────────────────────────────
+         BLUEPRINT PRODUCT LOOP  ·  v16
+         viewBox 0 0 900 700  ·  center (450,350)  ·  ring r=180
 
-          <!-- Path the particle travels along (full circle starting at top, clockwise) -->
-          <path id="pl-path"
-                d="M 350 130 A 150 150 0 1 1 349.9 130"
-                fill="none" stroke="none"/>
-          <path id="pl-lane-144" d="M 350 136 A 144 144 0 1 1 349.9 136" fill="none" stroke="none"/>
-          <path id="pl-lane-156" d="M 350 124 A 156 156 0 1 1 349.9 124" fill="none" stroke="none"/>
+         Node positions (r=180 from center, clockwise from 12 o'clock):
+           SENSE      (450, 170)   0°
+           PRIORITIZE (606, 260)  60°   [450+180·sin60, 350-180·cos60]
+           SPEC       (606, 440) 120°
+           ACT        (450, 530) 180°
+           VERIFY     (294, 440) 240°
+           MEASURE    (294, 260) 300°
 
-          <!-- Center ambient glow -->
-          <circle cx="350" cy="280" r="130" fill="url(#pl-center-glow)"/>
+         Mid-arc markers (r=180, midpoint of each 60° arc):
+           S→P  (540, 194)  30°    P→Sp (630, 350)  90°
+           Sp→A (540, 506) 150°    A→V  (360, 506) 210°
+           V→M  (270, 350) 270°    M→S  (360, 194) 330°
 
-          <!-- Subtle base ring -->
-          <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="rgba(255,255,255,0.05)" stroke-width="36"/>
+         Animations:
+           · Lead particle: 18s/rev clockwise, triggers node halos (3s each)
+           · Trailing particles + slow drifters: subtler, white-only
+    ──────────────────────────────────────────────────────────────────── -->
+    <svg viewBox="0 0 900 700" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <filter id="pl2-glow-sm" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="3"/>
+        </filter>
+        <filter id="pl2-glow-xs" x="-120%" y="-120%" width="340%" height="340%">
+          <feGaussianBlur stdDeviation="1.8"/>
+        </filter>
+      </defs>
 
-          <!-- Glow under ring -->
-          <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="#4083FF" stroke-width="30"
-                  opacity="0.4" filter="url(#pl-glow)"/>
+      <!-- Invisible animation paths (full clockwise circles from top) -->
+      <!-- r=180 main lane -->
+      <path id="pl2-ring"   d="M 450 170 A 180 180 0 0 1 630 350 A 180 180 0 0 1 450 530 A 180 180 0 0 1 270 350 A 180 180 0 0 1 450 170 Z" fill="none" stroke="none"/>
+      <!-- r=174 inner lane -->
+      <path id="pl2-ring-i" d="M 450 176 A 174 174 0 0 1 624 350 A 174 174 0 0 1 450 524 A 174 174 0 0 1 276 350 A 174 174 0 0 1 450 176 Z" fill="none" stroke="none"/>
+      <!-- r=186 outer lane -->
+      <path id="pl2-ring-o" d="M 450 164 A 186 186 0 0 1 636 350 A 186 186 0 0 1 450 536 A 186 186 0 0 1 264 350 A 186 186 0 0 1 450 164 Z" fill="none" stroke="none"/>
 
-          <!-- Active ring -->
-          <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="url(#pl-ring-grad)" stroke-width="30"/>
+      <!-- ── Corner bracket decoration ── -->
+      <g stroke="rgba(255,255,255,0.22)" stroke-width="1" fill="none" stroke-linecap="square">
+        <path d="M 36 68 L 36 36 L 68 36"/>
+        <path d="M 832 68 L 832 36 L 800 36"/>
+        <path d="M 36 632 L 36 664 L 68 664"/>
+        <path d="M 832 632 L 832 664 L 800 664"/>
+      </g>
+      <g fill="rgba(255,255,255,0.18)">
+        <circle cx="36" cy="36" r="1.5"/>
+        <circle cx="832" cy="36" r="1.5"/>
+        <circle cx="36" cy="664" r="1.5"/>
+        <circle cx="832" cy="664" r="1.5"/>
+      </g>
+      <!-- Outer dashed border -->
+      <rect x="36" y="36" width="828" height="628" fill="none"
+            stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="3 9"/>
 
-          <!-- Node halos — light in sequence as the pulse passes -->
-          <g fill="none" stroke="#6980FF" stroke-width="2">
-            <!-- SENSE -->
-            <circle cx="350" cy="130" r="40">
-              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="-1.98s"/>
-              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="-1.98s"/>
-            </circle>
-            <!-- PRIORITIZE -->
-            <circle cx="480" cy="205" r="40">
-              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="1.02s"/>
-              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="1.02s"/>
-            </circle>
-            <!-- SPEC -->
-            <circle cx="480" cy="355" r="40">
-              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="4.02s"/>
-              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="4.02s"/>
-            </circle>
-            <!-- ACT -->
-            <circle cx="350" cy="430" r="40">
-              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="7.02s"/>
-              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="7.02s"/>
-            </circle>
-            <!-- VERIFY -->
-            <circle cx="220" cy="355" r="40">
-              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="10.02s"/>
-              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="10.02s"/>
-            </circle>
-            <!-- MEASURE -->
-            <circle cx="220" cy="205" r="40">
-              <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="0;0;0.95;0;0" begin="13.02s"/>
-              <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.04;0.11;0.2;1" values="32;32;46;32;32" begin="13.02s"/>
-            </circle>
-          </g>
+      <!-- ── Center crosshair ── -->
+      <g stroke="rgba(255,255,255,0.22)" stroke-width="1" fill="none">
+        <!-- Solid tick marks -->
+        <line x1="432" y1="350" x2="468" y2="350"/>
+        <line x1="450" y1="332" x2="450" y2="368"/>
+        <!-- Dashed guide lines extending to ring -->
+        <line x1="272" y1="350" x2="430" y2="350" stroke-dasharray="2 7" stroke="rgba(255,255,255,0.07)"/>
+        <line x1="470" y1="350" x2="628" y2="350" stroke-dasharray="2 7" stroke="rgba(255,255,255,0.07)"/>
+        <line x1="450" y1="172" x2="450" y2="330" stroke-dasharray="2 7" stroke="rgba(255,255,255,0.07)"/>
+        <line x1="450" y1="370" x2="450" y2="528" stroke-dasharray="2 7" stroke="rgba(255,255,255,0.07)"/>
+      </g>
 
-          <!-- Many balls circling the whole (all-blue) loop, like the top loop -->
-          <g fill="#fff">
-          <g><circle r="7.4" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.4" fill="#fff"/><animateMotion dur="9s" begin="-0.5s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></g>
-          <g><circle r="7.0" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.0" fill="#fff"/><animateMotion dur="9s" begin="-3.4s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></g>
-          <g><circle r="7.0" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.0" fill="#fff"/><animateMotion dur="9s" begin="-6.0s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></g>
-          <g><circle r="6.8" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="2.8" fill="#fff"/><animateMotion dur="9s" begin="-1.8s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></g>
-          <circle r="1.8" fill="#cfe0ff" opacity="0.69"><animateMotion dur="9s" begin="-0.04s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-0.75s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="1.6" fill="#cfe0ff" opacity="0.65"><animateMotion dur="9s" begin="-1.28s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="1.1" fill="#cfe0ff" opacity="0.54"><animateMotion dur="9s" begin="-2.32s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="2.2" opacity="0.78"><animateMotion dur="9s" begin="-3.22s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="1.5" fill="#9FC0FF" opacity="0.63"><animateMotion dur="9s" begin="-3.77s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="2.3" opacity="0.8"><animateMotion dur="9s" begin="-4.48s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="1.4" fill="#cfe0ff" opacity="0.61"><animateMotion dur="9s" begin="-5.38s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="2.0" fill="#9FC0FF" opacity="0.74"><animateMotion dur="9s" begin="-6.03s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="1.4" fill="#9FC0FF" opacity="0.61"><animateMotion dur="9s" begin="-6.72s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="1.5" opacity="0.63"><animateMotion dur="9s" begin="-7.64s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="2.6" fill="#cfe0ff" opacity="0.86"><animateMotion dur="9s" begin="-8.26s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
-          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-0.38s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="1.9" fill="#cfe0ff" opacity="0.71"><animateMotion dur="9s" begin="-1.23s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="2.3" opacity="0.8"><animateMotion dur="9s" begin="-1.94s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="2.4" opacity="0.82"><animateMotion dur="9s" begin="-2.48s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="2.0" opacity="0.74"><animateMotion dur="9s" begin="-3.36s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="1.4" fill="#9FC0FF" opacity="0.61"><animateMotion dur="9s" begin="-4.16s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="1.7" fill="#9FC0FF" opacity="0.67"><animateMotion dur="9s" begin="-4.91s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="1.5" fill="#9FC0FF" opacity="0.63"><animateMotion dur="9s" begin="-5.8s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="1.9" fill="#9FC0FF" opacity="0.71"><animateMotion dur="9s" begin="-6.55s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="1.4" fill="#cfe0ff" opacity="0.61"><animateMotion dur="9s" begin="-6.87s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-8.03s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="2.5" opacity="0.84"><animateMotion dur="9s" begin="-8.56s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
-          <circle r="1.5" opacity="0.63"><animateMotion dur="9s" begin="-0.88s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="2.4" fill="#9FC0FF" opacity="0.82"><animateMotion dur="9s" begin="-1.22s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-1.95s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-3.13s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.8" opacity="0.69"><animateMotion dur="9s" begin="-3.52s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-4.3s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.1" opacity="0.54"><animateMotion dur="9s" begin="-5.07s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.1" opacity="0.54"><animateMotion dur="9s" begin="-5.75s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.4" opacity="0.61"><animateMotion dur="9s" begin="-6.74s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.6" opacity="0.65"><animateMotion dur="9s" begin="-7.29s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.9" fill="#9FC0FF" opacity="0.71"><animateMotion dur="9s" begin="-8.06s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          <circle r="1.6" opacity="0.65"><animateMotion dur="9s" begin="-8.98s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
-          </g>
+      <!-- ── Decorative concentric rings ── -->
+      <!-- Outermost faint ring -->
+      <circle cx="450" cy="350" r="198" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <!-- Outer decorative ring -->
+      <circle cx="450" cy="350" r="190" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+      <!-- Inner decorative ring -->
+      <circle cx="450" cy="350" r="162" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
 
-          <!-- 6 nodes (radius 32, positioned clockwise from top) -->
-          <!-- 1: SENSE — top -->
-          <g class="pl-node">
-            <circle cx="350" cy="130" r="32"/>
-            <g class="pl-ico" transform="translate(338,118)">
-              <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
-              <path d="M4 6h.01"/>
-              <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
-              <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/>
-              <path d="M12 18h.01"/>
-              <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/>
-              <circle cx="12" cy="12" r="2"/>
-              <path d="m13.41 10.59 5.66-5.66"/>
-            </g>
-          </g>
-          <!-- 2: PRIORITIZE — top-right -->
-          <g class="pl-node">
-            <circle cx="480" cy="205" r="32"/>
-            <g class="pl-ico" transform="translate(468,193)">
-              <path d="M11 5h10"/>
-              <path d="M11 12h10"/>
-              <path d="M11 19h10"/>
-              <path d="M4 4h1v5"/>
-              <path d="M4 9h2"/>
-              <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/>
-            </g>
-          </g>
-          <!-- 3: SPEC — bottom-right -->
-          <g class="pl-node">
-            <circle cx="480" cy="355" r="32"/>
-            <g class="pl-ico" transform="translate(468,343)">
-              <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
-              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-              <path d="M12 11h4"/>
-              <path d="M12 16h4"/>
-              <path d="M8 11h.01"/>
-              <path d="M8 16h.01"/>
-            </g>
-          </g>
-          <!-- 4: ACT — bottom -->
-          <g class="pl-node">
-            <circle cx="350" cy="430" r="32"/>
-            <g class="pl-ico" transform="translate(338,418)">
-              <path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9"/>
-              <path d="m18 15 4-4"/>
-              <path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/>
-            </g>
-          </g>
-          <!-- 5: VERIFY — bottom-left -->
-          <g class="pl-node">
-            <circle cx="220" cy="355" r="32"/>
-            <g class="pl-ico" transform="translate(208,343)">
-              <path d="M18 6 7 17l-5-5"/>
-              <path d="m22 10-7.5 7.5L13 16"/>
-            </g>
-          </g>
-          <!-- 6: MEASURE — top-left -->
-          <g class="pl-node">
-            <circle cx="220" cy="205" r="32"/>
-            <g class="pl-ico" transform="translate(208,193)">
-              <path d="M16 7h6v6"/>
-              <path d="m22 7-8.5 8.5-5-5L2 17"/>
-            </g>
-          </g>
+      <!-- ── Main dashed ring track ── -->
+      <!-- Faint solid base -->
+      <circle cx="450" cy="350" r="180" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="3"/>
+      <!-- Dashed overlay -->
+      <circle cx="450" cy="350" r="180" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-dasharray="3 8"/>
 
-          <!-- Labels for each node -->
-          <!-- SENSE (top) -->
-          <text x="350" y="44" text-anchor="middle" class="pl-label">SENSE</text>
-          <text x="350" y="62" text-anchor="middle" class="pl-desc">Find problems</text>
-          <text x="350" y="76" text-anchor="middle" class="pl-desc">worth solving</text>
+      <!-- ── Mid-arc open-circle markers ── -->
+      <!-- One between each pair of nodes, at r=180, midpoints of 60° arcs -->
+      <g fill="#0A0A0F" stroke="rgba(255,255,255,0.40)" stroke-width="1">
+        <circle cx="540" cy="194" r="3.5"/> <!-- S→P  30° -->
+        <circle cx="630" cy="350" r="3.5"/> <!-- P→Sp 90° -->
+        <circle cx="540" cy="506" r="3.5"/> <!-- Sp→A 150° -->
+        <circle cx="360" cy="506" r="3.5"/> <!-- A→V  210° -->
+        <circle cx="270" cy="350" r="3.5"/> <!-- V→M  270° -->
+        <circle cx="360" cy="194" r="3.5"/> <!-- M→S  330° -->
+      </g>
 
-          <!-- PRIORITIZE (top-right) -->
-          <text x="548" y="188" text-anchor="start" class="pl-label">PRIORITIZE</text>
-          <text x="548" y="206" text-anchor="start" class="pl-desc">Rank by impact</text>
-          <text x="548" y="220" text-anchor="start" class="pl-desc">and confidence</text>
+      <!-- ── Node halo animations (ring glows as lead particle passes) ──
+           Lead particle completes 1 rev in 18s; each node is 3s apart.
+           Halo fires at 0s (SENSE), 3s (PRIORITIZE), 6s (SPEC),
+           9s (ACT), 12s (VERIFY), 15s (MEASURE). -->
+      <g fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2">
+        <circle cx="450" cy="170" r="36">
+          <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="0s"/>
+          <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="0s"/>
+        </circle>
+        <circle cx="606" cy="260" r="36">
+          <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="3s"/>
+          <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="3s"/>
+        </circle>
+        <circle cx="606" cy="440" r="36">
+          <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="6s"/>
+          <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="6s"/>
+        </circle>
+        <circle cx="450" cy="530" r="36">
+          <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="9s"/>
+          <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="9s"/>
+        </circle>
+        <circle cx="294" cy="440" r="36">
+          <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="12s"/>
+          <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="12s"/>
+        </circle>
+        <circle cx="294" cy="260" r="36">
+          <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="15s"/>
+          <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="15s"/>
+        </circle>
+      </g>
 
-          <!-- SPEC (bottom-right) -->
-          <text x="548" y="338" text-anchor="start" class="pl-label">SPEC</text>
-          <text x="548" y="356" text-anchor="start" class="pl-desc">Define the solution</text>
-          <text x="548" y="370" text-anchor="start" class="pl-desc">and acceptance criteria</text>
+      <!-- ── Node circles (dark fill masks ring track behind them) ── -->
+      <g fill="#0A0A0F" stroke="rgba(255,255,255,0.52)" stroke-width="1.2">
+        <circle cx="450" cy="170" r="36"/>
+        <circle cx="606" cy="260" r="36"/>
+        <circle cx="606" cy="440" r="36"/>
+        <circle cx="450" cy="530" r="36"/>
+        <circle cx="294" cy="440" r="36"/>
+        <circle cx="294" cy="260" r="36"/>
+      </g>
 
-          <!-- ACT (bottom) -->
-          <text x="350" y="492" text-anchor="middle" class="pl-label">ACT</text>
-          <text x="350" y="510" text-anchor="middle" class="pl-desc">Build the right</text>
-          <text x="350" y="524" text-anchor="middle" class="pl-desc">thing</text>
+      <!-- ── Isometric cubes inside each node ──────────────────────────
+           Cube template (centered at node, coordinates relative to it):
+             Top face:   0,-14  →  11,-8  →  0,-2  →  -11,-8
+             Right face: 11,-8  →  11,+6  →   0,+12 →    0,-2
+             Left face: -11,-8  →   0,-2  →   0,+12 →  -11,+6
+           Bounding box: ±11 wide, -14 to +12 tall (26px) → fits r=36 circle.
+           Face fills: top lightest, right mid, left darkest (simulates light from top-left).
+           Icon drawn on right (front-facing) face, coords relative to cube center.
+      ──────────────────────────────────────────────────────────────────── -->
 
-          <!-- VERIFY (bottom-left) -->
-          <text x="152" y="338" text-anchor="end" class="pl-label">VERIFY</text>
-          <text x="152" y="356" text-anchor="end" class="pl-desc">Check the work</text>
-          <text x="152" y="370" text-anchor="end" class="pl-desc">and capture replay</text>
+      <!-- SENSE (450,170) · radar arcs -->
+      <g transform="translate(450,170)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.72)"/>
+        <!-- icon: concentric signal arcs + dot -->
+        <circle cx="6" cy="1" r="1.1" fill="rgba(255,255,255,0.9)" stroke="none"/>
+        <path d="M 3.5 1 A 2.8 2.8 0 0 1 8.5 1" stroke-width="0.8"/>
+        <path d="M 1.5 1 A 5 5 0 0 1 10.5 1"   stroke-width="0.8"/>
+      </g>
 
-          <!-- MEASURE (top-left) -->
-          <text x="152" y="188" text-anchor="end" class="pl-label">MEASURE</text>
-          <text x="152" y="206" text-anchor="end" class="pl-desc">Track outcomes</text>
-          <text x="152" y="220" text-anchor="end" class="pl-desc">and impact</text>
-        </svg>
+      <!-- PRIORITIZE (606,260) · numbered list lines -->
+      <g transform="translate(606,260)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.72)"/>
+        <!-- icon: three list rows (number dot + line) -->
+        <circle cx="2.5" cy="-2.5" r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
+        <line x1="4.5" y1="-2.5" x2="9.5" y2="-2.5" stroke-width="0.8"/>
+        <circle cx="2.5" cy="1"    r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
+        <line x1="4.5" y1="1"    x2="9.5" y2="1"    stroke-width="0.8"/>
+        <circle cx="2.5" cy="4.5"  r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
+        <line x1="4.5" y1="4.5"  x2="8"   y2="4.5"  stroke-width="0.8"/>
+      </g>
+
+      <!-- SPEC (606,440) · clipboard -->
+      <g transform="translate(606,440)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.72)"/>
+        <!-- icon: clipboard rect + lines -->
+        <rect x="2" y="-4" width="8" height="10" rx="0.8" stroke-width="0.8"/>
+        <line x1="4"   y1="-0.5" x2="8" y2="-0.5" stroke-width="0.7"/>
+        <line x1="4"   y1="2.5"  x2="8" y2="2.5"  stroke-width="0.7"/>
+        <line x1="4"   y1="5.5"  x2="6.5" y2="5.5" stroke-width="0.7"/>
+      </g>
+
+      <!-- ACT (450,530) · hammer -->
+      <g transform="translate(450,530)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.72)"/>
+        <!-- icon: handle + head -->
+        <line x1="3.5" y1="8.5" x2="8" y2="-1" stroke-width="1.1"/>
+        <rect x="6.5" y="-3.5" width="4.5" height="2.8" rx="0.5" transform="rotate(-27 8.75 -2.1)" stroke-width="0.8"/>
+      </g>
+
+      <!-- VERIFY (294,440) · double checkmark -->
+      <g transform="translate(294,440)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.72)"/>
+        <!-- icon: two check strokes -->
+        <polyline points="1.5,3 4,6.5 9.5,-1.5" stroke-width="1"/>
+        <polyline points="0,1 2.5,4.5 8,-3"     stroke-width="0.7" stroke="rgba(255,255,255,0.45)"/>
+      </g>
+
+      <!-- MEASURE (294,260) · trend line + baseline -->
+      <g transform="translate(294,260)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.72)"/>
+        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.72)"/>
+        <!-- icon: rising trend + baseline -->
+        <polyline points="2,7 4.5,3.5 7,5.5 10,-0.5" stroke-width="0.9"/>
+        <line x1="2" y1="8" x2="10" y2="8" stroke-width="0.7" stroke="rgba(255,255,255,0.45)"/>
+      </g>
+
+      <!-- ── Labels ───────────────────────────────────────────────────────
+           Format per node:   FIG 0.X (small dim)
+                              NODE NAME (spaced caps, bright)
+                              ——— (short rule)
+                              Description line 1 (dim)
+                              Description line 2
+           Connector: short dashed line from label edge to node circle edge.
+      ──────────────────────────────────────────────────────────────────── -->
+
+      <!-- SENSE (top, centered) -->
+      <g text-anchor="middle" font-family="'Inter', 'JetBrains Mono', monospace">
+        <text x="450" y="46"  font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.1</text>
+        <text x="450" y="68"  font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">SENSE</text>
+        <line x1="418" y1="76" x2="482" y2="76" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+        <text x="450" y="90"  font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Find problems</text>
+        <text x="450" y="105" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">worth solving</text>
+        <!-- connector: node top edge (y=134) to label (y=108) -->
+        <line x1="450" y1="108" x2="450" y2="133" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 4"/>
+      </g>
+
+      <!-- PRIORITIZE (upper-right, start-anchored) -->
+      <g text-anchor="start" font-family="'Inter', 'JetBrains Mono', monospace">
+        <text x="656" y="234" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.2</text>
+        <text x="656" y="256" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">PRIORITIZE</text>
+        <line x1="656" y1="264" x2="790" y2="264" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+        <text x="656" y="278" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Rank by impact</text>
+        <text x="656" y="293" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and confidence</text>
+        <!-- connector: node right edge x=642 to label x=654 -->
+        <line x1="643" y1="260" x2="654" y2="260" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+      </g>
+
+      <!-- SPEC (lower-right, start-anchored) -->
+      <g text-anchor="start" font-family="'Inter', 'JetBrains Mono', monospace">
+        <text x="656" y="414" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.3</text>
+        <text x="656" y="436" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">SPEC</text>
+        <line x1="656" y1="444" x2="750" y2="444" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+        <text x="656" y="458" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Define the solution</text>
+        <text x="656" y="473" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and acceptance criteria</text>
+        <!-- connector -->
+        <line x1="643" y1="440" x2="654" y2="440" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+      </g>
+
+      <!-- ACT (bottom, centered) -->
+      <g text-anchor="middle" font-family="'Inter', 'JetBrains Mono', monospace">
+        <!-- connector: node bottom edge y=566 to label y=596 -->
+        <line x1="450" y1="567" x2="450" y2="592" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 4"/>
+        <text x="450" y="600" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.4</text>
+        <text x="450" y="622" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">ACT</text>
+        <line x1="418" y1="630" x2="482" y2="630" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+        <text x="450" y="644" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Build the right</text>
+        <text x="450" y="659" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">thing</text>
+      </g>
+
+      <!-- VERIFY (lower-left, end-anchored) -->
+      <g text-anchor="end" font-family="'Inter', 'JetBrains Mono', monospace">
+        <text x="244" y="414" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.5</text>
+        <text x="244" y="436" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">VERIFY</text>
+        <line x1="150" y1="444" x2="244" y2="444" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+        <text x="244" y="458" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Check the work</text>
+        <text x="244" y="473" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and capture replay</text>
+        <!-- connector: label x=246 to node left edge x=257 -->
+        <line x1="246" y1="440" x2="257" y2="440" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+      </g>
+
+      <!-- MEASURE (upper-left, end-anchored) -->
+      <g text-anchor="end" font-family="'Inter', 'JetBrains Mono', monospace">
+        <text x="244" y="234" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.6</text>
+        <text x="244" y="256" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">MEASURE</text>
+        <line x1="110" y1="264" x2="244" y2="264" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+        <text x="244" y="278" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Track outcomes</text>
+        <text x="244" y="293" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and impact</text>
+        <!-- connector -->
+        <line x1="246" y1="260" x2="257" y2="260" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+      </g>
+
+      <!-- ── Particles ──────────────────────────────────────────────────
+           Lead (18s/rev): triggers halos at t=0,3,6,9,12,15s.
+           Trailing particles fade behind it. Drifters on outer/inner lanes.
+      ──────────────────────────────────────────────────────────────────── -->
+      <g fill="#fff">
+        <!-- Lead particle 1 (main, with glow halo) -->
+        <g>
+          <circle r="5.5" fill="rgba(255,255,255,0.18)" filter="url(#pl2-glow-sm)"/>
+          <circle r="2.2" fill="#fff"/>
+          <animateMotion dur="18s" begin="0s" repeatCount="indefinite"><mpath href="#pl2-ring"/></animateMotion>
+        </g>
+        <!-- Lead particle 2 (half-phase offset, inner lane) -->
+        <g opacity="0.7">
+          <circle r="4.5" fill="rgba(255,255,255,0.14)" filter="url(#pl2-glow-xs)"/>
+          <circle r="1.8" fill="#fff"/>
+          <animateMotion dur="18s" begin="-9s" repeatCount="indefinite"><mpath href="#pl2-ring-i"/></animateMotion>
+        </g>
+        <!-- Trailing particles (close behind lead 1) -->
+        <circle r="1.6" opacity="0.52"><animateMotion dur="18s" begin="-0.7s"  repeatCount="indefinite"><mpath href="#pl2-ring"/></animateMotion></circle>
+        <circle r="1.4" opacity="0.40"><animateMotion dur="18s" begin="-1.4s"  repeatCount="indefinite"><mpath href="#pl2-ring"/></animateMotion></circle>
+        <circle r="1.1" opacity="0.28"><animateMotion dur="18s" begin="-2.1s"  repeatCount="indefinite"><mpath href="#pl2-ring"/></animateMotion></circle>
+        <!-- Independent drifters on inner lane -->
+        <circle r="1.5" opacity="0.28"><animateMotion dur="18s" begin="-3.5s"  repeatCount="indefinite"><mpath href="#pl2-ring-i"/></animateMotion></circle>
+        <circle r="1.3" opacity="0.22"><animateMotion dur="18s" begin="-6.8s"  repeatCount="indefinite"><mpath href="#pl2-ring-i"/></animateMotion></circle>
+        <circle r="1.2" opacity="0.20"><animateMotion dur="18s" begin="-13.2s" repeatCount="indefinite"><mpath href="#pl2-ring-i"/></animateMotion></circle>
+        <!-- Drifters on outer lane (slower) -->
+        <circle r="1.4" opacity="0.22"><animateMotion dur="26s" begin="-4s"    repeatCount="indefinite"><mpath href="#pl2-ring-o"/></animateMotion></circle>
+        <circle r="1.2" opacity="0.17"><animateMotion dur="26s" begin="-14s"   repeatCount="indefinite"><mpath href="#pl2-ring-o"/></animateMotion></circle>
+        <!-- Very slow ambient drifters on main ring -->
+        <circle r="1.4" opacity="0.18"><animateMotion dur="34s" begin="-6s"    repeatCount="indefinite"><mpath href="#pl2-ring"/></animateMotion></circle>
+        <circle r="1.2" opacity="0.15"><animateMotion dur="34s" begin="-20s"   repeatCount="indefinite"><mpath href="#pl2-ring"/></animateMotion></circle>
+      </g>
+    </svg>
   </div>
 </section>
 
