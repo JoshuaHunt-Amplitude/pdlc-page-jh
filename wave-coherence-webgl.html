@@ -17,7 +17,7 @@
   .ln{stroke:#cdd8ff;fill:none}
   .dimln{stroke:#5c6fac;fill:none}
   .ey{font-weight:500;font-size:18px;letter-spacing:5px;fill:#aebeff}
-  .title{font-weight:600;font-size:56px;letter-spacing:12px;fill:#f2f6ff}
+  .title{font-weight:600;font-size:44px;letter-spacing:10px;fill:#f2f6ff}
   .sub{font-weight:400;font-size:18px;letter-spacing:5px;fill:#91a3dc}
   .k{font-weight:400;font-size:14px;letter-spacing:2px;fill:#7686b6}
   .v{font-weight:400;font-size:15px;letter-spacing:2px;fill:#e9efff}
@@ -26,9 +26,10 @@
   .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
   .ghost{opacity:.48}
   .reveal{opacity:0;transition:opacity .5s ease}
-  .rv{font-weight:400;font-size:13px;letter-spacing:3px;fill:#9fb6ff}
-  .backing{fill:#05070e;opacity:0.5}
-  .veil{fill:#071126;opacity:.22}
+  .rv{font-weight:500;font-size:13px;letter-spacing:3px;fill:#ffffff}
+  .rv-sub{font-weight:400;font-size:12px;letter-spacing:2px;fill:#b0c4de}
+  .backing{fill:#05070e;opacity:0.65}
+  .veil{fill:#040918;opacity:.88;stroke:#4083FF;stroke-width:1.2}
 </style>
 </head>
 <body>
@@ -46,14 +47,10 @@
 
     <!-- title -->
     <text class="ey" x="82" y="112">AMPLITUDE WAVE &#183; CLOSED BETA</text>
-    <text class="title" x="80" y="178">
+    <text class="title" x="80" y="172">
       <tspan x="80" dy="0">ENABLING</tspan>
-      <tspan x="80" dy="72">SELF-IMPROVING</tspan>
-      <tspan x="80" dy="72">PRODUCTS</tspan>
-    </text>
-    <text class="sub" x="82" y="382">
-      <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
-      <tspan x="82" dy="38">and prove it worked. Every release, on its own.</tspan>
+      <tspan x="80" dy="58">SELF-IMPROVING</tspan>
+      <tspan x="80" dy="58">PRODUCTS</tspan>
     </text>
 
     <!-- coherence lock is a subtle hover overlay, not a permanent ripple -->
@@ -80,46 +77,46 @@
 
     <!-- hover overlays: signal layer -> synthesis -> experiments -> outcomes -->
     <g id="rv-signals" class="reveal">
-      <rect class="veil" x="150" y="368" width="210" height="106" rx="8"/>
+      <rect class="veil" x="150" y="620" width="210" height="106" rx="8"/>
       <g class="dimln" stroke-width="1" opacity="0.72">
-        <path d="M178 420 H318 M202 394 v52 M230 394 v52 M258 394 v52 M286 394 v52"/>
-        <circle cx="202" cy="410" r="3" fill="#a9c7ff"/>
-        <circle cx="258" cy="433" r="3" fill="#70e5bd"/>
-        <circle cx="286" cy="402" r="3" fill="#ff9bba"/>
+        <path d="M178 672 H318 M202 646 v52 M230 646 v52 M258 646 v52 M286 646 v52"/>
+        <circle cx="202" cy="662" r="3" fill="#a9c7ff"/>
+        <circle cx="258" cy="685" r="3" fill="#70e5bd"/>
+        <circle cx="286" cy="654" r="3" fill="#ff9bba"/>
       </g>
-      <text class="rv" x="176" y="390">SIGNALS LAYER</text>
-      <text class="sm" x="176" y="464">ANALYTICS &#183; REPLAYS &#183; FEEDBACK</text>
+      <text class="rv" x="176" y="642">SIGNALS LAYER</text>
+      <text class="rv-sub" x="176" y="716">ANALYTICS &#183; REPLAYS &#183; FEEDBACK</text>
     </g>
     <g id="rv-synthesis" class="reveal">
-      <rect class="veil" x="965" y="360" width="210" height="86" rx="8"/>
+      <rect class="veil" x="450" y="620" width="210" height="86" rx="8"/>
       <g class="dimln" stroke-width="1.1" opacity="0.8">
-        <path d="M994 416 C1042 384 1096 384 1144 416"/>
-        <path d="M994 392 C1048 426 1090 426 1144 392"/>
-        <circle cx="1069" cy="404" r="5" fill="#dbe6ff"/>
+        <path d="M479 676 C527 644 581 644 629 676"/>
+        <path d="M479 652 C533 686 575 686 629 652"/>
+        <circle cx="554" cy="664" r="5" fill="#dbe6ff"/>
       </g>
-      <text class="rv" x="990" y="384">SYNTHESIS</text>
-      <text class="sm" x="990" y="438">CORROBORATE THE SIGNALS</text>
+      <text class="rv" x="475" y="644">SYNTHESIS</text>
+      <text class="rv-sub" x="475" y="698">CORROBORATE THE SIGNALS</text>
     </g>
     <g id="rv-experiments" class="reveal">
-      <rect class="veil" x="1230" y="304" width="194" height="100" rx="8"/>
+      <rect class="veil" x="750" y="620" width="194" height="100" rx="8"/>
       <g class="dimln" stroke-width="1" opacity="0.74">
-        <path d="M1260 370 H1390"/>
-        <path d="M1260 370 C1286 340 1320 340 1346 370 C1362 388 1378 388 1390 370"/>
-        <path d="M1260 348 H1306 M1344 348 H1390"/>
+        <path d="M780 686 H910"/>
+        <path d="M780 686 C806 656 840 656 866 686 C882 704 898 708 910 686"/>
+        <path d="M780 664 H826 M864 664 H910"/>
       </g>
-      <text class="rv" x="1258" y="330">WEB EXPERIMENTS</text>
-      <text class="sm" x="1258" y="394">READY TO APPROVE</text>
+      <text class="rv" x="778" y="646">WEB EXPERIMENTS</text>
+      <text class="rv-sub" x="778" y="710">READY TO APPROVE</text>
     </g>
     <g id="rv-outcomes" class="reveal">
-      <rect class="veil" x="1346" y="524" width="226" height="96" rx="8"/>
+      <rect class="veil" x="1050" y="620" width="226" height="96" rx="8"/>
       <g class="dimln" stroke-width="1.2" opacity="0.82">
-        <path d="M1378 596 H1542 M1378 596 V552"/>
-        <path d="M1378 586 C1414 578 1442 592 1472 568 C1498 548 1520 556 1542 540"/>
-        <circle cx="1472" cy="568" r="3" fill="#dbe6ff"/>
-        <circle cx="1542" cy="540" r="3" fill="#70e5bd"/>
+        <path d="M1082 692 H1246 M1082 692 V648"/>
+        <path d="M1082 682 C1118 674 1146 688 1176 664 C1202 644 1224 652 1246 636"/>
+        <circle cx="1176" cy="664" r="3" fill="#dbe6ff"/>
+        <circle cx="1246" cy="636" r="3" fill="#70e5bd"/>
       </g>
-      <text class="rv" x="1376" y="546">OUTCOMES GRAPH</text>
-      <text class="sm" x="1376" y="614">MEASURE WHAT MOVED</text>
+      <text class="rv" x="1080" y="642">OUTCOMES GRAPH</text>
+      <text class="rv-sub" x="1080" y="710">MEASURE WHAT MOVED</text>
     </g>
 
     <!-- bottom process axis -->
@@ -135,8 +132,10 @@
     </g>
 
     <!-- bottom story line -->
-    <text class="hero" x="82" y="846">Wave coheres scattered product signals into the opportunities worth shipping.</text>
-    <text class="sm" x="82" y="878">A PROACTIVE PRODUCT AGENT FROM AMPLITUDE</text>
+    <text class="hero" x="82" y="836">
+      <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
+      <tspan x="82" dy="34">and prove it worked. Every release, on its own.</tspan>
+    </text>
     <text class="cap" x="1486" y="878">[ 2026 ]</text>
     <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
     <circle id="cursorRing" class="reveal" r="24" fill="none" stroke="#7d93ff" stroke-width="1.2"/>
