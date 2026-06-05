@@ -1019,22 +1019,22 @@
       <text class="t-call" x="95" y="356" style="font-size:17px;letter-spacing:1px;fill:#c3d2ff">Products that find what's worth building, ship it,</text>
       <text class="t-call" x="95" y="383" style="font-size:17px;letter-spacing:1px;fill:#c3d2ff">and prove it worked. Every release, on its own.</text>
 
-      <!-- callouts · signals the loop reads, tapped onto the right of the torus (the left
-           is now the headline). Dashes flow along the leaders; each dot pulses.
-           Tuning knobs: each <path> = leader (label → dot on the ring); move the paired
-           <circle> dot + the <text> x/y to reposition a callout. -->
+      <!-- callouts · signals the loop reads, tapped onto the right shoulder of the
+           signal wave (the left is the headline). Dashes flow along the leaders; each
+           dot pulses. Tuning knobs: each <path> = leader (label → dot on the wave);
+           move the paired <circle> dot + the <text> x/y to reposition a callout. -->
       <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
         <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
-        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/>
+        <path d="M1290 466 L1150 508"/><path d="M1290 556 L1128 590"/><path d="M1290 646 L1150 668"/>
       </g>
       <g fill="#e9f0ff">
-        <circle cx="1180" cy="642" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
-        <circle cx="1280" cy="470" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
-        <circle cx="1180" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="1150" cy="508" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="1128" cy="590" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="1150" cy="668" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
       </g>
-      <text class="t-call" x="1300" y="250">WEB VITALS</text>
-      <text class="t-call" x="1330" y="472">PRODUCT FEEDBACK</text>
-      <text class="t-call" x="1300" y="692">SESSION REPLAYS</text>
+      <text class="t-call" x="1300" y="472">WEB VITALS</text>
+      <text class="t-call" x="1300" y="562">PRODUCT FEEDBACK</text>
+      <text class="t-call" x="1300" y="652">SESSION REPLAYS</text>
 
       <!-- bottom-left version (squares blink in sequence) -->
       <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
@@ -2057,54 +2057,81 @@
 })();
 </script>
 
-<!-- ── loop-blueprint hero canvas (3D torus wireframe + flow + comet streams) ── -->
+<!-- ── signal-wave hero canvas (datapoints cascade → resolve into one waveform) ── -->
 <script>
 (function(){
   const c=document.getElementById('bp-c');if(!c)return;const x=c.getContext('2d');
   let W=0,H=0,dpr=1;
   function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
-  resize();window.addEventListener('resize',resize);
-  const TAU=Math.PI*2;
-  const NP=3800,pts=[];
-  for(let i=0;i<NP;i++)pts.push({u:Math.random()*TAU,v:Math.random()*TAU,sp:0.10+Math.random()*0.12,dv:(Math.random()-0.5)*0.05,sz:Math.random()});
-  const NS=18,streams=[];
-  for(let i=0;i<NS;i++){const big=i<5;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:1.4+Math.random()*1.8,vturns:0.6+Math.random()*1.4,off:Math.random(),sp:0.018+Math.random()*0.024,big:big});}
+  resize();
+  const TAU=Math.PI*2, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── SIGNAL WAVE ────────────────────────────────────────────────────────────
+  // Many "datapoints" rain in from above (cascade / waterfall) and get pulled onto
+  // a travelling centre-line — raw noise self-organising into one coherent signal.
+  // Held to the centre-right so the left headline stays clear; fades out on the
+  // left tail (band) and into --bg at the edges (so the hero melts into the page).
+  //   yc(x) = base + envelope(x)·Σ sin(k·x ± speed·t)
+  // TUNING KNOBS: FOCUS/SPREAD = where the wave lives across the width · AMP (in yc)
+  //   = wave height · fade alpha (0.12) = trail length · NP cap = datapoint volume.
+  const FOCUS=0.62, SPREAD=0.27;
+  function env(nx){const d=(nx-FOCUS)/SPREAD;return Math.exp(-0.5*d*d);}          // amplitude swell 0..1
+  function band(nx){return Math.min(1,Math.max(0,(nx-0.20)/0.16));}              // fade the left tail
+  function yc(px,t){const nx=px/W, A=H*0.12*env(nx);
+    return H*0.585 + A*Math.sin(px*(TAU/(W*0.60)) + t*0.55)
+                   + A*0.40*Math.sin(px*(TAU/(W*0.26)) - t*0.95);}
+
+  let NP=0,pts=[];
+  function spawn(p,seed){
+    p.x=W*0.30+Math.random()*W*0.78;            // centre-right only (left = headline)
+    p.y=-0.14*H+Math.random()*0.32*H;           // rain in from above
+    p.vx=6+Math.random()*22; p.vy=8+Math.random()*26;
+    p.sz=0.5+Math.random()*1.0;
+    p.lead=!seed && Math.random()<0.014; if(p.lead)p.sz=1.9+Math.random()*1.1;
+    p.tone=Math.random()<0.5?'#eef4ff':'#cfe0ff';
+  }
+  function build(){NP=Math.min(2600,Math.round(W*H/520));pts=[];for(let i=0;i<NP;i++){const p={};spawn(p,true);p.y=Math.random()*H;pts.push(p);}}
+  build();window.addEventListener('resize',function(){resize();build();});
   let last=0;
   function frame(now){
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
-    // v16: dark navy field (edges land on --bg #070b1c) with only a soft blue
-    // core-glow behind the torus, so the hero dissolves into the rest of the page
-    const g=x.createRadialGradient(W*0.575,H*0.48,0,W*0.575,H*0.48,Math.max(W,H)*0.80);
-    g.addColorStop(0,'#1b2c66');g.addColorStop(0.5,'#0d1530');g.addColorStop(1,'#070b1c');
-    x.fillStyle=g;x.fillRect(0,0,W,H);
-    const cx=W*0.575,cy=H*0.50,R=Math.min(W,H)*0.300,r=R*0.42,Rr=R+r;
-    const e=0.85,a=t*0.055,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=2.6*Rr;
-    function proj(u,v){
-      const cu=Math.cos(u),su=Math.sin(u),cv=Math.cos(v),sv=Math.sin(v);
-      const X=(R+r*cv)*cu,Z=(R+r*cv)*su,Y=r*sv;
-      const X1=X*ca+Z*sa,Z1=-X*sa+Z*ca;
-      const Y2=Y*ce-Z1*se,Z2=Y*se+Z1*ce;
-      const p=fo/(fo+Z2);
-      return {sx:cx+X1*p,sy:cy+Y2*p,d:Z2,p:p};
-    }
-    x.save();x.translate(cx,cy+R*0.04);x.strokeStyle='rgba(208,222,255,0.22)';x.lineWidth=1;x.setLineDash([5,8]);
-    x.beginPath();x.ellipse(0,0,Rr*1.05,Rr*0.60,0,0,TAU);x.stroke();x.setLineDash([]);x.restore();
-    x.lineWidth=1;
-    const NU=56,SEGV=36;
-    for(let i=0;i<NU;i++){const u=i/NU*TAU;x.beginPath();for(let k=0;k<=SEGV;k++){const p=proj(u,k/SEGV*TAU);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(u,Math.PI/2).d/Rr;const al=0.04+0.13*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
-    const NV=22,SEGU=80;
-    for(let j=0;j<NV;j++){const v=j/NV*TAU;x.beginPath();for(let k=0;k<=SEGU;k++){const p=proj(k/SEGU*TAU,v);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(Math.PI/2,v).d/Rr;const al=0.03+0.10*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
+    // v17: translucent navy-glow wash each frame → previous particle positions fade
+    // into silky streamlines (the cascade + wave trails). Edges land on --bg.
+    const g=x.createRadialGradient(W*FOCUS,H*0.58,0,W*FOCUS,H*0.58,Math.max(W,H)*0.85);
+    g.addColorStop(0,'#16265c');g.addColorStop(0.5,'#0c1430');g.addColorStop(1,'#070b1c');
+    x.globalCompositeOperation='source-over';x.globalAlpha=reduce?1:0.12;
+    x.fillStyle=g;x.fillRect(0,0,W,H);x.globalAlpha=1;
+
+    // faint stacked wavelengths (the "beach wave" bands)
+    x.lineWidth=1;x.strokeStyle='rgba(170,196,255,0.08)';
+    for(let b=-2;b<=2;b++){x.beginPath();let started=false;
+      for(let px=W*0.16;px<=W;px+=14){const nx=px/W;if(band(nx)<=0.02){started=false;continue;}const yy=yc(px,t)+b*15;if(!started){x.moveTo(px,yy);started=true;}else x.lineTo(px,yy);}
+      x.stroke();}
+
+    // datapoints → signal
     x.globalCompositeOperation='lighter';
-    for(let i=0;i<NP;i++){const pt=pts[i];pt.u+=pt.sp*dt;pt.v+=pt.dv*dt;const q=proj(pt.u,pt.v);const near=q.d/Rr*0.5+0.5;x.globalAlpha=0.05+near*0.30;const s=(0.5+pt.sz*1.0+near*0.5)*q.p;x.fillStyle='#eef4ff';x.beginPath();x.arc(q.sx,q.sy,s,0,TAU);x.fill();}
-    for(let i=0;i<NS;i++){const sm=streams[i];
-      const segs=72;x.beginPath();let started=false;
-      for(let k=0;k<=segs;k++){const s=k/segs;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);if(!started){x.moveTo(p.sx,p.sy);started=true;}else x.lineTo(p.sx,p.sy);}
-      x.globalAlpha=sm.big?0.20:0.06;x.strokeStyle='#dfeaff';x.lineWidth=sm.big?1.3:0.8;x.stroke();
-      const head=(((t*sm.sp+sm.off)%1)+1)%1,TT=26;
-      for(let k=0;k<TT;k++){const s=head-k*0.012;if(s<0||s>1)continue;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);const near=p.d/Rr*0.5+0.5;const a2=(1-k/TT)*(sm.big?0.95:0.55)*(0.4+near*0.6);x.globalAlpha=a2;x.fillStyle='#ffffff';const ss=(sm.big?2.4:1.4)*(1-k/TT*0.7)*p.p;x.beginPath();x.arc(p.sx,p.sy,ss,0,TAU);x.fill();}
+    for(let i=0;i<NP;i++){const p=pts[i];
+      const target=yc(p.x,t), dist=target-p.y;
+      p.vy+=dist*2.6*dt; p.vy*=0.955;                          // fall / spring toward the line
+      const near=Math.max(0,1-Math.abs(dist)/(H*0.17));
+      const vxT=20+150*near; p.vx+=(vxT-p.vx)*Math.min(1,dt*3); // drift right, faster once joined
+      p.x+=p.vx*dt; p.y+=p.vy*dt;
+      if(p.x>W+30||p.y>H+60){spawn(p);}
+      const a=(0.06+near*0.5)*band(p.x/W)*(p.lead?1.7:1);
+      x.globalAlpha=Math.min(1,a);x.fillStyle=p.tone;
+      const s=p.sz*(0.7+near*0.8);
+      x.beginPath();x.arc(p.x,p.y,s,0,TAU);x.fill();
+      if(p.lead){x.globalAlpha=Math.min(1,a*0.45);x.beginPath();x.arc(p.x,p.y,s*3.4,0,TAU);x.fill();}
     }
+
+    // the resolved signal — crisp glowing core riding the wave
+    x.beginPath();let st2=false;
+    for(let px=W*0.16;px<=W;px+=8){const yy=yc(px,t);if(!st2){x.moveTo(px,yy);st2=true;}else x.lineTo(px,yy);}
+    x.globalAlpha=0.85;x.shadowColor='#7da0ff';x.shadowBlur=14;x.strokeStyle='rgba(180,205,255,0.5)';x.lineWidth=2.4;x.stroke();
+    x.shadowBlur=0;x.strokeStyle='rgba(233,240,255,0.92)';x.lineWidth=1.1;x.stroke();
+
     x.globalAlpha=1;x.globalCompositeOperation='source-over';
-    requestAnimationFrame(frame);
+    if(!reduce) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 })();
