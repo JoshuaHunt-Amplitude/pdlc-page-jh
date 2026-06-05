@@ -971,9 +971,15 @@
   .bp-scroll .chev{animation:bp-bob 1.8s ease-in-out infinite;}
   @keyframes bp-bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
   @media(prefers-reduced-motion:reduce){.bp-scroll .chev{animation:none}}
-  /* hero CTA — HTML button overlaid on the HUD (the SVG is pointer-events:none),
-     sat right below the headline/subhead in the same left gutter the HUD text uses */
-  .bp-cta{position:absolute;left:max(5.4vw,calc(50vw - 760px));top:44%;z-index:3;pointer-events:auto;
+  /* hero CTA — HTML button overlaid on the HUD (the SVG is pointer-events:none).
+     Anchor it to the SVG-HUD's own coordinate space (viewBox 1680×945, xMidYMid
+     meet) so its left edge sits exactly at the text gutter (SVG x=92) and its top
+     just below the subhead (SVG y=415), at any viewport size/aspect. */
+  .bp-cta{position:absolute;
+    --s:min(calc(100vw / 1680), calc(100vh / 945));
+    left:calc((100vw - var(--s)*1680)/2 + var(--s)*92);
+    top:calc((100vh - var(--s)*945)/2 + var(--s)*415);
+    z-index:3;pointer-events:auto;
     display:inline-flex;align-items:center;gap:13px;font-family:'Geist Mono',ui-monospace,monospace;
     font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:#0a1330;background:#e9f0ff;
     text-decoration:none;padding:20px 42px;border-radius:999px;transition:transform .2s,box-shadow .2s;
@@ -987,13 +993,14 @@
   <div class="stage">
     <canvas id="bp-c"></canvas>
     <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <!-- corner frames -->
+      <!-- corner frames (brackets 40px inset; crosshair TL + target TR sit on the
+           diagonal at a 104px inset so both corners read equidistant) -->
       <g class="ln" stroke-width="1.4">
-        <path d="M40 96 V40 H96"/><path d="M106 62 h18 M115 53 v18"/>
+        <path d="M40 96 V40 H96"/><path d="M95 104 h18 M104 95 v18"/>
         <path d="M1640 96 V40 H1584"/>
         <path d="M40 849 V905 H96"/>
         <path d="M1640 849 V905 H1584"/>
-        <circle cx="1600" cy="116" r="11"/><path d="M1600 99 V133 M1583 116 H1617"/>
+        <circle cx="1576" cy="104" r="11"/><path d="M1576 87 V121 M1559 104 H1593"/>
       </g>
       <!-- right edge tick scale + scanning readout -->
       <g class="ln" stroke-width="1">
@@ -1021,23 +1028,23 @@
       <text class="t-call" x="95" y="356" style="font-size:17px;letter-spacing:1px;fill:#c3d2ff">Products that find what's worth building, ship it,</text>
       <text class="t-call" x="95" y="383" style="font-size:17px;letter-spacing:1px;fill:#c3d2ff">and prove it worked. Every release, on its own.</text>
 
-      <!-- bottom-left version (squares blink in sequence) -->
-      <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
+      <!-- bottom-left version (squares blink) · 60px inset from BOTH left & bottom -->
+      <text class="t-sm" x="60" y="866" style="font-size:14px;fill:#e9f0ff">V1.0</text>
       <g class="ln" stroke-width="1">
-        <rect x="92" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="0s" repeatCount="indefinite"/></rect>
-        <rect x="104" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-0.5s" repeatCount="indefinite"/></rect>
-        <rect x="116" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.0s" repeatCount="indefinite"/></rect>
-        <rect x="128" y="872" width="9" height="7"/>
-        <rect x="140" y="872" width="20" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.5s" repeatCount="indefinite"/></rect>
+        <rect x="60" y="878" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="0s" repeatCount="indefinite"/></rect>
+        <rect x="72" y="878" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-0.5s" repeatCount="indefinite"/></rect>
+        <rect x="84" y="878" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.0s" repeatCount="indefinite"/></rect>
+        <rect x="96" y="878" width="9" height="7"/>
+        <rect x="108" y="878" width="20" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.5s" repeatCount="indefinite"/></rect>
       </g>
 
-      <!-- bottom-right -->
-      <text class="t-2026" x="1448" y="848">[ 2026 ]</text>
-      <text class="t-sm" x="1454" y="878">THE PRODUCT LOOP</text>
-      <text class="t-sm" x="1474" y="897">AMPLITUDE WAVE</text>
+      <!-- bottom-right · right-aligned, 60px inset from BOTH right & bottom -->
+      <text class="t-2026" x="1620" y="835" text-anchor="end">[ 2026 ]</text>
+      <text class="t-sm" x="1620" y="865" text-anchor="end">THE PRODUCT LOOP</text>
+      <text class="t-sm" x="1620" y="884" text-anchor="end">AMPLITUDE WAVE</text>
 
-      <!-- slow pulse accent -->
-      <circle cx="1600" cy="116" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
+      <!-- slow pulse accent (rides the relocated target) -->
+      <circle cx="1576" cy="104" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
     </svg>
   </div>
   <a class="bp-cta" href="#cta">Request access <span class="arr">→</span></a>
