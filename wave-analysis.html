@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wave Analysis — Amplitude Wave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:#15259a;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace}
+  .stage{position:relative;width:min(100vw,177.78vh);aspect-ratio:16/9;overflow:hidden;background:#1c34c4}
+  canvas,.hud{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hud{pointer-events:none}
+  .ln{stroke:#e9f0ff;fill:none}
+  .ey{font-weight:500;font-size:20px;letter-spacing:5px;fill:#cdd9ff}
+  .title{font-weight:600;font-size:58px;letter-spacing:12px;fill:#f2f6ff}
+  .sub{font-weight:400;font-size:19px;letter-spacing:5px;fill:#cdd9ff}
+  .item{font-weight:400;font-size:17px;letter-spacing:3px;fill:#e9f0ff}
+  .k{font-weight:400;font-size:15px;letter-spacing:2px;fill:#b9c9f5}
+  .v{font-weight:400;font-size:15px;letter-spacing:2px;fill:#f2f6ff}
+  .sm{font-weight:400;font-size:14px;letter-spacing:2px;fill:#cdd9ff}
+  .ax{font-weight:400;font-size:15px;letter-spacing:1px;fill:#cdd9ff}
+  .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
+  .t2026{font-weight:500;font-size:22px;letter-spacing:4px;fill:#f2f6ff}
+</style>
+</head>
+<body>
+<div class="stage">
+  <canvas id="c"></canvas>
+  <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
+    <!-- corner frames -->
+    <g class="ln" stroke-width="1.4">
+      <path d="M40 96 V40 H96"/><path d="M106 62 h18 M115 53 v18"/>
+      <path d="M1640 96 V40 H1584"/>
+      <path d="M40 849 V905 H96"/>
+      <path d="M1640 849 V905 H1584"/>
+      <circle cx="1600" cy="116" r="11"/><path d="M1600 99 V133 M1583 116 H1617"/>
+    </g>
+    <!-- right tick scale -->
+    <g class="ln" stroke-width="1">
+      <rect x="1632" y="150" width="14" height="11"/><rect x="1632" y="165" width="14" height="11"/>
+      <rect x="1632" y="180" width="14" height="11" fill="#e9f0ff"/><rect x="1632" y="195" width="14" height="11"/>
+      <rect x="1632" y="210" width="14" height="11"/><rect x="1632" y="225" width="14" height="11"/>
+    </g>
+
+    <!-- title -->
+    <text class="ey" x="96" y="120">WAVE 1.0</text>
+    <text class="title" x="94" y="188">WAVE ANALYSIS</text>
+    <text class="sub" x="96" y="232">AMPLITUDE &#160;&#8226;&#160; FREQUENCY &#160;&#8226;&#160; PHASE &#160;&#8226;&#160; TIME</text>
+
+    <!-- pipeline list -->
+    <path class="ln" stroke-width="1.3" d="M92 308 h-10 V452 h10"/>
+    <path class="ln" stroke-width="1.3" d="M300 308 h10 V452 h-10"/>
+    <g class="item">
+      <text x="118" y="334">MEASURE</text>
+      <text x="118" y="372">DECOMPOSE</text>
+      <text x="118" y="410">ANALYZE</text>
+      <text x="118" y="448">SYNTHESIZE</text>
+    </g>
+
+    <!-- glyph row -->
+    <path class="ln" stroke-width="1" opacity="0.5" d="M92 486 H330"/>
+    <g class="ln" stroke-width="1.4">
+      <path d="M96 520 q7 -13 14 0 t14 0 t14 0"/>
+      <path d="M170 528 V512 M180 528 V506 M190 528 V516 M200 528 V502"/>
+      <g fill="#e9f0ff" stroke="none"><circle cx="240" cy="508" r="1.8"/><circle cx="250" cy="508" r="1.8"/><circle cx="260" cy="508" r="1.8"/><circle cx="240" cy="518" r="1.8"/><circle cx="250" cy="518" r="1.8"/><circle cx="260" cy="518" r="1.8"/><circle cx="240" cy="528" r="1.8"/><circle cx="250" cy="528" r="1.8"/><circle cx="260" cy="528" r="1.8"/></g>
+      <rect x="300" y="506" width="24" height="24" rx="2"/><path d="M304 506 v-3 M320 506 v-3 M304 530 v3 M320 530 v3"/><circle cx="312" cy="518" r="2.4" fill="#e9f0ff"/>
+    </g>
+    <path class="ln" stroke-width="1" opacity="0.5" d="M92 548 H330"/>
+
+    <!-- stats -->
+    <g>
+      <text class="k" x="96" y="600">AMPLITUDE</text><text class="v" id="amp-val" x="250" y="600">0.812</text>
+      <text class="k" x="96" y="628">FREQUENCY</text><text class="v" x="250" y="628">128.6 Hz</text>
+      <text class="k" x="96" y="656">PHASE</text><text class="v" x="250" y="656">1.570 rad</text>
+      <text class="k" x="96" y="684">WAVELENGTH</text><text class="v" x="250" y="684">2.34 m</text>
+      <text class="k" x="96" y="712">PERIOD</text><text class="v" x="250" y="712">7.78 ms</text>
+    </g>
+
+    <!-- progress dots -->
+    <g class="ln" stroke-width="1.6">
+      <circle cx="104" cy="772" r="9" fill="#e9f0ff" stroke="none"/>
+      <circle cx="140" cy="772" r="9" fill="#e9f0ff" stroke="none"/>
+      <circle cx="176" cy="772" r="9"/>
+      <circle cx="212" cy="772" r="9" stroke-dasharray="3 3"/>
+    </g>
+
+    <!-- signal lock -->
+    <text class="sm" x="96" y="822">SIGNAL LOCK</text>
+    <g class="ln" stroke-width="1.4">
+      <circle cx="258" cy="816" r="9"/><path d="M258 802 v9 M258 821 v9 M244 816 h9 M267 816 h9"/>
+      <circle cx="258" cy="816" r="2.4" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="2.6s" repeatCount="indefinite"/></circle>
+    </g>
+
+    <!-- hero copy -->
+    <text class="hero" x="96" y="876">transform the data.</text>
+
+    <!-- top-right sampling panel -->
+    <g class="ln" stroke-width="1.4" opacity="0.85">
+      <path d="M1300 206 h-12 V286 h12"/><path d="M1540 206 h12 V286 h-12"/>
+    </g>
+    <g><text class="k" x="1312" y="240">SAMPLING RATE</text><text class="v" x="1452" y="240">48.0 kHz</text>
+       <text class="k" x="1312" y="270">RESOLUTION</text><text class="v" x="1452" y="270">24-bit</text></g>
+
+    <!-- scope axis labels -->
+    <g class="ax" text-anchor="start">
+      <text x="1568" y="302">+1.0</text><text x="1568" y="461">0</text><text x="1568" y="620">-1.0</text>
+    </g>
+    <g class="ln" stroke-width="1.2"><path d="M1548 297 h12 M1548 455 h12 M1548 613 h12"/></g>
+
+    <!-- FFT panel labels -->
+    <text class="sm" x="412" y="676" style="fill:#f2f6ff">FFT</text>
+    <text class="sm" x="452" y="676" style="fill:#9fb3ee">FREQUENCY DOMAIN</text>
+    <text class="sm" x="1545" y="676" text-anchor="end" style="fill:#9fb3ee">TRANSFORM</text>
+
+    <text class="t2026" x="1486" y="876">[ 2026 ]</text>
+  </svg>
+</div>
+<script>
+(function(){
+  const c=document.getElementById('c'),x=c.getContext('2d');
+  const ampVal=document.getElementById('amp-val');
+  let W=0,H=0,dpr=1,sc=1;
+  function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);sc=W/1680;}
+  resize();window.addEventListener('resize',resize);
+  const TAU=Math.PI*2;
+  function hash(n){n=(n<<13)^n;return 1-((n*(n*n*15731+789221)+1376312589)&0x7fffffff)/1073741824;}
+
+  // scope + fft geometry (viewBox units)
+  const BX0=410,BX1=1545,BASE=455,AMP=158,CYC=3;
+  const FX0=410,FX1=1545,FBASE=840,FH=150,NB=56;
+  const kw=TAU*CYC/(BX1-BX0);
+
+  // small radix-2 FFT
+  const Nf=256, F0=3;
+  const re=new Float32Array(Nf), im=new Float32Array(Nf), mag=new Float32Array(Nf);
+  const win=new Float32Array(Nf);
+  for(let n=0;n<Nf;n++)win[n]=0.5-0.5*Math.cos(TAU*n/(Nf-1));
+  function fft(){
+    for(let i=1,j=0;i<Nf;i++){let bit=Nf>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;if(i<j){let tr=re[i];re[i]=re[j];re[j]=tr;let ti=im[i];im[i]=im[j];im[j]=ti;}}
+    for(let len=2;len<=Nf;len<<=1){const ang=-TAU/len,wr=Math.cos(ang),wi=Math.sin(ang);for(let i=0;i<Nf;i+=len){let cr=1,ci=0;const h=len>>1;for(let k=0;k<h;k++){const ar=re[i+k],ai=im[i+k];const br=re[i+k+h]*cr-im[i+k+h]*ci,bi=re[i+k+h]*ci+im[i+k+h]*cr;re[i+k]=ar+br;im[i+k]=ai+bi;re[i+k+h]=ar-br;im[i+k+h]=ai-bi;const ncr=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=ncr;}}}
+  }
+
+  let last=0;
+  function frame(now){
+    const t=now/1000;
+    // bright cobalt background
+    const g=x.createRadialGradient(W*0.55,H*0.42,0,W*0.55,H*0.42,Math.max(W,H)*0.85);
+    g.addColorStop(0,'#2747e6');g.addColorStop(0.55,'#1f39cf');g.addColorStop(1,'#142398');
+    x.fillStyle=g;x.fillRect(0,0,W,H);
+
+    const ph=-0.55*t; // slow rightward travel
+
+    // ---- scope gridlines (behind waves) ----
+    x.lineWidth=1;
+    x.strokeStyle='rgba(220,232,255,0.16)';x.setLineDash([5,8]);
+    const fr=[0.18,0.40,0.62,0.84];
+    for(let i=0;i<fr.length;i++){const vx=BX0+(BX1-BX0)*fr[i];x.beginPath();x.moveTo(vx*sc,(BASE-AMP-22)*sc);x.lineTo(vx*sc,(BASE+AMP+22)*sc);x.stroke();}
+    x.setLineDash([]);
+    // baseline + ticks
+    x.strokeStyle='rgba(220,232,255,0.45)';x.beginPath();x.moveTo(BX0*sc,BASE*sc);x.lineTo((BX1+8)*sc,BASE*sc);x.stroke();
+    x.strokeStyle='rgba(220,232,255,0.30)';x.beginPath();for(let i=0;i<=24;i++){const vx=BX0+(BX1-BX0)*i/24;x.moveTo(vx*sc,(BASE-5)*sc);x.lineTo(vx*sc,(BASE+5)*sc);}x.stroke();
+
+    // ---- harmonic family (faint fan) ----
+    const M=26, spread=2.5+0.20*Math.sin(t*0.22);
+    for(let j=1;j<M;j++){const f=j/(M-1);const amp=Math.pow(1-f,1.15)*AMP*0.97;const phase=ph+f*spread;
+      x.beginPath();let started=false;
+      for(let vx=BX0;vx<=BX1;vx+=3){const y=BASE-amp*Math.sin(kw*(vx-BX0)+phase);if(!started){x.moveTo(vx*sc,y*sc);started=true;}else x.lineTo(vx*sc,y*sc);}
+      x.strokeStyle='rgba(226,236,255,'+(0.05+(1-f)*0.13).toFixed(3)+')';x.lineWidth=1;x.stroke();}
+
+    // ---- bold primary wave (glow + core) ----
+    const aBold=0.93*AMP;
+    x.beginPath();let st0=false;
+    for(let vx=BX0;vx<=BX1;vx+=2){const y=BASE-aBold*Math.sin(kw*(vx-BX0)+ph);if(!st0){x.moveTo(vx*sc,y*sc);st0=true;}else x.lineTo(vx*sc,y*sc);}
+    x.strokeStyle='rgba(180,205,255,0.35)';x.lineWidth=6*sc;x.stroke();
+    x.strokeStyle='rgba(255,255,255,0.98)';x.lineWidth=2.6*sc;x.stroke();
+
+    // ---- FFT (real transform of the synthesized signal) ----
+    for(let n=0;n<Nf;n++){const s=Math.sin(TAU*F0*n/Nf+ph)+0.20*Math.sin(TAU*2*F0*n/Nf+2*ph+0.5)+0.10*Math.sin(TAU*3*F0*n/Nf+3*ph+1.1)+0.03*hash(n+((t*6)|0));re[n]=s*win[n];im[n]=0;}
+    fft();
+    let mx=1e-6;for(let b=1;b<=NB;b++){mag[b]=Math.hypot(re[b],im[b]);if(mag[b]>mx)mx=mag[b];}
+    // baseline
+    x.strokeStyle='rgba(220,232,255,0.35)';x.lineWidth=1;x.beginPath();x.moveTo(FX0*sc,FBASE*sc);x.lineTo((FX1+8)*sc,FBASE*sc);x.stroke();
+    const bw=(FX1-FX0)/NB;
+    for(let b=0;b<NB;b++){const m=mag[b+1]/mx;const sh=0.92+0.08*Math.sin(t*2.0+b*0.6);let h=(Math.pow(m,0.6)*FH*sh);if(h<2)h=2;const bx=FX0+(b+0.5)*bw;
+      x.fillStyle='rgba(232,240,255,'+(0.42+m*0.5).toFixed(3)+')';
+      x.fillRect((bx-bw*0.30)*sc,(FBASE-h)*sc,(bw*0.6)*sc,h*sc);}
+
+    // live amplitude readout
+    if(ampVal){const a=0.806+0.012*(0.5+0.5*Math.sin(t*0.4));ampVal.textContent=a.toFixed(3);}
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

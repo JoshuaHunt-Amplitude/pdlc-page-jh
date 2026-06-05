@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%234083FF'/></svg>">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Animations Portfolio | Amplitude Wave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blue:#0052F2;
+    --blue-d:#4083FF;
+    --lilac:#6980FF;
+    --violet:#A373FF;
+    --pink:#FF7D78;
+    --green:#57E3A4;
+    --bg:#08090f;
+    --panel:#10121a;
+    --panel2:#0c0d14;
+    --line:rgba(255,255,255,.09);
+    --lines:rgba(255,255,255,.18);
+    --white:#fff;
+    --dim:rgba(255,255,255,.62);
+    --dim2:rgba(255,255,255,.42);
+    --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans:'Poppins', Helvetica, system-ui, sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+  body{
+    margin:0;background:var(--bg);color:var(--white);font-family:var(--sans);
+    overflow-x:hidden;background-image:
+      radial-gradient(900px 460px at 75% -10%,rgba(0,82,242,.22),transparent 62%),
+      radial-gradient(780px 420px at 0% 20%,rgba(163,115,255,.12),transparent 60%),
+      linear-gradient(180deg,#08090f 0%,#07080d 100%);
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:80px 80px;
+    -webkit-mask-image:radial-gradient(ellipse 100% 80% at 50% 24%,black 28%,transparent 78%);
+    mask-image:radial-gradient(ellipse 100% 80% at 50% 24%,black 28%,transparent 78%);
+    opacity:.46;
+  }
+  a{color:inherit;text-decoration:none;}
+  nav,main,footer{position:relative;z-index:1;}
+  nav{
+    position:sticky;top:0;z-index:50;background:rgba(8,9,15,.74);
+    border-bottom:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  }
+  .nav-in{max-width:1320px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+  .brand{display:flex;align-items:center;gap:14px;min-width:0;}
+  .brand img{height:22px;width:120px;display:block;}
+  .brand-sep{width:1px;height:18px;background:var(--lines);flex-shrink:0;}
+  .brand-sub{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-d);white-space:nowrap;}
+  .nav-links{display:flex;gap:24px;align-items:center;}
+  .nav-links a,.nav-btn{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);transition:color .2s,border-color .2s;}
+  .nav-links a:hover{color:var(--white);}
+  .nav-btn{color:var(--white);padding:9px 16px;border:1px solid var(--lines);border-radius:999px;white-space:nowrap;}
+  .nav-btn:hover{border-color:var(--blue-d);color:var(--blue-d);}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 32px;}
+  .hero{min-height:76vh;display:grid;grid-template-columns:minmax(0,.82fr) minmax(360px,1fr);gap:64px;align-items:center;padding:88px 32px 72px;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--blue-d);display:inline-flex;align-items:center;gap:12px;}
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue-d);box-shadow:0 0 16px var(--blue-d);}
+  h1{font-size:clamp(48px,7.2vw,104px);font-weight:400;letter-spacing:-.065em;line-height:.9;margin:22px 0 24px;max-width:9ch;}
+  h1 span{color:var(--blue-d);}
+  .lede{font-size:18px;line-height:1.7;color:var(--dim);max-width:55ch;margin:0;}
+  .hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:32px;}
+  .pill{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:10px 14px;border:1px solid var(--line);border-radius:999px;color:var(--dim);background:rgba(255,255,255,.03);}
+  .motion-toggle{appearance:none;border:1px solid rgba(64,131,255,.36);background:rgba(64,131,255,.08);color:var(--white);border-radius:999px;padding:10px 16px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+  .motion-toggle:hover{border-color:var(--blue-d);}
+  .hero-stage{position:relative;min-height:520px;border:1px solid var(--lines);border-radius:24px;background:linear-gradient(155deg,rgba(17,19,28,.92),rgba(8,9,15,.82));overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.46);}
+  .hero-stage::before{content:"";position:absolute;inset:-18%;background:radial-gradient(circle at 50% 50%,rgba(64,131,255,.2),transparent 50%);filter:blur(24px);}
+  .stage-tag{position:absolute;left:22px;top:20px;z-index:3;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim2);}
+  .orbital{position:absolute;inset:46px;display:grid;place-items:center;}
+  .orbital svg{width:100%;height:100%;overflow:visible;}
+  .orbit-ring{fill:none;stroke:rgba(255,255,255,.2);stroke-width:1.4;}
+  .orbit-line{fill:none;stroke:rgba(64,131,255,.62);stroke-width:1.2;stroke-dasharray:3 9;animation:dash 18s linear infinite;}
+  .orbit-node{fill:var(--white);}
+  .orbit-lead{fill:var(--blue-d);filter:drop-shadow(0 0 18px rgba(64,131,255,.85));}
+  .hero-card{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:min(330px,68%);padding:22px;border:1px solid rgba(255,255,255,.18);
+    border-radius:18px;background:rgba(12,13,20,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  }
+  .hero-card .k{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-d);}
+  .hero-card .t{font-size:24px;letter-spacing:-.035em;line-height:1.05;margin:12px 0 0;}
+  .bars{display:grid;gap:8px;margin-top:24px;}
+  .bar{height:7px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;}
+  .bar i{display:block;height:100%;width:var(--w);border-radius:inherit;background:linear-gradient(90deg,var(--blue),var(--blue-d));animation:load 3.8s ease-in-out infinite;}
+  .bar:nth-child(2) i{animation-delay:-1.2s;background:linear-gradient(90deg,var(--lilac),var(--violet));}
+  .bar:nth-child(3) i{animation-delay:-2.1s;background:linear-gradient(90deg,var(--pink),var(--green));}
+  .section-head{padding:42px 0 34px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;}
+  .section-head h2{font-size:clamp(34px,4.2vw,58px);font-weight:400;letter-spacing:-.045em;line-height:1;margin:0;max-width:760px;}
+  .section-head p{color:var(--dim);line-height:1.65;margin:0;max-width:44ch;}
+  .plate-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:44px;}
+  .plate-card{position:relative;border:1px solid var(--line);border-radius:20px;background:rgba(16,18,26,.76);overflow:hidden;}
+  .plate-card:hover{border-color:rgba(64,131,255,.38);}
+  .plate-preview{position:relative;aspect-ratio:16/9;background:#05070e;overflow:hidden;border-bottom:1px solid var(--line);}
+  .plate-preview iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;}
+  .plate-preview a{position:absolute;inset:0;z-index:2;}
+  .plate-copy{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start;padding:18px 20px 20px;}
+  .plate-card h3{font-size:20px;font-weight:400;letter-spacing:-.025em;margin:0;}
+  .plate-card p{font-size:13px;line-height:1.55;color:var(--dim);margin:6px 0 0;max-width:52ch;}
+  .plate-open{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-d);padding:8px 10px;border:1px solid rgba(64,131,255,.28);border-radius:999px;white-space:nowrap;}
+  .plate-open:hover{border-color:var(--blue-d);color:var(--white);}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding-bottom:112px;}
+  .study{position:relative;min-height:430px;border:1px solid var(--line);border-radius:20px;background:rgba(16,18,26,.76);overflow:hidden;}
+  .study::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.22));}
+  .study-head{position:relative;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:20px 22px;border-bottom:1px solid var(--line);}
+  .study h3{font-size:20px;font-weight:400;letter-spacing:-.025em;margin:0;}
+  .study p{font-size:13px;line-height:1.55;color:var(--dim);margin:6px 0 0;max-width:46ch;}
+  .code{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim2);white-space:nowrap;}
+  .canvas{position:absolute;inset:92px 18px 18px;border-radius:16px;background:radial-gradient(circle at 50% 40%,rgba(64,131,255,.12),transparent 55%),rgba(0,0,0,.18);overflow:hidden;}
+  .funnel .canvas svg,.loop .canvas svg,.queue .canvas svg,.review .canvas svg{width:100%;height:100%;overflow:visible;}
+  .sig{fill:var(--blue-d);filter:drop-shadow(0 0 12px rgba(64,131,255,.8));}
+  .sig.dim{fill:rgba(255,255,255,.34);filter:none;}
+  .funnel-line{fill:none;stroke:rgba(255,255,255,.2);stroke-width:1.2;}
+  .beam{fill:none;stroke:url(#beam-grad);stroke-width:2;stroke-linecap:round;stroke-dasharray:1 15;animation:dash 13s linear infinite;}
+  .loop-path{fill:none;stroke:rgba(255,255,255,.18);stroke-width:2;}
+  .loop-fast{fill:none;stroke:var(--blue-d);stroke-width:3;stroke-linecap:round;stroke-dasharray:260 900;animation:loop-run 5.8s linear infinite;}
+  .loop-slow{fill:none;stroke:var(--pink);stroke-width:3;stroke-linecap:round;stroke-dasharray:140 900;animation:loop-run 9s linear infinite reverse;}
+  .node{fill:#0b0d14;stroke:rgba(255,255,255,.38);stroke-width:1.3;}
+  .node-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;fill:var(--dim);}
+  .queue-dot{fill:var(--blue-d);filter:drop-shadow(0 0 10px rgba(64,131,255,.72));}
+  .queue-path{fill:none;stroke:rgba(255,255,255,.18);stroke-width:16;stroke-linecap:round;}
+  .gate{fill:rgba(255,125,120,.12);stroke:rgba(255,125,120,.55);stroke-width:1.4;}
+  .rank-card{position:absolute;left:50%;width:min(420px,82%);transform:translateX(-50%);padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(12,13,20,.82);box-shadow:0 16px 34px rgba(0,0,0,.24);animation:rank 7s ease-in-out infinite;}
+  .rank-card:nth-child(1){top:44px;--dy:0px;--delay:0s;}
+  .rank-card:nth-child(2){top:122px;--dy:8px;--delay:-2.1s;}
+  .rank-card:nth-child(3){top:200px;--dy:16px;--delay:-4.2s;}
+  .rank-card{animation-delay:var(--delay);}
+  .rank-top{display:flex;justify-content:space-between;gap:18px;font-size:13px;color:var(--white);}
+  .rank-meta{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-d);}
+  .rank-line{height:6px;border-radius:999px;background:rgba(255,255,255,.08);margin-top:12px;overflow:hidden;}
+  .rank-line i{display:block;height:100%;width:var(--w);background:linear-gradient(90deg,var(--blue),var(--blue-d));border-radius:inherit;}
+  .human{fill:none;stroke:var(--white);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .check{fill:none;stroke:var(--green);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:44;stroke-dashoffset:44;animation:check 3.2s ease-in-out infinite;}
+  .review-pulse{fill:none;stroke:rgba(87,227,164,.42);stroke-width:1.4;animation:review-pulse 3.2s ease-in-out infinite;}
+  footer{border-top:1px solid var(--line);padding:28px 32px;color:var(--dim2);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;}
+  footer .foot-in{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+  footer img{height:18px;opacity:.5;}
+  @keyframes dash{to{stroke-dashoffset:-220;}}
+  @keyframes load{0%,100%{transform:translateX(-28%);opacity:.55;}50%{transform:translateX(10%);opacity:1;}}
+  @keyframes loop-run{to{stroke-dashoffset:-1160;}}
+  @keyframes rank{0%,100%{transform:translate(-50%,var(--dy));}50%{transform:translate(-50%,calc(var(--dy) - 10px));}}
+  @keyframes check{0%,38%{stroke-dashoffset:44;}58%,100%{stroke-dashoffset:0;}}
+  @keyframes review-pulse{0%,100%{opacity:.1;transform:scale(.9);transform-origin:260px 170px;}50%{opacity:1;transform:scale(1.08);}}
+  body.paused *,body.paused *::before,body.paused *::after{animation-play-state:paused!important;}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;}
+    .motion-toggle{display:none;}
+  }
+  @media (max-width:960px){
+    .hero{grid-template-columns:1fr;min-height:auto;padding-top:64px;}
+    .hero-stage{min-height:440px;}
+    .grid,.plate-grid{grid-template-columns:1fr;}
+    .section-head{grid-template-columns:1fr;}
+  }
+  @media (max-width:720px){
+    .nav-in,.wrap,.hero{padding-left:22px;padding-right:22px;}
+    .nav-links{display:none;}
+    .hero-stage{min-height:380px;border-radius:18px;}
+    .study{min-height:380px;}
+    .canvas{inset:112px 12px 12px;}
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index-v14.html">
+      <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" />
+      <span class="brand-sep"></span>
+      <span class="brand-sub">Animations</span>
+    </a>
+    <div class="nav-links">
+      <a href="#studies">Studies</a>
+      <a href="micrographics.html">Micrographics</a>
+      <a href="index-v14.html">V14</a>
+      <a class="nav-btn" href="index-v5.html">Canonical</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero wrap">
+    <div>
+      <span class="eyebrow">Amplitude Wave // Motion Portfolio</span>
+      <h1>Animations that explain <span>how the loop moves.</span></h1>
+      <p class="lede">A small gallery of motion studies from the PDLC landing page: signal flow, bottlenecks, ranked output, human review, and the product loop. Each study is meant to carry meaning, not decoration.</p>
+      <div class="hero-actions">
+        <button class="motion-toggle" type="button" id="motionToggle">Pause motion</button>
+        <span class="pill">Open with Ctrl-K / Cmd-K</span>
+      </div>
+    </div>
+    <div class="hero-stage" aria-label="Animated orbital overview">
+      <div class="stage-tag">Live motion system</div>
+      <div class="orbital">
+        <svg viewBox="0 0 560 560" role="img" aria-label="Orbiting motion particles around a product loop card">
+          <defs>
+            <path id="hero-orbit" d="M280 62 C420 62 498 154 498 280 C498 406 420 498 280 498 C140 498 62 406 62 280 C62 154 140 62 280 62" />
+          </defs>
+          <circle class="orbit-ring" cx="280" cy="280" r="218" />
+          <circle class="orbit-ring" cx="280" cy="280" r="158" />
+          <path class="orbit-line" d="M280 62 C420 62 498 154 498 280 C498 406 420 498 280 498 C140 498 62 406 62 280 C62 154 140 62 280 62" />
+          <g>
+            <circle class="orbit-node" r="3.5"><animateMotion dur="16s" begin="-1s" repeatCount="indefinite"><mpath href="#hero-orbit" /></animateMotion></circle>
+            <circle class="orbit-node" r="2.8"><animateMotion dur="16s" begin="-4s" repeatCount="indefinite"><mpath href="#hero-orbit" /></animateMotion></circle>
+            <circle class="orbit-node" r="2.8"><animateMotion dur="16s" begin="-7s" repeatCount="indefinite"><mpath href="#hero-orbit" /></animateMotion></circle>
+            <circle class="orbit-node" r="3.2"><animateMotion dur="16s" begin="-10s" repeatCount="indefinite"><mpath href="#hero-orbit" /></animateMotion></circle>
+            <circle class="orbit-node" r="2.5"><animateMotion dur="16s" begin="-13s" repeatCount="indefinite"><mpath href="#hero-orbit" /></animateMotion></circle>
+            <circle class="orbit-lead" r="7"><animateMotion dur="16s" begin="-2.2s" repeatCount="indefinite"><mpath href="#hero-orbit" /></animateMotion></circle>
+          </g>
+        </svg>
+      </div>
+      <div class="hero-card">
+        <div class="k">Portfolio index</div>
+        <div class="t">Signal, decision, action, feedback.</div>
+        <div class="bars">
+          <span class="bar"><i style="--w:74%"></i></span>
+          <span class="bar"><i style="--w:58%"></i></span>
+          <span class="bar"><i style="--w:86%"></i></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="studies">
+    <div class="section-head">
+      <h2>Reusable motion studies for the landing page.</h2>
+      <p>These are page-scale animation ideas, not one-off flourishes. The shared rule: motion should reveal throughput, friction, priority, or review.</p>
+    </div>
+
+    <div class="plate-grid" aria-label="Full-screen animation plates">
+      <article class="plate-card">
+        <div class="plate-preview">
+          <iframe src="wave-analysis.html" title="Wave Analysis preview" loading="lazy"></iframe>
+          <a href="wave-analysis.html" aria-label="Open Wave Analysis"></a>
+        </div>
+        <div class="plate-copy">
+          <div>
+            <h3>Wave Analysis</h3>
+            <p>Oscilloscope-style plate for amplitude, frequency, phase, and time.</p>
+          </div>
+          <a class="plate-open" href="wave-analysis.html">Open</a>
+        </div>
+      </article>
+
+      <article class="plate-card">
+        <div class="plate-preview">
+          <iframe src="scale-structure.html" title="Scale Structure preview" loading="lazy"></iframe>
+          <a href="scale-structure.html" aria-label="Open Scale Structure"></a>
+        </div>
+        <div class="plate-copy">
+          <div>
+            <h3>CMB Acoustic Waves</h3>
+            <p>High-fidelity WebGL 2.0 Cosmic Web simulation with continuous, organic filamentary caustics and subtle motion.</p>
+          </div>
+          <a class="plate-open" href="scale-structure.html">Open</a>
+        </div>
+      </article>
+
+      <article class="plate-card">
+        <div class="plate-preview">
+          <iframe src="cmb-acoustic-webgl.html" title="CMB Acoustic Waves WebGL preview" loading="lazy"></iframe>
+          <a href="cmb-acoustic-webgl.html" aria-label="Open CMB Acoustic Waves WebGL"></a>
+        </div>
+        <div class="plate-copy">
+          <div>
+            <h3>CMB Acoustic Waves (WebGL)</h3>
+            <p>Organic WebGL 2.0 cosmic web caustic simulation with 160,000 active particles and interactive controls.</p>
+          </div>
+          <a class="plate-open" href="cmb-acoustic-webgl.html">Open</a>
+        </div>
+      </article>
+
+      <article class="plate-card">
+        <div class="plate-preview">
+          <iframe src="spectral-plate.html" title="Spectral Analysis preview" loading="lazy"></iframe>
+          <a href="spectral-plate.html" aria-label="Open Spectral Analysis"></a>
+        </div>
+        <div class="plate-copy">
+          <div>
+            <h3>Spectral Analysis</h3>
+            <p>Signal detection plate connecting analytics, replay, feedback, and traces.</p>
+          </div>
+          <a class="plate-open" href="spectral-plate.html">Open</a>
+        </div>
+      </article>
+
+      <article class="plate-card">
+        <div class="plate-preview">
+          <iframe src="anim-3b-end-to-end-gif.html" title="End to End preview" loading="lazy"></iframe>
+          <a href="anim-3b-end-to-end-gif.html" aria-label="Open End to End"></a>
+        </div>
+        <div class="plate-copy">
+          <div>
+            <h3>End to End</h3>
+            <p>Phase III flow from signals to agents, opportunities, action, and measured learning.</p>
+          </div>
+          <a class="plate-open" href="anim-3b-end-to-end-gif.html">Open</a>
+        </div>
+      </article>
+
+      <article class="plate-card">
+        <div class="plate-preview">
+          <iframe src="loop-blueprint-plate.html" title="Loop Blueprint preview" loading="lazy"></iframe>
+          <a href="loop-blueprint-plate.html" aria-label="Open Loop Blueprint"></a>
+        </div>
+        <div class="plate-copy">
+          <div>
+            <h3>Loop Blueprint</h3>
+            <p>Behavioral graph engine plate: sense, decide, act, learn.</p>
+          </div>
+          <a class="plate-open" href="loop-blueprint-plate.html">Open</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="grid">
+      <article class="study funnel">
+        <div class="study-head">
+          <div>
+            <h3>Signal Funnel</h3>
+            <p>Many raw inputs compress into a sharper opportunity signal.</p>
+          </div>
+          <span class="code">AN 01</span>
+        </div>
+        <div class="canvas">
+          <svg viewBox="0 0 640 360" aria-hidden="true">
+            <defs>
+              <linearGradient id="beam-grad" x1="0" x2="1">
+                <stop offset="0" stop-color="#4083FF" stop-opacity=".05" />
+                <stop offset=".65" stop-color="#4083FF" stop-opacity=".85" />
+                <stop offset="1" stop-color="#57E3A4" stop-opacity=".95" />
+              </linearGradient>
+              <path id="funnel-a" d="M80 78 C220 108 338 132 520 180" />
+              <path id="funnel-b" d="M78 160 C230 164 344 168 520 180" />
+              <path id="funnel-c" d="M82 252 C238 222 356 198 520 180" />
+            </defs>
+            <path class="funnel-line" d="M98 56 L522 156 L522 204 L98 294" />
+            <path class="beam" d="M80 78 C220 108 338 132 520 180" />
+            <path class="beam" d="M78 160 C230 164 344 168 520 180" style="animation-delay:-3s" />
+            <path class="beam" d="M82 252 C238 222 356 198 520 180" style="animation-delay:-6s" />
+            <g>
+              <circle class="sig dim" r="4"><animateMotion dur="7s" begin="-.3s" repeatCount="indefinite"><mpath href="#funnel-a" /></animateMotion></circle>
+              <circle class="sig dim" r="3"><animateMotion dur="7s" begin="-2.2s" repeatCount="indefinite"><mpath href="#funnel-a" /></animateMotion></circle>
+              <circle class="sig dim" r="3"><animateMotion dur="7s" begin="-4.8s" repeatCount="indefinite"><mpath href="#funnel-b" /></animateMotion></circle>
+              <circle class="sig dim" r="4"><animateMotion dur="7s" begin="-1.4s" repeatCount="indefinite"><mpath href="#funnel-c" /></animateMotion></circle>
+              <circle class="sig" r="8"><animateMotion dur="7s" begin="-6s" repeatCount="indefinite"><mpath href="#funnel-b" /></animateMotion></circle>
+            </g>
+            <circle class="sig" cx="520" cy="180" r="10" />
+          </svg>
+        </div>
+      </article>
+
+      <article class="study loop">
+        <div class="study-head">
+          <div>
+            <h3>Product Loop</h3>
+            <p>Fast action on one side, slower learning on the other, still one loop.</p>
+          </div>
+          <span class="code">AN 02</span>
+        </div>
+        <div class="canvas">
+          <svg viewBox="0 0 640 360" aria-hidden="true">
+            <path class="loop-path" d="M320 58 C475 58 560 150 560 180 C560 210 475 302 320 302 C165 302 80 210 80 180 C80 150 165 58 320 58" />
+            <path class="loop-fast" d="M320 58 C475 58 560 150 560 180 C560 210 475 302 320 302 C165 302 80 210 80 180 C80 150 165 58 320 58" />
+            <path class="loop-slow" d="M320 58 C475 58 560 150 560 180 C560 210 475 302 320 302 C165 302 80 210 80 180 C80 150 165 58 320 58" />
+            <g>
+              <circle class="node" cx="320" cy="58" r="32" /><text class="node-label" x="320" y="63" text-anchor="middle">BUILD</text>
+              <circle class="node" cx="560" cy="180" r="32" /><text class="node-label" x="560" y="185" text-anchor="middle">SHIP</text>
+              <circle class="node" cx="320" cy="302" r="32" /><text class="node-label" x="320" y="307" text-anchor="middle">USE</text>
+              <circle class="node" cx="80" cy="180" r="32" /><text class="node-label" x="80" y="185" text-anchor="middle">LEARN</text>
+            </g>
+          </svg>
+        </div>
+      </article>
+
+      <article class="study queue">
+        <div class="study-head">
+          <div>
+            <h3>Bottleneck Queue</h3>
+            <p>Particles share timing through the pinch so the slowdown is visible.</p>
+          </div>
+          <span class="code">AN 03</span>
+        </div>
+        <div class="canvas">
+          <svg viewBox="0 0 640 360" aria-hidden="true">
+            <defs><path id="queue-path" d="M70 180 C170 180 220 180 286 180 C340 180 368 180 428 180 C506 180 550 180 590 180" /></defs>
+            <path class="queue-path" d="M70 180 C170 180 220 180 286 180 C340 180 368 180 428 180 C506 180 550 180 590 180" />
+            <rect class="gate" x="294" y="114" width="52" height="132" rx="18" />
+            <rect class="gate" x="354" y="114" width="52" height="132" rx="18" />
+            <g>
+              <circle class="queue-dot" r="7"><animateMotion dur="6.4s" keyTimes="0;0.43;0.7;1" keyPoints="0;0.42;0.58;1" calcMode="linear" begin="-.3s" repeatCount="indefinite"><mpath href="#queue-path" /></animateMotion></circle>
+              <circle class="queue-dot" r="6"><animateMotion dur="6.4s" keyTimes="0;0.43;0.7;1" keyPoints="0;0.42;0.58;1" calcMode="linear" begin="-1.1s" repeatCount="indefinite"><mpath href="#queue-path" /></animateMotion></circle>
+              <circle class="queue-dot" r="5"><animateMotion dur="6.4s" keyTimes="0;0.43;0.7;1" keyPoints="0;0.42;0.58;1" calcMode="linear" begin="-1.9s" repeatCount="indefinite"><mpath href="#queue-path" /></animateMotion></circle>
+              <circle class="queue-dot" r="5"><animateMotion dur="6.4s" keyTimes="0;0.43;0.7;1" keyPoints="0;0.42;0.58;1" calcMode="linear" begin="-2.7s" repeatCount="indefinite"><mpath href="#queue-path" /></animateMotion></circle>
+              <circle class="queue-dot" r="4"><animateMotion dur="6.4s" keyTimes="0;0.43;0.7;1" keyPoints="0;0.42;0.58;1" calcMode="linear" begin="-3.5s" repeatCount="indefinite"><mpath href="#queue-path" /></animateMotion></circle>
+            </g>
+          </svg>
+        </div>
+      </article>
+
+      <article class="study ranked">
+        <div class="study-head">
+          <div>
+            <h3>Ranked Output</h3>
+            <p>The tangible product proof: opportunities settle into a prioritized list.</p>
+          </div>
+          <span class="code">AN 04</span>
+        </div>
+        <div class="canvas">
+          <div class="rank-card">
+            <div class="rank-top"><span>Fix onboarding drop-off on step 3</span><span class="rank-meta">91</span></div>
+            <div class="rank-line"><i style="--w:91%"></i></div>
+          </div>
+          <div class="rank-card">
+            <div class="rank-top"><span>Clarify report-sharing permissions</span><span class="rank-meta">84</span></div>
+            <div class="rank-line"><i style="--w:84%"></i></div>
+          </div>
+          <div class="rank-card">
+            <div class="rank-top"><span>Reduce chart-load wait states</span><span class="rank-meta">76</span></div>
+            <div class="rank-line"><i style="--w:76%"></i></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="study review">
+        <div class="study-head">
+          <div>
+            <h3>Human Review</h3>
+            <p>The agent proposes; people approve, redirect, or stop the work.</p>
+          </div>
+          <span class="code">AN 05</span>
+        </div>
+        <div class="canvas">
+          <svg viewBox="0 0 640 360" aria-hidden="true">
+            <rect x="128" y="88" width="240" height="184" rx="20" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.16)" />
+            <path class="human" d="M218 150a34 34 0 1 0 68 0a34 34 0 1 0-68 0M184 248c18-42 118-42 136 0" />
+            <circle class="review-pulse" cx="458" cy="180" r="68" />
+            <circle cx="458" cy="180" r="48" fill="rgba(87,227,164,.08)" stroke="rgba(87,227,164,.45)" />
+            <path class="check" d="M434 180 L452 198 L486 158" />
+            <path d="M368 180 H406" stroke="rgba(255,255,255,.28)" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 8" />
+          </svg>
+        </div>
+      </article>
+
+      <article class="study loop">
+        <div class="study-head">
+          <div>
+            <h3>Ambient HUD</h3>
+            <p>Subtle loops and scanlines that add system texture without taking over.</p>
+          </div>
+          <span class="code">AN 06</span>
+        </div>
+        <div class="canvas">
+          <svg viewBox="0 0 640 360" aria-hidden="true">
+            <g transform="translate(320 180)">
+              <circle class="orbit-ring" r="122" />
+              <circle class="orbit-ring" r="82" />
+              <path class="orbit-line" d="M-122 0 A122 122 0 1 1 122 0 A122 122 0 1 1 -122 0" />
+              <g class="loop-fast" style="transform-origin:center;animation-duration:7s"><circle cx="0" cy="-122" r="9" fill="#4083FF" stroke="none" /></g>
+              <path d="M-150 -78 H-70 M70 -78 H150 M-150 78 H-70 M70 78 H150" stroke="rgba(255,255,255,.24)" stroke-width="1.2" />
+              <path d="M-32 0 H32 M0 -32 V32" stroke="rgba(255,255,255,.46)" stroke-width="1.4" />
+            </g>
+          </svg>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" />
+    <span>Animations portfolio // Amplitude Wave // 2026</span>
+  </div>
+</footer>
+
+<!-- CMD+K version switcher -->
+<style id="cmdk-style">
+  .cmdk-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-start;justify-content:center;padding-top:14vh;animation:cmdk-fade .15s ease;}
+  .cmdk-overlay[hidden]{display:none;} @keyframes cmdk-fade{from{opacity:0;}}
+  .cmdk-modal{width:100%;max-width:560px;background:#0F1219;border:1px solid rgba(255,255,255,.18);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.7);font-family:'Poppins',system-ui,sans-serif;}
+  .cmdk-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.08);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;}
+  .cmdk-label{color:#4083FF;} .cmdk-hint{color:rgba(255,255,255,.42);}
+  .cmdk-hint kbd{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 5px;margin:0 1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:3px;color:#fff;}
+  .cmdk-list{padding:6px;max-height:62vh;overflow-y:auto;}
+  .cmdk-item{display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:14px;padding:12px 14px;margin:2px 0;border-radius:8px;color:#fff;cursor:pointer;transition:background .12s;}
+  .cmdk-item.selected{background:rgba(64,131,255,.14);outline:1px solid rgba(64,131,255,.32);}
+  .cmdk-item:hover{background:rgba(255,255,255,.04);}
+  .cmdk-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;color:#4083FF;padding:5px 8px;border:1px solid rgba(64,131,255,.3);border-radius:4px;background:rgba(64,131,255,.06);text-align:center;}
+  .cmdk-text .cmdk-name{font-size:14px;font-weight:500;color:#fff;line-height:1.35;}
+  .cmdk-text .cmdk-desc{font-size:11px;color:rgba(255,255,255,.55);font-family:'JetBrains Mono',monospace;letter-spacing:.03em;margin-top:3px;}
+  .cmdk-current{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:#57E3A4;padding:3px 7px;border:1px solid rgba(87,227,164,.3);background:rgba(87,227,164,.06);border-radius:3px;}
+  .cmdk-item:not(.is-current) .cmdk-current{display:none;}
+</style>
+<div id="cmdk" class="cmdk-overlay" hidden role="dialog" aria-label="Switch version">
+  <div class="cmdk-modal">
+    <div class="cmdk-head"><span class="cmdk-label">Switch version</span><span class="cmdk-hint">Up/Down <kbd>Enter</kbd> - <kbd>Esc</kbd></span></div>
+    <div class="cmdk-list" id="cmdk-list">
+      <a class="cmdk-item" href="index-v5.html" data-page="index-v5.html"><span class="cmdk-num">V5</span><span class="cmdk-text"><div class="cmdk-name">Find what matters - ship it faster</div><div class="cmdk-desc">Canonical full page</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="index-v9.html" data-page="index-v9.html"><span class="cmdk-num">V9</span><span class="cmdk-text"><div class="cmdk-name">Vision</div><div class="cmdk-desc">Manifesto + loop + funnel + video hero</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="index-v12.html" data-page="index-v12.html"><span class="cmdk-num">V12</span><span class="cmdk-text"><div class="cmdk-name">Amplitude Wave (named)</div><div class="cmdk-desc">Rotated loop, video hero</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="index-v13.html" data-page="index-v13.html"><span class="cmdk-num">V13</span><span class="cmdk-text"><div class="cmdk-name">HUD / technical-poster treatment</div><div class="cmdk-desc">Micrographic system + grainy gradients</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="index-v14.html" data-page="index-v14.html"><span class="cmdk-num">V14</span><span class="cmdk-text"><div class="cmdk-name">Amplitude Wave - micrographic video</div><div class="cmdk-desc">Hero video, thin type, animated micrographics</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="micrographics.html" data-page="micrographics.html"><span class="cmdk-num">MG</span><span class="cmdk-text"><div class="cmdk-name">Micrographics system</div><div class="cmdk-desc">32 custom SVG HUD elements to mix &amp; match</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="animations-portfolio.html" data-page="animations-portfolio.html"><span class="cmdk-num">AN</span><span class="cmdk-text"><div class="cmdk-name">Animations portfolio</div><div class="cmdk-desc">Signal flow, bottlenecks, ranking, review, loop motion</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="cmb-acoustic-webgl.html" data-page="cmb-acoustic-webgl.html"><span class="cmdk-num">CW</span><span class="cmdk-text"><div class="cmdk-name">CMB Acoustic Waves</div><div class="cmdk-desc">WebGL 2.0 Cosmic Web &amp; Caustic simulation</div></span><span class="cmdk-current">Current</span></a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const overlay=document.getElementById('cmdk');if(!overlay)return;
+  const items=Array.from(overlay.querySelectorAll('.cmdk-item'));
+  const cur=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  items.forEach(it=>{if(it.dataset.page.toLowerCase()===cur)it.classList.add('is-current');});
+  let sel=0;
+  function set(i){items.forEach((el,j)=>el.classList.toggle('selected',j===i));sel=i;items[i].scrollIntoView({block:'nearest'});}
+  function open(){overlay.hidden=false;let s=items.findIndex(it=>!it.classList.contains('is-current'));set(s<0?0:s);}
+  function close(){overlay.hidden=true;}
+  document.addEventListener('keydown',e=>{const m=e.metaKey||e.ctrlKey;if(m&&(e.key==='k'||e.key==='K')){e.preventDefault();overlay.hidden?open():close();return;}if(overlay.hidden)return;if(e.key==='Escape'){e.preventDefault();close();}else if(e.key==='ArrowDown'){e.preventDefault();set((sel+1)%items.length);}else if(e.key==='ArrowUp'){e.preventDefault();set((sel-1+items.length)%items.length);}else if(e.key==='Enter'){e.preventDefault();items[sel].click();}});
+  overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+  items.forEach((it,i)=>it.addEventListener('mouseenter',()=>set(i)));
+})();
+</script>
+<script>
+(function(){
+  const btn=document.getElementById('motionToggle');
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.body.classList.add('paused');
+    document.querySelectorAll('svg').forEach(function(svg){
+      try{svg.pauseAnimations();}catch(_){}
+    });
+  }
+  if(!btn)return;
+  btn.addEventListener('click',function(){
+    const paused=!document.body.classList.contains('paused');
+    document.body.classList.toggle('paused',paused);
+    btn.textContent=paused?'Resume motion':'Pause motion';
+    document.querySelectorAll('svg').forEach(function(svg){
+      try{paused?svg.pauseAnimations():svg.unpauseAnimations();}catch(_){}
+    });
+  });
+})();
+</script>
+</body>
+</html>

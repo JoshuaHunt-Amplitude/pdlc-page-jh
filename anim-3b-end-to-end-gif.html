@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>End to End — Amplitude Phase III</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#08080E;--ink:#F1F4FA;--dim:#B4BBcc;--faint:#8A92A6;
+    --blue:#4083FF;--blue-l:#9FC0FF;--blue-h:#cfe0ff;--blue-m:#6980FF;--green:#7FE0A8;--coral:#FF7D78}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;
+    font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .frame{position:relative;width:100%;max-width:1040px;aspect-ratio:1280/720;border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px;overflow:hidden;background:radial-gradient(120% 120% at 50% 38%,rgba(64,131,255,0.07),transparent 60%),#0A0B12}
+  .frame svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+  /* svg text classes */
+  .ttl{font-family:'Geist Mono',monospace;font-size:15px;letter-spacing:0.22em;text-transform:uppercase;fill:var(--faint)}
+  .rc{font-family:'Geist Mono',monospace;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;fill:var(--dim)}
+  .rc b{fill:var(--blue-l)}
+  .stx{font-family:'Geist Mono',monospace;font-size:17px;letter-spacing:0.18em;text-transform:uppercase;fill:var(--blue-l)}
+  .lab{font-family:'Geist Mono',monospace;font-size:12.5px;letter-spacing:0.05em;fill:var(--ink)}
+  .sub2{font-family:'Geist Mono',monospace;font-size:11px;fill:var(--dim)}
+  .narr{font-family:'Geist Mono',monospace;font-size:22px;letter-spacing:0.01em;fill:var(--ink)}
+  .narr .b{fill:var(--blue-l)}.narr .g{fill:var(--green)}.narr .c{fill:var(--coral)}
+  .ico{stroke:var(--blue-l);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .chip{fill:#10131d;stroke:rgba(120,145,255,0.55);stroke-width:1}
+  .node-c{fill:#0d0f18;stroke:rgba(130,158,255,0.7);stroke-width:1.6}
+  .station{opacity:0.55;transition:opacity .5s}
+  .station.active{opacity:1}
+  @keyframes df{to{stroke-dashoffset:-40}}
+  .flow{stroke-dasharray:3 13;animation:df 1.3s linear infinite}
+</style>
+</head>
+<body>
+<div class="frame">
+  <svg viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <radialGradient id="core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff" stop-opacity="0.9"/><stop offset="40%" stop-color="#9FC0FF" stop-opacity="0.3"/><stop offset="100%" stop-color="#4083FF" stop-opacity="0"/></radialGradient>
+      <filter id="g" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
+      <marker id="ar" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="rgba(127,224,168,0.55)"/></marker>
+    </defs>
+
+    <!-- header row -->
+    <text x="40" y="46" class="ttl">Amplitude · Phase III</text>
+    <text x="1240" y="46" text-anchor="end" class="rc">Outcome Graph · <tspan font-weight="500" fill="#9FC0FF" id="rc">1,284</tspan> patterns</text>
+
+    <!-- feedback arc -->
+    <path d="M 1180 332 C 1212 150, 1208 108, 1080 108 L 200 108 C 100 108, 110 230, 150 296" fill="none"
+          stroke="rgba(127,224,168,0.45)" stroke-width="1.6" stroke-dasharray="3 10" marker-end="url(#ar)"/>
+    <text x="640" y="98" text-anchor="middle" class="sub2" style="letter-spacing:0.2em">OUTCOME GRAPH · LEARNING</text>
+
+    <!-- ambient spine -->
+    <g fill="none" stroke="rgba(120,145,255,0.30)" stroke-width="1.6">
+      <path id="cn0" d="M 252 360 C 290 360, 305 360, 330 360"/>
+      <path id="cn1" d="M 630 360 C 670 360, 695 360, 720 360"/>
+      <path id="cn2" d="M 800 360 C 830 360, 855 360, 880 360"/>
+      <path id="cn3" d="M 1083 360 C 1110 360, 1135 360, 1158 360"/>
+    </g>
+    <g fill="none" stroke="var(--blue-l)" stroke-width="1.5" opacity="0.5">
+      <use href="#cn0" class="flow"/><use href="#cn1" class="flow"/><use href="#cn2" class="flow"/><use href="#cn3" class="flow"/>
+    </g>
+
+    <!-- ===== SIGNALS ===== -->
+    <g class="station active" id="st-signals">
+      <text x="135" y="150" text-anchor="middle" class="stx">Signals</text>
+      <g id="srcChips"></g>
+      <circle cx="230" cy="360" r="22" fill="url(#core)"/><circle cx="230" cy="360" r="15" class="node-c"/>
+      <g class="ico" transform="translate(219,349)"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></g>
+    </g>
+
+    <!-- ===== AGENTS ===== -->
+    <g class="station" id="st-agents">
+      <text x="480" y="150" text-anchor="middle" class="stx">Agents</text>
+      <circle cx="480" cy="235" r="16" class="node-c"/>
+      <g class="ico" transform="translate(469,224)"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><path d="M8 16h.01"/><path d="M16 16h.01"/></g>
+      <text x="480" y="208" text-anchor="middle" class="sub2">DISPATCH ACROSS FUNNEL</text>
+      <g id="funnelNodes"></g>
+    </g>
+
+    <!-- ===== OPPORTUNITIES ===== -->
+    <g class="station" id="st-opps">
+      <text x="760" y="150" text-anchor="middle" class="stx">Opportunities</text>
+      <circle cx="760" cy="360" r="40" fill="url(#core)"/>
+      <circle id="synthRing" cx="760" cy="360" r="24" fill="none" stroke="rgba(159,192,255,0.5)" stroke-width="1.5"/>
+      <circle cx="760" cy="360" r="17" fill="#0b0c14" stroke="rgba(159,192,255,0.7)" stroke-width="1.4"/>
+      <g class="ico" transform="translate(750,350)" style="stroke:#cfe0ff;stroke-width:1.6"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/></g>
+      <g id="oppCard" opacity="0" transform="translate(760,430)">
+        <rect x="-108" y="0" width="216" height="80" rx="10" fill="rgba(16,20,34,0.96)" stroke="rgba(105,128,255,0.45)" stroke-width="1"/>
+        <text x="-94" y="21" class="sub2" style="fill:var(--coral)">⚠ RANKED · RICC 8.6</text>
+        <text x="-94" y="42" class="lab">Activate → Purchase −12%</text>
+        <text x="-94" y="59" class="sub2" style="fill:var(--dim)">payment latency · since Tue deploy</text>
+        <text x="-94" y="73" class="sub2" style="fill:var(--green)">▲ est. +8–15% conversion</text>
+      </g>
+    </g>
+
+    <!-- ===== ACT ===== -->
+    <g class="station" id="st-act">
+      <text x="972" y="150" text-anchor="middle" class="stx">Act</text>
+      <circle cx="880" cy="360" r="16" class="node-c"/>
+      <g class="ico" transform="translate(870,350)"><rect x="3" y="2" width="14" height="20" rx="2"/><path d="M7 8h6"/><path d="M7 12h6"/><path d="M7 16h4"/></g>
+      <text x="880" y="338" text-anchor="middle" class="sub2">SPEC</text>
+      <circle cx="945" cy="360" r="16" class="node-c"/>
+      <g class="ico" transform="translate(935,350)"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></g>
+      <text x="945" y="338" text-anchor="middle" class="sub2">CODING AGENT</text>
+      <g id="prGlyph" opacity="0.25">
+        <circle cx="1005" cy="360" r="15" class="node-c"/>
+        <g class="ico" transform="translate(996,351)"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M6 9v6"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M18 9l-2 2-2-2"/></g>
+        <text x="1005" y="338" text-anchor="middle" class="sub2" id="prLabel">PR</text>
+      </g>
+      <circle cx="1065" cy="360" r="16" class="node-c"/>
+      <g class="ico" transform="translate(1055,350)"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></g>
+      <text x="1065" y="338" text-anchor="middle" class="sub2">SHIP</text>
+    </g>
+
+    <!-- ===== MEASURE ===== -->
+    <g class="station" id="st-measure">
+      <text x="1180" y="150" text-anchor="middle" class="stx">Measure</text>
+      <g transform="translate(1180,360)">
+        <line x1="0" y1="-30" x2="0" y2="30" stroke="rgba(255,255,255,0.1)"/>
+        <rect id="liftBar" x="-10" y="0" width="20" height="0" rx="3" fill="var(--green)"/>
+        <text id="liftTxt" x="0" y="-40" text-anchor="middle" class="sub2" style="fill:var(--green);opacity:0">+11%</text>
+        <text x="0" y="50" text-anchor="middle" class="sub2">LIFT</text>
+      </g>
+    </g>
+
+    <!-- token layer -->
+    <g id="tokens"></g>
+
+    <!-- step dots + narration -->
+    <g id="steps"></g>
+    <text x="640" y="668" text-anchor="middle" class="narr" id="narr">Booting the loop…</text>
+  </svg>
+</div>
+
+<script>
+(function(){
+  const SVG='http://www.w3.org/2000/svg';
+  const tokens=document.getElementById('tokens');
+  const stations={signals:'st-signals',agents:'st-agents',opps:'st-opps',act:'st-act',measure:'st-measure'};
+
+  // chips
+  const SRC=[['Warehouse','revenue · accounts'],['Behavioral','events · funnels'],['Session Replay','friction'],
+             ['Feedback','voice'],['Experiments','causal lift'],['Agent Traces','LLM clusters']];
+  const chipG=document.getElementById('srcChips');
+  SRC.forEach((s,i)=>{const y=240+i*40;const g=document.createElementNS(SVG,'g');
+    g.innerHTML=`<rect class="chip" x="40" y="${y-14}" width="126" height="28" rx="7"/>
+      <circle cx="55" cy="${y}" r="3" fill="${i<2?'#cfe0ff':'#6980FF'}"/>
+      <text x="68" y="${y-2}" class="lab" style="font-size:11.5px">${s[0]}</text>
+      <text x="68" y="${y+9}" class="sub2">${s[1]}</text>`;
+    chipG.appendChild(g);});
+
+  // funnel
+  const FUN=[['Visit',330],['Sign up',405],['Onboard',480],['Activate',555],['Purchase',630]];
+  const funG=document.getElementById('funnelNodes'); const funXY={};
+  FUN.forEach((f,i)=>{const x=f[1],y=360,r=15-i*0.7;funXY[i]=[x,y];
+    if(i<FUN.length-1){const ln=document.createElementNS(SVG,'path');ln.setAttribute('d',`M ${x} ${y} L ${FUN[i+1][1]} ${y}`);
+      ln.setAttribute('stroke','rgba(120,145,255,0.35)');ln.setAttribute('stroke-width','1.6');funG.appendChild(ln);}
+    const g=document.createElementNS(SVG,'g');
+    g.innerHTML=`<circle class="node-c fn" data-i="${i}" cx="${x}" cy="${y}" r="${r}"/><text x="${x}" y="${y+30}" text-anchor="middle" class="sub2">${f[0].toUpperCase()}</text>`;
+    funG.appendChild(g);});
+
+  // helpers
+  function token(c,r){const e=document.createElementNS(SVG,'circle');e.setAttribute('r',r||3);e.setAttribute('fill',c);tokens.appendChild(e);return e;}
+  function tween(el,pts,dur,cb){const segs=[];let total=0;
+    for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);segs.push(d);total+=d;}
+    const start=performance.now();
+    (function step(now){let t=Math.min(1,(now-start)/dur),dist=t*total,acc=0,i=0;
+      while(i<segs.length&&acc+segs[i]<dist){acc+=segs[i];i++;}if(i>=segs.length)i=segs.length-1;
+      const sT=segs[i]?(dist-acc)/segs[i]:1;
+      el.setAttribute('cx',pts[i][0]+(pts[i+1][0]-pts[i][0])*sT);el.setAttribute('cy',pts[i][1]+(pts[i+1][1]-pts[i][1])*sT);
+      if(t<1)requestAnimationFrame(step);else cb&&cb();})(performance.now());}
+  function highlight(id){Object.values(stations).forEach(s=>document.getElementById(s).classList.remove('active'));
+    if(id)document.getElementById(stations[id]).classList.add('active');}
+
+  // phases
+  function pSignals(){[...chipG.children].forEach((g,i)=>setTimeout(()=>{const y=240+i*40;const t=token(i<2?'#cfe0ff':'#9FC0FF',2.4);
+    tween(t,[[170,y],[230,360],[330,360]],1400,()=>t.remove());},i*110));}
+  function pDispatch(){Object.keys(funXY).forEach((k,i)=>setTimeout(()=>{const [x,y]=funXY[k];const a=token('#cfe0ff',3.2);
+    a.setAttribute('cx',480);a.setAttribute('cy',235);
+    tween(a,[[480,235],[x,y]],680,()=>{a.animate([{r:3.2},{r:6},{r:3.2}],{duration:900,iterations:2});setTimeout(()=>a.remove(),1800);
+      const fn=document.querySelector('.fn[data-i="'+k+'"]');if(fn){fn.setAttribute('stroke','#cfe0ff');fn.setAttribute('stroke-width','2');}});},i*100));}
+  function pLocalize(){document.querySelectorAll('.fn').forEach(n=>{n.setAttribute('stroke','rgba(130,158,255,0.7)');n.setAttribute('stroke-width','1.4');});
+    const w=document.querySelector('.fn[data-i="3"]');w.setAttribute('stroke','#FF7D78');w.setAttribute('stroke-width','2.4');}
+  function pOpps(){[3,2,1,0,4].forEach((k,i)=>setTimeout(()=>{const [x,y]=funXY[k];const t=token('#9FC0FF',2.6);tween(t,[[x,y],[760,360]],850,()=>t.remove());},i*85));
+    setTimeout(()=>{document.getElementById('synthRing').animate([{r:24,opacity:1},{r:40,opacity:0}],{duration:900,easing:'ease-out'});
+      document.getElementById('oppCard').animate([{opacity:0},{opacity:1}],{duration:500,fill:'forwards'});},950);}
+  function pAct(){const t=token('#cfe0ff',3);tween(t,[[760,400],[880,360]],650,()=>{t.remove();
+    const t2=token('#cfe0ff',3);tween(t2,[[880,360],[945,360]],520,()=>{t2.remove();
+      setTimeout(()=>{const t3=token('#cfe0ff',3);tween(t3,[[945,360],[1005,360]],520,()=>{t3.remove();
+        const pr=document.getElementById('prGlyph');pr.setAttribute('opacity','1');document.getElementById('prLabel').textContent='PR #4821';
+        pr.querySelector('circle').animate([{r:15},{r:19},{r:15}],{duration:600});
+        setTimeout(()=>{const t4=token('#9FC0FF',3);tween(t4,[[1005,360],[1065,360]],520,()=>t4.remove());},420);
+      });},420);});});}
+  function pMeasure(){const t=token('#9FC0FF',3);tween(t,[[1065,360],[1158,360]],600,()=>{t.remove();
+    const bar=document.getElementById('liftBar'),txt=document.getElementById('liftTxt');
+    bar.animate([{height:'0',y:'0'},{height:'30',y:'-30'}],{duration:700,fill:'forwards'});
+    txt.animate([{opacity:0},{opacity:1}],{duration:500,delay:350,fill:'forwards'});
+    setTimeout(()=>{const f=token('#7FE0A8',3.2);
+      tween(f,[[1180,330],[1208,150],[1080,108],[200,108],[150,296],[230,360]],1900,()=>{f.remove();
+        const rc=document.getElementById('rc');let n=parseInt(rc.textContent.replace(/,/g,''))+(40+Math.floor(Math.random()*40));
+        rc.textContent=n.toLocaleString();rc.animate([{opacity:1},{opacity:0.4},{opacity:1}],{duration:600});});},700);});}
+
+  function reset(){document.getElementById('oppCard').setAttribute('opacity','0');
+    document.getElementById('prGlyph').setAttribute('opacity','0.25');document.getElementById('prLabel').textContent='PR';
+    document.getElementById('liftBar').setAttribute('height','0');document.getElementById('liftBar').setAttribute('y','0');
+    document.getElementById('liftTxt').setAttribute('opacity','0');
+    document.querySelectorAll('.fn').forEach(n=>{n.setAttribute('stroke','rgba(130,158,255,0.7)');n.setAttribute('stroke-width','1.4');});
+    tokens.innerHTML='';}
+
+  const PH=[
+    {id:'signals',t:2600,fn:pSignals, txt:'<tspan class="b">Signals</tspan> in — warehouse + behavioral, replay, feedback, experiments, traces'},
+    {id:'agents', t:2500,fn:pDispatch,txt:'<tspan class="b">Agents</tspan> dispatched across the funnel — one per stage, in parallel'},
+    {id:'agents', t:1900,fn:pLocalize,txt:'Drop-off localized — <tspan class="c">Activate → Purchase, −12%</tspan>'},
+    {id:'opps',   t:2700,fn:pOpps,    txt:'Synthesized into one ranked <tspan class="b">opportunity · RICC 8.6</tspan>'},
+    {id:'act',    t:3000,fn:pAct,     txt:'<tspan class="b">Act</tspan> — specced, coded & shipped by an agent → PR #4821'},
+    {id:'measure',t:3200,fn:pMeasure, txt:'<tspan class="b">Measured</tspan> — <tspan class="g">lift +11%</tspan> → recorded to the Outcome Graph'}
+  ];
+  // step dots in svg
+  const stepsG=document.getElementById('steps'); const n=PH.length, gap=22, x0=640-(n-1)*gap/2;
+  PH.forEach((p,i)=>{const c=document.createElementNS(SVG,'circle');c.setAttribute('cx',x0+i*gap);c.setAttribute('cy',628);c.setAttribute('r',4);c.setAttribute('fill','rgba(255,255,255,0.22)');stepsG.appendChild(c);});
+  const dots=[...stepsG.children], narr=document.getElementById('narr');
+  let idx=0;
+  function run(){const ph=PH[idx];highlight(ph.id);
+    dots.forEach((d,i)=>d.setAttribute('fill', i<idx?'rgba(105,128,255,0.5)':i===idx?'#9FC0FF':'rgba(255,255,255,0.22)'));
+    narr.animate([{opacity:0},{opacity:1}],{duration:400});narr.innerHTML=ph.txt;
+    try{ph.fn();}catch(e){}
+    setTimeout(()=>{idx++;if(idx>=PH.length){idx=0;setTimeout(()=>{reset();run();},1000);}else run();},ph.t);}
+  setTimeout(run,700);
+})();
+</script>
+</body>
+</html>

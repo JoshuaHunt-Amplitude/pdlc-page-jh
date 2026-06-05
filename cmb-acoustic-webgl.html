@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%23FF7D78'/></svg>">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CMB Acoustic Waves — WebGL Cosmic Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blue: #0052F2;
+    --blue-d: #4083FF;
+    --lilac: #6980FF;
+    --violet: #A373FF;
+    --pink: #FF7D78;
+    --green: #57E3A4;
+    --bg: #04050a;
+    --panel: rgba(16, 18, 26, 0.72);
+    --line: rgba(255, 255, 255, 0.08);
+    --lines: rgba(255, 255, 255, 0.15);
+    --white: #ffffff;
+    --dim: rgba(255, 255, 255, 0.62);
+    --dim2: rgba(255, 255, 255, 0.38);
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: 'Poppins', Helvetica, system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: var(--bg); font-family: var(--sans); }
+
+  /* Canvas fills the screen */
+  #gl-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+  }
+
+  /* HUD Layout */
+  .hud {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 32px;
+  }
+
+  /* Interactive elements must re-enable pointer-events */
+  .interactive {
+    pointer-events: auto;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .title-block {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 24px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--pink);
+    box-shadow: 0 0 12px var(--pink);
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  h1 span {
+    color: var(--pink);
+  }
+
+  .subtitle {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--dim);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  /* Main grid */
+  .main-content {
+    display: grid;
+    grid-template-columns: 320px 1fr 340px;
+    gap: 24px;
+    align-items: center;
+    margin: 24px 0;
+  }
+
+  /* Frosted Glass Panels */
+  .panel-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+  }
+
+  /* Spec list */
+  .spec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .spec-item {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  .spec-label {
+    color: var(--dim2);
+    text-transform: uppercase;
+  }
+
+  .spec-value {
+    color: var(--white);
+    text-align: right;
+  }
+
+  /* Legend */
+  .legend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+
+  .legend-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .color-hot { background: #ffbe55; box-shadow: 0 0 10px #ffbe55; }
+  .color-filament { background: #b836cc; box-shadow: 0 0 10px #b836cc; }
+  .color-wave { background: #9fc0ff; box-shadow: 0 0 10px #9fc0ff; }
+  .color-cold { background: #141e61; }
+
+  /* Controls Panel */
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .control-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .control-label {
+    color: var(--dim);
+  }
+
+  .control-value {
+    color: var(--pink);
+  }
+
+  /* Range Slider styling */
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--pink);
+    box-shadow: 0 0 8px var(--pink);
+    transition: transform 0.1s;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+
+  /* Button styling */
+  .btn {
+    background: rgba(255, 125, 120, 0.08);
+    border: 1px solid rgba(255, 125, 120, 0.3);
+    color: var(--white);
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    width: 100%;
+  }
+
+  .btn:hover {
+    background: rgba(255, 125, 120, 0.15);
+    border-color: var(--pink);
+    box-shadow: 0 0 15px rgba(255, 125, 120, 0.2);
+  }
+
+  /* Footer row */
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--dim2);
+    text-transform: uppercase;
+  }
+
+  footer .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  footer img {
+    height: 16px;
+    opacity: 0.5;
+  }
+
+  /* Corner reticles on WebGL canvas */
+  .reticles {
+    position: absolute;
+    inset: 40px;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    z-index: 2;
+  }
+
+  .reticle-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--dim2);
+  }
+
+  .rc-tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+  .rc-tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+  .rc-bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
+  .rc-br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+  /* Attractor lock reticle */
+  .lock-reticle {
+    position: absolute;
+    left: 62.5%; /* Matches attractor x: 0.25 in WebGL (-1 to 1 space) -> 0.625 screen space */
+    top: 52.5%;  /* Matches attractor y: -0.05 in WebGL -> 0.525 screen space */
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.8;
+    transition: opacity 0.5s;
+  }
+
+  .lock-box {
+    position: absolute;
+    inset: 0;
+    border: 1px dashed rgba(255, 125, 120, 0.4);
+    border-radius: 8px;
+    animation: spin-slow 20s linear infinite;
+  }
+
+  .lock-corners {
+    position: absolute;
+    inset: -6px;
+  }
+
+  .lock-corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--pink);
+  }
+
+  .lc-tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+  .lc-tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+  .lc-bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+  .lc-br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+  .lock-label {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--pink);
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: rgba(4, 5, 10, 0.6);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 125, 120, 0.2);
+  }
+
+  @keyframes spin-slow {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Responsive layout adjustments */
+  @media (max-width: 1100px) {
+    .main-content {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+      overflow-y: auto;
+      max-height: 70vh;
+      pointer-events: auto;
+    }
+    .hud {
+      pointer-events: auto;
+      overflow-y: auto;
+    }
+    .panel-card {
+      pointer-events: auto;
+    }
+    .lock-reticle {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="gl-canvas"></canvas>
+
+<div class="reticles">
+  <div class="reticle-corner rc-tl"></div>
+  <div class="reticle-corner rc-tr"></div>
+  <div class="reticle-corner rc-bl"></div>
+  <div class="reticle-corner rc-br"></div>
+</div>
+
+<div class="lock-reticle" id="lockReticle">
+  <div class="lock-box"></div>
+  <div class="lock-corners">
+    <div class="lock-corner lc-tl"></div>
+    <div class="lock-corner lc-tr"></div>
+    <div class="lock-corner lc-bl"></div>
+    <div class="lock-corner lc-br"></div>
+  </div>
+  <div class="lock-label">Signal Lock</div>
+</div>
+
+<div class="hud">
+  <!-- Top Header -->
+  <header class="interactive">
+    <div class="title-block">
+      <div class="eyebrow">CMB Acoustic Waves</div>
+      <h1>Cosmic Web <span>Simulation</span></h1>
+      <div class="subtitle">WebGL Caustic & Coherent Wave Field</div>
+    </div>
+    
+    <div style="background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 18px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; color: var(--dim); text-transform: uppercase;">
+      Press <kbd style="background: rgba(255,255,255,0.08); border: 1px solid var(--line); padding: 2px 6px; border-radius: 3px; color: #fff;">Ctrl-K</kbd> to switch
+    </div>
+  </header>
+
+  <!-- Main HUD Panels -->
+  <main class="main-content">
+    <!-- Left Spec Panel -->
+    <section class="panel-card interactive">
+      <div class="panel-title">System Specs</div>
+      <div class="spec-list">
+        <div class="spec-item">
+          <span class="spec-label">Engine</span>
+          <span class="spec-value">WebGL 2.0 Core</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Particles</span>
+          <span class="spec-value" id="particleCount">160,000</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Integration</span>
+          <span class="spec-value">Zel'dovich Caustics</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Wave Mode</span>
+          <span class="spec-value">Coherent Acoustic</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Anisotropy</span>
+          <span class="spec-value">ΔT/T ≈ 10⁻⁵</span>
+        </div>
+      </div>
+
+      <div class="panel-title" style="margin-top: 10px;">Temperature Legend</div>
+      <div class="legend-list">
+        <div class="legend-item">
+          <div class="legend-color color-hot"></div>
+          <span>Hot Cluster (High Density)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color color-filament"></div>
+          <span>Filamentary Web</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color color-wave"></div>
+          <span>Acoustic Wavefront</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color color-cold"></div>
+          <span>Cold Void (Low Density)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Center Spacer -->
+    <div></div>
+
+    <!-- Right Controls Panel -->
+    <section class="panel-card interactive">
+      <div class="panel-title">Simulation Controls</div>
+      
+      <!-- Speed Slider -->
+      <div class="control-group">
+        <div class="control-header">
+          <span class="control-label">Time Speed</span>
+          <span class="control-value" id="val-speed">1.0x</span>
+        </div>
+        <input type="range" id="slider-speed" min="0" max="3" step="0.1" value="1">
+      </div>
+
+      <!-- Wave Frequency -->
+      <div class="control-group">
+        <div class="control-header">
+          <span class="control-label">Acoustic Frequency</span>
+          <span class="control-value" id="val-freq">18.0</span>
+        </div>
+        <input type="range" id="slider-freq" min="5" max="40" step="0.5" value="18">
+      </div>
+
+      <!-- Wave Amplitude -->
+      <div class="control-group">
+        <div class="control-header">
+          <span class="control-label">Wave Amplitude</span>
+          <span class="control-value" id="val-amp">0.025</span>
+        </div>
+        <input type="range" id="slider-amp" min="0" max="0.08" step="0.001" value="0.025">
+      </div>
+
+      <!-- Attractor Pull -->
+      <div class="control-group">
+        <div class="control-header">
+          <span class="control-label">Cluster Gravity</span>
+          <span class="control-value" id="val-pull">0.015</span>
+        </div>
+        <input type="range" id="slider-pull" min="0" max="0.04" step="0.001" value="0.015">
+      </div>
+
+      <!-- Particle Size -->
+      <div class="control-group">
+        <div class="control-header">
+          <span class="control-label">Particle Size</span>
+          <span class="control-value" id="val-size">1.0x</span>
+        </div>
+        <input type="range" id="slider-size" min="0.5" max="3" step="0.1" value="1">
+      </div>
+
+      <!-- Action Button -->
+      <button class="btn" id="btn-pause" type="button">Pause Simulation</button>
+    </section>
+  </main>
+
+  <!-- Bottom Footer -->
+  <footer class="interactive">
+    <div class="brand">
+      <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" />
+      <span>CMB Acoustic Waves // WebGL Engine</span>
+    </div>
+    <div>Plate V1.0 // [ 2026 ]</div>
+  </footer>
+</div>
+
+<!-- WebGL Shader Scripts -->
+<script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec2 a_gridPos; // grid coordinates in [0, 1]
+
+  uniform float u_time;
+  uniform float u_speed;
+  uniform float u_waveFreq;
+  uniform float u_waveAmp;
+  uniform float u_pullStrength;
+  uniform float u_sizeScale;
+
+  varying float v_brightness;
+  varying vec3 v_color;
+
+  // Pseudo-random hash
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  // 2D Value Noise
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i + vec2(0.0,0.0)), hash(i + vec2(1.0,0.0)), u.x),
+               mix(hash(i + vec2(0.0,1.0)), hash(i + vec2(1.0,1.0)), u.x), u.y);
+  }
+
+  // 3-Octave Fractal Brownian Motion (FBM)
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    vec2 shift = vec2(100.0);
+    mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
+    for (int i = 0; i < 3; ++i) {
+      v += a * noise(p);
+      p = rot * p * 2.0 + shift;
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  void main() {
+    // Map grid position to clip space [-1, 1]
+    vec2 pos = a_gridPos * 2.0 - 1.0;
+    float t = u_time * u_speed;
+
+    // Organic filamentary displacement using FBM
+    vec2 n_pos = pos * 2.2;
+    float nx = fbm(n_pos + vec2(t * 0.08, t * 0.06));
+    float ny = fbm(n_pos - vec2(t * 0.05, -t * 0.09));
+
+    vec2 displaced = pos;
+    displaced.x += (nx - 0.5) * 0.45;
+    displaced.y += (ny - 0.5) * 0.45;
+
+    // Attractor: Signal Cluster at (0.25, -0.05)
+    vec2 attractor = vec2(0.25, -0.05);
+    vec2 to_attractor = attractor - displaced;
+    float dist = length(to_attractor);
+
+    // Gravitational pull towards cluster
+    float pull = u_pullStrength / (dist * 3.5 + 0.18);
+    displaced += normalize(to_attractor) * pull * (1.0 + 0.12 * sin(t * 1.2));
+
+    // Coherent acoustic wave propagation (longitudinal compression)
+    float wave_phase = dist * u_waveFreq - t * 2.8;
+    float wave = sin(wave_phase);
+    float wave_decay = exp(-dist * 1.6);
+    displaced += normalize(to_attractor) * wave * u_waveAmp * wave_decay;
+
+    // Calculate local density/brightness
+    float density = 1.0 / (0.12 + dist * 2.2);
+    density += wave * 0.45 * wave_decay;
+    density = max(0.08, density);
+
+    v_brightness = clamp(0.12 + density * 0.22 + (1.0 - dist) * 0.28, 0.1, 1.0);
+
+    // Cosmic Microwave Background (CMB) color palette:
+    // - Voids (low density): Deep space dark blue
+    // - Filaments (med density): Rich cosmic purple/magenta
+    // - Acoustic wavefronts (compression): Coherent blue-lilac
+    // - Hot clusters (high density): Radiant gold/yellow
+    // - Core (highest density): Brilliant white-gold
+    vec3 cold_color = vec3(0.05, 0.08, 0.32);      // Deep space blue
+    vec3 filament_color = vec3(0.52, 0.12, 0.58);  // Cosmic purple
+    vec3 wave_color = vec3(0.42, 0.62, 1.0);       // Acoustic blue-lilac
+    vec3 hot_color = vec3(1.0, 0.72, 0.25);        // Radiant gold
+    vec3 core_color = vec3(1.0, 0.96, 0.85);       // White-gold
+
+    vec3 col = mix(cold_color, filament_color, clamp(density * 0.35, 0.0, 1.0));
+    
+    // Overlay acoustic wavefront color
+    if (wave > 0.0) {
+      col = mix(col, wave_color, clamp(wave * 0.5 * wave_decay, 0.0, 1.0));
+    }
+    
+    col = mix(col, hot_color, clamp((density - 1.1) * 0.55, 0.0, 1.0));
+    col = mix(col, core_color, clamp((1.0 - dist * 6.5), 0.0, 1.0));
+
+    v_color = col;
+
+    // Output final position
+    gl_Position = vec4(displaced, 0.0, 1.0);
+
+    // Particle point size scales with density and proximity
+    gl_PointSize = clamp((1.0 + density * 0.6) * (1.8 / (dist * 1.5 + 1.0)) * u_sizeScale, 1.0, 7.0);
+  }
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  varying float v_brightness;
+  varying vec3 v_color;
+
+  void main() {
+    // Render soft, glowing circular particles instead of square blocks
+    vec2 pc = gl_PointCoord - vec2(0.5);
+    float dist = length(pc);
+    if (dist > 0.5) discard;
+
+    // Smooth exponential falloff for gas-like glow
+    float alpha = smoothstep(0.5, 0.0, dist) * v_brightness;
+    
+    gl_FragColor = vec4(v_color, alpha * 0.75);
+  }
+</script>
+
+<!-- WebGL Simulation Core -->
+<script>
+(function(){
+  const canvas = document.getElementById('gl-canvas');
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  
+  if (!gl) {
+    alert('WebGL not supported in this browser. Falling back to 2D.');
+    return;
+  }
+
+  // Setup state variables
+  let width = 0, height = 0;
+  let isPaused = false;
+  let lastTime = 0;
+  let simTime = 0;
+
+  // Config parameters controlled by sliders
+  const params = {
+    speed: 1.0,
+    waveFreq: 18.0,
+    waveAmp: 0.025,
+    pullStrength: 0.015,
+    sizeScale: 1.0
+  };
+
+  // Setup sliders and UI hooks
+  const sliders = {
+    speed: document.getElementById('slider-speed'),
+    freq: document.getElementById('slider-freq'),
+    amp: document.getElementById('slider-amp'),
+    pull: document.getElementById('slider-pull'),
+    size: document.getElementById('slider-size')
+  };
+
+  const values = {
+    speed: document.getElementById('val-speed'),
+    freq: document.getElementById('val-freq'),
+    amp: document.getElementById('val-amp'),
+    pull: document.getElementById('val-pull'),
+    size: document.getElementById('val-size')
+  };
+
+  const btnPause = document.getElementById('btn-pause');
+
+  // Bind slider events
+  sliders.speed.addEventListener('input', (e) => {
+    params.speed = parseFloat(e.target.value);
+    values.speed.textContent = params.speed.toFixed(1) + 'x';
+  });
+  sliders.freq.addEventListener('input', (e) => {
+    params.waveFreq = parseFloat(e.target.value);
+    values.freq.textContent = params.waveFreq.toFixed(1);
+  });
+  sliders.amp.addEventListener('input', (e) => {
+    params.waveAmp = parseFloat(e.target.value);
+    values.amp.textContent = params.waveAmp.toFixed(3);
+  });
+  sliders.pull.addEventListener('input', (e) => {
+    params.pullStrength = parseFloat(e.target.value);
+    values.pull.textContent = params.pullStrength.toFixed(3);
+  });
+  sliders.size.addEventListener('input', (e) => {
+    params.sizeScale = parseFloat(e.target.value);
+    values.size.textContent = params.sizeScale.toFixed(1) + 'x';
+  });
+
+  btnPause.addEventListener('click', () => {
+    isPaused = !isPaused;
+    btnPause.textContent = isPaused ? 'Resume Simulation' : 'Pause Simulation';
+    btnPause.style.borderColor = isPaused ? 'var(--green)' : 'rgba(255, 125, 120, 0.3)';
+    btnPause.style.color = isPaused ? 'var(--green)' : 'var(--white)';
+  });
+
+  // Handle resizing
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = canvas.clientWidth;
+    height = canvas.clientHeight;
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Helper to compile shaders
+  function createShader(gl, type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
+      gl.deleteShader(shader);
+      return null;
+    }
+    return shader;
+  }
+
+  // Compile program
+  const vsSource = document.getElementById('vertex-shader').text;
+  const fsSource = document.getElementById('fragment-shader').text;
+  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+  const program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error('Shader program linking error:', gl.getProgramInfoLog(program));
+    return;
+  }
+
+  gl.useProgram(program);
+
+  // Generate particle grid buffer
+  // 400x400 grid = 160,000 particles
+  const GRID_SIZE = 400;
+  const particleCount = GRID_SIZE * GRID_SIZE;
+  document.getElementById('particleCount').textContent = particleCount.toLocaleString();
+  
+  const gridPositions = new Float32Array(particleCount * 2);
+  let idx = 0;
+  for (let y = 0; y < GRID_SIZE; y++) {
+    for (let x = 0; x < GRID_SIZE; x++) {
+      // Normalize to [0, 1] with subtle jitter to break perfect grid alignment
+      const jitterX = (Math.random() - 0.5) * 0.0015;
+      const jitterY = (Math.random() - 0.5) * 0.0015;
+      gridPositions[idx++] = x / (GRID_SIZE - 1) + jitterX;
+      gridPositions[idx++] = y / (GRID_SIZE - 1) + jitterY;
+    }
+  }
+
+  const positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, gridPositions, gl.STATIC_DRAW);
+
+  // Get attribute and uniform locations
+  const aGridPos = gl.getAttribLocation(program, 'a_gridPos');
+  gl.enableVertexAttribArray(aGridPos);
+  gl.vertexAttribPointer(aGridPos, 2, gl.FLOAT, false, 0, 0);
+
+  const uniforms = {
+    time: gl.getUniformLocation(program, 'u_time'),
+    speed: gl.getUniformLocation(program, 'u_speed'),
+    waveFreq: gl.getUniformLocation(program, 'u_waveFreq'),
+    waveAmp: gl.getUniformLocation(program, 'u_waveAmp'),
+    pullStrength: gl.getUniformLocation(program, 'u_pullStrength'),
+    sizeScale: gl.getUniformLocation(program, 'u_sizeScale')
+  };
+
+  // Setup blending for glowing, additive particle overlays
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE); // Additive blending
+
+  // Render Loop
+  function render(now) {
+    now *= 0.001; // convert to seconds
+    let dt = now - lastTime;
+    lastTime = now;
+
+    if (dt > 0.1) dt = 0.1; // cap timestep to avoid jumps
+    if (!isPaused) {
+      simTime += dt;
+    }
+
+    // Clear screen
+    gl.clearColor(0.015, 0.02, 0.04, 1.0); // deep cosmic blue-black
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // Update uniforms
+    gl.uniform1f(uniforms.time, simTime);
+    gl.uniform1f(uniforms.speed, params.speed);
+    gl.uniform1f(uniforms.waveFreq, params.waveFreq);
+    gl.uniform1f(uniforms.waveAmp, params.waveAmp);
+    gl.uniform1f(uniforms.pullStrength, params.pullStrength);
+    gl.uniform1f(uniforms.sizeScale, params.sizeScale);
+
+    // Draw particles
+    gl.drawArrays(gl.POINTS, 0, particleCount);
+
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+})();
+</script>
+
+<!-- CMD+K version switcher -->
+<style id="cmdk-style">
+  .cmdk-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-start;justify-content:center;padding-top:14vh;animation:cmdk-fade .15s ease;}
+  .cmdk-overlay[hidden]{display:none;} @keyframes cmdk-fade{from{opacity:0;}}
+  .cmdk-modal{width:100%;max-width:560px;background:#0F1219;border:1px solid rgba(255,255,255,.18);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.7);font-family:'Poppins',system-ui,sans-serif;}
+  .cmdk-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.08);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;}
+  .cmdk-label{color:#FF7D78;} .cmdk-hint{color:rgba(255,255,255,.42);}
+  .cmdk-hint kbd{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 5px;margin:0 1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:3px;color:#fff;}
+  .cmdk-list{padding:6px;max-height:62vh;overflow-y:auto;}
+  .cmdk-item{display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:14px;padding:12px 14px;margin:2px 0;border-radius:8px;color:#fff;cursor:pointer;transition:background .12s;}
+  .cmdk-item.selected{background:rgba(255,125,120,.14);outline:1px solid rgba(255,125,120,.32);}
+  .cmdk-item:hover{background:rgba(255,255,255,.04);}
+  .cmdk-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;color:#FF7D78;padding:5px 8px;border:1px solid rgba(255,125,120,.3);border-radius:4px;background:rgba(255,125,120,.06);text-align:center;}
+  .cmdk-text .cmdk-name{font-size:14px;font-weight:500;color:#fff;line-height:1.35;}
+  .cmdk-text .cmdk-desc{font-size:11px;color:rgba(255,255,255,.55);font-family:'JetBrains Mono',monospace;letter-spacing:.03em;margin-top:3px;}
+  .cmdk-current{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:#57E3A4;padding:3px 7px;border:1px solid rgba(87,227,164,.3);background:rgba(87,227,164,.06);border-radius:3px;}
+  .cmdk-item:not(.is-current) .cmdk-current{display:none;}
+</style>
+<div id="cmdk" class="cmdk-overlay" hidden role="dialog" aria-label="Switch version">
+  <div class="cmdk-modal">
+    <div class="cmdk-head"><span class="cmdk-label">Switch version</span><span class="cmdk-hint">Up/Down <kbd>Enter</kbd> - <kbd>Esc</kbd></span></div>
+    <div class="cmdk-list" id="cmdk-list">
+      <a class="cmdk-item" href="index-v5.html" data-page="index-v5.html"><span class="cmdk-num">V5</span><span class="cmdk-text"><div class="cmdk-name">Find what matters - ship it faster</div><div class="cmdk-desc">Canonical full page</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="index-v9.html" data-page="index-v9.html"><span class="cmdk-num">V9</span><span class="cmdk-text"><div class="cmdk-name">Vision</div><div class="cmdk-desc">Manifesto + loop + funnel + video hero</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="index-v12.html" data-page="index-v12.html"><span class="cmdk-num">V12</span><span class="cmdk-text"><div class="cmdk-name">Amplitude Wave (named)</div><div class="cmdk-desc">Rotated loop, video hero</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="index-v13.html" data-page="index-v13.html"><span class="cmdk-num">V13</span><span class="cmdk-text"><div class="cmdk-name">HUD / technical-poster treatment</div><div class="cmdk-desc">Micrographic system + grainy gradients</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="index-v14.html" data-page="index-v14.html"><span class="cmdk-num">V14</span><span class="cmdk-text"><div class="cmdk-name">Amplitude Wave - micrographic video</div><div class="cmdk-desc">Hero video, thin type, animated micrographics</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="micrographics.html" data-page="micrographics.html"><span class="cmdk-num">MG</span><span class="cmdk-text"><div class="cmdk-name">Micrographics system</div><div class="cmdk-desc">32 custom SVG HUD elements to mix &amp; match</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="animations-portfolio.html" data-page="animations-portfolio.html"><span class="cmdk-num">AN</span><span class="cmdk-text"><div class="cmdk-name">Animations portfolio</div><div class="cmdk-desc">Signal flow, bottlenecks, ranking, review, loop motion</div></span><span class="cmdk-current">Current</span></a>
+      <a class="cmdk-item" href="cmb-acoustic-webgl.html" data-page="cmb-acoustic-webgl.html"><span class="cmdk-num">CW</span><span class="cmdk-text"><div class="cmdk-name">CMB Acoustic Waves</div><div class="cmdk-desc">WebGL 2.0 Cosmic Web &amp; Caustic simulation</div></span><span class="cmdk-current">Current</span></a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const overlay=document.getElementById('cmdk');if(!overlay)return;
+  const items=Array.from(overlay.querySelectorAll('.cmdk-item'));
+  const cur=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  items.forEach(it=>{if(it.dataset.page.toLowerCase()===cur)it.classList.add('is-current');});
+  let sel=0;
+  function set(i){items.forEach((el,j)=>el.classList.toggle('selected',j===i));sel=i;items[i].scrollIntoView({block:'nearest'});}
+  function open(){overlay.hidden=false;let s=items.findIndex(it=>!it.classList.contains('is-current'));set(s<0?0:s);}
+  function close(){overlay.hidden=true;}
+  document.addEventListener('keydown',e=>{const m=e.metaKey||e.ctrlKey;if(m&&(e.key==='k'||e.key==='K')){e.preventDefault();overlay.hidden?open():close();return;}if(overlay.hidden)return;if(e.key==='Escape'){e.preventDefault();close();}else if(e.key==='ArrowDown'){e.preventDefault();set((sel+1)%items.length);}else if(e.key==='ArrowUp'){e.preventDefault();set((sel-1+items.length)%items.length);}else if(e.key==='Enter'){e.preventDefault();items[sel].click();}});
+  overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+  items.forEach((it,i)=>it.addEventListener('mouseenter',()=>set(i)));
+})();
+</script>
+</body>
+</html>
