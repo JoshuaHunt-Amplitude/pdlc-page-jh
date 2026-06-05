@@ -991,6 +991,11 @@
   .bp-cta .arr{font-size:18px;transition:transform .2s;}
   .bp-cta:hover .arr{transform:translateX(4px);}
   @media(max-width:760px){.bp-hero{height:100svh}.bp-cta{left:22px;top:auto;bottom:120px}}
+  /* hero entrance — soft fade + slide-up, staggered */
+  @keyframes bpHeroIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .bp-hero .bp-in { opacity: 0; transform: translateY(14px); animation: bpHeroIn 500ms cubic-bezier(.22,.61,.36,1) forwards; transform-box: fill-box; transform-origin: left center; will-change: opacity, transform; }
+  .bp-hero .bp-cta.bp-in { transform-box: border-box; }
+  @media (prefers-reduced-motion: reduce) { .bp-hero .bp-in { animation: none; opacity: 1; transform: none; } }
 </style>
 <section class="bp-hero">
   <div class="stage">
@@ -1032,13 +1037,13 @@
       </g>
 
       <!-- title (landing copy) · v17: hero sells the CATEGORY. -->
-      <text class="t-sub" x="120" y="208" style="letter-spacing:6px" fill="url(#eyebrowGrad)">AMPLITUDE WAVE · CLOSED BETA</text>
-      <text class="t-title" x="120" y="340">ENABLING</text>
-      <text class="t-title" x="120" y="452">SELF-IMPROVING</text>
-      <text class="t-title" x="120" y="564">PRODUCTS</text>
-      <text class="t-sub-r" x="1080" y="536">Products that find what's worth</text>
-      <text class="t-sub-r" x="1080" y="568">building, ship it, and prove it</text>
-      <text class="t-sub-r" x="1080" y="600">worked. Every release, on its own.</text>
+      <text class="t-sub bp-in" style="letter-spacing:6px;animation-delay:60ms" x="120" y="208" fill="url(#eyebrowGrad)">AMPLITUDE WAVE · CLOSED BETA</text>
+      <text class="t-title bp-in" style="animation-delay:140ms" x="120" y="340">ENABLING</text>
+      <text class="t-title bp-in" style="animation-delay:220ms" x="120" y="452">SELF-IMPROVING</text>
+      <text class="t-title bp-in" style="animation-delay:300ms" x="120" y="564">PRODUCTS</text>
+      <text class="t-sub-r bp-in" style="animation-delay:420ms" x="1080" y="536">Products that find what's worth</text>
+      <text class="t-sub-r bp-in" style="animation-delay:470ms" x="1080" y="568">building, ship it, and prove it</text>
+      <text class="t-sub-r bp-in" style="animation-delay:520ms" x="1080" y="600">worked. Every release, on its own.</text>
 
       <!-- bottom-left version (squares blink) · 60px inset from BOTH left & bottom -->
       <text class="t-sm" x="60" y="866" style="font-size:14px;fill:#e9f0ff">V1.0</text>
@@ -1059,7 +1064,7 @@
       <circle cx="1576" cy="104" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
     </svg>
   </div>
-  <a class="bp-cta" href="#cta">Request access <span class="arr">→</span></a>
+  <a class="bp-cta bp-in" style="animation-delay:580ms" href="#cta">Request access <span class="arr">→</span></a>
   <a class="bp-scroll" href="#problem" aria-label="Scroll to content">
     <span>Scroll</span>
     <svg viewBox="0 0 24 28" fill="none" stroke="#c3d2ff" stroke-width="1.6"><path class="chev" d="M5 9 L12 17 L19 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
