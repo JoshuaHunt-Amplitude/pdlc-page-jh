@@ -950,7 +950,9 @@
   .bp-hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:var(--bg);font-family:'Geist Mono',ui-monospace,monospace;}
   /* gentle dissolve into the page below — both are --bg now, so the seam disappears */
   .bp-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:200px;z-index:2;pointer-events:none;background:linear-gradient(to bottom, rgba(7,11,28,0), var(--bg));}
-  .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:var(--bg);}
+  /* static navy glow lives on the stage (CSS) so the canvas can stay transparent and
+     fade its trails to 0 — no permanent "painted" residue from the animation. */
+  .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(95% 120% at 62% 58%, #16265c 0%, #0c1430 46%, var(--bg) 82%);}
   .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
   .bp-hero .hud{pointer-events:none;}
   .bp-hero .hud text{fill:#e9f0ff;}
@@ -1591,64 +1593,122 @@
   </div>
 </section>
 
-<!-- ── footer loop · the donut returns to close the page (pulled from v16's hero) ── -->
+<!-- ── footer loop · the product loop returns to close the page (ported from v16's hero) ── -->
 <style>
-  #cta.closer{padding-bottom:72px;}                 /* shots gone → trim the tall gap */
-  /* bigger, bleeding loop + hero-style HUD annotations */
-  .bp-foot{position:relative;height:clamp(440px,48vw,700px);overflow:hidden;}
-  .bp-foot canvas{position:absolute;inset:0;width:100%;height:100%;display:block;
-    /* fade top + bottom so the loop bleeds into the CTA above and the footer below */
-    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 13%,#000 87%,transparent 100%);
-    mask-image:linear-gradient(to bottom,transparent 0,#000 13%,#000 87%,transparent 100%);}
-  .bp-foot .hud{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
-  .bp-foot .hud .lnf{stroke:rgba(233,240,255,0.6);fill:none;}
-  .bp-foot .hud text{fill:#c3d2ff;font-family:var(--mono);font-size:15px;letter-spacing:2px;}
-  .bp-foot .fchrome{position:absolute;inset:0;pointer-events:none;font-family:var(--mono);}
-  .bp-foot .fc-cnr{position:absolute;width:32px;height:32px;border:0 solid rgba(233,240,255,.45);}
-  .bp-foot .fc-tl{left:26px;top:24px;border-left-width:1px;border-top-width:1px;}
-  .bp-foot .fc-tr{right:26px;top:24px;border-right-width:1px;border-top-width:1px;}
-  .bp-foot .fc-bl{left:26px;bottom:24px;border-left-width:1px;border-bottom-width:1px;}
-  .bp-foot .fc-br{right:26px;bottom:24px;border-right-width:1px;border-bottom-width:1px;}
-  .bp-foot .fc-ticks{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;}
-  .bp-foot .fc-ticks.l{left:26px;align-items:flex-start;}
-  .bp-foot .fc-ticks.r{right:26px;align-items:flex-end;}
-  .bp-foot .fc-ticks i{display:block;height:4px;background:#e9f0ff;opacity:.55;}
-  .bp-foot .fc-tag{position:absolute;right:64px;bottom:30px;text-align:right;line-height:1.5;
-    font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim2);}
-  .bp-foot .fc-tag b{display:block;font-weight:400;font-size:18px;letter-spacing:.16em;color:#e9f0ff;}
+  #cta.closer{padding-bottom:96px;}
+  /* v17 close · the loop returns as a full HUD section, mirroring the top of v16 */
+  .bp-foot{position:relative;height:100vh;min-height:620px;overflow:hidden;background:var(--bg);font-family:'Geist Mono',ui-monospace,monospace;}
+  .bp-foot::before{content:"";position:absolute;left:0;right:0;top:0;height:140px;z-index:2;pointer-events:none;background:linear-gradient(to top, rgba(7,11,28,0), var(--bg));}
+  .bp-foot::after{content:"";position:absolute;left:0;right:0;bottom:0;height:150px;z-index:2;pointer-events:none;background:linear-gradient(to bottom, rgba(7,11,28,0), var(--bg));}
+  .bp-foot .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:var(--bg);}
+  .bp-foot canvas,.bp-foot .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .bp-foot .hud{pointer-events:none;}
+  .bp-foot .hud text{fill:#e9f0ff;}
+  .bp-foot .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
+  .bp-foot .t-sub{font-weight:400;font-size:17px;letter-spacing:5px;fill:#c3d2ff;}
+  .bp-foot .t-lab{font-weight:500;font-size:22px;letter-spacing:3px;}
+  .bp-foot .t-call{font-weight:400;font-size:15px;letter-spacing:2px;}
+  .bp-foot .t-sm{font-weight:400;font-size:12px;letter-spacing:2px;fill:#bcccff;}
+  .bp-foot .t-2026{font-weight:500;font-size:22px;letter-spacing:4px;}
+  .bp-foot .ln{stroke:#e9f0ff;fill:none;}
+  .bp-foot .lnf{stroke:rgba(233,240,255,0.7);fill:none;}
 </style>
 <section class="bp-foot" aria-hidden="true">
-  <canvas id="bp-foot"></canvas>
-  <!-- signal annotations tapping the loop (the callouts from the hero). viewBox is
-       centred on the donut, so leaders/dots track its left + right shoulders. -->
-  <svg class="hud" viewBox="0 0 1680 600" preserveAspectRatio="xMidYMid meet">
-    <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
-      <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
-      <path d="M1380 154 L1300 182"/><path d="M1430 300 L1352 300"/><path d="M1380 452 L1300 418"/>
-      <path d="M300 154 L380 182"/><path d="M250 300 L328 300"/><path d="M300 452 L380 418"/>
-    </g>
-    <g fill="#e9f0ff">
-      <circle cx="1300" cy="182" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
-      <circle cx="1352" cy="300" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
-      <circle cx="1300" cy="418" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
-      <circle cx="380" cy="182" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
-      <circle cx="328" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
-      <circle cx="380" cy="418" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
-    </g>
-    <text x="1610" y="156" text-anchor="end">WEB VITALS</text>
-    <text x="1610" y="306" text-anchor="end">PRODUCT FEEDBACK</text>
-    <text x="1610" y="456" text-anchor="end">SESSION REPLAYS</text>
-    <text x="80" y="156">COMPETITIVE</text>
-    <text x="80" y="306">AGENT TRACES</text>
-    <text x="80" y="456">CUSTOM DATA · MCP</text>
-  </svg>
-  <!-- HUD chrome: corner frames, edge tick scales, version tag -->
-  <div class="fchrome">
-    <span class="fc-cnr fc-tl"></span><span class="fc-cnr fc-tr"></span>
-    <span class="fc-cnr fc-bl"></span><span class="fc-cnr fc-br"></span>
-    <div class="fc-ticks l"><i style="width:16px"></i><i style="width:10px"></i><i style="width:16px"></i><i style="width:7px"></i><i style="width:14px"></i><i style="width:10px"></i></div>
-    <div class="fc-ticks r"><i style="width:16px"></i><i style="width:10px"></i><i style="width:16px"></i><i style="width:7px"></i><i style="width:14px"></i><i style="width:10px"></i></div>
-    <div class="fc-tag"><b>[ 2026 ]</b>The Product Loop · Always Running</div>
+  <div class="stage">
+    <canvas id="bp-foot"></canvas>
+    <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <!-- corner frames -->
+      <g class="ln" stroke-width="1.4">
+        <path d="M40 96 V40 H96"/><path d="M106 62 h18 M115 53 v18"/>
+        <path d="M1640 96 V40 H1584"/>
+        <path d="M40 849 V905 H96"/>
+        <path d="M1640 849 V905 H1584"/>
+        <circle cx="1600" cy="116" r="11"/><path d="M1600 99 V133 M1583 116 H1617"/>
+      </g>
+      <!-- right edge tick scale + scanning readout -->
+      <g class="ln" stroke-width="1">
+        <rect x="1632" y="150" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="1632" y="160" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="1632" y="170" width="16" height="5"/><rect x="1632" y="180" width="16" height="5"/>
+        <rect x="1632" y="190" width="11" height="5"/><rect x="1632" y="200" width="16" height="5"/>
+        <rect x="1632" y="210" width="9" height="5"/>
+        <rect x="1628" width="22" height="5" fill="#dfeaff" stroke="none"><animate attributeName="y" values="150;210;150" dur="3.2s" calcMode="linear" repeatCount="indefinite"/></rect>
+      </g>
+      <!-- left edge tick scale -->
+      <g class="ln" stroke-width="1">
+        <rect x="38" y="650" width="16" height="5" fill="#e9f0ff" stroke="none"/><rect x="38" y="660" width="11" height="5"/>
+        <rect x="38" y="670" width="16" height="5"/><rect x="38" y="680" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="38" y="690" width="9" height="5"/><rect x="38" y="700" width="16" height="5"/>
+        <rect x="38" y="710" width="13" height="5"/><rect x="38" y="720" width="16" height="5"/>
+      </g>
+      <!-- title -->
+      <text class="t-title" x="92" y="150">AMPLITUDE WAVE</text>
+      <text class="t-sub" x="95" y="184">THE PRODUCT LOOP · ALWAYS RUNNING</text>
+      <!-- infinity glyph -->
+      <g class="ln" stroke-width="1.3" opacity="0.9">
+        <animate attributeName="opacity" values="0.9;0.5;0.9" dur="3.6s" repeatCount="indefinite"/>
+        <path d="M96 262 L136 232 L176 262 L136 292 Z"/><path d="M156 262 L196 232 L236 262 L196 292 Z"/>
+        <path d="M96 262 L176 262 M156 262 L236 262"/><path d="M136 232 V292 M196 232 V292"/>
+        <path d="M96 262 L136 292 L176 262 L136 232" opacity="0.45"/><path d="M156 262 L196 292 L236 262 L196 232" opacity="0.45"/>
+      </g>
+      <!-- SENSE / DECIDE / ACT / LEARN -->
+      <path class="ln" stroke-width="1.3" d="M92 352 h-10 V500 h10"/>
+      <path class="ln" stroke-width="1.3" d="M360 352 h10 V500 h-10"/>
+      <text class="t-lab" x="106" y="372">SENSE</text><text class="t-lab" x="106" y="410">DECIDE</text>
+      <text class="t-lab" x="106" y="448">ACT</text><text class="t-lab" x="106" y="486">LEARN</text>
+      <g class="lnf" stroke-width="1.2" stroke-dasharray="4 6">
+        <animate attributeName="stroke-dashoffset" values="0;-20" dur="1.6s" repeatCount="indefinite"/>
+        <path d="M210 366 C 244 366, 250 478, 286 478"/><path d="M214 404 C 246 404, 252 442, 286 442"/>
+        <path d="M198 442 C 240 442, 250 404, 286 404"/><path d="M210 480 C 246 480, 252 366, 286 366"/>
+      </g>
+      <g class="ln" stroke-width="1.3">
+        <rect x="296" y="356" width="22" height="22" rx="2"/><path d="M300 356 v-3 M314 356 v-3 M300 378 v3 M314 378 v3"/><circle cx="307" cy="367" r="2.4" fill="#e9f0ff"/>
+        <circle cx="307" cy="404" r="11"/><rect x="296" y="431" width="22" height="22" rx="6"/>
+        <circle cx="307" cy="478" r="11"/><path d="M301 478 l4 4 l8 -9"/>
+      </g>
+      <!-- icon row -->
+      <g class="ln" stroke-width="1.3">
+        <circle cx="106" cy="552" r="5"/><path d="M97 569 a9 9 0 0 1 18 0"/>
+        <ellipse cx="148" cy="549" rx="9" ry="3.5"/><path d="M139 549 v15 a9 3.5 0 0 0 18 0 v-15"/>
+        <rect x="176" y="547" width="20" height="17" rx="3"/><path d="M180 555 h12"/>
+        <rect x="214" y="545" width="20" height="20" rx="3"/><circle cx="220" cy="551" r="1.6" fill="#e9f0ff"/><circle cx="228" cy="559" r="1.6" fill="#e9f0ff"/>
+        <rect x="252" y="549" width="26" height="13" rx="6"/>
+      </g>
+      <!-- callouts -->
+      <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
+        <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
+        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/>
+        <path d="M268 290 L570 302"/><path d="M268 632 L520 614"/><path d="M310 708 L720 690"/>
+      </g>
+      <g fill="#e9f0ff">
+        <circle cx="1180" cy="642" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
+        <circle cx="1280" cy="470" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="1180" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="570"  cy="302" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="520"  cy="614" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
+        <circle cx="720"  cy="690" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
+      </g>
+      <text class="t-call" x="1300" y="250">WEB VITALS</text>
+      <text class="t-call" x="1330" y="472">PRODUCT FEEDBACK</text>
+      <text class="t-call" x="1300" y="692">SESSION REPLAYS</text>
+      <text class="t-call" x="110" y="292">COMPETITIVE</text>
+      <text class="t-call" x="110" y="636">AGENT TRACES</text>
+      <text class="t-call" x="110" y="712">CUSTOM DATA · MCP</text>
+      <!-- bottom-left version (squares blink in sequence) -->
+      <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
+      <g class="ln" stroke-width="1">
+        <rect x="92" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="0s" repeatCount="indefinite"/></rect>
+        <rect x="104" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-0.5s" repeatCount="indefinite"/></rect>
+        <rect x="116" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.0s" repeatCount="indefinite"/></rect>
+        <rect x="128" y="872" width="9" height="7"/>
+        <rect x="140" y="872" width="20" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.5s" repeatCount="indefinite"/></rect>
+      </g>
+      <!-- bottom-right -->
+      <text class="t-2026" x="1448" y="848">[ 2026 ]</text>
+      <text class="t-sm" x="1454" y="878">THE PRODUCT LOOP</text>
+      <text class="t-sm" x="1474" y="897">AMPLITUDE WAVE</text>
+      <circle cx="1600" cy="116" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
+    </svg>
   </div>
 </section>
 <script>
@@ -1657,21 +1717,18 @@
   let W=0,H=0,dpr=1;
   function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
   resize();window.addEventListener('resize',resize);
-  const TAU=Math.PI*2, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const NP=2800,pts=[];
+  const TAU=Math.PI*2;
+  const NP=3800,pts=[];
   for(let i=0;i<NP;i++)pts.push({u:Math.random()*TAU,v:Math.random()*TAU,sp:0.10+Math.random()*0.12,dv:(Math.random()-0.5)*0.05,sz:Math.random()});
-  const NS=16,streams=[];
+  const NS=18,streams=[];
   for(let i=0;i<NS;i++){const big=i<5;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:1.4+Math.random()*1.8,vturns:0.6+Math.random()*1.4,off:Math.random(),sp:0.018+Math.random()*0.024,big:big});}
   let last=0;
   function frame(now){
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
-    // navy-glow ground; vertical edges land on --bg so the band melts into the CTA above + footer below
-    const g=x.createRadialGradient(W*0.5,H*0.5,0,W*0.5,H*0.5,Math.max(W,H)*0.5);
-    g.addColorStop(0,'#16265c');g.addColorStop(0.5,'#0c1430');g.addColorStop(1,'#070b1c');
+    const g=x.createRadialGradient(W*0.575,H*0.48,0,W*0.575,H*0.48,Math.max(W,H)*0.80);
+    g.addColorStop(0,'#1b2c66');g.addColorStop(0.5,'#0d1530');g.addColorStop(1,'#070b1c');
     x.fillStyle=g;x.fillRect(0,0,W,H);
-    // v17: bigger donut (tied to width) so it bleeds toward the edges; the CSS mask
-    // fades the top/bottom so it dissolves into the page.
-    const cx=W*0.5,cy=H*0.5,R=Math.min(W*0.27,H*0.62),r=R*0.42,Rr=R+r;
+    const cx=W*0.575,cy=H*0.50,R=Math.min(W,H)*0.300,r=R*0.42,Rr=R+r;
     const e=0.85,a=t*0.055,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=2.6*Rr;
     function proj(u,v){
       const cu=Math.cos(u),su=Math.sin(u),cv=Math.cos(v),sv=Math.sin(v);
@@ -1698,7 +1755,7 @@
       for(let k=0;k<TT;k++){const s=head-k*0.012;if(s<0||s>1)continue;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);const near=p.d/Rr*0.5+0.5;const a2=(1-k/TT)*(sm.big?0.95:0.55)*(0.4+near*0.6);x.globalAlpha=a2;x.fillStyle='#ffffff';const ss=(sm.big?2.4:1.4)*(1-k/TT*0.7)*p.p;x.beginPath();x.arc(p.sx,p.sy,ss,0,TAU);x.fill();}
     }
     x.globalAlpha=1;x.globalCompositeOperation='source-over';
-    if(!reduce) requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 })();
