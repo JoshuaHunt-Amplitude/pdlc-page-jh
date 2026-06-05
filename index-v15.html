@@ -1027,22 +1027,34 @@
         <rect x="252" y="549" width="26" height="13" rx="6"/>
       </g>
 
-      <!-- callouts · the signals the loop reads (dashes flow along leaders) -->
+      <!-- callouts · the signals the loop reads, one tapped to each point around the ring
+           (dashes flow along leaders). Six signals ⇄ the six loop stages below:
+             SESSION REPLAYS  → verify   (lower-right)   PRODUCT FEEDBACK → sense   (mid-right)
+             WEB VITALS       → measure  (upper-right)   COMPETITIVE      → prioritize (upper-left)
+             AGENT TRACES     → act/build (lower-left)   CUSTOM DATA·MCP  → spec      (bottom)
+           Endpoints sit on the torus footprint (~center 875,470, ±400×±240). The torus is a
+           viewport-proportional canvas shape under a letterboxed HUD, so they're approximate.
+           Tuning knobs: each <path> = leader (start near label → dot on the ring); move the
+           paired <circle> dot + adjust the <text> x/y to reposition a callout. -->
       <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
         <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
-        <path d="M1238 170 L1120 232"/><path d="M1338 272 L1280 312"/><path d="M1332 690 L1268 652"/>
-        <path d="M398 672 L500 660"/><path d="M392 722 L470 706"/>
+        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/>
+        <path d="M268 290 L570 302"/><path d="M268 632 L520 614"/><path d="M310 708 L720 690"/>
       </g>
       <g fill="#e9f0ff">
-        <circle cx="1120" cy="232" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
-        <circle cx="1268" cy="652" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
-        <circle cx="500" cy="660" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="1180" cy="642" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
+        <circle cx="1280" cy="470" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="1180" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="570"  cy="302" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="520"  cy="614" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
+        <circle cx="720"  cy="690" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
       </g>
-      <text class="t-call" x="1246" y="175">SESSION REPLAYS</text>
-      <text class="t-call" x="1346" y="277">PRODUCT FEEDBACK</text>
-      <text class="t-call" x="1340" y="695">WEB VITALS</text>
-      <text class="t-call" x="150" y="678">FUNNEL ANALYTICS</text>
-      <text class="t-call" x="150" y="728">FEATURE ADOPTION</text>
+      <text class="t-call" x="1300" y="250">WEB VITALS</text>
+      <text class="t-call" x="1330" y="472">PRODUCT FEEDBACK</text>
+      <text class="t-call" x="1300" y="692">SESSION REPLAYS</text>
+      <text class="t-call" x="110" y="292">COMPETITIVE</text>
+      <text class="t-call" x="110" y="636">AGENT TRACES</text>
+      <text class="t-call" x="110" y="712">CUSTOM DATA · MCP</text>
 
       <!-- bottom-left version (squares blink in sequence) -->
       <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
