@@ -281,19 +281,25 @@
 
     // Signal cluster at the reticle center (0.63, 0.48 in screen_uv). Rather than a
     // smooth round blob, we amplify the local web so filaments converge into an
-    // irregular bright knot, then add a tiny blue-white core.
+    // irregular bright galaxy-cluster knot with a compact core and nearby satellites.
     vec2 screen_uv = gl_FragCoord.xy / u_resolution;
     vec2 target_uv = vec2(0.63, 0.48);
-    float d_target = length((screen_uv - target_uv) * vec2(u_resolution.x / u_resolution.y, 1.0));
+    vec2 cluster_rel = (screen_uv - target_uv) * vec2(u_resolution.x / u_resolution.y, 1.0);
+    float d_target = length(cluster_rel);
     float region = exp(-d_target * d_target * 46.0);
     // Irregular amplification: boost the existing filaments/nodes near the cluster.
-    float clusterBoost = region * (f1 * 1.6 + nodes * 1.1 + f2 * 0.6 + fbm(coord * 1.7) * 0.5);
+    float clusterBoost = region * (f1 * 1.9 + nodes * 1.35 + f2 * 0.7 + fbm(coord * 1.7) * 0.55);
     // Compact, slightly broken core (modulated so it is not a perfect circle).
-    float coreShape = 1.0 + 0.5 * fbm(coord * 5.0);
-    float target_core = exp(-d_target * d_target * 1500.0) * 1.7 * coreShape;
+    float coreShape = 1.0 + 0.55 * fbm(coord * 5.0);
+    float target_core = exp(-d_target * d_target * 2200.0) * 2.3 * coreShape;
+    float cluster_halo = exp(-d_target * d_target * 260.0) * 0.45;
+    float satellites =
+      exp(-dot(cluster_rel - vec2(-0.024, 0.015), cluster_rel - vec2(-0.024, 0.015)) * 3200.0) * 0.75 +
+      exp(-dot(cluster_rel - vec2(0.027, -0.011), cluster_rel - vec2(0.027, -0.011)) * 3600.0) * 0.62 +
+      exp(-dot(cluster_rel - vec2(0.011, 0.030), cluster_rel - vec2(0.011, 0.030)) * 4200.0) * 0.48;
 
     // Combine all structural layers
-    float total_density = f1 * 0.82 + f2 * 0.30 + sheets * 0.045 + nodes + secondary_nodes + clusterBoost + target_core;
+    float total_density = f1 * 0.82 + f2 * 0.30 + sheets * 0.045 + nodes + secondary_nodes + clusterBoost + cluster_halo + satellites + target_core;
 
     // Add granular particle/dust texture (mild, so it reads as grain not fog)
     float fine_dust = dust(gl_FragCoord.xy * 0.72);
