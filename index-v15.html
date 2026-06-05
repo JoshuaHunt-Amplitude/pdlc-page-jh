@@ -930,6 +930,7 @@
   .d-dash{animation:mgx-dash var(--sp,2s) linear infinite}
   @media (prefers-reduced-motion: reduce){.d-spin,.d-spinr,.d-throb,.d-pulse,.d-dash{animation:none}}
   .mg-eyb{width:22px;height:22px;flex:none;opacity:.9}
+  .mg-loop{width:104px;margin-bottom:22px;opacity:.92}
   .mg-deco{position:absolute;pointer-events:none;z-index:2;opacity:.34}
   @media(max-width:760px){.mg-deco{display:none}}
 </style>
@@ -1072,7 +1073,13 @@
 <section class="manifesto" id="why">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <div class="eyebrow">Manifesto<svg class="mg mg-eyb" viewBox="0 0 24 24" aria-hidden="true"><circle class="l2" cx="12" cy="12" r="9" stroke-dasharray="2 4"/><g class="d-spin" style="transform-box:view-box;transform-origin:12px 12px;--sp:3.2s"><circle class="ln" cx="12" cy="12" r="9" stroke-dasharray="13 60" stroke-linecap="round"/></g><circle class="acf" cx="12" cy="12" r="1.6"/></svg></div>
+      <!-- loop micrographic (adapted from /micrographics A02 "Product loop") -->
+      <svg class="mg mg-loop" viewBox="0 0 160 110" aria-hidden="true">
+        <ellipse class="ln" cx="80" cy="55" rx="62" ry="34"/><ellipse class="l2" cx="80" cy="55" rx="33" ry="18"/>
+        <path d="M80 21 A 62 34 0 0 1 142 55" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+        <g class="nd"><circle class="d-throb" cx="80" cy="21" r="4" style="--sp:3.6s"/><circle class="d-throb" cx="142" cy="55" r="4" style="--sp:3.6s;animation-delay:.9s"/><circle class="d-throb" cx="80" cy="89" r="4" style="--sp:3.6s;animation-delay:1.8s"/><circle class="d-throb" cx="18" cy="55" r="4" style="--sp:3.6s;animation-delay:2.7s"/></g>
+        <path class="l2" d="M75 51h6M80 51v6"/>
+      </svg>
       <h2>The best predictor of quality is the number of <span class="a">iterations.</span></h2>
       <p>It holds for code, for writing, for an AI model, for any system. The strategist John Boyd showed that the pilot who cycles their decision loop faster wins the dogfight; evolution's results are staggering only because it has had so long to iterate. Products are no different — to build a great one is to tighten the loop and fit in more iterations.</p>
       <p>Every product development team runs the same loop: <strong>build, ship, use, learn.</strong></p>
