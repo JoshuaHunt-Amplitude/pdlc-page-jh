@@ -2044,12 +2044,13 @@
   let last=0;
   function frame(now){
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
-    // v17: translucent navy-glow wash each frame → previous particle positions fade
-    // into silky streamlines (the cascade + wave trails). Edges land on --bg.
-    const g=x.createRadialGradient(W*FOCUS,H*0.58,0,W*FOCUS,H*0.58,Math.max(W,H)*0.85);
-    g.addColorStop(0,'#16265c');g.addColorStop(0.5,'#0c1430');g.addColorStop(1,'#070b1c');
-    x.globalCompositeOperation='source-over';x.globalAlpha=reduce?1:0.16;
-    x.fillStyle=g;x.fillRect(0,0,W,H);x.globalAlpha=1;
+    // v17: fade the previous frame toward FULLY TRANSPARENT (alpha→0), not toward a
+    // colour. Trails decay to nothing and never leave a painted halo; the static navy
+    // glow is a CSS background on .stage and shows through cleanly underneath.
+    // (destination-out multiplies existing alpha by 1−0.16 each frame.)
+    if(reduce){x.clearRect(0,0,W,H);}
+    else{x.globalCompositeOperation='destination-out';x.globalAlpha=0.16;x.fillStyle='#000';x.fillRect(0,0,W,H);x.globalAlpha=1;}
+    x.globalCompositeOperation='source-over';
 
     // faint stacked wavelengths (the "beach wave" bands) — opacity falls off with
     // distance from the core so they read as separate layers, not one fill.
