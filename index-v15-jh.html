@@ -968,21 +968,9 @@
 <section class="manifesto" id="why">
   <div class="manifesto-in">
 
-    <!-- STICKY LEFT CTA -->
-    <div class="manifesto-sticky reveal">
-      <div class="eyebrow">Manifesto</div>
-      <h2>The best predictor of quality is the number of <span class="a">iterations.</span></h2>
-      <p class="lede">Every product development team runs the same loop: <strong style="color:var(--white);font-weight:500">build, ship, use, learn.</strong> The companies that win the next decade will master this loop.</p>
-      <div class="cta-group">
-        <a href="#cta" class="btn btn-primary" style="font-size:14px;padding:14px 26px;">Join the closed beta →</a>
-        <a href="#loops" class="btn btn-ghost" style="font-size:14px;padding:14px 26px;">See how it works</a>
-      </div>
-    </div>
-
-    <!-- SCROLLING RIGHT CONTENT -->
-    <div class="manifesto-scroll">
-
-    <div class="loop-viz reveal" aria-hidden="true">
+    <!-- STICKY LEFT: loop viz + CTA -->
+    <div class="manifesto-sticky">
+      <div class="loop-viz" aria-hidden="true">
       <svg viewBox="0 0 760 440" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="lv-fast" x1="0" y1="1" x2="0" y2="0">
@@ -1059,7 +1047,26 @@
           <text x="710" y="200" class="lv-side slow" text-anchor="end">Bottleneck</text>
         </g>
       </svg>
-    </div>
+      </div><!-- /loop-viz -->
+
+      <div class="cta-group">
+        <form class="waitlist" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
+          <input type="email" placeholder="you@company.com" required aria-label="Email address">
+          <button type="submit">Join our closed beta →</button>
+        </form>
+        <p class="waitlist-help"><span class="dot"></span>Use your Amplitude account email.</p>
+      </div>
+    </div><!-- /manifesto-sticky -->
+
+    <!-- SCROLLING RIGHT: manifesto title + blocks -->
+    <div class="manifesto-scroll">
+      <div class="manifesto-block reveal">
+        <div class="eyebrow" style="margin-bottom:16px;">Manifesto</div>
+        <h2 style="font-family:var(--sans);font-size:clamp(28px,3.2vw,44px);font-weight:600;letter-spacing:-0.03em;line-height:1.05;margin:0 0 16px;">The best predictor of quality is the number of <span class="a">iterations.</span></h2>
+        <p>It holds for code, for writing, for an AI model, for any system. Every product team runs the same loop: <strong>build, ship, use, learn.</strong></p>
+      </div>
+
+      <div class="manifesto-divider"></div>
 
       <div class="manifesto-block reveal">
         <h3>Build &amp; ship is now instant.</h3>
