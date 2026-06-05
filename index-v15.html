@@ -4,11 +4,12 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>[Vision] PDLC · v9 — Amplitude</title>
+<title>Amplitude Wave · v15 — loop blueprint hero | Amplitude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --blue:   #0052F2;
@@ -17,14 +18,15 @@
     --violet: #A373FF;
     --pink:   #FF7D78;
     --green:  #57E3A4;
-    --bg:     #0A0A0F;
-    --panel:  #111118;
-    --line:   rgba(255,255,255,.08);
-    --lines:  rgba(255,255,255,.18);
+    /* v15: blueprint-navy base so the page lives in the hero's world */
+    --bg:     #070b1c;
+    --panel:  #0c1226;
+    --line:   rgba(150,180,255,.10);
+    --lines:  rgba(150,180,255,.22);
     --white:  #FFFFFF;
-    --dim:    rgba(255,255,255,.62);
-    --dim2:   rgba(255,255,255,.42);
-    --mono:   'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --dim:    rgba(213,224,255,.64);
+    --dim2:   rgba(213,224,255,.42);
+    --mono:   'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans:   'Poppins', Helvetica, system-ui, sans-serif;
   }
 
@@ -35,26 +37,35 @@
     margin: 0; background: var(--bg); color: var(--white);
     font-family: var(--sans); font-weight: 400; line-height: 1.5; overflow-x: hidden;
     background-image:
-      radial-gradient(ellipse 1200px 600px at 70% -10%, rgba(0,82,242,.18), transparent 60%),
-      radial-gradient(ellipse 800px 400px at 0% 30%, rgba(64,131,255,.08), transparent 60%);
+      radial-gradient(ellipse 1600px 800px at 50% -6%, rgba(39,71,230,.34), transparent 62%),
+      radial-gradient(ellipse 900px 520px at 8% 22%, rgba(64,131,255,.08), transparent 60%);
     background-attachment: fixed;
   }
+  /* v14: simplified type — no bold, no italic (emphasis carried by color) */
+  strong, b { font-weight: 400; }
+  em, i { font-style: normal; }
   body::before {
     content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background-image: linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size: 80px 80px;
-    -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
-    mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
-    opacity: .5;
+    background-size: 72px 72px;
+    /* blueprint grid persists down the page, fading near the bottom */
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
+    opacity: .6;
   }
   main, nav, footer { position: relative; z-index: 1; }
 
   /* ── NAV ────────────────────────────── */
   nav {
-    position: sticky; top: 0; z-index: 50;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    background: rgba(10,10,15,.72); border-bottom: 1px solid var(--line);
+    background: rgba(7,11,28,.66); border-bottom: 1px solid var(--line);
+    /* hidden over the hero; .show slides it in after you scroll past */
+    transform: translateY(-110%); opacity: 0; pointer-events: none;
+    transition: transform .42s cubic-bezier(.2,.7,.2,1), opacity .42s ease;
   }
+  nav.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  @media (prefers-reduced-motion: reduce) { nav { transition: opacity .2s ease; } }
   .nav-in { max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 14px; }
   .brand img { display: block; height: 22px; width: 120px; }
@@ -73,14 +84,31 @@
 
   .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--blue-d); display: inline-flex; align-items: center; gap: 14px; }
 
-  .sec-title { font-size: clamp(36px,4.8vw,64px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 16px 0 0; }
-  .sec-title .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .sec-title { font-size: clamp(36px,4.8vw,64px); font-weight:400; letter-spacing: -0.035em; line-height: 1; margin: 16px 0 0; }
+  .sec-title .a { color: var(--blue-d); font-style:normal; font-weight:400; }
 
   /* ── HERO ───────────────────────────── */
-  .hero { min-height: 92vh; display: grid; grid-template-columns: 1fr; align-content: center; position: relative; padding: 0 32px; max-width: 1320px; margin: 0 auto; }
-  .hero h1 { font-size: clamp(42px,5.6vw,88px); font-weight: 600; line-height: 1; letter-spacing: -0.04em; margin: 32px 0 28px; max-width: 18ch; }
-  .hero h1 .a { color: var(--blue-d); font-weight: 700; font-style: italic; }
-  .hero .lede { font-size: clamp(18px,1.6vw,22px); line-height: 1.5; color: var(--dim); max-width: 56ch; margin: 0 0 48px; }
+  /* content anchored to the LOWER band so it never fights the video's own
+     baked-in diagram/labels in the centre & top */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; padding: 0 40px 40px; max-width: 1320px; margin: 0 auto; }
+  .hero .eyebrow { font-size: 11px; }
+  .hero h1 { font-size: clamp(19px,2vw,30px); font-weight:400; line-height: 1.12; letter-spacing: -0.01em; margin: 9px 0 0; max-width: 17ch; }
+  .hero h1 .a { color: var(--blue-d); font-weight:400; font-style:normal; }
+  /* Full-bleed hero background video (100vw, clipped by body overflow-x) */
+  .hero-video, .hero-scrim { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; height: 100%; }
+  .hero-video { object-fit: cover; z-index: 0; }
+  .hero-scrim { z-index: 1; pointer-events: none; background:
+      linear-gradient(0deg, rgba(8,9,14,.94) 0%, rgba(8,9,14,.6) 24%, rgba(8,9,14,0) 50%),
+      radial-gradient(130% 55% at 50% 100%, rgba(8,9,14,.5), transparent 72%); }
+  .hero-content { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: end; width: 100%; }
+  .hero-left { min-width: 0; }
+  /* hairline above the description column */
+  .hero-right { min-width: 0; max-width: 440px; justify-self: end; border-top: 1px solid rgba(243,243,248,.18); padding-top: 16px; }
+  @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
+  .hero .lede { font-size: clamp(12.5px,1vw,14px); line-height: 1.5; color: var(--dim); max-width: 44ch; margin: 0 0 16px; }
+  .hero-cta { margin-top: 16px; }
+  .hero .waitlist { max-width: 400px; }
+  @media (max-width: 820px){ .hero-content { grid-template-columns: 1fr; gap: 22px; } .hero-right { justify-self: start; max-width: 100%; } .hero { padding-bottom: 40px; } }
 
   .hero-meta { display: flex; gap: 28px; flex-wrap: wrap; }
   .hero-meta-item { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim2); display: flex; align-items: center; gap: 10px; }
@@ -117,7 +145,7 @@
   .loop-viz { max-width: 820px; margin: 8px auto 0; width: 100%; }
   .loop-viz svg { width: 100%; height: auto; display: block; overflow: visible; }
   .lv-node-bg { fill: var(--bg); stroke: rgba(255,255,255,.55); stroke-width: 1.5; }
-  .lv-node-label { font-family: var(--sans); font-weight: 600; letter-spacing: .14em; fill: var(--white); font-size: 13px; }
+  .lv-node-label { font-family: var(--sans); font-weight:400; letter-spacing: .14em; fill: var(--white); font-size: 13px; }
   .lv-center { font-family: var(--mono); fill: var(--dim); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; }
   .lv-center-sub { font-family: var(--mono); fill: var(--dim2); font-size: 10px; letter-spacing: .14em; }
   .lv-side { font-family: var(--mono); font-size: 14px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase; }
@@ -135,7 +163,7 @@
   .pl-head .loop-pill { display: inline-flex; margin: 0 auto 24px; }
   .pl-head h3 {
     font-family: var(--sans); font-size: clamp(32px,4.4vw,52px);
-    font-weight: 600; line-height: 1.05; letter-spacing: -0.025em;
+    font-weight:400; line-height: 1.05; letter-spacing: -0.025em;
     color: var(--white); margin: 0 0 24px;
   }
   .pl-head p { font-size: 17px; line-height: 1.65; color: var(--dim); margin: 0 0 16px; }
@@ -176,7 +204,7 @@
     fill: var(--dim);
   }
   .pl-center-title {
-    font-family: var(--sans); font-size: 17px; font-weight: 600;
+    font-family: var(--sans); font-size: 17px; font-weight:400;
     fill: var(--white); letter-spacing: -0.01em;
   }
   .pl-center-sub {
@@ -202,10 +230,10 @@
   .pshot-copy { max-width: 500px; }
   .pshot-copy .eyebrow { margin-bottom: 22px; }
   .pshot-copy h2 {
-    font-size: clamp(32px,4vw,52px); font-weight: 600;
+    font-size: clamp(32px,4vw,52px); font-weight:400;
     letter-spacing: -0.035em; line-height: 1.04; margin: 0 0 24px;
   }
-  .pshot-copy h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .pshot-copy h2 .a { color: var(--blue-d); font-style:normal; font-weight:400; }
   .pshot-copy p { color: var(--dim); font-size: 17px; line-height: 1.65; margin: 0 0 14px; max-width: 48ch; }
   .pshot-copy p strong { color: var(--white); font-weight: 500; }
   .pshot-checks { margin: 28px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
@@ -213,7 +241,7 @@
   .pshot-checks li .ck {
     width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
     background: var(--blue); display: flex; align-items: center; justify-content: center;
-    color: var(--white); font-size: 13px; font-weight: 700;
+    color: var(--white); font-size: 13px; font-weight:400;
   }
   .pshot-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
   .pshot-chips .pchip {
@@ -247,7 +275,7 @@
     display: flex; align-items: center; justify-content: space-between;
     background: rgba(255,255,255,.02);
   }
-  .opp-feed-title { font-size: 16px; font-weight: 600; color: var(--white); letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
+  .opp-feed-title { font-size: 16px; font-weight:400; color: var(--white); letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
   .opp-feed-title .badge { font-family: var(--mono); font-size: 10px; padding: 3px 7px; border: 1px solid var(--line); border-radius: 4px; color: var(--dim2); letter-spacing: .14em; font-weight: 400; }
   .opp-feed-controls { display: flex; gap: 6px; }
   .opp-feed-btn {
@@ -334,7 +362,7 @@
   .pmc-side { width: 24%; display: flex; flex-direction: column; gap: 3px; }
   .pmc-plot { flex: 1; display: flex; align-items: flex-end; gap: 2px; padding: 2px; background: rgba(255,255,255,.02); border-radius: 2px; }
   .pmc-swatch { flex: 1; border-radius: 2px; }
-  .pmc-title { font-family: var(--sans); font-weight: 600; font-size: 11px; color: var(--white); letter-spacing: -0.01em; line-height: 1.2; }
+  .pmc-title { font-family: var(--sans); font-weight:400; font-size: 11px; color: var(--white); letter-spacing: -0.01em; line-height: 1.2; }
   .pmc-path { font-family: var(--mono); font-size: 8px; color: var(--dim2); letter-spacing: .02em; }
 
   /* Edge labels — always float above cards */
@@ -380,7 +408,7 @@
     background: var(--green); box-shadow: 0 0 6px var(--green);
   }
   .brief-body { padding: 28px; }
-  .brief-title { font-size: 20px; font-weight: 600; color: var(--white); margin: 0 0 8px; letter-spacing: -0.015em; line-height: 1.35; }
+  .brief-title { font-size: 20px; font-weight:400; color: var(--white); margin: 0 0 8px; letter-spacing: -0.015em; line-height: 1.35; }
   .brief-sub { font-size: 13px; color: var(--dim); margin: 0 0 24px; line-height: 1.6; }
   .brief-meta-row {
     display: flex; align-items: center; gap: 14px;
@@ -415,8 +443,8 @@
 
   .manifesto-head { max-width: 760px; margin: 0 auto; }
   .manifesto-head .eyebrow { margin-bottom: 24px; }
-  .manifesto-head h2 { font-family: var(--sans); font-size: clamp(34px, 4.4vw, 54px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.04; margin: 0; max-width: 720px; }
-  .manifesto-head h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .manifesto-head h2 { font-family: var(--sans); font-size: clamp(34px, 4.4vw, 54px); font-weight:400; letter-spacing: -0.03em; line-height: 1.04; margin: 0; max-width: 720px; }
+  .manifesto-head h2 .a { color: var(--blue-d); font-style:normal; font-weight:400; }
 
   .manifesto-body { max-width: 760px; margin: 0 auto; }
   @media (max-width: 880px) { .manifesto-body { grid-template-columns: 1fr; gap: 40px; } }
@@ -425,9 +453,9 @@
   .manifesto-body strong { color: var(--white); font-weight: 500; }
   .manifesto-head p { font-size: 19px; line-height: 1.6; color: var(--dim); margin: 22px 0 0; }
   .manifesto-head p strong { color: var(--white); font-weight: 500; }
-  .manifesto-body em { color: var(--dim); font-style: italic; }
+  .manifesto-body em { color: var(--dim); font-style:normal; }
   .manifesto-mv { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--blue-d); margin: 42px 0 6px; }
-  .manifesto-body h3 { font-family: var(--sans); font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; color: var(--white); margin: 0 0 12px; }
+  .manifesto-body h3 { font-family: var(--sans); font-size: 24px; font-weight:400; letter-spacing: -0.02em; line-height: 1.15; color: var(--white); margin: 0 0 12px; }
 
   /* Stats strip */
   .stats-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 32px; }
@@ -467,7 +495,7 @@
     .state-row .st-tags { grid-column: 2; }
   }
   .st-n { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--blue-d); letter-spacing: .12em; padding-top: 4px; }
-  .st-name { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+  .st-name { font-size: 22px; font-weight:400; letter-spacing: -0.02em; line-height: 1.2; }
   .st-name span { display: block; font-family: var(--mono); font-size: 10px; font-weight: 400; text-transform: uppercase; letter-spacing: .2em; color: var(--dim); margin-top: 8px; }
   .st-body { font-size: 15px; line-height: 1.7; color: var(--dim); max-width: 56ch; }
   .st-body strong { color: var(--white); font-weight: 500; }
@@ -497,8 +525,8 @@
   .loops-sec { padding: 0 0 180px; }
   .loops-head { max-width: 1320px; margin: 0 auto; padding: 80px 32px 40px; }
   .loops-head .eyebrow { margin-bottom: 20px; }
-  .loops-head h2 { font-size: clamp(36px,4.8vw,64px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 0; }
-  .loops-head h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .loops-head h2 { font-size: clamp(36px,4.8vw,64px); font-weight:400; letter-spacing: -0.035em; line-height: 1; margin: 0; }
+  .loops-head h2 .a { color: var(--blue-d); font-style:normal; font-weight:400; }
   .loops-head p { color: var(--dim); font-size: 17px; line-height: 1.7; margin-top: 22px; max-width: 60ch; }
 
   .story-wrap {
@@ -538,7 +566,7 @@
   .panel h3 {
     font-family: var(--sans);
     font-size: clamp(30px,4vw,46px);
-    font-weight: 600; line-height: 1.08;
+    font-weight:400; line-height: 1.08;
     letter-spacing: -0.025em; color: var(--white);
     margin: 0 0 18px;
   }
@@ -618,7 +646,7 @@
   .surface-card:hover { border-color: rgba(64,131,255,.5); transform: translateY(-2px); }
   .surface-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--blue-d); display: flex; align-items: center; gap: 8px; }
   .surface-tag .material-symbols-rounded { font-size: 16px; }
-  .surface-card h4 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 16px 0 12px; }
+  .surface-card h4 { font-size: 24px; font-weight:400; letter-spacing: -0.02em; margin: 16px 0 12px; }
   .surface-card p { font-size: 14px; color: var(--dim); line-height: 1.65; margin: 0 0 20px; }
   .surface-code {
     font-family: var(--mono); font-size: 12px;
@@ -645,7 +673,7 @@
   .sig-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
   .sig-ico { width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(64,131,255,.1); border: 1px solid rgba(64,131,255,.28); }
   .sig-ico svg { width: 22px; height: 22px; fill: none; stroke: var(--blue-d); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .sig-card h4 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin: 0; line-height: 1.25; }
+  .sig-card h4 { font-size: 16px; font-weight:400; letter-spacing: -0.01em; margin: 0; line-height: 1.25; }
   .sig-card > p { color: var(--dim); font-size: 14px; line-height: 1.6; margin: 0 0 18px; }
   .sig-tags { display: flex; flex-wrap: wrap; gap: 7px; }
   .sig-tags span { font-family: var(--mono); font-size: 10px; letter-spacing: .05em; color: var(--dim); padding: 5px 9px; border: 1px solid var(--line); border-radius: 6px; background: rgba(0,0,0,.3); }
@@ -668,7 +696,7 @@
   @media (max-width: 900px) { .cmps-grid { grid-template-columns: 1fr; } }
   .cmp { background: var(--bg); padding: 40px 32px; }
   .cmp-num { font-family: var(--mono); font-size: 13px; color: var(--blue-d); letter-spacing: .14em; }
-  .cmp h4 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin: 14px 0 14px; }
+  .cmp h4 { font-size: 22px; font-weight:400; letter-spacing: -0.02em; margin: 14px 0 14px; }
   .cmp p { color: var(--dim); font-size: 15px; line-height: 1.7; margin: 0; }
   .cmp p strong { color: var(--white); font-weight: 500; }
 
@@ -701,11 +729,11 @@
     pointer-events: none; z-index: -1;
   }
   .closer h2 {
-    font-size: clamp(34px,4.2vw,58px); font-weight: 600;
+    font-size: clamp(34px,4.2vw,58px); font-weight:400;
     letter-spacing: -0.035em; line-height: 1.04;
     margin: 0 auto 24px; max-width: 22ch;
   }
-  .closer h2 .a { color: var(--blue-d); font-style: italic; font-weight: 700; }
+  .closer h2 .a { color: var(--blue-d); font-style:normal; font-weight:400; }
   .closer p {
     color: var(--dim); font-size: 17px; line-height: 1.55;
     max-width: 44ch; margin: 0 auto 36px;
@@ -765,8 +793,8 @@
 
   /* Hero waitlist variant (smaller, left-aligned) */
   .hero .waitlist { margin: 0; max-width: 460px; }
-  .hero .waitlist input { font-size: 14px; padding: 10px 14px; }
-  .hero .waitlist button { padding: 10px 18px; font-size: 10.5px; }
+  .hero .waitlist input { font-size: 13px; padding: 9px 13px; }
+  .hero .waitlist button { padding: 9px 16px; font-size: 10px; }
   .hero .waitlist-help-wrap { margin-top: 22px; }
 
   /* Mobile: stack the signup so the button drops BELOW the input (instead of
@@ -814,7 +842,7 @@
   .aha-step .step-head { display: flex; align-items: center; gap: 10px; }
   .aha-step .step-n { font-family: var(--mono); font-size: 11px; color: var(--blue-d); letter-spacing: .14em; }
   .aha-step .step-ico { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; background: rgba(64,131,255,.1); border: 1px solid rgba(64,131,255,.3); color: var(--blue-d); font-size: 14px; }
-  .aha-step h4 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin: 0; line-height: 1.3; }
+  .aha-step h4 { font-size: 16px; font-weight:400; letter-spacing: -0.01em; margin: 0; line-height: 1.3; }
   .aha-step p { font-size: 13px; color: var(--dim); line-height: 1.6; margin: 0; }
   .aha-mini {
     margin-top: auto; font-family: var(--mono); font-size: 11px; line-height: 1.6;
@@ -871,7 +899,7 @@
     <div class="brand">
       <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="120" height="22">
       <span class="brand-sep"></span>
-      <span class="brand-sub">PDLC</span>
+      <span class="brand-sub">Wave</span>
     </div>
     <div class="nav-links">
       <a href="#why">Why</a>
@@ -884,33 +912,227 @@
 
 <main>
 
-<!-- ── HERO ──────────────────────────────────────────── -->
-<section class="hero">
-  <div class="lg" aria-hidden="true">
-    <div class="lr"></div><div class="lr"></div>
-    <div class="lr"></div><div class="lr"></div>
-    <div class="lc"></div>
-  </div>
-  <div>
-    <div class="eyebrow reveal">Introducing PDLC</div>
-    <h1 class="reveal">Towards<br><span class="a">self-improving products</span></h1>
-    <p class="lede reveal">Now that execution is faster than ever, the bottleneck becomes understanding signal and deciding what to do next.</p>
+<!-- ── sprinkled micrographic decorations (styles) ────── -->
+<style>
+  .mg{display:block;overflow:visible}
+  .mg .ln{fill:none;stroke:#d5e2ff;stroke-width:1.4}
+  .mg .l2{fill:none;stroke:rgba(200,216,255,.42);stroke-width:1.4}
+  .mg .nd{fill:#eaf1ff} .mg .no{fill:none;stroke:#d5e2ff;stroke-width:1.4}
+  .mg .ac{stroke:var(--blue-d)} .mg .acf{fill:var(--blue-d)} .mg .thin{stroke-width:1}
+  @keyframes mgx-spin{to{transform:rotate(360deg)}}
+  @keyframes mgx-pulse{0%,100%{opacity:.28}50%{opacity:1}}
+  @keyframes mgx-throb{0%,100%{transform:scale(.7)}50%{transform:scale(1.25)}}
+  @keyframes mgx-dash{to{stroke-dashoffset:-32}}
+  .d-spin{animation:mgx-spin var(--sp,18s) linear infinite}
+  .d-spinr{animation:mgx-spin var(--sp,18s) linear infinite reverse}
+  .d-throb{animation:mgx-throb var(--sp,2.6s) ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+  .d-pulse{animation:mgx-pulse var(--sp,2.8s) ease-in-out infinite}
+  .d-dash{animation:mgx-dash var(--sp,2s) linear infinite}
+  @media (prefers-reduced-motion: reduce){.d-spin,.d-spinr,.d-throb,.d-pulse,.d-dash{animation:none}}
+  .mg-eyb{width:22px;height:22px;flex:none;opacity:.9}
+  .mg-loop{width:148px;margin:-12px 0 12px -10px;opacity:.92}
+  .mg-deco{position:absolute;pointer-events:none;z-index:2;opacity:.34}
+  @media(max-width:760px){.mg-deco{display:none}}
+</style>
 
-    <div class="hero-cta reveal" style="margin-top:40px">
-      <form class="waitlist" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
-        <input type="email" placeholder="you@company.com" required aria-label="Email address">
-        <button type="submit">Join our closed Beta →</button>
-      </form>
-      <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
-    </div>
+<!-- ── HERO · the loop blueprint (animated 3D torus + HUD) ───── -->
+<style>
+  .bp-hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:#15259a;font-family:'Geist Mono',ui-monospace,monospace;}
+  /* dissolve the cobalt hero into the blueprint-navy page below */
+  .bp-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:160px;z-index:2;pointer-events:none;background:linear-gradient(to bottom, rgba(7,11,28,0), var(--bg));}
+  .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#1c34c4;}
+  .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .bp-hero .hud{pointer-events:none;}
+  .bp-hero .hud text{fill:#e9f0ff;}
+  .bp-hero .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
+  .bp-hero .t-sub{font-weight:400;font-size:17px;letter-spacing:5px;fill:#c3d2ff;}
+  .bp-hero .t-lab{font-weight:500;font-size:22px;letter-spacing:3px;}
+  .bp-hero .t-call{font-weight:400;font-size:15px;letter-spacing:2px;}
+  .bp-hero .t-sm{font-weight:400;font-size:12px;letter-spacing:2px;fill:#bcccff;}
+  .bp-hero .t-2026{font-weight:500;font-size:22px;letter-spacing:4px;}
+  .bp-hero .ln{stroke:#e9f0ff;fill:none;}
+  .bp-hero .lnf{stroke:rgba(233,240,255,0.7);fill:none;}
+  /* scroll-down indicator */
+  .bp-scroll{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:9px;color:#c3d2ff;font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;opacity:.85;transition:opacity .2s;}
+  .bp-scroll:hover{opacity:1;}
+  .bp-scroll svg{width:20px;height:28px;}
+  .bp-scroll .chev{animation:bp-bob 1.8s ease-in-out infinite;}
+  @keyframes bp-bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
+  @media(prefers-reduced-motion:reduce){.bp-scroll .chev{animation:none}}
+  @media(max-width:760px){.bp-hero{height:100svh}}
+</style>
+<section class="bp-hero">
+  <div class="stage">
+    <canvas id="bp-c"></canvas>
+    <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <!-- corner frames -->
+      <g class="ln" stroke-width="1.4">
+        <path d="M40 96 V40 H96"/><path d="M106 62 h18 M115 53 v18"/>
+        <path d="M1640 96 V40 H1584"/>
+        <path d="M40 849 V905 H96"/>
+        <path d="M1640 849 V905 H1584"/>
+        <circle cx="1600" cy="116" r="11"/><path d="M1600 99 V133 M1583 116 H1617"/>
+      </g>
+      <!-- right edge tick scale + scanning readout -->
+      <g class="ln" stroke-width="1">
+        <rect x="1632" y="150" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="1632" y="160" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="1632" y="170" width="16" height="5"/><rect x="1632" y="180" width="16" height="5"/>
+        <rect x="1632" y="190" width="11" height="5"/><rect x="1632" y="200" width="16" height="5"/>
+        <rect x="1632" y="210" width="9" height="5"/>
+        <rect x="1628" width="22" height="5" fill="#dfeaff" stroke="none"><animate attributeName="y" values="150;210;150" dur="3.2s" calcMode="linear" repeatCount="indefinite"/></rect>
+      </g>
+      <!-- left edge tick scale -->
+      <g class="ln" stroke-width="1">
+        <rect x="38" y="650" width="16" height="5" fill="#e9f0ff" stroke="none"/><rect x="38" y="660" width="11" height="5"/>
+        <rect x="38" y="670" width="16" height="5"/><rect x="38" y="680" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="38" y="690" width="9" height="5"/><rect x="38" y="700" width="16" height="5"/>
+        <rect x="38" y="710" width="13" height="5"/><rect x="38" y="720" width="16" height="5"/>
+      </g>
+
+      <!-- title (landing copy) -->
+      <text class="t-title" x="92" y="150">AMPLITUDE WAVE</text>
+      <text class="t-sub" x="95" y="184">TOWARDS SELF-IMPROVING PRODUCTS</text>
+
+      <!-- infinity glyph (gentle pulse) -->
+      <g class="ln" stroke-width="1.3" opacity="0.9">
+        <animate attributeName="opacity" values="0.9;0.5;0.9" dur="3.6s" repeatCount="indefinite"/>
+        <path d="M96 262 L136 232 L176 262 L136 292 Z"/><path d="M156 262 L196 232 L236 262 L196 292 Z"/>
+        <path d="M96 262 L176 262 M156 262 L236 262"/><path d="M136 232 V292 M196 232 V292"/>
+        <path d="M96 262 L136 292 L176 262 L136 232" opacity="0.45"/><path d="M156 262 L196 292 L236 262 L196 232" opacity="0.45"/>
+      </g>
+
+      <!-- SENSE / DECIDE / ACT / LEARN -->
+      <path class="ln" stroke-width="1.3" d="M92 352 h-10 V500 h10"/>
+      <path class="ln" stroke-width="1.3" d="M360 352 h10 V500 h-10"/>
+      <text class="t-lab" x="106" y="372">SENSE</text><text class="t-lab" x="106" y="410">DECIDE</text>
+      <text class="t-lab" x="106" y="448">ACT</text><text class="t-lab" x="106" y="486">LEARN</text>
+      <g class="lnf" stroke-width="1.2" stroke-dasharray="4 6">
+        <animate attributeName="stroke-dashoffset" values="0;-20" dur="1.6s" repeatCount="indefinite"/>
+        <path d="M210 366 C 244 366, 250 478, 286 478"/><path d="M214 404 C 246 404, 252 442, 286 442"/>
+        <path d="M198 442 C 240 442, 250 404, 286 404"/><path d="M210 480 C 246 480, 252 366, 286 366"/>
+      </g>
+      <g class="ln" stroke-width="1.3">
+        <rect x="296" y="356" width="22" height="22" rx="2"/><path d="M300 356 v-3 M314 356 v-3 M300 378 v3 M314 378 v3"/><circle cx="307" cy="367" r="2.4" fill="#e9f0ff"/>
+        <circle cx="307" cy="404" r="11"/><rect x="296" y="431" width="22" height="22" rx="6"/>
+        <circle cx="307" cy="478" r="11"/><path d="M301 478 l4 4 l8 -9"/>
+      </g>
+
+      <!-- icon row -->
+      <g class="ln" stroke-width="1.3">
+        <circle cx="106" cy="552" r="5"/><path d="M97 569 a9 9 0 0 1 18 0"/>
+        <ellipse cx="148" cy="549" rx="9" ry="3.5"/><path d="M139 549 v15 a9 3.5 0 0 0 18 0 v-15"/>
+        <rect x="176" y="547" width="20" height="17" rx="3"/><path d="M180 555 h12"/>
+        <rect x="214" y="545" width="20" height="20" rx="3"/><circle cx="220" cy="551" r="1.6" fill="#e9f0ff"/><circle cx="228" cy="559" r="1.6" fill="#e9f0ff"/>
+        <rect x="252" y="549" width="26" height="13" rx="6"/>
+      </g>
+
+      <!-- callouts · the signals the loop reads, one tapped to each point around the ring
+           (dashes flow along leaders). Six signals ⇄ the six loop stages below:
+             SESSION REPLAYS  → verify   (lower-right)   PRODUCT FEEDBACK → sense   (mid-right)
+             WEB VITALS       → measure  (upper-right)   COMPETITIVE      → prioritize (upper-left)
+             AGENT TRACES     → act/build (lower-left)   CUSTOM DATA·MCP  → spec      (bottom)
+           Endpoints sit on the torus footprint (~center 875,470, ±400×±240). The torus is a
+           viewport-proportional canvas shape under a letterboxed HUD, so they're approximate.
+           Tuning knobs: each <path> = leader (start near label → dot on the ring); move the
+           paired <circle> dot + adjust the <text> x/y to reposition a callout. -->
+      <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
+        <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
+        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/>
+        <path d="M268 290 L570 302"/><path d="M268 632 L520 614"/><path d="M310 708 L720 690"/>
+      </g>
+      <g fill="#e9f0ff">
+        <circle cx="1180" cy="642" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
+        <circle cx="1280" cy="470" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="1180" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="570"  cy="302" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="520"  cy="614" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
+        <circle cx="720"  cy="690" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
+      </g>
+      <text class="t-call" x="1300" y="250">WEB VITALS</text>
+      <text class="t-call" x="1330" y="472">PRODUCT FEEDBACK</text>
+      <text class="t-call" x="1300" y="692">SESSION REPLAYS</text>
+      <text class="t-call" x="110" y="292">COMPETITIVE</text>
+      <text class="t-call" x="110" y="636">AGENT TRACES</text>
+      <text class="t-call" x="110" y="712">CUSTOM DATA · MCP</text>
+
+      <!-- bottom-left version (squares blink in sequence) -->
+      <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
+      <g class="ln" stroke-width="1">
+        <rect x="92" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="0s" repeatCount="indefinite"/></rect>
+        <rect x="104" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-0.5s" repeatCount="indefinite"/></rect>
+        <rect x="116" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.0s" repeatCount="indefinite"/></rect>
+        <rect x="128" y="872" width="9" height="7"/>
+        <rect x="140" y="872" width="20" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.5s" repeatCount="indefinite"/></rect>
+      </g>
+
+      <!-- bottom-right -->
+      <text class="t-2026" x="1448" y="848">[ 2026 ]</text>
+      <text class="t-sm" x="1454" y="878">THE PRODUCT LOOP</text>
+      <text class="t-sm" x="1474" y="897">AMPLITUDE WAVE</text>
+
+      <!-- slow pulse accent -->
+      <circle cx="1600" cy="116" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
+    </svg>
   </div>
+  <a class="bp-scroll" href="#why" aria-label="Scroll to content">
+    <span>Scroll</span>
+    <svg viewBox="0 0 24 28" fill="none" stroke="#c3d2ff" stroke-width="1.6"><path class="chev" d="M5 9 L12 17 L19 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
 </section>
 
 <!-- ── WHY ───────────────────────────────────────────── -->
 <section class="manifesto" id="why">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <div class="eyebrow">Manifesto</div>
+      <!-- loop micrographic (adapted from /micrographics COMP 07 "The Product Loop"):
+           graduation rings + Build/Ship/Use/Learn cardinal nodes + center reticle,
+           a rotating radar sweep, and a clockwise particle stream (small + glowing leads). -->
+      <svg class="mg mg-loop" viewBox="0 0 300 240" aria-hidden="true">
+        <defs>
+          <radialGradient id="c7-lead" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="c7-sweep" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="100%" stop-color="#fff" stop-opacity=".16"/>
+          </linearGradient>
+          <path id="c7-orbit" d="M150 24 A96 96 0 0 1 246 120 A96 96 0 0 1 150 216 A96 96 0 0 1 54 120 A96 96 0 0 1 150 24" fill="none"/>
+        </defs>
+        <circle class="l2 thin" cx="150" cy="120" r="116" stroke-dasharray="1 9" opacity=".42"/>
+        <circle class="ln thin" cx="150" cy="120" r="110" stroke-dasharray="2 7" opacity=".5"/>
+        <path class="l2 thin" d="M236.6 70 L243.5 66 M200 33.4 L204 26.5 M100 33.4 L96 26.5 M63.4 70 L56.5 66 M63.4 170 L56.5 174 M100 206.6 L96 213.5 M200 206.6 L204 213.5 M236.6 170 L243.5 174"/>
+        <path class="ln thin" d="M150 16 L150 6 M254 120 L264 120 M150 224 L150 234 M46 120 L36 120"/>
+        <circle class="l2" cx="150" cy="120" r="96"/>
+        <circle class="l2 thin" cx="150" cy="120" r="70" stroke-dasharray="3 7" opacity=".7"/>
+        <circle class="l2" cx="150" cy="120" r="44"/>
+        <path d="M150 24 A96 96 0 0 1 246 120" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+        <g>
+          <path d="M150 120 L150 24 A96 96 0 0 1 173 27 Z" fill="url(#c7-sweep)"/>
+          <path class="ln thin" d="M150 120 L150 24" opacity=".5"/>
+          <animateTransform attributeName="transform" type="rotate" from="0 150 120" to="360 150 120" dur="9s" repeatCount="indefinite"/>
+        </g>
+        <g class="nd"><circle cx="217.9" cy="52.1" r="1.6"/><circle cx="82.1" cy="52.1" r="1.6"/><circle cx="82.1" cy="187.9" r="1.6"/><circle cx="217.9" cy="187.9" r="1.6"/></g>
+        <g class="nd" opacity=".65"><circle cx="150" cy="50" r="1.1"/><circle cx="220" cy="120" r="1.1"/><circle cx="150" cy="190" r="1.1"/><circle cx="80" cy="120" r="1.1"/></g>
+        <g><circle class="no" cx="150" cy="24" r="6.5"/><circle class="nd" cx="150" cy="24" r="2.4"/>
+           <circle class="no" cx="246" cy="120" r="6.5"/><circle class="nd" cx="246" cy="120" r="2.4"/>
+           <circle class="no" cx="150" cy="216" r="6.5"/><circle class="nd" cx="150" cy="216" r="2.4"/>
+           <circle class="no" cx="54" cy="120" r="6.5"/><circle class="nd" cx="54" cy="120" r="2.4"/></g>
+        <circle class="ac thin" cx="246" cy="120" r="10" fill="none" opacity=".7"/>
+        <circle class="ln" cx="150" cy="120" r="9" fill="none"/>
+        <path class="l2 thin" d="M150 105 v8 M150 127 v8 M135 120 h8 M157 120 h8"/>
+        <circle class="nd" cx="150" cy="120" r="2.2"/>
+        <g fill="#fff">
+          <circle r="1.3"><animateMotion dur="3.6s" begin="0s"     repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-0.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.5"><animateMotion dur="3.6s" begin="-0.95s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.2"><animateMotion dur="3.6s" begin="-2.0s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-2.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.2"><animateMotion dur="3.6s" begin="-3.05s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <g><circle r="4.5" fill="url(#c7-lead)"/><circle r="2"/><animateMotion dur="3.6s" begin="-0.3s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
+          <g><circle r="4" fill="url(#c7-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
+        </g>
+      </svg>
       <h2>The best predictor of quality is the number of <span class="a">iterations.</span></h2>
       <p>It holds for code, for writing, for an AI model, for any system. The strategist John Boyd showed that the pilot who cycles their decision loop faster wins the dogfight; evolution's results are staggering only because it has had so long to iterate. Products are no different — to build a great one is to tighten the loop and fit in more iterations.</p>
       <p>Every product development team runs the same loop: <strong>build, ship, use, learn.</strong></p>
@@ -918,189 +1140,80 @@
 
     <div class="loop-viz reveal" aria-hidden="true">
       <svg viewBox="0 0 760 440" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="lv-fast" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#0052F2"/>
-            <stop offset="55%" stop-color="#4083FF"/>
-            <stop offset="100%" stop-color="#9FC0FF"/>
-          </linearGradient>
-          <linearGradient id="lv-slow" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#A373FF"/>
-            <stop offset="100%" stop-color="#FF7D78"/>
-          </linearGradient>
-          <radialGradient id="lv-node-fill" cx="50%" cy="38%" r="70%">
-            <stop offset="0%" stop-color="#16233f"/>
-            <stop offset="100%" stop-color="#0A0A0F"/>
-          </radialGradient>
-          <radialGradient id="lv-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#cfe0ff"/>
-            <stop offset="45%" stop-color="#4083FF" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-          </radialGradient>
-          <filter id="lv-glow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="7"/>
-          </filter>
-          <filter id="lv-glow-sm" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="3"/>
-          </filter>
-        </defs>
-
-        <!-- Soft core glow behind center -->
+      <defs>
+        <linearGradient id="lv-fast" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#0052F2"/><stop offset="55%" stop-color="#4083FF"/><stop offset="100%" stop-color="#9FC0FF"/>
+        </linearGradient>
+        <linearGradient id="lv-slow" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#A373FF"/><stop offset="100%" stop-color="#FF7D78"/>
+        </linearGradient>
+        <radialGradient id="lv-node-fill" cx="50%" cy="38%" r="70%"><stop offset="0%" stop-color="#16233f"/><stop offset="100%" stop-color="#0A0A0F"/></radialGradient>
+        <radialGradient id="lv-core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#cfe0ff"/><stop offset="45%" stop-color="#4083FF" stop-opacity="0.5"/><stop offset="100%" stop-color="#4083FF" stop-opacity="0"/></radialGradient>
+        <filter id="lv-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter>
+        <filter id="lv-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
+      </defs>
+        <!-- rotated loop: USE top · LEARN right · BUILD bottom · SHIP left; left half fast/blue, right half slow/red -->
         <circle cx="380" cy="220" r="120" fill="url(#lv-core)" opacity="0.5"/>
-
-        <!-- Subtle base ring -->
+        <!-- faint full base track -->
         <circle cx="380" cy="220" r="150" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="38"/>
-
-        <!-- BOTTLENECK — only the short USE → LEARN arc (right side): thin, dim, stalled -->
-        <path d="M 486 114 A 150 150 0 0 1 486 326"
-              stroke="url(#lv-slow)" stroke-width="18"
-              fill="none" stroke-linecap="round" opacity="0.5"/>
-
-        <!-- FAST — the other 3/4 (LEARN → BUILD → SHIP → USE), glow underlay -->
-        <path d="M 486 326 A 150 150 0 1 1 486 114"
-              stroke="#4083FF" stroke-width="30"
-              fill="none" stroke-linecap="round"
-              opacity="0.4" filter="url(#lv-glow)"/>
-        <!-- FAST — solid bright gradient -->
-        <path d="M 486 326 A 150 150 0 1 1 486 114"
-              stroke="url(#lv-fast)" stroke-width="30"
-              fill="none" stroke-linecap="round"/>
-
-        <!-- Clockwise motion path: full circle starting at LEARN -->
-        <path id="lv-loop-path" d="M 486.07 326.07 A 150 150 0 1 1 486.07 113.93" fill="none" stroke="none"/>
-        <path id="lv-lane-144" d="M 481.82 321.82 A 144 144 0 1 1 481.82 118.18" fill="none" stroke="none"/>
-        <path id="lv-lane-147" d="M 483.94 323.94 A 147 147 0 1 1 483.94 116.06" fill="none" stroke="none"/>
-        <path id="lv-lane-153" d="M 488.19 328.19 A 153 153 0 1 1 488.19 111.81" fill="none" stroke="none"/>
-        <path id="lv-lane-156" d="M 490.31 330.31 A 156 156 0 1 1 490.31 109.69" fill="none" stroke="none"/>
-        <path id="lv-bottleneck" d="M 486 114 A 150 150 0 0 1 486 326" fill="none" stroke="none"/>
-
-        <!-- ──────────────────────────────────────────────────────────────────────
-             THROUGHPUT PARTICLES — the "work items" streaming through the loop.
-
-             GEOMETRY
-               Ring is centred at (380,220), radius 150. The four nodes sit at the
-               corners: BUILD + SHIP on the LEFT (the FAST half), USE + LEARN on the
-               RIGHT (the BOTTLENECK quarter). The pinch / ✕ marker sits at (530,220).
-
-             MOTION PATH  (#lv-loop-path)
-               One full circle, clockwise, starting at LEARN, built from two arcs:
-                 • arc 1  LEARN→BUILD→SHIP→USE  = 270°  = 0.75 of the path length  (FAST)
-                 • arc 2  USE→LEARN             =  90°  = 0.25 of the path length  (BOTTLENECK)
-
-             SPEED PROFILE  (this is the part that sells the metaphor)
-               EVERY particle shares ONE dur and ONE speed curve, so they all behave
-               identically — only their `begin` offset and size differ:
-                 dur       = 7s
-                 keyPoints = 0 ; 0.75 ; 1     ← fraction of DISTANCE covered
-                 keyTimes  = 0 ; 0.62 ; 1     ← fraction of TIME elapsed
-               i.e. a dot covers the fast 3/4 in 62% of the cycle, then slows through the final
-               quarter (use→learn) over the remaining 38% — fewer pile up than a hard crawl. Because that slow leg runs at
-               one identical rate for all dots, they queue up and bunch through the
-               bottleneck while staying spread out on the fast arc → high throughput
-               meeting a constraint. (calcMode="linear" is required for keyPoints.)
-
-             TUNING KNOBS (what makes it look great)
-               • COUNT ......... number of dots = perceived VOLUME of work (here ~49 across 5
-                                 radial lanes, weighted to the fast arc, like highway traffic).
-               • SIZE MIX ...... mostly small (r≈1.3–2.6) + 3 "lead" dots (r≈3–3.5 with a
-                                 soft glow). Small + lower-opacity dots read as depth.
-               • keyTimes split  0.35 = how brisk the fast arc is. Raise toward 0.5 to
-                                 ease the pile-up; lower it to deepen the queue.
-               • DUR (7s) ...... overall tempo of the whole system.
-               • begin[] ....... staggered and deliberately IRREGULAR so the flow looks
-                                 organic, not metronomic. All negative → field is full on load.
-        ────────────────────────────────────────────────────────────────────────── -->
+        <!-- RIGHT half = BOTTLENECK (USE→LEARN→BUILD): dim red, narrower -->
+        <path d="M 380 70 A 150 150 0 0 1 380 370" stroke="url(#lv-slow)" stroke-width="18" fill="none" stroke-linecap="round" opacity="0.5"/>
+        <!-- LEFT half = FAST (BUILD→SHIP→USE): bright blue, thicker -->
+        <path d="M 380 370 A 150 150 0 0 1 380 70" stroke="#4083FF" stroke-width="30" fill="none" stroke-linecap="round" opacity="0.4" filter="url(#lv-glow)"/>
+        <path d="M 380 370 A 150 150 0 0 1 380 70" stroke="url(#lv-fast)" stroke-width="30" fill="none" stroke-linecap="round"/>
+        <path id="lv-left-142" d="M 380 362 A 142 142 0 0 1 380 78" fill="none" stroke="none"/>
+        <path id="lv-left-150" d="M 380 370 A 150 150 0 0 1 380 70" fill="none" stroke="none"/>
+        <path id="lv-left-158" d="M 380 378 A 158 158 0 0 1 380 62" fill="none" stroke="none"/>
+        <path id="lv-right-150" d="M 380 70 A 150 150 0 0 1 380 370" fill="none" stroke="none"/>
         <g class="lv-pulses" fill="#fff">
-          <g opacity="0"><circle r="7.2" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="3.2" fill="#fff"/><animateMotion dur="3.8s" begin="-0.4s" repeatCount="indefinite"><mpath href="#lv-loop-path"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.4s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.9;0.9;0"/></g>
-          <g opacity="0"><circle r="6.9" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="2.9" fill="#fff"/><animateMotion dur="3.8s" begin="-1.6s" repeatCount="indefinite"><mpath href="#lv-lane-144"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-1.6s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.9;0.9;0"/></g>
-          <g opacity="0"><circle r="6.8" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="2.8" fill="#fff"/><animateMotion dur="3.8s" begin="-2.7s" repeatCount="indefinite"><mpath href="#lv-lane-156"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.7s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.9;0.9;0"/></g>
-          <circle r="1.7" opacity="0"><animateMotion dur="3.8s" begin="-0.12s" repeatCount="indefinite"><mpath href="#lv-lane-144"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.12s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.67;0.67;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="3.8s" begin="-0.6s" repeatCount="indefinite"><mpath href="#lv-lane-144"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.6s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="1.9" fill="#cfe0ff" opacity="0"><animateMotion dur="3.8s" begin="-0.96s" repeatCount="indefinite"><mpath href="#lv-lane-144"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.96s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.71;0.71;0"/></circle>
-          <circle r="1.6" opacity="0"><animateMotion dur="3.8s" begin="-1.56s" repeatCount="indefinite"><mpath href="#lv-lane-144"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-1.56s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.65;0.65;0"/></circle>
-          <circle r="1.7" opacity="0"><animateMotion dur="3.8s" begin="-2.27s" repeatCount="indefinite"><mpath href="#lv-lane-144"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.27s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.67;0.67;0"/></circle>
-          <circle r="2.6" opacity="0"><animateMotion dur="3.8s" begin="-2.85s" repeatCount="indefinite"><mpath href="#lv-lane-144"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.85s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.86;0.86;0"/></circle>
-          <circle r="1.2" opacity="0"><animateMotion dur="3.8s" begin="-3.36s" repeatCount="indefinite"><mpath href="#lv-lane-144"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-3.36s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.56;0.56;0"/></circle>
-          <circle r="1.3" opacity="0"><animateMotion dur="3.8s" begin="-0.23s" repeatCount="indefinite"><mpath href="#lv-lane-147"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.23s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.59;0.59;0"/></circle>
-          <circle r="2.6" opacity="0"><animateMotion dur="3.8s" begin="-0.77s" repeatCount="indefinite"><mpath href="#lv-lane-147"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.77s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.86;0.86;0"/></circle>
-          <circle r="2.4" opacity="0"><animateMotion dur="3.8s" begin="-1.25s" repeatCount="indefinite"><mpath href="#lv-lane-147"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-1.25s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.82;0.82;0"/></circle>
-          <circle r="1.2" opacity="0"><animateMotion dur="3.8s" begin="-1.84s" repeatCount="indefinite"><mpath href="#lv-lane-147"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-1.84s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.56;0.56;0"/></circle>
-          <circle r="2.9" fill="#cfe0ff" opacity="0"><animateMotion dur="3.8s" begin="-2.47s" repeatCount="indefinite"><mpath href="#lv-lane-147"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.47s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.93;0.93;0"/></circle>
-          <circle r="2.2" opacity="0"><animateMotion dur="3.8s" begin="-2.8s" repeatCount="indefinite"><mpath href="#lv-lane-147"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.8s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.78;0.78;0"/></circle>
-          <circle r="1.5" fill="#cfe0ff" opacity="0"><animateMotion dur="3.8s" begin="-3.54s" repeatCount="indefinite"><mpath href="#lv-lane-147"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-3.54s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="3.8s" begin="-0.4s" repeatCount="indefinite"><mpath href="#lv-loop-path"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.4s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="2.1" opacity="0"><animateMotion dur="3.8s" begin="-0.91s" repeatCount="indefinite"><mpath href="#lv-loop-path"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.91s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.76;0.76;0"/></circle>
-          <circle r="1.8" opacity="0"><animateMotion dur="3.8s" begin="-1.53s" repeatCount="indefinite"><mpath href="#lv-loop-path"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-1.53s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.69;0.69;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="3.8s" begin="-2.14s" repeatCount="indefinite"><mpath href="#lv-loop-path"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.14s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="1.3" opacity="0"><animateMotion dur="3.8s" begin="-2.62s" repeatCount="indefinite"><mpath href="#lv-loop-path"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.62s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.59;0.59;0"/></circle>
-          <circle r="1.8" fill="#cfe0ff" opacity="0"><animateMotion dur="3.8s" begin="-3.19s" repeatCount="indefinite"><mpath href="#lv-loop-path"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-3.19s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.69;0.69;0"/></circle>
-          <circle r="2.5" opacity="0"><animateMotion dur="3.8s" begin="-3.65s" repeatCount="indefinite"><mpath href="#lv-loop-path"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-3.65s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.84;0.84;0"/></circle>
-          <circle r="2.4" opacity="0"><animateMotion dur="3.8s" begin="-0.59s" repeatCount="indefinite"><mpath href="#lv-lane-153"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.59s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.82;0.82;0"/></circle>
-          <circle r="1.0" opacity="0"><animateMotion dur="3.8s" begin="-1.15s" repeatCount="indefinite"><mpath href="#lv-lane-153"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-1.15s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.52;0.52;0"/></circle>
-          <circle r="1.7" opacity="0"><animateMotion dur="3.8s" begin="-1.77s" repeatCount="indefinite"><mpath href="#lv-lane-153"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-1.77s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.67;0.67;0"/></circle>
-          <circle r="2.0" opacity="0"><animateMotion dur="3.8s" begin="-2.16s" repeatCount="indefinite"><mpath href="#lv-lane-153"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.16s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.74;0.74;0"/></circle>
-          <circle r="2.8" opacity="0"><animateMotion dur="3.8s" begin="-2.69s" repeatCount="indefinite"><mpath href="#lv-lane-153"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.69s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.91;0.91;0"/></circle>
-          <circle r="1.8" opacity="0"><animateMotion dur="3.8s" begin="-3.34s" repeatCount="indefinite"><mpath href="#lv-lane-153"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-3.34s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.69;0.69;0"/></circle>
-          <circle r="2.1" opacity="0"><animateMotion dur="3.8s" begin="-0.13s" repeatCount="indefinite"><mpath href="#lv-lane-153"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.13s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.76;0.76;0"/></circle>
-          <circle r="1.6" fill="#cfe0ff" opacity="0"><animateMotion dur="3.8s" begin="-0.8s" repeatCount="indefinite"><mpath href="#lv-lane-156"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.8s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.65;0.65;0"/></circle>
-          <circle r="1.3" fill="#cfe0ff" opacity="0"><animateMotion dur="3.8s" begin="-1.33s" repeatCount="indefinite"><mpath href="#lv-lane-156"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-1.33s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.59;0.59;0"/></circle>
-          <circle r="2.3" opacity="0"><animateMotion dur="3.8s" begin="-2.04s" repeatCount="indefinite"><mpath href="#lv-lane-156"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.04s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.8;0.8;0"/></circle>
-          <circle r="2.5" opacity="0"><animateMotion dur="3.8s" begin="-2.37s" repeatCount="indefinite"><mpath href="#lv-lane-156"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-2.37s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.84;0.84;0"/></circle>
-          <circle r="2.5" fill="#cfe0ff" opacity="0"><animateMotion dur="3.8s" begin="-3.11s" repeatCount="indefinite"><mpath href="#lv-lane-156"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-3.11s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.84;0.84;0"/></circle>
-          <circle r="2.3" opacity="0"><animateMotion dur="3.8s" begin="-3.56s" repeatCount="indefinite"><mpath href="#lv-lane-156"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-3.56s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.8;0.8;0"/></circle>
-          <circle r="1.2" fill="#cfe0ff" opacity="0"><animateMotion dur="3.8s" begin="-0.36s" repeatCount="indefinite"><mpath href="#lv-lane-156"/></animateMotion><animate attributeName="opacity" dur="3.8s" begin="-0.36s" repeatCount="indefinite" keyTimes="0;0.1;0.88;1" values="0;0.56;0.56;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="8s" begin="-7.81s" repeatCount="indefinite"><mpath href="#lv-bottleneck"/></animateMotion><animate attributeName="opacity" dur="8s" begin="-7.81s" repeatCount="indefinite" keyTimes="0;0.14;0.84;1" values="0;0.27;0.27;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="8s" begin="-2.18s" repeatCount="indefinite"><mpath href="#lv-bottleneck"/></animateMotion><animate attributeName="opacity" dur="8s" begin="-2.18s" repeatCount="indefinite" keyTimes="0;0.14;0.84;1" values="0;0.23;0.23;0"/></circle>
-          <circle r="1.6" opacity="0"><animateMotion dur="8s" begin="-3.99s" repeatCount="indefinite"><mpath href="#lv-bottleneck"/></animateMotion><animate attributeName="opacity" dur="8s" begin="-3.99s" repeatCount="indefinite" keyTimes="0;0.14;0.84;1" values="0;0.24;0.24;0"/></circle>
-          <circle r="1.7" opacity="0"><animateMotion dur="8s" begin="-5.96s" repeatCount="indefinite"><mpath href="#lv-bottleneck"/></animateMotion><animate attributeName="opacity" dur="8s" begin="-5.96s" repeatCount="indefinite" keyTimes="0;0.14;0.84;1" values="0;0.26;0.26;0"/></circle>
+          <circle r="2.5" opacity="0"><animateMotion dur="3.6s" begin="-0.09s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.09s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.84;0.84;0"/></circle>
+          <circle r="1.2" opacity="0"><animateMotion dur="3.6s" begin="-0.43s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.43s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.56;0.56;0"/></circle>
+          <circle r="1.7" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-0.83s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.83s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.67;0.67;0"/></circle>
+          <circle r="1.6" opacity="0"><animateMotion dur="3.6s" begin="-1.34s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.34s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="1.1" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.85s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
+          <circle r="1.6" opacity="0"><animateMotion dur="3.6s" begin="-2.3s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.3s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="1.5" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-2.76s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.76s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
+          <circle r="1.8" opacity="0"><animateMotion dur="3.6s" begin="-3.18s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-3.18s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.69;0.69;0"/></circle>
+          <circle r="2.7" opacity="0"><animateMotion dur="3.6s" begin="-0.24s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.24s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.89;0.89;0"/></circle>
+          <circle r="1.5" opacity="0"><animateMotion dur="3.6s" begin="-0.67s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.67s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
+          <circle r="1.5" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-1.07s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.07s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
+          <circle r="2.0" opacity="0"><animateMotion dur="3.6s" begin="-1.52s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.52s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.74;0.74;0"/></circle>
+          <circle r="1.9" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-1.91s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.91s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.71;0.71;0"/></circle>
+          <circle r="1.5" opacity="0"><animateMotion dur="3.6s" begin="-2.36s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.36s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
+          <circle r="1.2" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-2.78s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.78s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.56;0.56;0"/></circle>
+          <circle r="1.4" opacity="0"><animateMotion dur="3.6s" begin="-3.4s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-3.4s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
+          <circle r="1.5" opacity="0"><animateMotion dur="3.6s" begin="-0.31s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.31s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
+          <circle r="1.5" opacity="0"><animateMotion dur="3.6s" begin="-0.82s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.82s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
+          <circle r="1.4" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-1.32s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.32s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
+          <circle r="2.0" opacity="0"><animateMotion dur="3.6s" begin="-1.65s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.65s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.74;0.74;0"/></circle>
+          <circle r="1.8" opacity="0"><animateMotion dur="3.6s" begin="-2.18s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.18s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.69;0.69;0"/></circle>
+          <circle r="2.6" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-2.72s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.72s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.86;0.86;0"/></circle>
+          <circle r="1.1" opacity="0"><animateMotion dur="3.6s" begin="-2.95s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.95s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
+          <circle r="2.2" opacity="0"><animateMotion dur="3.6s" begin="-0.02s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.02s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.78;0.78;0"/></circle>
+          <g opacity="0"><circle r="7.2" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="3.2" fill="#fff"/><animateMotion dur="3.6s" begin="-0.4s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.4s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></g>
+          <g opacity="0"><circle r="6.9" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="2.9" fill="#fff"/><animateMotion dur="3.6s" begin="-2.0s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.0s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></g>
+          <g opacity="0"><circle r="6.8" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="2.8" fill="#fff"/><animateMotion dur="3.6s" begin="-1.2s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.2s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></g>
+          <circle r="2.1" opacity="0"><animateMotion dur="7.5s" begin="-0.03s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-0.03s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="2.5" opacity="0"><animateMotion dur="7.5s" begin="-1.13s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-1.13s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="2.4" opacity="0"><animateMotion dur="7.5s" begin="-2.27s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-2.27s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="1.3" opacity="0"><animateMotion dur="7.5s" begin="-3.52s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-3.52s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.23;0.23;0"/></circle>
+          <circle r="2.3" opacity="0"><animateMotion dur="7.5s" begin="-4.79s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-4.79s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="1.4" opacity="0"><animateMotion dur="7.5s" begin="-6.0s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-6.0s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.24;0.24;0"/></circle>
         </g>
-
-        <!-- 4 nodes at diagonals -->
-        <!-- BUILD bottom-left (fast) -->
-        <g class="lv-node fast">
-          <circle cx="274" cy="326" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/>
-          <circle cx="274" cy="326" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/>
-          <text x="274" y="332" class="lv-node-label" text-anchor="middle">BUILD</text>
-        </g>
-        <!-- SHIP top-left (fast) -->
-        <g class="lv-node fast">
-          <circle cx="274" cy="114" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/>
-          <circle cx="274" cy="114" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/>
-          <text x="274" y="120" class="lv-node-label" text-anchor="middle">SHIP</text>
-        </g>
-        <!-- USE top-right (slow) -->
-        <g class="lv-node slow">
-          <circle cx="486" cy="114" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/>
-          <text x="486" y="120" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">USE</text>
-        </g>
-        <!-- LEARN bottom-right (slow) -->
-        <g class="lv-node slow">
-          <circle cx="486" cy="326" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/>
-          <text x="486" y="332" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">LEARN</text>
-        </g>
-
-        <!-- LEFT side caption: FAST -->
+        <g class="lv-node slow"><circle cx="380" cy="70" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/><text x="380" y="76" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">USE</text></g>
+        <g class="lv-node slow"><circle cx="530" cy="220" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/><text x="530" y="226" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">LEARN</text></g>
+        <g class="lv-node fast"><circle cx="380" cy="370" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/><circle cx="380" cy="370" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/><text x="380" y="376" class="lv-node-label" text-anchor="middle">BUILD</text></g>
+        <g class="lv-node fast"><circle cx="230" cy="220" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/><circle cx="230" cy="220" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/><text x="230" y="226" class="lv-node-label" text-anchor="middle">SHIP</text></g>
         <g>
           <circle cx="118" cy="218" r="3.5" fill="#4083FF"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
           <line x1="130" y1="218" x2="172" y2="218" stroke="rgba(64,131,255,0.5)" stroke-width="1"/>
           <text x="118" y="200" class="lv-side fast" text-anchor="start">Fast</text>
         </g>
-
-        <!-- RIGHT side caption: BOTTLENECK — shifted right (642→700) to clear the queued dots -->
         <g>
-          <circle cx="700" cy="218" r="3.5" fill="#FF7D78" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
-          <line x1="646" y1="218" x2="688" y2="218" stroke="rgba(255,125,120,0.5)" stroke-width="1"/>
-          <text x="700" y="200" class="lv-side slow" text-anchor="end">Bottleneck</text>
+          <circle cx="680" cy="218" r="3.5" fill="#FF7D78" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
+          <line x1="626" y1="218" x2="668" y2="218" stroke="rgba(255,125,120,0.5)" stroke-width="1"/>
+          <text x="710" y="200" class="lv-side slow" text-anchor="end">Bottleneck</text>
         </g>
-
-        <!-- Pinch / blockage marker on right edge of ring -->
-        <g transform="translate(530, 220)">
-          <circle r="13" fill="#FF7D78" opacity="0.18" filter="url(#lv-glow-sm)" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
-          <circle r="11" fill="#0A0A0F" stroke="rgba(255,125,120,0.55)" stroke-width="1.2"/>
-          <line x1="-5" y1="-5" x2="5" y2="5" stroke="#FF7D78" stroke-width="1.6" stroke-linecap="round"/>
-          <line x1="-5" y1="5" x2="5" y2="-5" stroke="#FF7D78" stroke-width="1.6" stroke-linecap="round"/>
-        </g>
-
       </svg>
     </div>
 
@@ -1110,19 +1223,7 @@
       <p>And nobody truly knows what people want — not companies, not markets, not the experts. The state of the art is to ask: interviews, studies, surveys, feedback. But people don't know what they want. They're good at naming problems and frustrations; the solution stays elusive. <em>"If I had asked people what they wanted, they would have said faster horses."</em></p>
       <p>So look at what people <strong>do</strong>. Actions speak louder than words. If someone keeps coming back, that's a signal. If they bring others, a better one. If they'd be upset to lose it, better still. This isn't about blindly chasing a metric — it's that behavior reveals intent. Automate and scale this half of the loop and you unlock the next step change in building great products.</p>
 
-      <p class="manifesto-mv">Sense</p>
-      <h3>Feel your users.</h3>
-      <p>More than 95% of product data goes unlooked at. For every issue someone happens to catch, hundreds sit undetected — bugs that linger for months, frustration that quietly piles up, moments the product fails to meet someone where they are. Picture a room full of analysts trawling every event, surfacing what you need to know and explaining <em>why</em> it's happening, in real time, for everyone who touches the experience. Facebook found — just by reading the data — that a new user adding seven friends in ten days predicted long-term engagement; that one insight carried them past every other social network. The bottleneck has always been human attention. Remove it and we go from data breadlines to data abundance.</p>
-
-      <p class="manifesto-mv">Decide</p>
-      <h3>Adapt to every user.</h3>
-      <p>Today everyone gets the same static product. Next, every user gets an experience shaped by their behavior. See someone struggling and offer help in the moment; trigger a guide; connect your highest-value users to a person instantly. Run many variants of a campaign and lean into what works. The same intelligence reaches back into the work itself — recommending what to build, and previewing how a change will land before you ship it.</p>
-
-      <p class="manifesto-mv">Act</p>
-      <h3>Products that improve themselves.</h3>
-      <p>Products will heal themselves. A release that breaks the experience can roll itself back. Subtle papercuts get found — often with a fix already waiting. You'll get suggestions for what to improve, the experiments to prove them, and the segments to tailor to — continuously, without waiting on a roadmap. Every part of the product gets better, all the time.</p>
-
-      <p style="color:var(--white);font-size:20px;line-height:1.5;margin-top:14px"><strong>We'll live in a world of self-improving products.</strong> The companies that win the next decade will master this loop — and Amplitude gives every company the advantage only the world's best product teams have had: to <span class="a" style="font-style:normal">sense, decide, and act.</span></p>
+      <p style="color:var(--white);font-size:20px;line-height:1.5;margin-top:14px"><strong>We'll live in a world of self-improving products.</strong> The companies that win the next decade will master this loop — and Amplitude Wave gives every company the advantage only the world's best product teams have had: to <span class="a" style="font-style:normal">sense, decide, and act.</span></p>
     </div>
   </div>
 </section>
@@ -1207,7 +1308,7 @@
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
   <div class="pl-head">
-    <div class="eyebrow">The product loop</div>
+    <div class="eyebrow">The product loop<svg class="mg mg-eyb" viewBox="0 0 24 24" aria-hidden="true"><ellipse class="ln" cx="12" cy="12" rx="10" ry="6"/><circle class="nd" cx="22" cy="12" r="1.4"/><circle class="acf d-throb" cx="12" cy="12" r="1.8" style="--sp:2.4s"/></svg></div>
     <h3>The loop that's always running.</h3>
   </div>
 
@@ -1242,28 +1343,24 @@
           <path id="pl-path"
                 d="M 350 130 A 150 150 0 1 1 349.9 130"
                 fill="none" stroke="none"/>
+          <path id="pl-lane-144" d="M 350 136 A 144 144 0 1 1 349.9 136" fill="none" stroke="none"/>
+          <path id="pl-lane-156" d="M 350 124 A 156 156 0 1 1 349.9 124" fill="none" stroke="none"/>
 
           <!-- Center ambient glow -->
           <circle cx="350" cy="280" r="130" fill="url(#pl-center-glow)"/>
 
           <!-- Subtle base ring -->
           <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="rgba(255,255,255,0.05)" stroke-width="26"/>
+                  stroke="rgba(255,255,255,0.05)" stroke-width="36"/>
 
           <!-- Glow under ring -->
           <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="#4083FF" stroke-width="3"
-                  opacity="0.45" filter="url(#pl-glow)"/>
+                  stroke="#4083FF" stroke-width="30"
+                  opacity="0.4" filter="url(#pl-glow)"/>
 
           <!-- Active ring -->
           <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="url(#pl-ring-grad)" stroke-width="2"/>
-
-          <!-- Flowing light along the ring -->
-          <circle cx="350" cy="280" r="150" fill="none"
-                  stroke="#cfe0ff" stroke-width="2.5"
-                  stroke-dasharray="4 20" stroke-linecap="round"
-                  opacity="0.8" style="animation: dash-flow 3s linear infinite;"/>
+                  stroke="url(#pl-ring-grad)" stroke-width="30"/>
 
           <!-- Node halos — light in sequence as the pulse passes -->
           <g fill="none" stroke="#6980FF" stroke-width="2">
@@ -1299,19 +1396,49 @@
             </circle>
           </g>
 
-          <!-- Traveling pulse + comet trail -->
-          <circle r="11" fill="#fff" opacity="0.5" filter="url(#pl-glow-sm)">
-            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"><mpath href="#pl-path"/></animateMotion>
-          </circle>
-          <circle r="4" fill="#9FC0FF" opacity="0.5">
-            <animateMotion dur="18s" begin="0.5s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion>
-          </circle>
-          <circle r="3" fill="#9FC0FF" opacity="0.3">
-            <animateMotion dur="18s" begin="0.9s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion>
-          </circle>
-          <circle r="5.5" fill="#fff">
-            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"><mpath href="#pl-path"/></animateMotion>
-          </circle>
+          <!-- Many balls circling the whole (all-blue) loop, like the top loop -->
+          <g fill="#fff">
+          <g><circle r="7.4" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.4" fill="#fff"/><animateMotion dur="9s" begin="-0.5s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></g>
+          <g><circle r="7.0" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.0" fill="#fff"/><animateMotion dur="9s" begin="-3.4s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></g>
+          <g><circle r="7.0" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="3.0" fill="#fff"/><animateMotion dur="9s" begin="-6.0s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></g>
+          <g><circle r="6.8" fill="#cfe0ff" opacity="0.4" filter="url(#pl-glow-sm)"/><circle r="2.8" fill="#fff"/><animateMotion dur="9s" begin="-1.8s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></g>
+          <circle r="1.8" fill="#cfe0ff" opacity="0.69"><animateMotion dur="9s" begin="-0.04s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-0.75s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.6" fill="#cfe0ff" opacity="0.65"><animateMotion dur="9s" begin="-1.28s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.1" fill="#cfe0ff" opacity="0.54"><animateMotion dur="9s" begin="-2.32s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.2" opacity="0.78"><animateMotion dur="9s" begin="-3.22s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.5" fill="#9FC0FF" opacity="0.63"><animateMotion dur="9s" begin="-3.77s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.3" opacity="0.8"><animateMotion dur="9s" begin="-4.48s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.4" fill="#cfe0ff" opacity="0.61"><animateMotion dur="9s" begin="-5.38s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.0" fill="#9FC0FF" opacity="0.74"><animateMotion dur="9s" begin="-6.03s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.4" fill="#9FC0FF" opacity="0.61"><animateMotion dur="9s" begin="-6.72s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="1.5" opacity="0.63"><animateMotion dur="9s" begin="-7.64s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.6" fill="#cfe0ff" opacity="0.86"><animateMotion dur="9s" begin="-8.26s" repeatCount="indefinite"><mpath href="#pl-lane-144"/></animateMotion></circle>
+          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-0.38s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.9" fill="#cfe0ff" opacity="0.71"><animateMotion dur="9s" begin="-1.23s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.3" opacity="0.8"><animateMotion dur="9s" begin="-1.94s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.4" opacity="0.82"><animateMotion dur="9s" begin="-2.48s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.0" opacity="0.74"><animateMotion dur="9s" begin="-3.36s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.4" fill="#9FC0FF" opacity="0.61"><animateMotion dur="9s" begin="-4.16s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.7" fill="#9FC0FF" opacity="0.67"><animateMotion dur="9s" begin="-4.91s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.5" fill="#9FC0FF" opacity="0.63"><animateMotion dur="9s" begin="-5.8s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.9" fill="#9FC0FF" opacity="0.71"><animateMotion dur="9s" begin="-6.55s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.4" fill="#cfe0ff" opacity="0.61"><animateMotion dur="9s" begin="-6.87s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-8.03s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="2.5" opacity="0.84"><animateMotion dur="9s" begin="-8.56s" repeatCount="indefinite"><mpath href="#pl-path"/></animateMotion></circle>
+          <circle r="1.5" opacity="0.63"><animateMotion dur="9s" begin="-0.88s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="2.4" fill="#9FC0FF" opacity="0.82"><animateMotion dur="9s" begin="-1.22s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-1.95s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.9" opacity="0.71"><animateMotion dur="9s" begin="-3.13s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.8" opacity="0.69"><animateMotion dur="9s" begin="-3.52s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="2.1" fill="#cfe0ff" opacity="0.76"><animateMotion dur="9s" begin="-4.3s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.1" opacity="0.54"><animateMotion dur="9s" begin="-5.07s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.1" opacity="0.54"><animateMotion dur="9s" begin="-5.75s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.4" opacity="0.61"><animateMotion dur="9s" begin="-6.74s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.6" opacity="0.65"><animateMotion dur="9s" begin="-7.29s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.9" fill="#9FC0FF" opacity="0.71"><animateMotion dur="9s" begin="-8.06s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          <circle r="1.6" opacity="0.65"><animateMotion dur="9s" begin="-8.98s" repeatCount="indefinite"><mpath href="#pl-lane-156"/></animateMotion></circle>
+          </g>
 
           <!-- 6 nodes (radius 32, positioned clockwise from top) -->
           <!-- 1: SENSE — top -->
@@ -1414,6 +1541,14 @@
 
 <!-- ── CTA ────────────────────────────────────────────── -->
 <section id="cta" class="closer">
+  <!-- deco · slow orbital ring, top-left -->
+  <svg class="mg mg-deco" style="top:74px;left:38px;width:92px" viewBox="0 0 100 100" aria-hidden="true">
+    <g class="d-spin" style="transform-box:view-box;transform-origin:50px 50px;--sp:26s">
+      <ellipse class="l2" cx="50" cy="50" rx="42" ry="20" transform="rotate(-18 50 50)"/>
+      <circle class="acf" cx="89" cy="38" r="2.4"/><circle class="nd" cx="11" cy="62" r="2"/>
+    </g>
+    <circle class="nd d-throb" cx="50" cy="50" r="2.2" style="--sp:2.6s"/>
+  </svg>
   <!-- Full-bleed product shots running off both screen edges, peeking behind the CTA -->
   <div class="cta-shots" aria-hidden="true">
   <div class="cta-shot right" aria-hidden="true">
@@ -1575,7 +1710,7 @@
 
 <footer>
   <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" style="width:100px;height:20px;opacity:.4">
-  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; PDLC</span>
+  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; Amplitude Wave</span>
 </footer>
 
 <script>
@@ -1902,6 +2037,70 @@
 })();
 </script>
 <!-- ── /CMD+K version switcher ────────────────────── -->
+
+<!-- ── reveal the nav only after the hero scrolls past ── -->
+<script>
+(function(){
+  const nav=document.querySelector('nav'), hero=document.querySelector('.bp-hero');
+  if(!nav||!hero) return;
+  let ticking=false;
+  function update(){ ticking=false; nav.classList.toggle('show', hero.getBoundingClientRect().bottom <= 64); }
+  addEventListener('scroll', ()=>{ if(!ticking){ requestAnimationFrame(update); ticking=true; } }, {passive:true});
+  addEventListener('resize', update);
+  update();
+})();
+</script>
+
+<!-- ── loop-blueprint hero canvas (3D torus wireframe + flow + comet streams) ── -->
+<script>
+(function(){
+  const c=document.getElementById('bp-c');if(!c)return;const x=c.getContext('2d');
+  let W=0,H=0,dpr=1;
+  function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+  const TAU=Math.PI*2;
+  const NP=3800,pts=[];
+  for(let i=0;i<NP;i++)pts.push({u:Math.random()*TAU,v:Math.random()*TAU,sp:0.10+Math.random()*0.12,dv:(Math.random()-0.5)*0.05,sz:Math.random()});
+  const NS=18,streams=[];
+  for(let i=0;i<NS;i++){const big=i<5;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:1.4+Math.random()*1.8,vturns:0.6+Math.random()*1.4,off:Math.random(),sp:0.018+Math.random()*0.024,big:big});}
+  let last=0;
+  function frame(now){
+    const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
+    const g=x.createRadialGradient(W*0.56,H*0.40,0,W*0.56,H*0.40,Math.max(W,H)*0.85);
+    g.addColorStop(0,'#2747e6');g.addColorStop(0.55,'#1f39cf');g.addColorStop(1,'#142398');
+    x.fillStyle=g;x.fillRect(0,0,W,H);
+    const cx=W*0.575,cy=H*0.50,R=Math.min(W,H)*0.300,r=R*0.42,Rr=R+r;
+    const e=0.85,a=t*0.055,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=2.6*Rr;
+    function proj(u,v){
+      const cu=Math.cos(u),su=Math.sin(u),cv=Math.cos(v),sv=Math.sin(v);
+      const X=(R+r*cv)*cu,Z=(R+r*cv)*su,Y=r*sv;
+      const X1=X*ca+Z*sa,Z1=-X*sa+Z*ca;
+      const Y2=Y*ce-Z1*se,Z2=Y*se+Z1*ce;
+      const p=fo/(fo+Z2);
+      return {sx:cx+X1*p,sy:cy+Y2*p,d:Z2,p:p};
+    }
+    x.save();x.translate(cx,cy+R*0.04);x.strokeStyle='rgba(208,222,255,0.22)';x.lineWidth=1;x.setLineDash([5,8]);
+    x.beginPath();x.ellipse(0,0,Rr*1.05,Rr*0.60,0,0,TAU);x.stroke();x.setLineDash([]);x.restore();
+    x.lineWidth=1;
+    const NU=56,SEGV=36;
+    for(let i=0;i<NU;i++){const u=i/NU*TAU;x.beginPath();for(let k=0;k<=SEGV;k++){const p=proj(u,k/SEGV*TAU);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(u,Math.PI/2).d/Rr;const al=0.04+0.13*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
+    const NV=22,SEGU=80;
+    for(let j=0;j<NV;j++){const v=j/NV*TAU;x.beginPath();for(let k=0;k<=SEGU;k++){const p=proj(k/SEGU*TAU,v);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(Math.PI/2,v).d/Rr;const al=0.03+0.10*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
+    x.globalCompositeOperation='lighter';
+    for(let i=0;i<NP;i++){const pt=pts[i];pt.u+=pt.sp*dt;pt.v+=pt.dv*dt;const q=proj(pt.u,pt.v);const near=q.d/Rr*0.5+0.5;x.globalAlpha=0.05+near*0.30;const s=(0.5+pt.sz*1.0+near*0.5)*q.p;x.fillStyle='#eef4ff';x.beginPath();x.arc(q.sx,q.sy,s,0,TAU);x.fill();}
+    for(let i=0;i<NS;i++){const sm=streams[i];
+      const segs=72;x.beginPath();let started=false;
+      for(let k=0;k<=segs;k++){const s=k/segs;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);if(!started){x.moveTo(p.sx,p.sy);started=true;}else x.lineTo(p.sx,p.sy);}
+      x.globalAlpha=sm.big?0.20:0.06;x.strokeStyle='#dfeaff';x.lineWidth=sm.big?1.3:0.8;x.stroke();
+      const head=(((t*sm.sp+sm.off)%1)+1)%1,TT=26;
+      for(let k=0;k<TT;k++){const s=head-k*0.012;if(s<0||s>1)continue;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);const near=p.d/Rr*0.5+0.5;const a2=(1-k/TT)*(sm.big?0.95:0.55)*(0.4+near*0.6);x.globalAlpha=a2;x.fillStyle='#ffffff';const ss=(sm.big?2.4:1.4)*(1-k/TT*0.7)*p.p;x.beginPath();x.arc(p.sx,p.sy,ss,0,TAU);x.fill();}
+    }
+    x.globalAlpha=1;x.globalCompositeOperation='source-over';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 
 </body>
 </html>
