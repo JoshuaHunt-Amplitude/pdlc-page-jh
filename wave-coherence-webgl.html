@@ -48,32 +48,16 @@
     <text class="title" x="80" y="182">COHERE YOUR SIGNALS</text>
     <text class="sub" x="82" y="226">SIGNALS &#160;&#8226;&#160; OPPORTUNITIES &#160;&#8226;&#160; OUTCOMES</text>
 
-    <!-- left source panel -->
-    <g class="ln" stroke-width="1.25" opacity="0.72">
-      <path d="M82 318 h-12 V616 h12"/>
-      <path d="M332 318 h12 V616 h-12"/>
-      <path d="M100 360 H318 M100 410 H318 M100 460 H318 M100 510 H318 M100 560 H318"/>
-    </g>
-    <text class="cap" x="102" y="342">INCOMING SIGNALS</text>
-    <g>
-      <circle cx="110" cy="382" r="4" fill="#e9efff"/><text class="v" x="132" y="388">ANALYTICS</text>
-      <circle cx="110" cy="432" r="4" fill="#a9c7ff"/><text class="v" x="132" y="438">SESSION REPLAYS</text>
-      <circle cx="110" cy="482" r="4" fill="#c4a3ff"/><text class="v" x="132" y="488">FEEDBACK</text>
-      <circle cx="110" cy="532" r="4" fill="#70e5bd"/><text class="v" x="132" y="538">AGENT TRACES</text>
-      <circle cx="110" cy="582" r="4" fill="#ff9bba"/><text class="v" x="132" y="588">WEB VITALS</text>
-    </g>
-    <text class="rv reveal" id="rv-src" x="102" y="640">+ YOUR OWN SOURCES VIA MCP</text>
-
-    <!-- process labels above the field -->
+    <!-- process labels above the field (spans the full width) -->
     <g class="dimln" stroke-width="1.1" opacity="0.64">
-      <path d="M420 294 H1532"/>
-      <path d="M420 294 v18 M712 294 v18 M1004 294 v18 M1296 294 v18 M1532 294 v18"/>
+      <path d="M120 294 H1532"/>
+      <path d="M120 294 v18 M473 294 v18 M826 294 v18 M1179 294 v18 M1532 294 v18"/>
     </g>
     <g>
-      <text class="sm" x="420" y="276">SENSE</text>
-      <text class="sm" x="712" y="276">CORROBORATE</text>
-      <text class="sm" x="1004" y="276">COMPOSE</text>
-      <text class="sm" x="1296" y="276">APPROVE</text>
+      <text class="sm" x="120" y="276">SENSE</text>
+      <text class="sm" x="473" y="276">CORROBORATE</text>
+      <text class="sm" x="826" y="276">COMPOSE</text>
+      <text class="sm" x="1179" y="276">APPROVE</text>
       <text class="sm" x="1532" y="276" text-anchor="end">LEARN</text>
     </g>
 
@@ -269,9 +253,9 @@
     float inBand = fract(a_seed.y * nB) - 0.5;
     float ribbon = bandCenter + inBand * 0.075;
     float swell =
-        0.135 * sin(x * 3.0 - t * 0.90 + bandIdx * 0.85)
-      + 0.060 * sin(x * 6.4 - t * 1.40 + bandIdx * 1.70 + 1.1)
-      + 0.028 * sin(x * 12.0 - t * 2.10 + a_seed.w * 6.2831);
+        0.120 * sin(x * 3.0 - t * 0.50 + bandIdx * 0.85)
+      + 0.052 * sin(x * 6.4 - t * 0.80 + bandIdx * 1.70 + 1.1)
+      + 0.022 * sin(x * 12.0 - t * 1.20 + a_seed.w * 6.2831);
     float strandId = floor(a_seed.w * 15.0);
     float strandPhase = strandId * 1.37 + a_seed.x * 4.0;
     float streamOffset = (hash(strandId + 13.0) - 0.5) * 0.34;
@@ -448,7 +432,6 @@
   let hover = 0, hoverTarget = 0;
   const ring = document.getElementById('cursorRing');
   const zones = [
-    { el: document.getElementById('rv-src'), cx: 210, cy: 470, r: 230 },
     { el: document.getElementById('rv-lock'), cx: 1126, cy: 473, r: 240 },
     { el: document.getElementById('rv-opp'), cx: 1539, cy: 500, r: 190 }
   ];
