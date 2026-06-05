@@ -190,10 +190,10 @@
       fbm(uv + vec2(5.2, 1.3))
     );
     vec2 r = vec2(
-      fbm(uv + 3.0 * q + vec2(1.7, 9.2)),
-      fbm(uv + 3.0 * q + vec2(8.3, 2.8))
+      fbm(uv + 2.0 * q + vec2(1.7, 9.2)),
+      fbm(uv + 2.0 * q + vec2(8.3, 2.8))
     );
-    return uv + 1.2 * r;
+    return uv + 0.7 * r;
   }
 
   // 2D Worley noise for cell-boundary filament structures
