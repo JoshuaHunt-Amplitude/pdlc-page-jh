@@ -4,7 +4,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Amplitude Wave · v16 — seamless blueprint hero | Amplitude</title>
+<title>Amplitude Wave · v17 — enabling self-improving products | Amplitude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -456,6 +456,10 @@
   .manifesto-body em { color: var(--dim); font-style:normal; }
   .manifesto-mv { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--blue-d); margin: 42px 0 6px; }
   .manifesto-body h3 { font-family: var(--sans); font-size: 24px; font-weight:400; letter-spacing: -0.02em; line-height: 1.15; color: var(--white); margin: 0 0 12px; }
+  /* "dagger" — the punchy lead line under a section headline (v17) */
+  .dagger { max-width: 760px; margin: 28px auto 0; font-family: var(--sans); font-size: clamp(20px,2.2vw,26px); font-weight: 400; line-height: 1.4; letter-spacing: -0.01em; color: var(--white); }
+  .dagger .a { color: var(--blue-d); font-style: normal; }
+  .manifesto-head .dagger { margin-top: 26px; }
 
   /* Stats strip */
   .stats-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 32px; }
@@ -902,11 +906,12 @@
       <span class="brand-sub">Wave</span>
     </div>
     <div class="nav-links">
-      <a href="#why">Why</a>
+      <a href="#problem">Why</a>
       <a href="#loops">The loop</a>
+      <a href="#wave">Wave</a>
       <a href="docs.html">Docs</a>
     </div>
-    <a href="#cta" class="nav-btn">Join our closed Beta</a>
+    <a href="#cta" class="nav-btn">Request access</a>
   </div>
 </nav>
 
@@ -1047,67 +1052,21 @@
       <circle cx="1600" cy="116" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
     </svg>
   </div>
-  <a class="bp-scroll" href="#why" aria-label="Scroll to content">
+  <a class="bp-cta" href="#cta">Request access <span class="arr">→</span></a>
+  <a class="bp-scroll" href="#problem" aria-label="Scroll to content">
     <span>Scroll</span>
     <svg viewBox="0 0 24 28" fill="none" stroke="#c3d2ff" stroke-width="1.6"><path class="chev" d="M5 9 L12 17 L19 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </a>
 </section>
 
 <!-- ── WHY ───────────────────────────────────────────── -->
-<section class="manifesto" id="why">
+<!-- ── §2 · PROBLEM — the false summit ─────────────────── -->
+<section class="manifesto" id="problem">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <!-- loop micrographic (adapted from /micrographics COMP 07 "The Product Loop"):
-           graduation rings + Build/Ship/Use/Learn cardinal nodes + center reticle,
-           a rotating radar sweep, and a clockwise particle stream (small + glowing leads). -->
-      <svg class="mg mg-loop" viewBox="0 0 300 240" aria-hidden="true">
-        <defs>
-          <radialGradient id="c7-lead" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-          </radialGradient>
-          <linearGradient id="c7-sweep" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="100%" stop-color="#fff" stop-opacity=".16"/>
-          </linearGradient>
-          <path id="c7-orbit" d="M150 24 A96 96 0 0 1 246 120 A96 96 0 0 1 150 216 A96 96 0 0 1 54 120 A96 96 0 0 1 150 24" fill="none"/>
-        </defs>
-        <circle class="l2 thin" cx="150" cy="120" r="116" stroke-dasharray="1 9" opacity=".42"/>
-        <circle class="ln thin" cx="150" cy="120" r="110" stroke-dasharray="2 7" opacity=".5"/>
-        <path class="l2 thin" d="M236.6 70 L243.5 66 M200 33.4 L204 26.5 M100 33.4 L96 26.5 M63.4 70 L56.5 66 M63.4 170 L56.5 174 M100 206.6 L96 213.5 M200 206.6 L204 213.5 M236.6 170 L243.5 174"/>
-        <path class="ln thin" d="M150 16 L150 6 M254 120 L264 120 M150 224 L150 234 M46 120 L36 120"/>
-        <circle class="l2" cx="150" cy="120" r="96"/>
-        <circle class="l2 thin" cx="150" cy="120" r="70" stroke-dasharray="3 7" opacity=".7"/>
-        <circle class="l2" cx="150" cy="120" r="44"/>
-        <path d="M150 24 A96 96 0 0 1 246 120" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-        <g>
-          <path d="M150 120 L150 24 A96 96 0 0 1 173 27 Z" fill="url(#c7-sweep)"/>
-          <path class="ln thin" d="M150 120 L150 24" opacity=".5"/>
-          <animateTransform attributeName="transform" type="rotate" from="0 150 120" to="360 150 120" dur="9s" repeatCount="indefinite"/>
-        </g>
-        <g class="nd"><circle cx="217.9" cy="52.1" r="1.6"/><circle cx="82.1" cy="52.1" r="1.6"/><circle cx="82.1" cy="187.9" r="1.6"/><circle cx="217.9" cy="187.9" r="1.6"/></g>
-        <g class="nd" opacity=".65"><circle cx="150" cy="50" r="1.1"/><circle cx="220" cy="120" r="1.1"/><circle cx="150" cy="190" r="1.1"/><circle cx="80" cy="120" r="1.1"/></g>
-        <g><circle class="no" cx="150" cy="24" r="6.5"/><circle class="nd" cx="150" cy="24" r="2.4"/>
-           <circle class="no" cx="246" cy="120" r="6.5"/><circle class="nd" cx="246" cy="120" r="2.4"/>
-           <circle class="no" cx="150" cy="216" r="6.5"/><circle class="nd" cx="150" cy="216" r="2.4"/>
-           <circle class="no" cx="54" cy="120" r="6.5"/><circle class="nd" cx="54" cy="120" r="2.4"/></g>
-        <circle class="ac thin" cx="246" cy="120" r="10" fill="none" opacity=".7"/>
-        <circle class="ln" cx="150" cy="120" r="9" fill="none"/>
-        <path class="l2 thin" d="M150 105 v8 M150 127 v8 M135 120 h8 M157 120 h8"/>
-        <circle class="nd" cx="150" cy="120" r="2.2"/>
-        <g fill="#fff">
-          <circle r="1.3"><animateMotion dur="3.6s" begin="0s"     repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.0"><animateMotion dur="3.6s" begin="-0.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.5"><animateMotion dur="3.6s" begin="-0.95s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.0"><animateMotion dur="3.6s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.2"><animateMotion dur="3.6s" begin="-2.0s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.0"><animateMotion dur="3.6s" begin="-2.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.2"><animateMotion dur="3.6s" begin="-3.05s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <g><circle r="4.5" fill="url(#c7-lead)"/><circle r="2"/><animateMotion dur="3.6s" begin="-0.3s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
-          <g><circle r="4" fill="url(#c7-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
-        </g>
-      </svg>
-      <h2>The best predictor of quality is the number of <span class="a">iterations.</span></h2>
-      <p>It holds for code, for writing, for an AI model, for any system. The strategist John Boyd showed that the pilot who cycles their decision loop faster wins the dogfight; evolution's results are staggering only because it has had so long to iterate. Products are no different — to build a great one is to tighten the loop and fit in more iterations.</p>
-      <p>Every product development team runs the same loop: <strong>build, ship, use, learn.</strong></p>
+      <div class="eyebrow">The false summit<svg class="mg mg-eyb" viewBox="0 0 24 24" aria-hidden="true"><path class="ln" d="M3 18 L9 9 L14 14 L21 5" stroke-linecap="round" stroke-linejoin="round"/><circle class="acf d-throb" cx="21" cy="5" r="1.8" style="--sp:2.4s"/></svg></div>
+      <h2>Building got cheap. Deciding and improving <span class="a">didn't.</span></h2>
+      <p>Coding agents ship features overnight. Backlogs clear, PRs pile up. But shipping more was never the hard part.</p>
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
@@ -1190,12 +1149,89 @@
     </div>
 
     <div class="manifesto-body reveal">
-      <p>The left side — <strong>build and ship</strong> — is now incredibly fast, after fifty years of progress: programming languages, agile, the internet, the cloud, and now AI coding. The distance between an idea and millions of people using it is going to zero. A single person can ship a product used by millions overnight.</p>
-      <p>The right side — <strong>use and learn</strong> — still sits in the stone ages. Understanding what people want is extraordinarily hard. It is the limiting reagent for great product development.</p>
-      <p>And nobody truly knows what people want — not companies, not markets, not the experts. The state of the art is to ask: interviews, studies, surveys, feedback. But people don't know what they want. They're good at naming problems and frustrations; the solution stays elusive. <em>"If I had asked people what they wanted, they would have said faster horses."</em></p>
-      <p>So look at what people <strong>do</strong>. Actions speak louder than words. If someone keeps coming back, that's a signal. If they bring others, a better one. If they'd be upset to lose it, better still. This isn't about blindly chasing a metric — it's that behavior reveals intent. Automate and scale this half of the loop and you unlock the next step change in building great products.</p>
+      <p>Knowing what to build, and proving it worked, still happens by hand. A factory that runs faster just makes more.</p>
+      <p class="dagger"><strong>Output is not improvement.</strong></p>
+    </div>
+  </div>
+</section>
 
-      <p style="color:var(--white);font-size:20px;line-height:1.5;margin-top:14px"><strong>We'll live in a world of self-improving products.</strong> The companies that win the next decade will master this loop — and Amplitude Wave gives every company the advantage only the world's best product teams have had: to <span class="a" style="font-style:normal">sense, decide, and act.</span></p>
+<!-- ── §3 · SOLUTION — the category, defined ───────────── -->
+<section class="manifesto" id="solution">
+  <div class="manifesto-in">
+    <div class="manifesto-head reveal">
+      <!-- loop micrographic (adapted from /micrographics COMP 07 "The Product Loop"):
+           graduation rings + cardinal nodes + center reticle, a rotating radar sweep,
+           and a clockwise particle stream (small + glowing leads). -->
+      <svg class="mg mg-loop" viewBox="0 0 300 240" aria-hidden="true">
+        <defs>
+          <radialGradient id="c7-lead" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="c7-sweep" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="100%" stop-color="#fff" stop-opacity=".16"/>
+          </linearGradient>
+          <path id="c7-orbit" d="M150 24 A96 96 0 0 1 246 120 A96 96 0 0 1 150 216 A96 96 0 0 1 54 120 A96 96 0 0 1 150 24" fill="none"/>
+        </defs>
+        <circle class="l2 thin" cx="150" cy="120" r="116" stroke-dasharray="1 9" opacity=".42"/>
+        <circle class="ln thin" cx="150" cy="120" r="110" stroke-dasharray="2 7" opacity=".5"/>
+        <path class="l2 thin" d="M236.6 70 L243.5 66 M200 33.4 L204 26.5 M100 33.4 L96 26.5 M63.4 70 L56.5 66 M63.4 170 L56.5 174 M100 206.6 L96 213.5 M200 206.6 L204 213.5 M236.6 170 L243.5 174"/>
+        <path class="ln thin" d="M150 16 L150 6 M254 120 L264 120 M150 224 L150 234 M46 120 L36 120"/>
+        <circle class="l2" cx="150" cy="120" r="96"/>
+        <circle class="l2 thin" cx="150" cy="120" r="70" stroke-dasharray="3 7" opacity=".7"/>
+        <circle class="l2" cx="150" cy="120" r="44"/>
+        <path d="M150 24 A96 96 0 0 1 246 120" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+        <g>
+          <path d="M150 120 L150 24 A96 96 0 0 1 173 27 Z" fill="url(#c7-sweep)"/>
+          <path class="ln thin" d="M150 120 L150 24" opacity=".5"/>
+          <animateTransform attributeName="transform" type="rotate" from="0 150 120" to="360 150 120" dur="9s" repeatCount="indefinite"/>
+        </g>
+        <g class="nd"><circle cx="217.9" cy="52.1" r="1.6"/><circle cx="82.1" cy="52.1" r="1.6"/><circle cx="82.1" cy="187.9" r="1.6"/><circle cx="217.9" cy="187.9" r="1.6"/></g>
+        <g class="nd" opacity=".65"><circle cx="150" cy="50" r="1.1"/><circle cx="220" cy="120" r="1.1"/><circle cx="150" cy="190" r="1.1"/><circle cx="80" cy="120" r="1.1"/></g>
+        <g><circle class="no" cx="150" cy="24" r="6.5"/><circle class="nd" cx="150" cy="24" r="2.4"/>
+           <circle class="no" cx="246" cy="120" r="6.5"/><circle class="nd" cx="246" cy="120" r="2.4"/>
+           <circle class="no" cx="150" cy="216" r="6.5"/><circle class="nd" cx="150" cy="216" r="2.4"/>
+           <circle class="no" cx="54" cy="120" r="6.5"/><circle class="nd" cx="54" cy="120" r="2.4"/></g>
+        <circle class="ac thin" cx="246" cy="120" r="10" fill="none" opacity=".7"/>
+        <circle class="ln" cx="150" cy="120" r="9" fill="none"/>
+        <path class="l2 thin" d="M150 105 v8 M150 127 v8 M135 120 h8 M157 120 h8"/>
+        <circle class="nd" cx="150" cy="120" r="2.2"/>
+        <g fill="#fff">
+          <circle r="1.3"><animateMotion dur="3.6s" begin="0s"     repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-0.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.5"><animateMotion dur="3.6s" begin="-0.95s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.2"><animateMotion dur="3.6s" begin="-2.0s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-2.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.2"><animateMotion dur="3.6s" begin="-3.05s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <g><circle r="4.5" fill="url(#c7-lead)"/><circle r="2"/><animateMotion dur="3.6s" begin="-0.3s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
+          <g><circle r="4" fill="url(#c7-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
+        </g>
+      </svg>
+      <h2>Self-improving <span class="a">products.</span></h2>
+      <p class="dagger">Build, ship, use, learn. We automated the first half. <span class="a">Now the second.</span></p>
+    </div>
+
+    <div class="manifesto-body reveal">
+      <p>The use-and-learn half is still manual. Teams dig through data, argue over what matters, and rarely check if it landed.</p>
+      <p>A self-improving product runs that half continuously: it <strong>senses</strong> what matters, <strong>decides</strong> what's worth doing, and <strong>proves</strong> whether it worked.</p>
+      <p>You set the direction. Your judgment still ships the work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── §4 · THE DATA — signals become a spec ───────────── -->
+<section class="manifesto" id="data">
+  <div class="manifesto-in">
+    <div class="manifesto-head reveal">
+      <div class="eyebrow">The signal<svg class="mg mg-eyb" viewBox="0 0 24 24" aria-hidden="true"><path class="l2" d="M3 12 H21"/><path class="ln" d="M3 16 L9 16 L11 9 L14 19 L16 13 L18 16 L21 16" stroke-linecap="round" stroke-linejoin="round"/><circle class="acf d-throb" cx="11" cy="9" r="1.8" style="--sp:2.2s"/></svg></div>
+      <h2>The answer is already in your <span class="a">data.</span></h2>
+      <p class="dagger">Analytics, replays, feedback, agent traces. Almost no one reads it. <span class="a">It's where the next move is hiding.</span></p>
+    </div>
+
+    <div class="manifesto-body reveal">
+      <p>A self-improving product reads every signal in real time, corroborates it across sources, and weighs it against the metrics you care about.</p>
+      <p>The best signals become a <strong>spec</strong>: the problem, the evidence, the fix. Send it to Linear, or hand it straight to your coding agents to ship.</p>
+      <p class="dagger">The software factory finally knows what to build.</p>
     </div>
   </div>
 </section>
@@ -1280,8 +1316,10 @@
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
   <div class="pl-head">
-    <div class="eyebrow">The product loop<svg class="mg mg-eyb" viewBox="0 0 24 24" aria-hidden="true"><ellipse class="ln" cx="12" cy="12" rx="10" ry="6"/><circle class="nd" cx="22" cy="12" r="1.4"/><circle class="acf d-throb" cx="12" cy="12" r="1.8" style="--sp:2.4s"/></svg></div>
-    <h3>The loop that's always running.</h3>
+    <div class="eyebrow">Outcomes<svg class="mg mg-eyb" viewBox="0 0 24 24" aria-hidden="true"><ellipse class="ln" cx="12" cy="12" rx="10" ry="6"/><circle class="nd" cx="22" cy="12" r="1.4"/><circle class="acf d-throb" cx="12" cy="12" r="1.8" style="--sp:2.4s"/></svg></div>
+    <h3>Every ship is a hypothesis.</h3>
+    <p>When the work lands, the loop measures whether the metric actually moved, and ties the result back to the signal that started it. What worked is remembered. What didn't is too. The next cycle is sharper than the last.</p>
+    <p><strong>This is the part no one can copy: a product that compounds.</strong></p>
   </div>
 
   <div class="product-loop">
@@ -1511,7 +1549,24 @@
   </div>
 </section>
 
-<!-- ── CTA ────────────────────────────────────────────── -->
+<!-- ── §6 · MEET WAVE — the reveal (one line up top, no feature list) ───── -->
+<section class="manifesto" id="wave">
+  <div class="manifesto-in">
+    <div class="manifesto-head reveal" style="text-align:center">
+      <div class="eyebrow" style="justify-content:center">The reveal<svg class="mg mg-eyb" viewBox="0 0 24 24" aria-hidden="true"><circle class="l2" cx="12" cy="12" r="9" stroke-dasharray="2 4"/><g class="d-spin" style="transform-box:view-box;transform-origin:12px 12px;--sp:3.6s"><circle class="ln" cx="12" cy="12" r="9" stroke-dasharray="13 60" stroke-linecap="round"/></g><circle class="acf" cx="12" cy="12" r="1.6"/></svg></div>
+      <h2 style="margin-left:auto;margin-right:auto">Meet <span class="a">Wave.</span></h2>
+      <p class="dagger" style="margin-left:auto;margin-right:auto">A coding agent knows your codebase. <span class="a">Wave knows your product.</span></p>
+    </div>
+
+    <div class="manifesto-body reveal" style="text-align:center">
+      <p>Wave is the proactive product agent that runs this loop for you. It lives on the data already in Amplitude and works in the UI, over MCP, and in the CLI.</p>
+      <p>It knows what users do, where they stall, and what they tell you — so it can say what's worth building, not just build what it's told.</p>
+      <p class="dagger" style="margin-left:auto;margin-right:auto">You keep the judgment. Wave clears everything in the way.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── §7 · CTA / WAITLIST ──────────────────────────────── -->
 <section id="cta" class="closer">
   <!-- deco · slow orbital ring, top-left -->
   <svg class="mg mg-deco" style="top:74px;left:38px;width:92px" viewBox="0 0 100 100" aria-hidden="true">
@@ -1668,10 +1723,10 @@
   </div>
   </div>
   <h2 class="reveal">Build products that<br><span class="a">improve themselves.</span></h2>
-  <p class="reveal">A closed beta, for a small group of teams. Be first to sense what your users want, decide what to build, and act on it — with your team in control. We work hand in hand with everyone we bring on.</p>
+  <p class="reveal">A closed beta, for a small group of teams. Be first to put a self-improving product to work — sensing what users want, deciding what to build, and proving it landed, with your team in control. We work hand in hand with everyone we bring on.</p>
   <form class="waitlist reveal" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
     <input type="email" placeholder="you@company.com" required aria-label="Email address">
-    <button type="submit">Join our closed Beta →</button>
+    <button type="submit">Request access →</button>
   </form>
   <div class="reveal" style="display:flex;justify-content:center">
     <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
@@ -1930,6 +1985,14 @@
         <span class="cmdk-text">
           <div class="cmdk-name">Seamless blueprint hero</div>
           <div class="cmdk-desc">v15 fork · hero cobalt dropped to the page bg — torus floats on one continuous navy field</div>
+        </span>
+        <span class="cmdk-current">Current</span>
+      </a>
+      <a class="cmdk-item" href="index-v17.html" data-page="index-v17.html">
+        <span class="cmdk-num">V17</span>
+        <span class="cmdk-text">
+          <div class="cmdk-name">Self-improving products · 7-beat narrative</div>
+          <div class="cmdk-desc">v16 fork · category hero · problem/solution split · data → hypothesis → Meet Wave reveal</div>
         </span>
         <span class="cmdk-current">Current</span>
       </a>
