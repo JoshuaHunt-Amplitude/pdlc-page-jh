@@ -18,14 +18,15 @@
     --violet: #A373FF;
     --pink:   #FF7D78;
     --green:  #57E3A4;
-    --bg:     #0A0A0F;
-    --panel:  #111118;
-    --line:   rgba(255,255,255,.08);
-    --lines:  rgba(255,255,255,.18);
+    /* v15: blueprint-navy base so the page lives in the hero's world */
+    --bg:     #070b1c;
+    --panel:  #0c1226;
+    --line:   rgba(150,180,255,.10);
+    --lines:  rgba(150,180,255,.22);
     --white:  #FFFFFF;
-    --dim:    rgba(255,255,255,.62);
-    --dim2:   rgba(255,255,255,.42);
-    --mono:   'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --dim:    rgba(213,224,255,.64);
+    --dim2:   rgba(213,224,255,.42);
+    --mono:   'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans:   'Poppins', Helvetica, system-ui, sans-serif;
   }
 
@@ -36,8 +37,8 @@
     margin: 0; background: var(--bg); color: var(--white);
     font-family: var(--sans); font-weight: 400; line-height: 1.5; overflow-x: hidden;
     background-image:
-      radial-gradient(ellipse 1200px 600px at 70% -10%, rgba(0,82,242,.18), transparent 60%),
-      radial-gradient(ellipse 800px 400px at 0% 30%, rgba(64,131,255,.08), transparent 60%);
+      radial-gradient(ellipse 1600px 800px at 50% -6%, rgba(39,71,230,.34), transparent 62%),
+      radial-gradient(ellipse 900px 520px at 8% 22%, rgba(64,131,255,.08), transparent 60%);
     background-attachment: fixed;
   }
   /* v14: simplified type — no bold, no italic (emphasis carried by color) */
@@ -46,10 +47,11 @@
   body::before {
     content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background-image: linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size: 80px 80px;
-    -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
-    mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
-    opacity: .5;
+    background-size: 72px 72px;
+    /* blueprint grid persists down the page, fading near the bottom */
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
+    opacity: .6;
   }
   main, nav, footer { position: relative; z-index: 1; }
 
@@ -57,7 +59,7 @@
   nav {
     position: sticky; top: 0; z-index: 50;
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    background: rgba(10,10,15,.72); border-bottom: 1px solid var(--line);
+    background: rgba(7,11,28,.66); border-bottom: 1px solid var(--line);
   }
   .nav-in { max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 14px; }
@@ -908,9 +910,9 @@
 <!-- ── sprinkled micrographic decorations (styles) ────── -->
 <style>
   .mg{display:block;overflow:visible}
-  .mg .ln{fill:none;stroke:#fff;stroke-width:1.4}
-  .mg .l2{fill:none;stroke:rgba(255,255,255,.42);stroke-width:1.4}
-  .mg .nd{fill:#fff} .mg .no{fill:none;stroke:#fff;stroke-width:1.4}
+  .mg .ln{fill:none;stroke:#d5e2ff;stroke-width:1.4}
+  .mg .l2{fill:none;stroke:rgba(200,216,255,.42);stroke-width:1.4}
+  .mg .nd{fill:#eaf1ff} .mg .no{fill:none;stroke:#d5e2ff;stroke-width:1.4}
   .mg .ac{stroke:var(--blue-d)} .mg .acf{fill:var(--blue-d)} .mg .thin{stroke-width:1}
   @keyframes mgx-spin{to{transform:rotate(360deg)}}
   @keyframes mgx-pulse{0%,100%{opacity:.28}50%{opacity:1}}
@@ -930,6 +932,8 @@
 <!-- ── HERO · the loop blueprint (animated 3D torus + HUD) ───── -->
 <style>
   .bp-hero{position:relative;height:calc(100vh - 50px);min-height:560px;overflow:hidden;background:#15259a;font-family:'Geist Mono',ui-monospace,monospace;}
+  /* dissolve the cobalt hero into the blueprint-navy page below */
+  .bp-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:160px;z-index:2;pointer-events:none;background:linear-gradient(to bottom, rgba(7,11,28,0), var(--bg));}
   .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#1c34c4;}
   .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
   .bp-hero .hud{pointer-events:none;}
