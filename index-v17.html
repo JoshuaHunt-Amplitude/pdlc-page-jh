@@ -1594,15 +1594,62 @@
 <!-- ── footer loop · the donut returns to close the page (pulled from v16's hero) ── -->
 <style>
   #cta.closer{padding-bottom:72px;}                 /* shots gone → trim the tall gap */
-  .bp-foot{position:relative;height:clamp(340px,40vw,520px);overflow:hidden;}
-  .bp-foot canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
-  .bp-foot .foot-cap{position:absolute;left:0;right:0;bottom:30px;text-align:center;
-    font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;
-    color:var(--dim2);pointer-events:none;}
+  /* bigger, bleeding loop + hero-style HUD annotations */
+  .bp-foot{position:relative;height:clamp(440px,48vw,700px);overflow:hidden;}
+  .bp-foot canvas{position:absolute;inset:0;width:100%;height:100%;display:block;
+    /* fade top + bottom so the loop bleeds into the CTA above and the footer below */
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 13%,#000 87%,transparent 100%);
+    mask-image:linear-gradient(to bottom,transparent 0,#000 13%,#000 87%,transparent 100%);}
+  .bp-foot .hud{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .bp-foot .hud .lnf{stroke:rgba(233,240,255,0.6);fill:none;}
+  .bp-foot .hud text{fill:#c3d2ff;font-family:var(--mono);font-size:15px;letter-spacing:2px;}
+  .bp-foot .fchrome{position:absolute;inset:0;pointer-events:none;font-family:var(--mono);}
+  .bp-foot .fc-cnr{position:absolute;width:32px;height:32px;border:0 solid rgba(233,240,255,.45);}
+  .bp-foot .fc-tl{left:26px;top:24px;border-left-width:1px;border-top-width:1px;}
+  .bp-foot .fc-tr{right:26px;top:24px;border-right-width:1px;border-top-width:1px;}
+  .bp-foot .fc-bl{left:26px;bottom:24px;border-left-width:1px;border-bottom-width:1px;}
+  .bp-foot .fc-br{right:26px;bottom:24px;border-right-width:1px;border-bottom-width:1px;}
+  .bp-foot .fc-ticks{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;}
+  .bp-foot .fc-ticks.l{left:26px;align-items:flex-start;}
+  .bp-foot .fc-ticks.r{right:26px;align-items:flex-end;}
+  .bp-foot .fc-ticks i{display:block;height:4px;background:#e9f0ff;opacity:.55;}
+  .bp-foot .fc-tag{position:absolute;right:64px;bottom:30px;text-align:right;line-height:1.5;
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim2);}
+  .bp-foot .fc-tag b{display:block;font-weight:400;font-size:18px;letter-spacing:.16em;color:#e9f0ff;}
 </style>
 <section class="bp-foot" aria-hidden="true">
   <canvas id="bp-foot"></canvas>
-  <div class="foot-cap">The product loop · always running</div>
+  <!-- signal annotations tapping the loop (the callouts from the hero). viewBox is
+       centred on the donut, so leaders/dots track its left + right shoulders. -->
+  <svg class="hud" viewBox="0 0 1680 600" preserveAspectRatio="xMidYMid meet">
+    <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
+      <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
+      <path d="M1380 154 L1300 182"/><path d="M1430 300 L1352 300"/><path d="M1380 452 L1300 418"/>
+      <path d="M300 154 L380 182"/><path d="M250 300 L328 300"/><path d="M300 452 L380 418"/>
+    </g>
+    <g fill="#e9f0ff">
+      <circle cx="1300" cy="182" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+      <circle cx="1352" cy="300" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
+      <circle cx="1300" cy="418" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
+      <circle cx="380" cy="182" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
+      <circle cx="328" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
+      <circle cx="380" cy="418" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
+    </g>
+    <text x="1610" y="156" text-anchor="end">WEB VITALS</text>
+    <text x="1610" y="306" text-anchor="end">PRODUCT FEEDBACK</text>
+    <text x="1610" y="456" text-anchor="end">SESSION REPLAYS</text>
+    <text x="80" y="156">COMPETITIVE</text>
+    <text x="80" y="306">AGENT TRACES</text>
+    <text x="80" y="456">CUSTOM DATA · MCP</text>
+  </svg>
+  <!-- HUD chrome: corner frames, edge tick scales, version tag -->
+  <div class="fchrome">
+    <span class="fc-cnr fc-tl"></span><span class="fc-cnr fc-tr"></span>
+    <span class="fc-cnr fc-bl"></span><span class="fc-cnr fc-br"></span>
+    <div class="fc-ticks l"><i style="width:16px"></i><i style="width:10px"></i><i style="width:16px"></i><i style="width:7px"></i><i style="width:14px"></i><i style="width:10px"></i></div>
+    <div class="fc-ticks r"><i style="width:16px"></i><i style="width:10px"></i><i style="width:16px"></i><i style="width:7px"></i><i style="width:14px"></i><i style="width:10px"></i></div>
+    <div class="fc-tag"><b>[ 2026 ]</b>The Product Loop · Always Running</div>
+  </div>
 </section>
 <script>
 (function(){
@@ -1611,7 +1658,7 @@
   function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
   resize();window.addEventListener('resize',resize);
   const TAU=Math.PI*2, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const NP=2400,pts=[];
+  const NP=2800,pts=[];
   for(let i=0;i<NP;i++)pts.push({u:Math.random()*TAU,v:Math.random()*TAU,sp:0.10+Math.random()*0.12,dv:(Math.random()-0.5)*0.05,sz:Math.random()});
   const NS=16,streams=[];
   for(let i=0;i<NS;i++){const big=i<5;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:1.4+Math.random()*1.8,vturns:0.6+Math.random()*1.4,off:Math.random(),sp:0.018+Math.random()*0.024,big:big});}
@@ -1619,10 +1666,12 @@
   function frame(now){
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
     // navy-glow ground; vertical edges land on --bg so the band melts into the CTA above + footer below
-    const g=x.createRadialGradient(W*0.5,H*0.5,0,W*0.5,H*0.5,H*0.55);
+    const g=x.createRadialGradient(W*0.5,H*0.5,0,W*0.5,H*0.5,Math.max(W,H)*0.5);
     g.addColorStop(0,'#16265c');g.addColorStop(0.5,'#0c1430');g.addColorStop(1,'#070b1c');
     x.fillStyle=g;x.fillRect(0,0,W,H);
-    const cx=W*0.5,cy=H*0.5,R=Math.min(W,H)*0.32,r=R*0.42,Rr=R+r;
+    // v17: bigger donut (tied to width) so it bleeds toward the edges; the CSS mask
+    // fades the top/bottom so it dissolves into the page.
+    const cx=W*0.5,cy=H*0.5,R=Math.min(W*0.27,H*0.62),r=R*0.42,Rr=R+r;
     const e=0.85,a=t*0.055,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=2.6*Rr;
     function proj(u,v){
       const cu=Math.cos(u),su=Math.sin(u),cv=Math.cos(v),sv=Math.sin(v);
@@ -1912,7 +1961,8 @@
   // left tail (band) and into --bg at the edges (so the hero melts into the page).
   //   yc(x) = base + envelope(x)·Σ sin(k·x ± speed·t)
   // TUNING KNOBS: FOCUS/SPREAD = where the wave lives across the width · AMP (in yc)
-  //   = wave height · fade alpha (0.12) = trail length · NP cap = datapoint volume.
+  //   = wave height · fade alpha (0.16) = trail length (higher = shorter/cleaner
+  //   strands) · NP cap = datapoint volume · p.dim spread = opacity layering.
   const FOCUS=0.62, SPREAD=0.27;
   function env(nx){const d=(nx-FOCUS)/SPREAD;return Math.exp(-0.5*d*d);}          // amplitude swell 0..1
   function band(nx){return Math.min(1,Math.max(0,(nx-0.20)/0.16));}              // fade the left tail
@@ -1927,9 +1977,12 @@
     p.vx=6+Math.random()*22; p.vy=8+Math.random()*26;
     p.sz=0.5+Math.random()*1.0;
     p.lead=!seed && Math.random()<0.014; if(p.lead)p.sz=1.9+Math.random()*1.1;
+    // persistent opacity tier → distinct layers instead of one merged mass.
+    // Math.random()² skews most strands dim; a minority ride bright.
+    p.dim=p.lead?1:(0.22+Math.random()*Math.random()*0.95);
     p.tone=Math.random()<0.5?'#eef4ff':'#cfe0ff';
   }
-  function build(){NP=Math.min(2600,Math.round(W*H/520));pts=[];for(let i=0;i<NP;i++){const p={};spawn(p,true);p.y=Math.random()*H;pts.push(p);}}
+  function build(){NP=Math.min(2100,Math.round(W*H/640));pts=[];for(let i=0;i<NP;i++){const p={};spawn(p,true);p.y=Math.random()*H;pts.push(p);}}
   build();window.addEventListener('resize',function(){resize();build();});
   let last=0;
   function frame(now){
@@ -1938,13 +1991,14 @@
     // into silky streamlines (the cascade + wave trails). Edges land on --bg.
     const g=x.createRadialGradient(W*FOCUS,H*0.58,0,W*FOCUS,H*0.58,Math.max(W,H)*0.85);
     g.addColorStop(0,'#16265c');g.addColorStop(0.5,'#0c1430');g.addColorStop(1,'#070b1c');
-    x.globalCompositeOperation='source-over';x.globalAlpha=reduce?1:0.12;
+    x.globalCompositeOperation='source-over';x.globalAlpha=reduce?1:0.16;
     x.fillStyle=g;x.fillRect(0,0,W,H);x.globalAlpha=1;
 
-    // faint stacked wavelengths (the "beach wave" bands)
-    x.lineWidth=1;x.strokeStyle='rgba(170,196,255,0.08)';
-    for(let b=-2;b<=2;b++){x.beginPath();let started=false;
-      for(let px=W*0.16;px<=W;px+=14){const nx=px/W;if(band(nx)<=0.02){started=false;continue;}const yy=yc(px,t)+b*15;if(!started){x.moveTo(px,yy);started=true;}else x.lineTo(px,yy);}
+    // faint stacked wavelengths (the "beach wave" bands) — opacity falls off with
+    // distance from the core so they read as separate layers, not one fill.
+    x.lineWidth=1;
+    for(let b=-2;b<=2;b++){x.strokeStyle='rgba(170,196,255,'+(0.10-Math.abs(b)*0.022).toFixed(3)+')';x.beginPath();let started=false;
+      for(let px=W*0.16;px<=W;px+=14){const nx=px/W;if(band(nx)<=0.02){started=false;continue;}const yy=yc(px,t)+b*19;if(!started){x.moveTo(px,yy);started=true;}else x.lineTo(px,yy);}
       x.stroke();}
 
     // datapoints → signal
@@ -1956,7 +2010,7 @@
       const vxT=20+150*near; p.vx+=(vxT-p.vx)*Math.min(1,dt*3); // drift right, faster once joined
       p.x+=p.vx*dt; p.y+=p.vy*dt;
       if(p.x>W+30||p.y>H+60){spawn(p);}
-      const a=(0.06+near*0.5)*band(p.x/W)*(p.lead?1.7:1);
+      const a=(0.04+near*0.40)*band(p.x/W)*(p.lead?1.9:1)*p.dim;
       x.globalAlpha=Math.min(1,a);x.fillStyle=p.tone;
       const s=p.sz*(0.7+near*0.8);
       x.beginPath();x.arc(p.x,p.y,s,0,TAU);x.fill();
