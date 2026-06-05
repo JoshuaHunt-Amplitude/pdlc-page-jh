@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wave Coherence &mdash; Amplitude Wave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:#030409;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace}
+  .stage{position:relative;width:min(100vw,177.78vh);aspect-ratio:16/9;overflow:hidden;background:#030409}
+  canvas,.hud{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hud{pointer-events:none}
+  .ln{stroke:#cdd8ff;fill:none}
+  .dimln{stroke:#5c6fac;fill:none}
+  .ey{font-weight:500;font-size:18px;letter-spacing:5px;fill:#aebeff}
+  .title{font-weight:600;font-size:60px;letter-spacing:12px;fill:#f2f6ff}
+  .sub{font-weight:400;font-size:18px;letter-spacing:5px;fill:#91a3dc}
+  .k{font-weight:400;font-size:14px;letter-spacing:2px;fill:#7686b6}
+  .v{font-weight:400;font-size:15px;letter-spacing:2px;fill:#e9efff}
+  .sm{font-weight:400;font-size:13px;letter-spacing:2px;fill:#8fa2d6}
+  .cap{font-weight:500;font-size:18px;letter-spacing:4px;fill:#e9efff}
+  .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
+  .ghost{opacity:.48}
+  .reveal{opacity:0;transition:opacity .5s ease}
+  .rv{font-weight:400;font-size:13px;letter-spacing:3px;fill:#9fb6ff}
+  .backing{fill:#05070e;opacity:0.5}
+</style>
+</head>
+<body>
+<div class="stage">
+  <canvas id="c"></canvas>
+  <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
+    <!-- instrument frame -->
+    <g class="ln" stroke-width="1.35" opacity="0.78">
+      <path d="M42 98 V42 H98"/><path d="M110 62 h18 M119 53 v18"/>
+      <path d="M1638 98 V42 H1582"/>
+      <path d="M42 847 V903 H98"/>
+      <path d="M1638 847 V903 H1582"/>
+      <circle cx="1598" cy="116" r="11"/><path d="M1598 99 V133 M1581 116 H1615"/>
+    </g>
+
+    <!-- title -->
+    <text class="ey" x="82" y="112">AMPLITUDE WAVE &#183; COHERENCE FIELD</text>
+    <text class="title" x="80" y="182">COHERE YOUR SIGNALS</text>
+    <text class="sub" x="82" y="226">SIGNALS &#160;&#8226;&#160; OPPORTUNITIES &#160;&#8226;&#160; OUTCOMES</text>
+
+    <!-- left source panel -->
+    <g class="ln" stroke-width="1.25" opacity="0.72">
+      <path d="M82 318 h-12 V616 h12"/>
+      <path d="M332 318 h12 V616 h-12"/>
+      <path d="M100 360 H318 M100 410 H318 M100 460 H318 M100 510 H318 M100 560 H318"/>
+    </g>
+    <text class="cap" x="102" y="342">INCOMING SIGNALS</text>
+    <g>
+      <circle cx="110" cy="382" r="4" fill="#e9efff"/><text class="v" x="132" y="388">ANALYTICS</text>
+      <circle cx="110" cy="432" r="4" fill="#a9c7ff"/><text class="v" x="132" y="438">SESSION REPLAYS</text>
+      <circle cx="110" cy="482" r="4" fill="#c4a3ff"/><text class="v" x="132" y="488">FEEDBACK</text>
+      <circle cx="110" cy="532" r="4" fill="#70e5bd"/><text class="v" x="132" y="538">AGENT TRACES</text>
+      <circle cx="110" cy="582" r="4" fill="#ff9bba"/><text class="v" x="132" y="588">WEB VITALS</text>
+    </g>
+    <text class="rv reveal" id="rv-src" x="102" y="640">+ YOUR OWN SOURCES VIA MCP</text>
+
+    <!-- process labels above the field -->
+    <g class="dimln" stroke-width="1.1" opacity="0.64">
+      <path d="M420 294 H1532"/>
+      <path d="M420 294 v18 M712 294 v18 M1004 294 v18 M1296 294 v18 M1532 294 v18"/>
+    </g>
+    <g>
+      <text class="sm" x="420" y="276">SENSE</text>
+      <text class="sm" x="712" y="276">CORROBORATE</text>
+      <text class="sm" x="1004" y="276">COMPOSE</text>
+      <text class="sm" x="1296" y="276">APPROVE</text>
+      <text class="sm" x="1532" y="276" text-anchor="end">LEARN</text>
+    </g>
+
+    <!-- coherence lock -->
+    <g class="ln" stroke-width="1.4" opacity="0.92">
+      <path d="M1080 426 h-18 v-18 M1172 426 h18 v-18 M1080 520 h-18 v18 M1172 520 h18 v18"/>
+      <circle cx="1126" cy="473" r="42" opacity="0.34">
+        <animate attributeName="r" values="34;54;34" dur="4.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.15;0.52;0.15" dur="4.8s" repeatCount="indefinite"/>
+      </circle>
+      <path d="M1178 462 L1262 420 L1440 420" opacity="0.72"/>
+    </g>
+    <text class="sm" x="1126" y="556" text-anchor="middle" style="fill:#e9efff">OPPORTUNITY LOCK</text>
+    <text class="rv reveal" id="rv-lock" x="1126" y="586" text-anchor="middle">CORROBORATED ACROSS SOURCES</text>
+
+    <!-- right readout -->
+    <rect class="backing" x="1446" y="384" width="186" height="232" rx="6"/>
+    <g class="ln" stroke-width="1.25" opacity="0.76">
+      <path d="M1452 384 h-14 V588 h14"/>
+      <path d="M1614 384 h14 V588 h-14"/>
+      <path d="M1464 452 H1600"/>
+      <path d="M1464 518 H1600"/>
+    </g>
+    <text class="cap" x="1464" y="414">OPPORTUNITY</text>
+    <text class="k" x="1464" y="440">EVIDENCE</text><text class="v" x="1464" y="472">CROSS-SOURCE</text>
+    <text class="k" x="1464" y="506">ACTION</text><text class="v" x="1464" y="538">REVIEW-READY</text>
+    <text class="k" x="1464" y="572">OUTCOME</text><text class="v" x="1464" y="604">MEASURED</text>
+    <text class="rv reveal" id="rv-opp" x="1626" y="640" text-anchor="end">REVIEW IN UI &#183; MCP &#183; CLI</text>
+
+    <!-- bottom story line -->
+    <text class="hero" x="82" y="846">Wave coheres scattered product signals into the opportunities worth shipping.</text>
+    <text class="sm" x="82" y="878">A PROACTIVE PRODUCT AGENT FROM AMPLITUDE</text>
+    <text class="cap" x="1486" y="878">[ 2026 ]</text>
+    <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
+    <circle id="cursorRing" class="reveal" r="24" fill="none" stroke="#7d93ff" stroke-width="1.2"/>
+  </svg>
+</div>
+
+<script id="bg-vertex" type="x-shader/x-vertex">
+  attribute vec2 a_position;
+  void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+  }
+</script>
+
+<script id="bg-fragment" type="x-shader/x-fragment">
+  precision highp float;
+  uniform vec2 u_resolution;
+  uniform float u_time;
+
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+  }
+
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    mat2 r = mat2(0.82, 0.57, -0.57, 0.82);
+    for (int i = 0; i < 5; i++) {
+      v += a * noise(p);
+      p = r * p * 2.02 + vec2(19.1, 7.7);
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  void main() {
+    vec2 st = gl_FragCoord.xy / u_resolution;
+    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
+    float t = u_time;
+
+    float bgFall = smoothstep(-1.02, 0.58, uv.x);
+    float curl = fbm(vec2(uv.x * 2.15 + t * 0.035, uv.y * 1.7 - t * 0.018)) - 0.5;
+    float waveY = 0.48 - 0.62 * bgFall * bgFall
+      + 0.18 * curl
+      + 0.042 * sin(uv.x * 8.4 + uv.y * 2.6 + t * 0.12);
+    float beam = exp(-pow((uv.y - waveY) * 2.35, 2.0));
+    float beamCore = exp(-pow((uv.y - waveY) * 7.4, 2.0));
+    float opportunity = exp(-dot((uv - vec2(0.36, 0.0)) * vec2(1.1, 1.45), (uv - vec2(0.36, 0.0)) * vec2(1.1, 1.45)) * 7.0);
+
+    float interference = 0.0;
+    for (int i = 0; i < 5; i++) {
+      float fi = float(i);
+      float p = sin(length(uv - vec2(-0.74 + fi * 0.19, -0.34 + fi * 0.17)) * (17.0 + fi * 2.4) - t * (0.82 + fi * 0.07));
+      interference += smoothstep(0.82, 1.0, p) * (0.11 - fi * 0.012);
+    }
+
+    float grain = hash(gl_FragCoord.xy + floor(t * 18.0));
+    float field = fbm(uv * 2.2 + vec2(t * 0.025, -t * 0.018));
+    float verticalMist = pow(clamp(1.0 - abs(uv.x - 0.10) * 1.25, 0.0, 1.0), 2.0)
+      * smoothstep(0.58, -0.42, uv.y);
+    float leftShade = smoothstep(0.0, 0.24, st.x);
+    float rightShade = 1.0 - smoothstep(0.70, 1.0, st.x);
+    float vgn = smoothstep(0.93, 0.28, length(st - 0.5));
+
+    vec3 ink = vec3(0.006, 0.010, 0.026);
+    vec3 blue = vec3(0.010, 0.090, 0.320);
+    vec3 violet = vec3(0.180, 0.130, 0.430);
+    vec3 laser = vec3(0.370, 0.640, 1.000);
+    vec3 white = vec3(0.880, 0.950, 1.000);
+
+    vec3 col = mix(ink, blue, 0.32 + 0.30 * field);
+    col += violet * (beam * 0.075 + interference * 0.74);
+    col += laser * beam * 0.052;
+    col += white * beamCore * 0.024;
+    col += vec3(0.05, 0.16, 0.42) * verticalMist * 0.20;
+    col += vec3(0.32, 0.74, 1.0) * opportunity * 0.18;
+    col *= vgn * leftShade * rightShade;
+    col += (grain - 0.5) * 0.018;
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+</script>
+
+<script id="particle-vertex" type="x-shader/x-vertex">
+  precision highp float;
+  attribute vec4 a_seed;
+  attribute vec4 a_extra;
+  uniform vec2 u_resolution;
+  uniform float u_time;
+  uniform vec2 u_mouse;
+  uniform float u_hover;
+  varying vec4 v_color;
+  varying float v_alpha;
+  varying float v_glow;
+
+  float hash(float n) {
+    return fract(sin(n) * 43758.5453123);
+  }
+
+  float hash2(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash2(i), hash2(i + vec2(1.0, 0.0)), u.x),
+               mix(hash2(i + vec2(0.0, 1.0)), hash2(i + vec2(1.0, 1.0)), u.x), u.y);
+  }
+
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    mat2 r = mat2(0.80, 0.60, -0.60, 0.80);
+    for (int i = 0; i < 4; i++) {
+      v += a * noise(p);
+      p = r * p * 2.03 + vec2(11.7, 4.2);
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  float sourceBand(float id) {
+    return mix(0.72, -0.72, id / 4.0);
+  }
+
+  vec3 sourceColor(float id) {
+    if (id < 0.5) return vec3(0.82, 0.92, 1.00);
+    if (id < 1.5) return vec3(0.50, 0.72, 1.00);
+    if (id < 2.5) return vec3(0.72, 0.52, 1.00);
+    if (id < 3.5) return vec3(0.32, 0.92, 0.72);
+    return vec3(1.00, 0.52, 0.70);
+  }
+
+  void main() {
+    float t = u_time;
+    float speed = 0.018 + a_seed.z * 0.052;
+    float lane = floor(a_extra.x * 5.0);
+    float cycle = fract(a_seed.x + t * speed);
+    float x = mix(-0.88, 0.94, cycle);
+
+    // Waves stay tall and structured across the left; coherence only takes hold
+    // in the right third as the field locks into the opportunity.
+    float lock = smoothstep(0.02, 0.82, x);
+    float phaseLock = lock * lock * (3.0 - 2.0 * lock);
+    float convergence = phaseLock * 0.85;
+    // A stack of undulating ribbons = an ocean of signal swells. Particles pack
+    // into thin bands that travel as sine crests, so clear wave structure reads
+    // across the field before it coheres into the lock.
+    float nB = 7.0;
+    float bandIdx = floor(a_seed.y * nB);
+    float bandCenter = mix(0.86, -0.86, bandIdx / (nB - 1.0));
+    float inBand = fract(a_seed.y * nB) - 0.5;
+    float ribbon = bandCenter + inBand * 0.075;
+    float swell =
+        0.135 * sin(x * 3.0 - t * 0.90 + bandIdx * 0.85)
+      + 0.060 * sin(x * 6.4 - t * 1.40 + bandIdx * 1.70 + 1.1)
+      + 0.028 * sin(x * 12.0 - t * 2.10 + a_seed.w * 6.2831);
+    float strandId = floor(a_seed.w * 15.0);
+    float strandPhase = strandId * 1.37 + a_seed.x * 4.0;
+    float streamOffset = (hash(strandId + 13.0) - 0.5) * 0.34;
+    float fall = smoothstep(-1.02, 0.58, x);
+    float gravity = 0.62 * fall * fall;
+    float slowCurl = fbm(vec2(x * 2.2 + strandPhase, t * 0.070 + a_seed.w * 2.4)) - 0.5;
+    float fastSpray = fbm(vec2(x * 8.4 + a_seed.x * 14.0, t * 0.18 + a_seed.y * 7.0)) - 0.5;
+    float waterfall = 0.55 + streamOffset * (1.0 - fall * 0.52) - gravity + slowCurl * 0.25 + fastSpray * 0.075;
+    // Swells are tall upstream and flatten as the field coheres into the lock.
+    float waveDamp = 1.0 - phaseLock;
+    float source = ribbon + swell * waveDamp + slowCurl * 0.06;
+    float sprayWidth = 0.16 + 0.22 * smoothstep(0.40, 0.98, fall) + 0.07 * fastSpray;
+    // Tiny scatter only, so the ribbons stay crisp wave lines.
+    float scatter = inBand * 0.045 + fastSpray * 0.025 * waveDamp;
+    float y = mix(source + scatter, waterfall + (a_seed.y - 0.5) * sprayWidth, convergence);
+
+    float cascadeMask = step(a_extra.z, 0.24);
+    float dropCycle = fract(a_seed.x + t * (0.035 + a_seed.z * 0.060));
+    float cascadeLife = smoothstep(0.04, 0.22, dropCycle) * (1.0 - smoothstep(0.78, 0.98, dropCycle));
+    float curtainX = -0.18 + (a_seed.y - 0.5) * 0.82 + streamOffset * 0.22
+      + (fbm(vec2(a_seed.y * 4.0 + t * 0.030, dropCycle * 2.6)) - 0.5) * (0.20 + 0.22 * dropCycle);
+    float curtainY = mix(0.66, -0.50, dropCycle)
+      + (fbm(vec2(curtainX * 3.1, dropCycle * 5.0 + t * 0.08)) - 0.5) * 0.16;
+    x = mix(x, curtainX, cascadeMask);
+    y = mix(y, curtainY, cascadeMask);
+    waterfall = mix(waterfall, curtainY, cascadeMask);
+
+    float crest = exp(-pow((x - 0.34) * 2.35, 2.0) - pow((y - waterfall) * 5.4, 2.0));
+    float packet = pow(sin((cycle + a_seed.w * 0.13) * 6.2831853) * 0.5 + 0.5, 7.0);
+    float shimmer = 0.56 + 0.44 * sin(t * 7.1 + a_seed.w * 39.0 + x * 11.0);
+    float coherence = smoothstep(0.18, 0.88, convergence);
+
+    vec3 src = sourceColor(lane);
+    vec3 coherent = mix(vec3(0.16, 0.42, 1.00), vec3(0.56, 0.80, 1.00), coherence);
+    vec3 col = mix(src, coherent, phaseLock);
+    col += vec3(0.38, 0.74, 1.0) * crest * 0.30;
+
+    // Ridge glow concentrated on the ribbon centerline so the upstream wave
+    // crests read as bright swell lines, not a flat haze.
+    float ridge = exp(-inBand * inBand * 20.0) * (1.0 - cascadeMask);
+
+    // Mouse attractor: particles near the cursor are gently drawn in and lit,
+    // so hovering nudges the field without disrupting the overall flow.
+    float aspect = u_resolution.x / u_resolution.y;
+    vec2 clip = vec2(x * 2.0 / aspect, y);
+    float md = distance(clip, u_mouse);
+    float pull = exp(-md * md * 7.5) * u_hover;
+    clip += (u_mouse - clip) * pull * 0.16;
+
+    gl_Position = vec4(clip, 0.0, 1.0);
+    // Alpha is scaled down hard because density is ~10x; brightness accumulates
+    // additively across the many overlapping points.
+    gl_PointSize = (0.40 + a_extra.y * 0.70 + packet * 0.52 + crest * 1.70 + ridge * 0.45 + pull * 1.30) * (1.0 + coherence * 0.20);
+    v_alpha = (0.0110 + ridge * 0.0110 * waveDamp + coherence * 0.0210 + crest * 0.0240 + cascadeMask * 0.0085) * shimmer;
+    v_alpha += pull * 0.030 * shimmer;
+    v_alpha *= mix(1.0, cascadeLife, cascadeMask);
+    v_glow = crest + packet * 0.16 + pull * 0.30;
+    v_color = vec4(col + vec3(0.20, 0.40, 0.85) * pull * 0.6, 1.0);
+  }
+</script>
+
+<script id="particle-fragment" type="x-shader/x-fragment">
+  precision mediump float;
+  varying vec4 v_color;
+  varying float v_alpha;
+  varying float v_glow;
+
+  void main() {
+    vec2 p = gl_PointCoord - vec2(0.5);
+    float d = length(p);
+    if (d > 0.5) discard;
+    float core = smoothstep(0.50, 0.02, d);
+    float halo = exp(-d * d * 13.0);
+    float alpha = (core * 0.72 + halo * 0.28) * v_alpha;
+    vec3 col = v_color.rgb + vec3(0.22, 0.48, 0.90) * v_glow;
+    gl_FragColor = vec4(col, alpha);
+  }
+</script>
+
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl');
+  if (!gl) {
+    console.error('WebGL not supported');
+    return;
+  }
+
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let last = 0;
+  let time = 0;
+
+  function shader(type, source) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, source);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(s) || 'Shader compile failed');
+    }
+    return s;
+  }
+
+  function program(vsId, fsId) {
+    const p = gl.createProgram();
+    gl.attachShader(p, shader(gl.VERTEX_SHADER, document.getElementById(vsId).textContent));
+    gl.attachShader(p, shader(gl.FRAGMENT_SHADER, document.getElementById(fsId).textContent));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+      throw new Error(gl.getProgramInfoLog(p) || 'Program link failed');
+    }
+    return p;
+  }
+
+  const bgProgram = program('bg-vertex', 'bg-fragment');
+  const ptProgram = program('particle-vertex', 'particle-fragment');
+
+  const quad = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    -1, -1,  1, -1, -1,  1,
+    -1,  1,  1, -1,  1,  1
+  ]), gl.STATIC_DRAW);
+
+  let seed = 20260605 >>> 0;
+  function rnd() {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+
+  const count = 2800000;
+  const seeds = new Float32Array(count * 4);
+  const extras = new Float32Array(count * 4);
+  for (let i = 0; i < count; i++) {
+    const lane = Math.floor(rnd() * 5);
+    seeds[i * 4 + 0] = rnd();
+    seeds[i * 4 + 1] = rnd();
+    seeds[i * 4 + 2] = rnd();
+    seeds[i * 4 + 3] = rnd();
+    extras[i * 4 + 0] = (lane + rnd() * 0.96) / 5;
+    extras[i * 4 + 1] = rnd();
+    extras[i * 4 + 2] = rnd();
+    extras[i * 4 + 3] = rnd();
+  }
+
+  const seedBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, seedBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
+
+  const extraBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, extraBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, extras, gl.STATIC_DRAW);
+
+  const bg = {
+    position: gl.getAttribLocation(bgProgram, 'a_position'),
+    resolution: gl.getUniformLocation(bgProgram, 'u_resolution'),
+    time: gl.getUniformLocation(bgProgram, 'u_time')
+  };
+
+  const pts = {
+    seed: gl.getAttribLocation(ptProgram, 'a_seed'),
+    extra: gl.getAttribLocation(ptProgram, 'a_extra'),
+    resolution: gl.getUniformLocation(ptProgram, 'u_resolution'),
+    time: gl.getUniformLocation(ptProgram, 'u_time'),
+    mouse: gl.getUniformLocation(ptProgram, 'u_mouse'),
+    hover: gl.getUniformLocation(ptProgram, 'u_hover')
+  };
+
+  // Hover state: clip-space cursor for the shader attractor, eased hover amount,
+  // and proximity-driven reveal of hidden HUD signals.
+  const stage = document.querySelector('.stage');
+  let mouseClipX = -2, mouseClipY = -2;
+  let hover = 0, hoverTarget = 0;
+  const ring = document.getElementById('cursorRing');
+  const zones = [
+    { el: document.getElementById('rv-src'), cx: 210, cy: 470, r: 230 },
+    { el: document.getElementById('rv-lock'), cx: 1126, cy: 473, r: 240 },
+    { el: document.getElementById('rv-opp'), cx: 1539, cy: 500, r: 190 }
+  ];
+
+  function onMove(e) {
+    const rect = stage.getBoundingClientRect();
+    const fx = (e.clientX - rect.left) / rect.width;
+    const fy = (e.clientY - rect.top) / rect.height;
+    mouseClipX = fx * 2 - 1;
+    mouseClipY = 1 - fy * 2;
+    hoverTarget = 1;
+    const vbX = fx * 1680, vbY = fy * 945;
+    if (ring) { ring.setAttribute('cx', vbX.toFixed(1)); ring.setAttribute('cy', vbY.toFixed(1)); ring.style.opacity = '0.5'; }
+    for (const z of zones) {
+      if (!z.el) continue;
+      const d = Math.hypot(vbX - z.cx, vbY - z.cy);
+      const op = Math.max(0, Math.min(1, 1 - d / z.r));
+      z.el.style.opacity = (op * 0.85).toFixed(3);
+    }
+  }
+  function onLeave() {
+    hoverTarget = 0;
+    if (ring) ring.style.opacity = '0';
+    for (const z of zones) { if (z.el) z.el.style.opacity = '0'; }
+  }
+  stage.addEventListener('mousemove', onMove);
+  stage.addEventListener('mouseleave', onLeave);
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = canvas.clientWidth;
+    height = canvas.clientHeight;
+    canvas.width = Math.max(1, Math.floor(width * dpr));
+    canvas.height = Math.max(1, Math.floor(height * dpr));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw(now) {
+    now *= 0.001;
+    let dt = now - last;
+    last = now;
+    if (dt > 0.1) dt = 0.1;
+    time += dt;
+
+    gl.disable(gl.BLEND);
+    gl.useProgram(bgProgram);
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.enableVertexAttribArray(bg.position);
+    gl.vertexAttribPointer(bg.position, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform2f(bg.resolution, canvas.width, canvas.height);
+    gl.uniform1f(bg.time, time);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    gl.useProgram(ptProgram);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.bindBuffer(gl.ARRAY_BUFFER, seedBuffer);
+    gl.enableVertexAttribArray(pts.seed);
+    gl.vertexAttribPointer(pts.seed, 4, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, extraBuffer);
+    gl.enableVertexAttribArray(pts.extra);
+    gl.vertexAttribPointer(pts.extra, 4, gl.FLOAT, false, 0, 0);
+    hover += (hoverTarget - hover) * Math.min(1, dt * 6);
+    gl.uniform2f(pts.resolution, canvas.width, canvas.height);
+    gl.uniform1f(pts.time, time);
+    gl.uniform2f(pts.mouse, mouseClipX, mouseClipY);
+    gl.uniform1f(pts.hover, hover);
+    gl.drawArrays(gl.POINTS, 0, count);
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
