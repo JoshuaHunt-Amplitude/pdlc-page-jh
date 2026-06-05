@@ -441,12 +441,15 @@
     font-weight: 500; letter-spacing: -0.01em;
   }
 
-  .manifesto-head { max-width: 760px; margin: 0 auto; }
+  /* width:100% so head + body fill the grid track to the SAME capped width and
+     share one left edge — otherwise auto-margin grid items shrink to content
+     width and a short headline lands at a different x than the body. */
+  .manifesto-head { width: 100%; max-width: 760px; margin: 0 auto; }
   .manifesto-head .eyebrow { margin-bottom: 24px; }
   .manifesto-head h2 { font-family: var(--sans); font-size: clamp(34px, 4.4vw, 54px); font-weight:400; letter-spacing: -0.03em; line-height: 1.04; margin: 0; max-width: 720px; }
   .manifesto-head h2 .a { color: var(--blue-d); font-style:normal; font-weight:400; }
 
-  .manifesto-body { max-width: 760px; margin: 0 auto; }
+  .manifesto-body { width: 100%; max-width: 760px; margin: 0 auto; }
   @media (max-width: 880px) { .manifesto-body { grid-template-columns: 1fr; gap: 40px; } }
   .manifesto-body p { font-size: 17px; line-height: 1.72; color: var(--dim); margin: 0 0 18px; }
   .manifesto-body p:last-child { margin-bottom: 0; }
