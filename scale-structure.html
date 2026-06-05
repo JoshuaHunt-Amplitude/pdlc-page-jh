@@ -183,18 +183,17 @@
     return v;
   }
 
-  // Light domain warp keeps the web from looking mechanically perfect without
-  // bending filaments into biological veins.
+  // Domain warping to create organic, curved, braided filaments
   vec2 warp(vec2 uv) {
     vec2 q = vec2(
       fbm(uv + vec2(0.0, 0.0)),
       fbm(uv + vec2(5.2, 1.3))
     );
     vec2 r = vec2(
-      fbm(uv + 1.2 * q + vec2(1.7, 9.2)),
-      fbm(uv + 1.2 * q + vec2(8.3, 2.8))
+      fbm(uv + 2.0 * q + vec2(1.7, 9.2)),
+      fbm(uv + 2.0 * q + vec2(8.3, 2.8))
     );
-    return uv + 0.32 * r;
+    return uv + 0.7 * r;
   }
 
   // 2D Worley noise for cell-boundary filament structures
@@ -207,8 +206,8 @@
       for (int i = -1; i <= 1; i++) {
         vec2 g = vec2(float(i), float(j));
         vec2 o = hash2(n + g);
-        // Keep cosmic structure mostly fixed; only a tiny seed shimmer remains.
-        o += 0.018 * sin(u_time * 0.025 + o.yx * 6.2831);
+        // Extremely slow organic drift of the nodes
+        o = 0.5 + 0.5 * sin(u_time * 0.04 + o * 6.2831);
         vec2 r = g + o - f;
         float d = dot(r, r);
         if (d < d1) {
@@ -267,11 +266,11 @@
 
     // Primary filaments (Worley boundary ridge). High exponent = thin, sharp filaments.
     vec2 w1 = worley(warp(coord));
-    float f1 = exp(-24.0 * (w1.y - w1.x));
+    float f1 = exp(-15.0 * (w1.y - w1.x));
 
     // Secondary, finer filaments
     vec2 w2 = worley(warp(coord * 2.1 + vec2(17.3, 34.1)));
-    float f2 = exp(-34.0 * (w2.y - w2.x));
+    float f2 = exp(-22.0 * (w2.y - w2.x));
 
     // Background diffuse sheets / gas (kept very faint so voids stay dark)
     float sheets = clamp(fbm(coord * 0.8) * 0.5 + 0.5, 0.0, 1.0);
@@ -294,7 +293,7 @@
     float target_core = exp(-d_target * d_target * 1500.0) * 1.7 * coreShape;
 
     // Combine all structural layers
-    float total_density = f1 * 0.72 + f2 * 0.22 + sheets * 0.025 + nodes + secondary_nodes + clusterBoost + target_core;
+    float total_density = f1 * 0.82 + f2 * 0.30 + sheets * 0.045 + nodes + secondary_nodes + clusterBoost + target_core;
 
     // Add granular particle/dust texture (mild, so it reads as grain not fog)
     float fine_dust = dust(gl_FragCoord.xy * 0.72);
