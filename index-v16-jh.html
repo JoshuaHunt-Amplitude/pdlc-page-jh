@@ -1631,12 +1631,14 @@
         if (e.isIntersecting && !fired) {
           fired = true;
           steps.forEach(function(step, i) {
-            setTimeout(function(){ step.classList.add('in'); }, i * 200);
+            setTimeout(function(){ step.classList.add('in'); }, i * 600);
           });
           obs.disconnect();
         }
       });
-    }, { threshold: 0.25 });
+    // rootMargin fires 400px before the section enters the viewport,
+    // giving steps time to begin their transition before they're visible.
+    }, { threshold: 0, rootMargin: '0px 0px 400px 0px' });
     const section = document.querySelector('#loops');
     if (section) obs.observe(section);
   })();
