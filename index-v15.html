@@ -930,7 +930,7 @@
   .d-dash{animation:mgx-dash var(--sp,2s) linear infinite}
   @media (prefers-reduced-motion: reduce){.d-spin,.d-spinr,.d-throb,.d-pulse,.d-dash{animation:none}}
   .mg-eyb{width:22px;height:22px;flex:none;opacity:.9}
-  .mg-loop{width:104px;margin-bottom:22px;opacity:.92}
+  .mg-loop{width:148px;margin:-12px 0 12px -10px;opacity:.92}
   .mg-deco{position:absolute;pointer-events:none;z-index:2;opacity:.34}
   @media(max-width:760px){.mg-deco{display:none}}
 </style>
@@ -1073,12 +1073,53 @@
 <section class="manifesto" id="why">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <!-- loop micrographic (adapted from /micrographics A02 "Product loop") -->
-      <svg class="mg mg-loop" viewBox="0 0 160 110" aria-hidden="true">
-        <ellipse class="ln" cx="80" cy="55" rx="62" ry="34"/><ellipse class="l2" cx="80" cy="55" rx="33" ry="18"/>
-        <path d="M80 21 A 62 34 0 0 1 142 55" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-        <g class="nd"><circle class="d-throb" cx="80" cy="21" r="4" style="--sp:3.6s"/><circle class="d-throb" cx="142" cy="55" r="4" style="--sp:3.6s;animation-delay:.9s"/><circle class="d-throb" cx="80" cy="89" r="4" style="--sp:3.6s;animation-delay:1.8s"/><circle class="d-throb" cx="18" cy="55" r="4" style="--sp:3.6s;animation-delay:2.7s"/></g>
-        <path class="l2" d="M75 51h6M80 51v6"/>
+      <!-- loop micrographic (adapted from /micrographics COMP 07 "The Product Loop"):
+           graduation rings + Build/Ship/Use/Learn cardinal nodes + center reticle,
+           a rotating radar sweep, and a clockwise particle stream (small + glowing leads). -->
+      <svg class="mg mg-loop" viewBox="0 0 300 240" aria-hidden="true">
+        <defs>
+          <radialGradient id="c7-lead" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="c7-sweep" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="100%" stop-color="#fff" stop-opacity=".16"/>
+          </linearGradient>
+          <path id="c7-orbit" d="M150 24 A96 96 0 0 1 246 120 A96 96 0 0 1 150 216 A96 96 0 0 1 54 120 A96 96 0 0 1 150 24" fill="none"/>
+        </defs>
+        <circle class="l2 thin" cx="150" cy="120" r="116" stroke-dasharray="1 9" opacity=".42"/>
+        <circle class="ln thin" cx="150" cy="120" r="110" stroke-dasharray="2 7" opacity=".5"/>
+        <path class="l2 thin" d="M236.6 70 L243.5 66 M200 33.4 L204 26.5 M100 33.4 L96 26.5 M63.4 70 L56.5 66 M63.4 170 L56.5 174 M100 206.6 L96 213.5 M200 206.6 L204 213.5 M236.6 170 L243.5 174"/>
+        <path class="ln thin" d="M150 16 L150 6 M254 120 L264 120 M150 224 L150 234 M46 120 L36 120"/>
+        <circle class="l2" cx="150" cy="120" r="96"/>
+        <circle class="l2 thin" cx="150" cy="120" r="70" stroke-dasharray="3 7" opacity=".7"/>
+        <circle class="l2" cx="150" cy="120" r="44"/>
+        <path d="M150 24 A96 96 0 0 1 246 120" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+        <g>
+          <path d="M150 120 L150 24 A96 96 0 0 1 173 27 Z" fill="url(#c7-sweep)"/>
+          <path class="ln thin" d="M150 120 L150 24" opacity=".5"/>
+          <animateTransform attributeName="transform" type="rotate" from="0 150 120" to="360 150 120" dur="9s" repeatCount="indefinite"/>
+        </g>
+        <g class="nd"><circle cx="217.9" cy="52.1" r="1.6"/><circle cx="82.1" cy="52.1" r="1.6"/><circle cx="82.1" cy="187.9" r="1.6"/><circle cx="217.9" cy="187.9" r="1.6"/></g>
+        <g class="nd" opacity=".65"><circle cx="150" cy="50" r="1.1"/><circle cx="220" cy="120" r="1.1"/><circle cx="150" cy="190" r="1.1"/><circle cx="80" cy="120" r="1.1"/></g>
+        <g><circle class="no" cx="150" cy="24" r="6.5"/><circle class="nd" cx="150" cy="24" r="2.4"/>
+           <circle class="no" cx="246" cy="120" r="6.5"/><circle class="nd" cx="246" cy="120" r="2.4"/>
+           <circle class="no" cx="150" cy="216" r="6.5"/><circle class="nd" cx="150" cy="216" r="2.4"/>
+           <circle class="no" cx="54" cy="120" r="6.5"/><circle class="nd" cx="54" cy="120" r="2.4"/></g>
+        <circle class="ac thin" cx="246" cy="120" r="10" fill="none" opacity=".7"/>
+        <circle class="ln" cx="150" cy="120" r="9" fill="none"/>
+        <path class="l2 thin" d="M150 105 v8 M150 127 v8 M135 120 h8 M157 120 h8"/>
+        <circle class="nd" cx="150" cy="120" r="2.2"/>
+        <g fill="#fff">
+          <circle r="1.3"><animateMotion dur="3.6s" begin="0s"     repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-0.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.5"><animateMotion dur="3.6s" begin="-0.95s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.2"><animateMotion dur="3.6s" begin="-2.0s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.0"><animateMotion dur="3.6s" begin="-2.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <circle r="1.2"><animateMotion dur="3.6s" begin="-3.05s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
+          <g><circle r="4.5" fill="url(#c7-lead)"/><circle r="2"/><animateMotion dur="3.6s" begin="-0.3s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
+          <g><circle r="4" fill="url(#c7-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
+        </g>
       </svg>
       <h2>The best predictor of quality is the number of <span class="a">iterations.</span></h2>
       <p>It holds for code, for writing, for an AI model, for any system. The strategist John Boyd showed that the pilot who cycles their decision loop faster wins the dogfight; evolution's results are staggering only because it has had so long to iterate. Products are no different — to build a great one is to tighten the loop and fit in more iterations.</p>
