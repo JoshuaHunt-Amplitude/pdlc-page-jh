@@ -893,19 +893,41 @@
 <main>
 
 <!-- ── UNICORN SCENE + LOTTIE OVERLAY ───────────────── -->
+<style>
+  .hero-lottie {
+    position: absolute;
+    width: 27%;
+    max-width: 442px;
+    aspect-ratio: 1/1;
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity .4s ease;
+  }
+  .hero-lottie--left  { top: calc(50% - 50px); left: 8%; transform: translateY(-50%); }
+  .hero-lottie--right { top: 12%; right: 8%; opacity: 0; }
+</style>
 <div style="position:relative;width:100%;aspect-ratio:1440/900;">
   <div data-us-project="DW8WqiJ6yvRP0yQEL0my" style="position:absolute;inset:0;width:100%;height:100%;"></div>
-  <div id="hero-lottie" style="position:absolute;top:50%;left:8%;transform:translateY(-50%);width:32%;max-width:520px;aspect-ratio:1/1;pointer-events:none;z-index:2;"></div>
+  <div id="hero-lottie-left"  class="hero-lottie hero-lottie--left"></div>
+  <div id="hero-lottie-right" class="hero-lottie hero-lottie--right"></div>
 </div>
 <script>!function(){var u=window.UnicornStudio;if(u&&u.init){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){u.init()})}else{u.init()}}else{window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.1/dist/unicornStudio.umd.js",i.onload=function(){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){UnicornStudio.init()})}else{UnicornStudio.init()}},(document.head||document.body).appendChild(i)}}();</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 <script>
-  lottie.loadAnimation({
-    container: document.getElementById('hero-lottie'),
-    renderer: 'svg',
-    loop: true,
-    autoplay: true,
+  var leftEl  = document.getElementById('hero-lottie-left');
+  var rightEl = document.getElementById('hero-lottie-right');
+  var leftAnim = lottie.loadAnimation({
+    container: leftEl, renderer: 'svg', loop: false, autoplay: true,
     path: 'resources/scene-1-playful.json'
+  });
+  var rightAnim = lottie.loadAnimation({
+    container: rightEl, renderer: 'svg', loop: false, autoplay: false,
+    path: 'resources/scene-1-playful.json'
+  });
+  leftAnim.addEventListener('complete', function(){
+    leftEl.style.opacity = '0';
+    rightEl.style.opacity = '1';
+    rightAnim.goToAndPlay(0, true);
   });
 </script>
 
