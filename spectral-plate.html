@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spectral Analysis — Amplitude Wave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:#06070b;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace}
+  .stage{position:relative;width:min(100vw,177.78vh);aspect-ratio:16/9;overflow:hidden;background:#0a0c12}
+  canvas,.hud{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hud{pointer-events:none}
+  .ey{font-weight:500;font-size:18px;letter-spacing:5px;fill:#aeb8d2}
+  .title{font-weight:600;font-size:62px;letter-spacing:9px;fill:#eef2fb}
+  .sub{font-weight:400;font-size:18px;letter-spacing:6px;fill:#aeb8d2}
+  .cap{font-weight:400;font-size:13px;letter-spacing:4px;fill:#79859f}
+  .lab{font-weight:400;font-size:15px;letter-spacing:2px;fill:#c7cfe2}
+  .labd{font-weight:400;font-size:13px;letter-spacing:2px;fill:#8e99b6}
+  .labb{font-weight:500;font-size:18px;letter-spacing:3px;fill:#eef2fb}
+  .foot{font-weight:400;font-size:21px;letter-spacing:3px;fill:#e8ecf5}
+  .ln{stroke:#cdd5e6;fill:none}
+  .ret{stroke:#ffffff;fill:none}
+</style>
+</head>
+<body>
+<div class="stage">
+  <canvas id="c"></canvas>
+  <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
+    <!-- title -->
+    <text class="ey" x="70" y="108">WAVE &#8201;&#183;&#8201; SIGNAL 1.3</text>
+    <text class="title" x="68" y="174">SPECTRAL ANALYSIS</text>
+    <text class="sub" x="70" y="216">SIGNALS &#160;&#8226;&#160; OPPORTUNITIES &#160;&#8226;&#160; OUTCOMES</text>
+
+    <!-- top-right progress dots + waveform -->
+    <g class="ln" stroke-width="1.6">
+      <circle cx="1246" cy="120" r="11" fill="#cdd5e6" stroke="none"/>
+      <circle cx="1290" cy="120" r="11" fill="#cdd5e6" stroke="none"/>
+      <circle cx="1334" cy="120" r="11"/>
+      <circle cx="1378" cy="120" r="11"/>
+      <circle cx="1422" cy="120" r="11" stroke-dasharray="3 3"/>
+      <path d="M1486 120 q12 -26 24 0 t24 0 t24 0 t24 0" stroke-width="2"/>
+    </g>
+
+    <!-- plate frame -->
+    <rect class="ln" stroke-width="1.2" x="140" y="322" width="1160" height="404" opacity="0.55"/>
+    <text class="labd" x="142" y="312">CONTINUOUS SIGNAL FIELD</text>
+    <text class="labd" x="1300" y="312" text-anchor="end">ORDERS 01&#8211;08</text>
+
+    <!-- left order ticks -->
+    <g class="ln" stroke-width="1" opacity="0.5">
+      <path d="M132 348 h8 M132 399 h8 M132 449 h8 M132 500 h8 M132 550 h8 M132 601 h8 M132 651 h8 M132 702 h8"/>
+    </g>
+
+    <!-- detection reticle on the locked signal (~720,494) -->
+    <g class="ret" stroke-width="1.5">
+      <g opacity="0.95">
+        <path d="M700 470 h-12 v-12 M740 470 h12 v-12 M700 518 h-12 v12 M740 518 h12 v12"/>
+        <path d="M720 452 v10 M720 526 v10 M686 494 h10 M744 494 h10"/>
+      </g>
+      <circle cx="720" cy="494" r="26" opacity="0.5">
+        <animate attributeName="opacity" values="0.18;0.6;0.18" dur="3.2s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="24;30;24" dur="3.2s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <text class="labd" x="754" y="540" style="fill:#eef2fb">SIGNAL</text>
+    <!-- leader to panel -->
+    <path class="ln" stroke-width="1" opacity="0.6" d="M756 488 L1352 432"/>
+
+    <!-- detection panel -->
+    <g class="ret" stroke-width="1.4" opacity="0.85">
+      <path d="M1368 360 h-12 V548 h12"/>
+      <path d="M1604 360 h12 V548 h-12"/>
+    </g>
+    <text class="labb" x="1372" y="392">SIGNAL DETECTED</text>
+    <g class="lab">
+      <text x="1372" y="430">SOURCE</text><text x="1480" y="430" style="fill:#eef2fb">ANALYTICS &#183; REPLAY</text>
+      <text x="1372" y="458">PATTERN</text><text x="1480" y="458" style="fill:#eef2fb">ACTIVATION DROP-OFF</text>
+    </g>
+    <path class="ln" stroke-width="1" opacity="0.4" d="M1372 476 H1600"/>
+    <text class="labb" x="1372" y="506" style="font-size:16px">&#8594; OPPORTUNITY</text>
+    <g class="lab">
+      <text x="1372" y="534">METRIC</text><text x="1480" y="534" style="fill:#eef2fb">ACTIVATION RATE &#8593;</text>
+    </g>
+
+    <!-- source readouts (what Wave reads) -->
+    <g class="ret" stroke-width="1.5" opacity="0.9">
+      <rect x="1356" y="580" width="248" height="32" rx="16"/>
+      <rect x="1356" y="620" width="248" height="32" rx="16"/>
+      <rect x="1356" y="660" width="248" height="32" rx="16"/>
+      <rect x="1356" y="700" width="248" height="32" rx="16"/>
+      <circle cx="1582" cy="596" r="11" fill="#eef2fb" stroke="none"/>
+      <circle cx="1582" cy="636" r="11" fill="#eef2fb" stroke="none"/>
+      <circle cx="1582" cy="676" r="11" fill="#eef2fb" stroke="none"/>
+      <circle cx="1582" cy="716" r="11" fill="#eef2fb" stroke="none"/>
+    </g>
+    <g class="labd" style="fill:#c7cfe2">
+      <text x="1376" y="601">ANALYTICS</text>
+      <text x="1376" y="641">SESSION REPLAYS</text>
+      <text x="1376" y="681">FEEDBACK</text>
+      <text x="1376" y="721">AGENT TRACES</text>
+    </g>
+
+    <!-- footer -->
+    <text class="foot" x="70" y="858">we read your signals.</text>
+    <text class="cap" x="70" y="886">A PROACTIVE PRODUCT AGENT FROM AMPLITUDE</text>
+    <text class="foot" x="1448" y="858">[ 2026 ]</text>
+    <path class="ln" stroke-width="1.2" opacity="0.5" d="M70 906 H1300"/>
+  </svg>
+</div>
+<script>
+(function(){
+  const c=document.getElementById('c'),x=c.getContext('2d');
+  let W=0,H=0,dpr=1;
+  function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+
+  // plate geometry (viewBox 1680x945 units) — must match SVG overlay
+  const N=8, PX=140, PY=322, PW=1160, PH=404;
+  const OW=680, OH=264;
+  const off=document.createElement('canvas');off.width=OW;off.height=OH;
+  const octx=off.getContext('2d');
+  const img=octx.createImageData(OW,OH);const data=img.data;
+
+  function hash(n){n=(n<<13)^n;return 1-((n*(n*n*15731+789221)+1376312589)&0x7fffffff)/1073741824;}
+
+  // ---- absorption line list (Fraunhofer-like) baked into a 1D field ----
+  let seed=20260604>>>0; function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+  const AN=4096, A=new Float32Array(AN);
+  function addLine(pos,depth,width){const center=pos*AN,span=Math.ceil(width*3);for(let k=-span;k<=span;k++){const idx=Math.round(center)+k;if(idx<0||idx>=AN)continue;A[idx]+=depth*Math.exp(-(k*k)/(2*width*width));}}
+  for(let k=0;k<440;k++){const r2=rnd();addLine(rnd(),0.12+r2*r2*0.70,1.0+rnd()*rnd()*5.0);}
+  for(let cl=0;cl<7;cl++){const base=rnd();for(let m=0;m<6;m++)addLine(base+(rnd()-0.5)*0.02,0.20+rnd()*0.50,0.8+rnd()*1.5);}
+  for(let b=0;b<5;b++)addLine(rnd(),0.30+rnd()*0.30,6+rnd()*8);
+  const U_TARGET=0.4375; addLine(U_TARGET,0.95,2.2);
+
+  // ---- precompute per-(order,column) continuum attenuation ----
+  const attSC=new Float32Array(N*OW);
+  for(let i=0;i<N;i++)for(let cc=0;cc<OW;cc++){
+    const u=(i+cc/OW)/N, fp=u*AN, ix=Math.floor(fp), fr=fp-ix;
+    const a=A[ix]*(1-fr)+A[(ix+1)%AN]*fr;
+    let att=1-a;attSC[i*OW+cc]=att<0.05?0.05:(att>1?1:att);
+  }
+  // ---- per-row order index + lit profile (duty) ----
+  const rowStrip=new Int16Array(OH), rowProf=new Float32Array(OH), rowGap=new Uint8Array(OH);
+  const DUTY=0.80;
+  for(let r=0;r<OH;r++){const pos=r/OH*N;let i=Math.floor(pos);if(i>=N)i=N-1;const local=pos-i;rowStrip[r]=i;if(local>DUTY){rowGap[r]=1;rowProf[r]=0;}else{rowGap[r]=0;rowProf[r]=Math.pow(Math.sin(Math.PI*(local/DUTY)),0.55);}}
+
+  // target column in offscreen + its order
+  const TS=3, TC=Math.round((U_TARGET*N-TS)*OW), TW=3;
+
+  const shim=new Float32Array(OW);
+  let last=0;
+  function frame(now){
+    const t=now/1000;let dt=t-last;last=t;if(dt<0)dt=0;
+    // background — near-black cool radial
+    const g=x.createRadialGradient(W*0.42,H*0.46,0,W*0.42,H*0.46,Math.max(W,H)*0.95);
+    g.addColorStop(0,'#10131c');g.addColorStop(0.6,'#0a0c12');g.addColorStop(1,'#06070b');
+    x.fillStyle=g;x.fillRect(0,0,W,H);
+
+    // shimmer envelope (slow scintillation across the plate)
+    for(let cc=0;cc<OW;cc++){shim[cc]=1+0.07*Math.sin(cc*0.024+t*0.45)+0.045*Math.sin(cc*0.010-t*0.30)+0.03*Math.sin(t*0.7+cc*0.003);}
+    const fI=Math.floor(t*7), pulse=0.5+0.5*Math.sin(t*1.3);
+
+    let di=0;
+    for(let r=0;r<OH;r++){
+      const i=rowStrip[r],gap=rowGap[r],prof=rowProf[r],rowBase=i*OW;
+      for(let cc=0;cc<OW;cc++){
+        const grain=hash(cc+r*OW+fI)*0.5+0.5;
+        let L;
+        if(gap){L=0.015+grain*0.02;}
+        else{
+          L=0.86*prof*attSC[rowBase+cc]*shim[cc]+(grain-0.5)*0.05;
+          if(i===TS){const dd=Math.abs(cc-TC);if(dd<=TW){const k=1-dd/(TW+0.5);L=0.80+(0.55+0.5*pulse)*k;}}
+        }
+        if(L<0)L=0;const v=L>1?1:L;
+        data[di]=v*226;data[di+1]=v*236;data[di+2]=v*250;data[di+3]=255;di+=4;
+      }
+    }
+    octx.putImageData(img,0,0);
+    const sc=W/1680;
+    x.imageSmoothingEnabled=false;
+    x.drawImage(off,PX*sc,PY*sc,PW*sc,PH*sc);
+
+    // emission bloom over the locked signal
+    const tx=(PX+(TC/OW)*PW)*sc, ty=(PY+((TS+0.40)/N)*PH)*sc;
+    const br=(34+10*pulse)*sc;
+    const bg2=x.createRadialGradient(tx,ty,0,tx,ty,br);
+    bg2.addColorStop(0,'rgba(238,242,251,'+(0.30+0.18*pulse).toFixed(3)+')');
+    bg2.addColorStop(1,'rgba(238,242,251,0)');
+    x.save();x.globalCompositeOperation='lighter';x.fillStyle=bg2;x.beginPath();x.arc(tx,ty,br,0,Math.PI*2);x.fill();x.restore();
+
+    // slow scan sweep
+    const sw=(PX+(((t*0.07)%1))*PW)*sc;
+    const gsw=x.createLinearGradient(sw-8*sc,0,sw+8*sc,0);
+    gsw.addColorStop(0,'rgba(220,228,242,0)');gsw.addColorStop(0.5,'rgba(220,228,242,0.07)');gsw.addColorStop(1,'rgba(220,228,242,0)');
+    x.fillStyle=gsw;x.fillRect((sw-8*sc),PY*sc,16*sc,PH*sc);
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
