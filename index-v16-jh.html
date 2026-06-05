@@ -884,6 +884,10 @@
   /* ── REVEAL ─────────────────────────── */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
   .reveal.in { opacity: 1; transform: none; }
+
+  /* ── PRODUCT LOOP step fade-in ───────── */
+  .pl2-step { opacity: 0; transition: opacity 600ms ease; }
+  .pl2-step.in { opacity: 1; }
 </style>
 </head>
 <body>
@@ -1261,197 +1265,157 @@
         <circle cx="360" cy="194" r="3.5"/> <!-- M→S  330° -->
       </g>
 
-      <!-- ── Node halo animations (ring glows as lead particle passes) ──
-           Lead particle completes 1 rev in 18s; each node is 3s apart.
-           Halo fires at 0s (SENSE), 3s (PRIORITIZE), 6s (SPEC),
-           9s (ACT), 12s (VERIFY), 15s (MEASURE). -->
-      <g fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2">
-        <circle cx="450" cy="170" r="36">
+      <!-- ── Steps: each group fades in via JS stagger (.pl2-step → .in) ── -->
+
+      <!-- Step 0: SENSE (top) -->
+      <g class="pl2-step">
+        <circle cx="450" cy="170" r="36" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2">
           <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="0s"/>
           <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="0s"/>
         </circle>
-        <circle cx="606" cy="260" r="36">
+        <circle cx="450" cy="170" r="36" fill="#080d18" stroke="rgba(255,255,255,0.52)" stroke-width="1.2"/>
+        <g transform="translate(450,170)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+          <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
+          <circle cx="6" cy="1" r="1.1" fill="rgba(255,255,255,0.9)" stroke="none"/>
+          <path d="M 3.5 1 A 2.8 2.8 0 0 1 8.5 1" stroke-width="0.8"/>
+          <path d="M 1.5 1 A 5 5 0 0 1 10.5 1"   stroke-width="0.8"/>
+        </g>
+        <g text-anchor="middle" font-family="'Inter', 'JetBrains Mono', monospace">
+          <text x="450" y="46"  font-size="9.5"  letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.1</text>
+          <text x="450" y="68"  font-size="15"   letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">SENSE</text>
+          <line x1="418" y1="76" x2="482" y2="76" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+          <text x="450" y="90"  font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Find problems</text>
+          <text x="450" y="105" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">worth solving</text>
+          <line x1="450" y1="108" x2="450" y2="133" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 4"/>
+        </g>
+      </g>
+
+      <!-- Step 1: PRIORITIZE (upper-right) -->
+      <g class="pl2-step">
+        <circle cx="606" cy="260" r="36" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2">
           <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="3s"/>
           <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="3s"/>
         </circle>
-        <circle cx="606" cy="440" r="36">
+        <circle cx="606" cy="260" r="36" fill="#080d18" stroke="rgba(255,255,255,0.52)" stroke-width="1.2"/>
+        <g transform="translate(606,260)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+          <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
+          <circle cx="2.5" cy="-2.5" r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
+          <line x1="4.5" y1="-2.5" x2="9.5" y2="-2.5" stroke-width="0.8"/>
+          <circle cx="2.5" cy="1"   r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
+          <line x1="4.5" y1="1"    x2="9.5" y2="1"    stroke-width="0.8"/>
+          <circle cx="2.5" cy="4.5" r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
+          <line x1="4.5" y1="4.5"  x2="8"   y2="4.5"  stroke-width="0.8"/>
+        </g>
+        <g text-anchor="start" font-family="'Inter', 'JetBrains Mono', monospace">
+          <text x="656" y="234" font-size="9.5"  letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.2</text>
+          <text x="656" y="256" font-size="15"   letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">PRIORITIZE</text>
+          <line x1="656" y1="264" x2="790" y2="264" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+          <text x="656" y="278" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Rank by impact</text>
+          <text x="656" y="293" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and confidence</text>
+          <line x1="643" y1="260" x2="654" y2="260" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+        </g>
+      </g>
+
+      <!-- Step 2: SPEC (lower-right) -->
+      <g class="pl2-step">
+        <circle cx="606" cy="440" r="36" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2">
           <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="6s"/>
           <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="6s"/>
         </circle>
-        <circle cx="450" cy="530" r="36">
+        <circle cx="606" cy="440" r="36" fill="#080d18" stroke="rgba(255,255,255,0.52)" stroke-width="1.2"/>
+        <g transform="translate(606,440)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+          <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
+          <rect x="2" y="-4" width="8" height="10" rx="0.8" stroke-width="0.8"/>
+          <line x1="4" y1="-0.5" x2="8" y2="-0.5" stroke-width="0.7"/>
+          <line x1="4" y1="2.5"  x2="8" y2="2.5"  stroke-width="0.7"/>
+          <line x1="4" y1="5.5"  x2="6.5" y2="5.5" stroke-width="0.7"/>
+        </g>
+        <g text-anchor="start" font-family="'Inter', 'JetBrains Mono', monospace">
+          <text x="656" y="414" font-size="9.5"  letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.3</text>
+          <text x="656" y="436" font-size="15"   letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">SPEC</text>
+          <line x1="656" y1="444" x2="750" y2="444" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+          <text x="656" y="458" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Define the solution</text>
+          <text x="656" y="473" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and acceptance criteria</text>
+          <line x1="643" y1="440" x2="654" y2="440" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+        </g>
+      </g>
+
+      <!-- Step 3: ACT (bottom) -->
+      <g class="pl2-step">
+        <circle cx="450" cy="530" r="36" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2">
           <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="9s"/>
           <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="9s"/>
         </circle>
-        <circle cx="294" cy="440" r="36">
+        <circle cx="450" cy="530" r="36" fill="#080d18" stroke="rgba(255,255,255,0.52)" stroke-width="1.2"/>
+        <g transform="translate(450,530)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+          <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
+          <line x1="3.5" y1="8.5" x2="8" y2="-1" stroke-width="1.1"/>
+          <rect x="6.5" y="-3.5" width="4.5" height="2.8" rx="0.5" transform="rotate(-27 8.75 -2.1)" stroke-width="0.8"/>
+        </g>
+        <g text-anchor="middle" font-family="'Inter', 'JetBrains Mono', monospace">
+          <line x1="450" y1="567" x2="450" y2="592" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 4"/>
+          <text x="450" y="600" font-size="9.5"  letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.4</text>
+          <text x="450" y="622" font-size="15"   letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">ACT</text>
+          <line x1="418" y1="630" x2="482" y2="630" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+          <text x="450" y="644" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Build the right</text>
+          <text x="450" y="659" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">thing</text>
+        </g>
+      </g>
+
+      <!-- Step 4: VERIFY (lower-left) -->
+      <g class="pl2-step">
+        <circle cx="294" cy="440" r="36" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2">
           <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="12s"/>
           <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="12s"/>
         </circle>
-        <circle cx="294" cy="260" r="36">
+        <circle cx="294" cy="440" r="36" fill="#080d18" stroke="rgba(255,255,255,0.52)" stroke-width="1.2"/>
+        <g transform="translate(294,440)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+          <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
+          <polyline points="1.5,3 4,6.5 9.5,-1.5" stroke-width="1"/>
+          <polyline points="0,1 2.5,4.5 8,-3"     stroke-width="0.7" stroke="rgba(255,255,255,0.45)"/>
+        </g>
+        <g text-anchor="end" font-family="'Inter', 'JetBrains Mono', monospace">
+          <text x="244" y="414" font-size="9.5"  letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.5</text>
+          <text x="244" y="436" font-size="15"   letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">VERIFY</text>
+          <line x1="150" y1="444" x2="244" y2="444" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+          <text x="244" y="458" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Check the work</text>
+          <text x="244" y="473" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and capture replay</text>
+          <line x1="246" y1="440" x2="257" y2="440" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+        </g>
+      </g>
+
+      <!-- Step 5: MEASURE (upper-left) -->
+      <g class="pl2-step">
+        <circle cx="294" cy="260" r="36" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2">
           <animate attributeName="opacity" dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="0;0;0.85;0;0" begin="15s"/>
           <animate attributeName="r"       dur="18s" repeatCount="indefinite" keyTimes="0;0.03;0.10;0.20;1" values="30;30;46;30;30" begin="15s"/>
         </circle>
-      </g>
-
-      <!-- ── Node circles (dark fill masks ring track behind them) ── -->
-      <g fill="#080d18" stroke="rgba(255,255,255,0.52)" stroke-width="1.2">
-        <circle cx="450" cy="170" r="36"/>
-        <circle cx="606" cy="260" r="36"/>
-        <circle cx="606" cy="440" r="36"/>
-        <circle cx="450" cy="530" r="36"/>
-        <circle cx="294" cy="440" r="36"/>
-        <circle cx="294" cy="260" r="36"/>
-      </g>
-
-      <!-- ── Isometric cubes inside each node ──────────────────────────
-           Cube template (centered at node, coordinates relative to it):
-             Top face:   0,-14  →  11,-8  →  0,-2  →  -11,-8
-             Right face: 11,-8  →  11,+6  →   0,+12 →    0,-2
-             Left face: -11,-8  →   0,-2  →   0,+12 →  -11,+6
-           Bounding box: ±11 wide, -14 to +12 tall (26px) → fits r=36 circle.
-           Face fills: top lightest, right mid, left darkest (simulates light from top-left).
-           Icon drawn on right (front-facing) face, coords relative to cube center.
-      ──────────────────────────────────────────────────────────────────── -->
-
-      <!-- SENSE (450,170) · radar arcs -->
-      <g transform="translate(450,170)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
-        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
-        <!-- icon: concentric signal arcs + dot -->
-        <circle cx="6" cy="1" r="1.1" fill="rgba(255,255,255,0.9)" stroke="none"/>
-        <path d="M 3.5 1 A 2.8 2.8 0 0 1 8.5 1" stroke-width="0.8"/>
-        <path d="M 1.5 1 A 5 5 0 0 1 10.5 1"   stroke-width="0.8"/>
-      </g>
-
-      <!-- PRIORITIZE (606,260) · numbered list lines -->
-      <g transform="translate(606,260)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
-        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
-        <!-- icon: three list rows (number dot + line) -->
-        <circle cx="2.5" cy="-2.5" r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
-        <line x1="4.5" y1="-2.5" x2="9.5" y2="-2.5" stroke-width="0.8"/>
-        <circle cx="2.5" cy="1"    r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
-        <line x1="4.5" y1="1"    x2="9.5" y2="1"    stroke-width="0.8"/>
-        <circle cx="2.5" cy="4.5"  r="0.9" fill="rgba(255,255,255,0.8)" stroke="none"/>
-        <line x1="4.5" y1="4.5"  x2="8"   y2="4.5"  stroke-width="0.8"/>
-      </g>
-
-      <!-- SPEC (606,440) · clipboard -->
-      <g transform="translate(606,440)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
-        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
-        <!-- icon: clipboard rect + lines -->
-        <rect x="2" y="-4" width="8" height="10" rx="0.8" stroke-width="0.8"/>
-        <line x1="4"   y1="-0.5" x2="8" y2="-0.5" stroke-width="0.7"/>
-        <line x1="4"   y1="2.5"  x2="8" y2="2.5"  stroke-width="0.7"/>
-        <line x1="4"   y1="5.5"  x2="6.5" y2="5.5" stroke-width="0.7"/>
-      </g>
-
-      <!-- ACT (450,530) · hammer -->
-      <g transform="translate(450,530)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
-        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
-        <!-- icon: handle + head -->
-        <line x1="3.5" y1="8.5" x2="8" y2="-1" stroke-width="1.1"/>
-        <rect x="6.5" y="-3.5" width="4.5" height="2.8" rx="0.5" transform="rotate(-27 8.75 -2.1)" stroke-width="0.8"/>
-      </g>
-
-      <!-- VERIFY (294,440) · double checkmark -->
-      <g transform="translate(294,440)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
-        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
-        <!-- icon: two check strokes -->
-        <polyline points="1.5,3 4,6.5 9.5,-1.5" stroke-width="1"/>
-        <polyline points="0,1 2.5,4.5 8,-3"     stroke-width="0.7" stroke="rgba(255,255,255,0.45)"/>
-      </g>
-
-      <!-- MEASURE (294,260) · trend line + baseline -->
-      <g transform="translate(294,260)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
-        <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
-        <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
-        <!-- icon: rising trend + baseline -->
-        <polyline points="2,7 4.5,3.5 7,5.5 10,-0.5" stroke-width="0.9"/>
-        <line x1="2" y1="8" x2="10" y2="8" stroke-width="0.7" stroke="rgba(255,255,255,0.45)"/>
-      </g>
-
-      <!-- ── Labels ───────────────────────────────────────────────────────
-           Format per node:   FIG 0.X (small dim)
-                              NODE NAME (spaced caps, bright)
-                              ——— (short rule)
-                              Description line 1 (dim)
-                              Description line 2
-           Connector: short dashed line from label edge to node circle edge.
-      ──────────────────────────────────────────────────────────────────── -->
-
-      <!-- SENSE (top, centered) -->
-      <g text-anchor="middle" font-family="'Inter', 'JetBrains Mono', monospace">
-        <text x="450" y="46"  font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.1</text>
-        <text x="450" y="68"  font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">SENSE</text>
-        <line x1="418" y1="76" x2="482" y2="76" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-        <text x="450" y="90"  font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Find problems</text>
-        <text x="450" y="105" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">worth solving</text>
-        <!-- connector: node top edge (y=134) to label (y=108) -->
-        <line x1="450" y1="108" x2="450" y2="133" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 4"/>
-      </g>
-
-      <!-- PRIORITIZE (upper-right, start-anchored) -->
-      <g text-anchor="start" font-family="'Inter', 'JetBrains Mono', monospace">
-        <text x="656" y="234" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.2</text>
-        <text x="656" y="256" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">PRIORITIZE</text>
-        <line x1="656" y1="264" x2="790" y2="264" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-        <text x="656" y="278" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Rank by impact</text>
-        <text x="656" y="293" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and confidence</text>
-        <!-- connector: node right edge x=642 to label x=654 -->
-        <line x1="643" y1="260" x2="654" y2="260" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
-      </g>
-
-      <!-- SPEC (lower-right, start-anchored) -->
-      <g text-anchor="start" font-family="'Inter', 'JetBrains Mono', monospace">
-        <text x="656" y="414" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.3</text>
-        <text x="656" y="436" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">SPEC</text>
-        <line x1="656" y1="444" x2="750" y2="444" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-        <text x="656" y="458" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Define the solution</text>
-        <text x="656" y="473" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and acceptance criteria</text>
-        <!-- connector -->
-        <line x1="643" y1="440" x2="654" y2="440" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
-      </g>
-
-      <!-- ACT (bottom, centered) -->
-      <g text-anchor="middle" font-family="'Inter', 'JetBrains Mono', monospace">
-        <!-- connector: node bottom edge y=566 to label y=596 -->
-        <line x1="450" y1="567" x2="450" y2="592" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 4"/>
-        <text x="450" y="600" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.4</text>
-        <text x="450" y="622" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">ACT</text>
-        <line x1="418" y1="630" x2="482" y2="630" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-        <text x="450" y="644" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Build the right</text>
-        <text x="450" y="659" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">thing</text>
-      </g>
-
-      <!-- VERIFY (lower-left, end-anchored) -->
-      <g text-anchor="end" font-family="'Inter', 'JetBrains Mono', monospace">
-        <text x="244" y="414" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.5</text>
-        <text x="244" y="436" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">VERIFY</text>
-        <line x1="150" y1="444" x2="244" y2="444" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-        <text x="244" y="458" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Check the work</text>
-        <text x="244" y="473" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and capture replay</text>
-        <!-- connector: label x=246 to node left edge x=257 -->
-        <line x1="246" y1="440" x2="257" y2="440" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
-      </g>
-
-      <!-- MEASURE (upper-left, end-anchored) -->
-      <g text-anchor="end" font-family="'Inter', 'JetBrains Mono', monospace">
-        <text x="244" y="234" font-size="9.5" letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.6</text>
-        <text x="244" y="256" font-size="15"  letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">MEASURE</text>
-        <line x1="110" y1="264" x2="244" y2="264" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-        <text x="244" y="278" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Track outcomes</text>
-        <text x="244" y="293" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and impact</text>
-        <!-- connector -->
-        <line x1="246" y1="260" x2="257" y2="260" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+        <circle cx="294" cy="260" r="36" fill="#080d18" stroke="rgba(255,255,255,0.52)" stroke-width="1.2"/>
+        <g transform="translate(294,260)" stroke="rgba(255,255,255,0.72)" stroke-width="0.75" stroke-linejoin="round" fill="none">
+          <polygon points="0,-14 11,-8 0,-2 -11,-8"  fill="rgba(90,140,255,0.18)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="11,-8 11,6 0,12 0,-2"     fill="rgba(60,110,240,0.08)" stroke="rgba(255,255,255,0.72)"/>
+          <polygon points="-11,-8 0,-2 0,12 -11,6"   fill="rgba(40,90,220,0.05)" stroke="rgba(255,255,255,0.72)"/>
+          <polyline points="2,7 4.5,3.5 7,5.5 10,-0.5" stroke-width="0.9"/>
+          <line x1="2" y1="8" x2="10" y2="8" stroke-width="0.7" stroke="rgba(255,255,255,0.45)"/>
+        </g>
+        <g text-anchor="end" font-family="'Inter', 'JetBrains Mono', monospace">
+          <text x="244" y="234" font-size="9.5"  letter-spacing="0.20em" fill="rgba(255,255,255,0.32)">FIG 0.6</text>
+          <text x="244" y="256" font-size="15"   letter-spacing="0.22em" fill="rgba(255,255,255,0.88)" font-weight="500">MEASURE</text>
+          <line x1="110" y1="264" x2="244" y2="264" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+          <text x="244" y="278" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">Track outcomes</text>
+          <text x="244" y="293" font-size="10.5" letter-spacing="0.04em" fill="rgba(255,255,255,0.42)">and impact</text>
+          <line x1="246" y1="260" x2="257" y2="260" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
+        </g>
       </g>
 
       <!-- ── Particles ──────────────────────────────────────────────────
@@ -1657,6 +1621,26 @@
 </footer>
 
 <script>
+  // ── Product loop step-by-step fade-in ───────────────
+  (function(){
+    const steps = Array.from(document.querySelectorAll('.pl2-step'));
+    if (!steps.length) return;
+    let fired = false;
+    const obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting && !fired) {
+          fired = true;
+          steps.forEach(function(step, i) {
+            setTimeout(function(){ step.classList.add('in'); }, i * 200);
+          });
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    const section = document.querySelector('#loops');
+    if (section) obs.observe(section);
+  })();
+
   // ── Scroll reveal ───────────────────────────────────
   const revealObs = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
