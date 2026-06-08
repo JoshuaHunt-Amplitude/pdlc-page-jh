@@ -1076,39 +1076,35 @@
 </section>
 
 <!-- ── SCROLL-DRIVEN VIDEO TRANSITION (placeholder, à la ramp.com/stack) ──────────
-     A video sits embedded below the hero; as you scroll it grows to a modal-size
-     focal point and a scrim dims the page; then the size HOLDS and only the tint
-     fades as you keep scrolling — no clicks. A tall .film runway pins .film-pin to
-     the viewport. JS grows + dims the moment the frame enters the viewport (driven
-     by the pin's position, so it doesn't wait to reach centre), then undims at the
-     end while the frame stays full size.
-     Drop a real <video> source into .film-media and delete .film-ph to go live.
-     TUNING: .film height = runway · 0.78→1.0 = enter→full size · 0.72 = max dim ·
-     enter/0.7 = how early it hits full · (sp−0.55)/0.4 = when the tint releases. -->
+     A video embedded below the hero. It scrolls NORMALLY — no pin, no scroll-jack.
+     As it peeks into the viewport it immediately starts growing, reaching full size
+     right as it centres and the page dim ("tint") completes. After centre the size
+     HOLDS at full while the tint fades away as you keep scrolling past. Scale + dim
+     are driven purely by the wrap's centre vs the viewport centre; the wrap is not
+     transformed (so measuring it is stable). The scrim is a fixed full-page overlay.
+     Drop a real <video> into .film-media and delete .film-ph to go live.
+     TUNING: .film-wrap width = max size · 0.8→1.0 = peek→full · 0.74 = max dim. -->
 <style>
-  .film { position: relative; height: 230vh; }
-  .film-pin { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; z-index: 4; }
-  .film-scrim { position: absolute; inset: 0; background: #04060f; opacity: var(--dim, 0); pointer-events: none; }
+  .film { position: relative; padding: 12vh 0 16vh; }
+  .film-scrim { position: fixed; inset: 0; background: #04060f; opacity: var(--dim, 0); pointer-events: none; z-index: 40; }
+  .film-wrap { position: relative; z-index: 41; width: min(1280px, 94vw); aspect-ratio: 16 / 9; margin: 0 auto; }
   .film-frame {
-    position: relative; z-index: 2;
-    width: min(1080px, 90vw); aspect-ratio: 16 / 9;
-    border-radius: 16px; overflow: hidden;
+    position: absolute; inset: 0; border-radius: 16px; overflow: hidden;
     border: 1px solid rgba(180,200,255,.18);
     background: linear-gradient(160deg, #101a3a, #0a1024);
-    box-shadow: 0 40px 140px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.04);
-    transform: scale(var(--scale, 0.78)); transform-origin: center; will-change: transform;
+    box-shadow: 0 40px 140px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.04);
+    transform: scale(var(--scale, 0.8)); transform-origin: center; will-change: transform;
   }
   .film-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .film-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #c3d2ff; font-family: var(--mono); }
   .film-play { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; border: 1px solid rgba(180,200,255,.4); background: rgba(180,200,255,.08); color: #e9f0ff; font-size: 24px; padding-left: 5px; box-shadow: 0 0 44px rgba(64,131,255,.35); }
   .film-ph-label { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #7f8cc4; }
-  .film-tag { position: absolute; left: 16px; top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #9fb0d8; opacity: .85; }
-  @media (prefers-reduced-motion: reduce) { .film { height: auto; } .film-pin { position: static; height: auto; padding: 90px 0; } .film-frame { transform: scale(.86); } .film-scrim { display: none; } }
-  @media (max-width: 760px) { .film { height: 180vh; } }
+  .film-tag { position: absolute; left: 16px; top: 14px; z-index: 1; font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #9fb0d8; opacity: .85; }
+  @media (prefers-reduced-motion: reduce) { .film-frame { transform: scale(.94); } .film-scrim { display: none; } }
 </style>
 <section class="film" id="demo" aria-label="Product demo">
-  <div class="film-pin">
-    <div class="film-scrim"></div>
+  <div class="film-scrim"></div>
+  <div class="film-wrap">
     <div class="film-frame">
       <span class="film-tag">Wave · Demo</span>
       <!-- drop the product demo here, then remove .film-ph -->
@@ -1117,37 +1113,44 @@
         <span class="film-play">&#9654;</span>
         <span class="film-ph-label">Product demo · video placeholder</span>
       </div>
+      <!-- click-to-unmute badge (enable alongside a real video):
+      <button class="film-sound" type="button">&#128266; Play with sound</button> -->
     </div>
   </div>
 </section>
 <script>
 (function(){
   var film = document.getElementById('demo'); if(!film) return;
-  var pin = film.querySelector('.film-pin');
+  var wrap = film.querySelector('.film-wrap');
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var ticking = false;
   function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
   function smooth(v){ return v*v*(3-2*v); }
+  var ticking = false;
   function update(){
     ticking = false;
     var vh = window.innerHeight;
-    var rect = film.getBoundingClientRect();
-    var total = film.offsetHeight - vh;
-    if (total <= 0) return;
-    // GROW + DIM the instant the frame enters the viewport (pin position drives it,
-    // so it starts at first sight and reaches full a touch before centre).
-    var prTop = pin.getBoundingClientRect().top;
-    var enter = clamp(1 - 2 * prTop / vh);          // 0 = frame at viewport bottom → 1 = centred
-    var g = smooth(clamp(enter / 0.7));
-    // HOLD full size; release only the tint in the last stretch of the runway.
-    var sp = clamp(-rect.top / total);
-    var exit = smooth(clamp((sp - 0.55) / 0.4));
-    pin.style.setProperty('--scale', (0.78 + 0.22 * g).toFixed(4));
-    pin.style.setProperty('--dim',   (0.72 * g * (1 - exit)).toFixed(4));
+    var r = wrap.getBoundingClientRect();           // wrap is NOT scaled → stable to measure
+    var wc = r.top + r.height / 2, wh = r.height;
+    // grow + dim from first peek (centre at vh + wh/2) → full at centre (centre at vh/2)
+    var enter = clamp((vh + wh / 2 - wc) / ((vh + wh) / 2));
+    // past centre, fade the tint as the wrap rises toward the top of the viewport
+    var exit  = clamp((vh / 2 - wc) / (vh / 2));
+    var g = smooth(enter);
+    film.style.setProperty('--scale', (0.8 + 0.2 * g).toFixed(4));
+    film.style.setProperty('--dim',   (0.74 * g * (1 - smooth(exit))).toFixed(4));
   }
   addEventListener('scroll', function(){ if(!ticking){ requestAnimationFrame(update); ticking = true; } }, {passive:true});
   addEventListener('resize', update);
   update();
+
+  // --- once it's the focal point, auto-play; click to add sound (wire up with a real
+  //     <video> source in .film-media) ---
+  // var vid = film.querySelector('.film-media');
+  // new IntersectionObserver(function(es){ es.forEach(function(e){
+  //   if (e.isIntersecting) { var p = vid.play && vid.play(); if (p && p.catch) p.catch(function(){}); }
+  //   else if (vid.pause) { vid.pause(); }
+  // }); }, { threshold: 0.6 }).observe(wrap);
+  // film.querySelector('.film-frame').addEventListener('click', function(){ vid.muted = !vid.muted; });
 })();
 </script>
 
