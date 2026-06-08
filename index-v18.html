@@ -2403,7 +2403,7 @@
   <p class="reveal">Wave is rolling out to design partners. Be one of them.</p>
   <div class="waitlist-zone reveal" id="cta-zone">
     <form class="waitlist" id="cta-form" onsubmit="event.preventDefault()">
-      <input type="email" id="cta-email" placeholder="you@company.com" required aria-label="Email address">
+      <input type="email" id="cta-email" placeholder="you@company.com" aria-label="Email address">
       <button type="submit">Request access →</button>
     </form>
     <div class="waitlist-help-row">
@@ -2429,7 +2429,8 @@
   f.addEventListener('submit', function(e){
     e.preventDefault();
     var v = (em.value || '').trim();
-    if (echo && v) echo.textContent = v;
+    if (!v) { em.focus(); return; }   // empty → drop focus into the field so they can type
+    if (echo) echo.textContent = v;
     z.classList.add('is-done');
   });
 })();
