@@ -1271,7 +1271,7 @@
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
-      <svg viewBox="0 0 900 540" preserveAspectRatio="xMidYMid meet">
+      <svg viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet">
         <defs>
           <!-- FAST gradient (left half): bright blue, slight bottom-up brightness ramp -->
           <linearGradient id="fl-fast" x1="0" y1="1" x2="0" y2="0">
@@ -1294,6 +1294,10 @@
             <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
           </radialGradient>
           <filter id="fl-glow"    x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter>
+          <linearGradient id="fl-name-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#93A6F8"/>
+            <stop offset="1" stop-color="#FFFFFF"/>
+          </linearGradient>
           <filter id="fl-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
           <!-- Background gradient panel (matches loop-v2 visual frame) -->
           <linearGradient id="fl-bg" x1="0" y1="0" x2="0" y2="1">
@@ -1303,7 +1307,7 @@
         </defs>
 
         <!-- ── Background gradient panel (sits behind everything) ── -->
-        <rect x="50" y="40" width="800" height="460" fill="url(#fl-bg)"/>
+        <rect x="50" y="40" width="800" height="560" fill="url(#fl-bg)"/>
 
         <!-- ── Corner brackets (+ cross + 90px dashed guide lines) ── -->
         <g stroke="rgba(255,255,255,0.30)" stroke-width="1" fill="none" stroke-linecap="square">
@@ -1318,35 +1322,35 @@
           <line x1="755" y1="35"  x2="845" y2="35" stroke-dasharray="3 6"/>
           <line x1="855" y1="45"  x2="855" y2="135" stroke-dasharray="3 6"/>
           <!-- bottom-left: corner at (45, 505) -->
-          <line x1="40"  y1="505" x2="50"  y2="505"/>
-          <line x1="45"  y1="500" x2="45"  y2="510"/>
-          <line x1="55"  y1="505" x2="145" y2="505" stroke-dasharray="3 6"/>
-          <line x1="45"  y1="405" x2="45"  y2="495" stroke-dasharray="3 6"/>
+          <line x1="40"  y1="605" x2="50"  y2="605"/>
+          <line x1="45"  y1="600" x2="45"  y2="610"/>
+          <line x1="55"  y1="605" x2="145" y2="605" stroke-dasharray="3 6"/>
+          <line x1="45"  y1="505" x2="45"  y2="595" stroke-dasharray="3 6"/>
           <!-- bottom-right: corner at (855, 505) -->
-          <line x1="850" y1="505" x2="860" y2="505"/>
-          <line x1="855" y1="500" x2="855" y2="510"/>
-          <line x1="755" y1="505" x2="845" y2="505" stroke-dasharray="3 6"/>
-          <line x1="855" y1="405" x2="855" y2="495" stroke-dasharray="3 6"/>
+          <line x1="850" y1="605" x2="860" y2="605"/>
+          <line x1="855" y1="600" x2="855" y2="610"/>
+          <line x1="755" y1="605" x2="845" y2="605" stroke-dasharray="3 6"/>
+          <line x1="855" y1="505" x2="855" y2="595" stroke-dasharray="3 6"/>
         </g>
 
         <!-- Center radial glow -->
-        <circle cx="450" cy="270" r="150" fill="url(#fl-core)" opacity="0.55"/>
+        <circle cx="450" cy="320" r="150" fill="url(#fl-core)" opacity="0.55"/>
 
         <!-- Faint full base track (whole ring) -->
-        <circle cx="450" cy="270" r="190" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="44"/>
+        <circle cx="450" cy="320" r="190" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="44"/>
 
         <!-- RIGHT half = BOTTLENECK (USE→LEARN→BUILD): thin violet arc -->
-        <path d="M 450 80 A 190 190 0 0 1 450 460" stroke="url(#fl-slow)" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.55"/>
+        <path d="M 450 130 A 190 190 0 0 1 450 510" stroke="url(#fl-slow)" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.55"/>
 
         <!-- LEFT half = FAST (BUILD→SHIP→USE): thick bright blue arc, glow underlay + saturated overlay -->
-        <path d="M 450 460 A 190 190 0 0 1 450 80" stroke="#4083FF" stroke-width="34" fill="none" stroke-linecap="round" opacity="0.45" filter="url(#fl-glow)"/>
-        <path d="M 450 460 A 190 190 0 0 1 450 80" stroke="url(#fl-fast)" stroke-width="34" fill="none" stroke-linecap="round"/>
+        <path d="M 450 510 A 190 190 0 0 1 450 130" stroke="#4083FF" stroke-width="34" fill="none" stroke-linecap="round" opacity="0.45" filter="url(#fl-glow)"/>
+        <path d="M 450 510 A 190 190 0 0 1 450 130" stroke="url(#fl-fast)" stroke-width="34" fill="none" stroke-linecap="round"/>
 
         <!-- Invisible motion paths (3 lanes inside the wide blue arc; 1 lane on the thin red arc) -->
-        <path id="fl-left-180" d="M 450 450 A 180 180 0 0 1 450 90"  fill="none" stroke="none"/>
-        <path id="fl-left-190" d="M 450 460 A 190 190 0 0 1 450 80"  fill="none" stroke="none"/>
-        <path id="fl-left-200" d="M 450 470 A 200 200 0 0 1 450 70"  fill="none" stroke="none"/>
-        <path id="fl-right-190" d="M 450 80  A 190 190 0 0 1 450 460" fill="none" stroke="none"/>
+        <path id="fl-left-180" d="M 450 500 A 180 180 0 0 1 450 140"  fill="none" stroke="none"/>
+        <path id="fl-left-190" d="M 450 510 A 190 190 0 0 1 450 130"  fill="none" stroke="none"/>
+        <path id="fl-left-200" d="M 450 520 A 200 200 0 0 1 450 120"  fill="none" stroke="none"/>
+        <path id="fl-right-190" d="M 450 130 A 190 190 0 0 1 450 510" fill="none" stroke="none"/>
 
         <!-- ── PARTICLES ──────────────────────────────────────────
              LEFT HALF (fast): ~25 particles across 3 lanes at 3.2s /
@@ -1397,24 +1401,24 @@
 
         <!-- ── 4 Nodes (45 radius), positioned clockwise from top ── -->
         <!-- USE — top — on the bottleneck side, dim violet stroke -->
-        <g><circle cx="450" cy="80"  r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.50)" stroke-width="1.5"/><text x="450" y="86" font-family="'Inter','JetBrains Mono',monospace" font-size="15" font-weight="500" letter-spacing="0.20em" text-anchor="middle" fill="rgba(255,255,255,0.80)">USE</text></g>
+        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.50)" stroke-width="1.5"/><text x="450" y="136" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl-name-grad)">USE</text></g>
         <!-- LEARN — right — bottleneck side, deepest dim -->
-        <g><circle cx="640" cy="270" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.50)" stroke-width="1.5"/><text x="640" y="276" font-family="'Inter','JetBrains Mono',monospace" font-size="15" font-weight="500" letter-spacing="0.20em" text-anchor="middle" fill="rgba(255,255,255,0.80)">LEARN</text></g>
+        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.50)" stroke-width="1.5"/><text x="640" y="326" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl-name-grad)">LEARN</text></g>
         <!-- BUILD — bottom — fast side, bright blue stroke + glow ring -->
-        <g><circle cx="450" cy="460" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.90)" stroke-width="1.5"/><circle cx="450" cy="460" r="50" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.45" filter="url(#fl-glow-sm)"/><text x="450" y="466" font-family="'Inter','JetBrains Mono',monospace" font-size="15" font-weight="500" letter-spacing="0.20em" text-anchor="middle" fill="#FFFFFF">BUILD</text></g>
+        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.90)" stroke-width="1.5"/><circle cx="450" cy="510" r="50" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.45" filter="url(#fl-glow-sm)"/><text x="450" y="516" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl-name-grad)">BUILD</text></g>
         <!-- SHIP — left — fast side, bright blue stroke + glow ring -->
-        <g><circle cx="260" cy="270" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.90)" stroke-width="1.5"/><circle cx="260" cy="270" r="50" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.45" filter="url(#fl-glow-sm)"/><text x="260" y="276" font-family="'Inter','JetBrains Mono',monospace" font-size="15" font-weight="500" letter-spacing="0.20em" text-anchor="middle" fill="#FFFFFF">SHIP</text></g>
+        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.90)" stroke-width="1.5"/><circle cx="260" cy="320" r="50" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.45" filter="url(#fl-glow-sm)"/><text x="260" y="326" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl-name-grad)">SHIP</text></g>
 
         <!-- Side labels: FAST (left) and BOTTLENECK (right) -->
         <g>
-          <circle cx="80" cy="268" r="3.5" fill="#4083FF"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
-          <line x1="92" y1="268" x2="140" y2="268" stroke="rgba(64,131,255,0.55)" stroke-width="1"/>
-          <text x="80" y="248" font-family="'Inter','JetBrains Mono',monospace" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="start" fill="#4083FF">FAST</text>
+          <circle cx="80" cy="318" r="3.5" fill="#4083FF"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
+          <line x1="92" y1="318" x2="140" y2="318" stroke="rgba(64,131,255,0.55)" stroke-width="1"/>
+          <text x="80" y="298" font-family="'Inter','JetBrains Mono',monospace" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="start" fill="#4083FF">FAST</text>
         </g>
         <g>
-          <circle cx="820" cy="268" r="3.5" fill="#FF7D78" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
-          <line x1="760" y1="268" x2="808" y2="268" stroke="rgba(255,125,120,0.55)" stroke-width="1"/>
-          <text x="820" y="248" font-family="'Inter','JetBrains Mono',monospace" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="end" fill="#FF7D78">BOTTLENECK</text>
+          <circle cx="820" cy="318" r="3.5" fill="#FF7D78" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
+          <line x1="760" y1="318" x2="808" y2="318" stroke="rgba(255,125,120,0.55)" stroke-width="1"/>
+          <text x="820" y="298" font-family="'Inter','JetBrains Mono',monospace" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="end" fill="#FF7D78">BOTTLENECK</text>
         </g>
       </svg>
     </div>
