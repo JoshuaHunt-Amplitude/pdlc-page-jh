@@ -31,7 +31,13 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+  /* Headline orphans: `balance` evens out heading line lengths (no lone trailing
+     word); `pretty` keeps body copy from leaving a single word on the last line. */
+  h1, h2, h3, h4, .sec-title, .pl-head h3,
+  .manifesto-head h2, .pshot-copy h2, .closer h2 { text-wrap: balance; }
+  p, .dagger, .pl-head p, .manifesto-body p, .pshot-copy p { text-wrap: pretty; }
 
   body {
     margin: 0; background: var(--bg); color: var(--white);
@@ -66,17 +72,12 @@
   }
   nav.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
   @media (prefers-reduced-motion: reduce) { nav { transition: opacity .2s ease; } }
+  /* minimal sticky header: square Amplitude mark + the one CTA, nothing else */
   .nav-in { max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
-  .brand { display: flex; align-items: center; gap: 14px; }
-  .brand img { display: block; height: 22px; width: 120px; }
-  .brand-sep { width: 1px; height: 18px; background: var(--lines); flex-shrink: 0; }
-  .brand-sub { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--blue-d); }
-  .nav-links { display: flex; gap: 28px; align-items: center; }
-  .nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); text-decoration: none; transition: color .2s; }
-  .nav-links a:hover { color: var(--white); }
+  .brand { display: inline-flex; align-items: center; line-height: 0; }
+  .brand-mark { width: 26px; height: 26px; display: block; fill: var(--white); }
   .nav-btn { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--white); text-decoration: none; padding: 10px 18px; border: 1px solid var(--lines); border-radius: 999px; transition: all .2s; white-space: nowrap; }
   .nav-btn:hover { border-color: var(--blue-d); color: var(--blue-d); }
-  @media (max-width: 820px) { .nav-links { display: none; } }
 
   /* ── SHARED ─────────────────────────── */
   .sec { padding: 120px 32px; max-width: 1320px; margin: 0 auto; }
@@ -183,6 +184,13 @@
     .funnel { padding: 0 6px; }
     .hero { padding: 0 22px; }
     .manifesto-head p { font-size: 17px; }
+    /* the centered radial glow is 720px wide → clamp it so it can't push the
+       document past 100vw and reintroduce horizontal scroll on phones */
+    .closer::before { width: min(720px, 92vw); }
+    /* the demo's 12vh/16vh padding leaves a cavern of dead space on a phone */
+    .film { padding: 6svh 0 7svh; }
+    /* trim the gap between the signup and the closing loop graphic */
+    #cta.closer { padding-bottom: 48px; }
   }
   .pl-node circle {
     fill: url(#pl-node-grad);
@@ -943,17 +951,11 @@
 <!-- NAV -->
 <nav>
   <div class="nav-in">
-    <div class="brand">
-      <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="120" height="22">
-      <span class="brand-sep"></span>
-      <span class="brand-sub">Wave</span>
-    </div>
-    <div class="nav-links">
-      <a href="#problem">Why</a>
-      <a href="#loops">The loop</a>
-      <a href="#wave">Wave</a>
-      <a href="docs.html">Docs</a>
-    </div>
+    <a class="brand" href="#" aria-label="Amplitude Wave — top">
+      <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z"/>
+      </svg>
+    </a>
     <a href="#cta" class="nav-btn">Request access</a>
   </div>
 </nav>
@@ -1822,6 +1824,16 @@
   .bp-foot .t-2026{font-weight:500;font-size:22px;letter-spacing:4px;}
   .bp-foot .ln{stroke:#e9f0ff;fill:none;}
   .bp-foot .lnf{stroke:rgba(233,240,255,0.7);fill:none;}
+  /* Mobile: the HUD is a 16:9 instrument composition that letterboxes to a tiny
+     centred band on a tall phone, and a full 100vh of mostly-empty navy reads as
+     dead space. Drop the desktop HUD overlay (it's decorative, aria-hidden) and
+     let the torus canvas fill a shorter band so the close stays a "vibe", not a gap. */
+  @media (max-width: 760px){
+    .bp-foot{height:auto;min-height:0;aspect-ratio:1/1;max-height:88svh;}
+    .bp-foot .hud{display:none;}
+    .bp-foot::before{height:90px;}
+    .bp-foot::after{height:90px;}
+  }
 </style>
 <section class="bp-foot" aria-hidden="true">
   <div class="stage">

@@ -61,12 +61,13 @@
   .row input[type=number]{grid-column:2;width:100%;background:#0c1424;border:1px solid #243352;color:#e9efff;border-radius:4px;padding:3px 4px;font-family:inherit;font-size:11px}
   .row input[type=color]{grid-column:1 / -1;width:100%;height:26px;background:#0c1424;border:1px solid #243352;border-radius:4px;padding:2px;cursor:pointer}
   .row.dirty input[type=number],.row.dirty input[type=color]{border-color:#4083FF}
-  #sheet{position:fixed;inset:0;background:rgba(3,4,9,.72);display:none;align-items:center;justify-content:center;z-index:50}
-  #sheet.open{display:flex}
-  #sheet .card{width:min(640px,90vw);max-height:80vh;background:#070b16;border:1px solid #2a3c61;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
-  #sheet h2{font-size:12px;letter-spacing:2px;color:#aebeff}
-  #sheet textarea{flex:1;min-height:300px;background:#0c1424;border:1px solid #243352;color:#e9efff;border-radius:6px;padding:10px;font-family:inherit;font-size:12px;resize:vertical;white-space:pre}
-  #sheet .actions{display:flex;gap:8px;justify-content:flex-end}
+  #sheet,#importSheet{position:fixed;inset:0;background:rgba(3,4,9,.72);display:none;align-items:center;justify-content:center;z-index:50}
+  #sheet.open,#importSheet.open{display:flex}
+  #sheet .card,#importSheet .card{width:min(640px,90vw);max-height:80vh;background:#070b16;border:1px solid #2a3c61;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+  #sheet h2,#importSheet h2{font-size:12px;letter-spacing:2px;color:#aebeff}
+  #sheet textarea,#importSheet textarea{flex:1;min-height:300px;background:#0c1424;border:1px solid #243352;color:#e9efff;border-radius:6px;padding:10px;font-family:inherit;font-size:12px;resize:vertical;white-space:pre}
+  #importSheet input[type=file]{color:#cdd8ff;font-family:inherit;font-size:11px}
+  #sheet .actions,#importSheet .actions{display:flex;gap:8px;justify-content:flex-end}
   #showTab{position:fixed;top:12px;right:12px;z-index:40;display:none}
   body.panel-off #showTab{display:block}
 </style>
@@ -171,6 +172,7 @@
   <div class="p-head">
     <h1>FOOTER LOOP — TUNER</h1>
     <button class="btn primary" id="exportBtn">Export config</button>
+    <button class="btn" id="importBtn">Import</button>
     <button class="btn" id="resetBtn">Reset</button>
     <button class="btn" id="hideBtn">Hide ▸</button>
     <div class="p-presets">
@@ -192,6 +194,19 @@
       <button class="btn" id="sheetClose">Close</button>
       <button class="btn" id="sheetDownload">Download .json</button>
       <button class="btn primary" id="sheetCopy">Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- import sheet -->
+<div id="importSheet">
+  <div class="card">
+    <h2>IMPORT CONFIG</h2>
+    <input type="file" id="importFile" accept="application/json,.json,.txt">
+    <textarea id="importText" spellcheck="false" placeholder="…or paste config JSON here"></textarea>
+    <div class="actions">
+      <button class="btn" id="importClose">Close</button>
+      <button class="btn primary" id="importApply">Apply</button>
     </div>
   </div>
 </div>
@@ -485,6 +500,35 @@
     a.href=url;a.download='footer-loop-'+(presetSelect.value||'config')+'.json';
     document.body.appendChild(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+
+  // ---- import: map any recognized keys, skip missing / unknown / malformed ----
+  const importSheet=document.getElementById('importSheet');
+  const importText=document.getElementById('importText');
+  const importFile=document.getElementById('importFile');
+  function importConfig(obj){
+    const clean={};let n=0;
+    PARAMS.forEach(p=>{
+      if(!(p.k in obj))return;                  // missing key -> keep current value
+      let v=obj[p.k];
+      if(p.type==='color'){ if(typeof v==='string'){clean[p.k]=v;n++;} }
+      else { v=parseFloat(v); if(!isNaN(v)){ if(typeof p.min==='number')v=Math.max(p.min,Math.min(p.max,v)); clean[p.k]=v;n++; } }
+    });
+    applyConfig(clean);                          // sets known keys, persists, syncs, rebuilds
+    return n;
+  }
+  document.getElementById('importBtn').addEventListener('click',()=>{importText.value='';importSheet.classList.add('open');importText.focus();});
+  document.getElementById('importClose').addEventListener('click',()=>importSheet.classList.remove('open'));
+  importSheet.addEventListener('click',(e)=>{if(e.target===importSheet)importSheet.classList.remove('open');});
+  importFile.addEventListener('change',()=>{const f=importFile.files&&importFile.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{importText.value=fr.result;};fr.readAsText(f);});
+  document.getElementById('importApply').addEventListener('click',()=>{
+    const btn=document.getElementById('importApply');
+    let data;
+    try{data=JSON.parse(importText.value);}catch(e){btn.textContent='Invalid JSON';setTimeout(()=>btn.textContent='Apply',1400);return;}
+    if(!data||typeof data!=='object'){btn.textContent='Not an object';setTimeout(()=>btn.textContent='Apply',1400);return;}
+    const n=importConfig(data);
+    btn.textContent='Applied '+n+' ✓';
+    setTimeout(()=>{btn.textContent='Apply';importSheet.classList.remove('open');importFile.value='';},800);
   });
   sheet.addEventListener('click',(e)=>{if(e.target===sheet)sheet.classList.remove('open');});
   document.getElementById('sheetCopy').addEventListener('click',async()=>{const btn=document.getElementById('sheetCopy');try{await navigator.clipboard.writeText(sheetText.value);btn.textContent='Copied ✓';}catch(e){sheetText.select();document.execCommand('copy');btn.textContent='Copied ✓';}setTimeout(()=>btn.textContent='Copy to clipboard',1400);});

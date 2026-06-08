@@ -39,11 +39,41 @@
   .rv-sub{font-weight:500;font-size:12px;letter-spacing:2px;fill:#f1f5f9}
   .backing{fill:#05070e;opacity:0.75}
   .veil{fill:#040816;opacity:0.96;stroke:#60a5fa;stroke-width:1.5}
+
+  /* ── Mobile / portrait ──────────────────────────────────────────────
+     The 16:9 stage letterboxes to a thin centred band on a tall phone, and the
+     wide instrument HUD shrinks until its text is unreadable. Instead: let the
+     procedural particle field fill the whole viewport (it RE-RENDERS to the new
+     aspect — it's a shader, not a stretched bitmap), hide the wide SVG HUD, and
+     swap in a compact stacked title/subtitle sized for a phone. */
+  .mob-hud{display:none}
+  @media (max-aspect-ratio: 1/1), (max-width: 760px){
+    .stage{width:100vw;height:100svh;aspect-ratio:auto}
+    .hud{display:none}
+    .mob-hud{
+      display:block;position:absolute;left:0;top:0;z-index:3;
+      padding:max(72px,12svh) 28px 28px;pointer-events:none;color:#f2f6ff;
+      font-family:'Geist Mono',ui-monospace,monospace;
+    }
+    .mob-hud h1{
+      margin:0;font-weight:600;text-transform:uppercase;
+      letter-spacing:.12em;line-height:1.2;font-size:clamp(26px,8vw,40px);
+    }
+    .mob-hud p{
+      margin:18px 0 0;max-width:26ch;color:#c3d2ff;font-weight:400;
+      letter-spacing:.03em;line-height:1.55;font-size:clamp(13px,3.6vw,15px);
+    }
+  }
 </style>
 </head>
 <body>
 <div class="stage">
   <canvas id="c"></canvas>
+  <!-- compact title for portrait/phone (the wide SVG HUD below is hidden there) -->
+  <div class="mob-hud">
+    <h1>Enabling<br>self&#8209;improving<br>products</h1>
+    <p>Products that find what&#8217;s worth building, ship it, and prove it worked. Every release, on its own.</p>
+  </div>
   <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
     <!-- instrument frame -->
     <g class="ln" stroke-width="1.35" opacity="0.78">
