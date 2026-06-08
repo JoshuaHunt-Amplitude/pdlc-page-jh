@@ -44,33 +44,14 @@
   /* v14: simplified type — no bold, no italic (emphasis carried by color) */
   strong, b { font-weight: 400; }
   em, i { font-style: normal; }
-  /* ── DITHER BACKGROUND ──────────────────────────────────────────────
-     Replaces the blueprint grid with a fine halftone dot field. Two
-     aligned dot layers (same 9px lattice, same origin so dots coincide):
-       ::before — faint uniform dots across the whole page
-       ::after  — brighter dots, masked to soft glow blobs so the field
-                  reads as a dithered glow that follows the hero light.
-     Tuning knobs: BACKGROUND-SIZE = dot pitch (density); the dot color
-     alphas = base vs. glow brightness; the ::after mask radial gradients
-     = where the glow blobs sit. ───────────────────────────────────── */
   body::before {
     content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    /* faint base dither — tiny pinpoints, barely visible in the dark */
-    background-image: radial-gradient(circle at center, rgba(86,116,200,.13) 0px, rgba(86,116,200,.13) .6px, transparent 1.1px);
-    background-size: 11px 11px;
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%);
-    mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%);
-    opacity: .9;
-  }
-  body::after {
-    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    /* same lattice, brighter dots, revealed only through a soft central glow
-       with a gradual multi-stop falloff so the halftone fades smoothly out */
-    background-image: radial-gradient(circle at center, rgba(120,155,255,.5) 0px, rgba(120,155,255,.5) .7px, transparent 1.1px);
-    background-size: 11px 11px;
-    -webkit-mask-image: radial-gradient(ellipse 48% 40% at 52% 34%, #000 0%, rgba(0,0,0,.55) 38%, rgba(0,0,0,.18) 62%, transparent 82%);
-    mask-image: radial-gradient(ellipse 48% 40% at 52% 34%, #000 0%, rgba(0,0,0,.55) 38%, rgba(0,0,0,.18) 62%, transparent 82%);
-    opacity: .85;
+    background-image: linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size: 72px 72px;
+    /* blueprint grid persists down the page, fading near the bottom */
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
+    opacity: .6;
   }
   main, nav, footer { position: relative; z-index: 1; }
 
