@@ -980,7 +980,7 @@
   .bp-cta{position:absolute;
     --s:min(calc(100vw / 1680), calc(100vh / 945));
     left:calc((100vw - var(--s)*1680)/2 + var(--s)*92);
-    top:calc((100vh - var(--s)*945)/2 + var(--s)*528);
+    top:calc((100vh - var(--s)*945)/2 + var(--s)*256);
     z-index:3;pointer-events:auto;
     display:inline-flex;align-items:center;gap:13px;font-family:'Geist Mono',ui-monospace,monospace;
     font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:#0a1330;background:#e9f0ff;
@@ -995,62 +995,77 @@
   <div class="stage">
     <canvas id="bp-c"></canvas>
     <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <!-- corner frames (brackets 40px inset; target TR sits on the diagonal at a
-           104px inset, equidistant from top & right) -->
+      <!-- corner frames · 40px brackets, TL crosshair, TR target (104px diagonal) -->
       <g class="ln" stroke-width="1.4">
-        <path d="M40 96 V40 H96"/>
+        <path d="M40 96 V40 H96"/><path d="M112 74 h16 M120 66 v16"/>
         <path d="M1640 96 V40 H1584"/>
         <path d="M40 849 V905 H96"/>
         <path d="M1640 849 V905 H1584"/>
         <circle cx="1576" cy="104" r="11"/><path d="M1576 87 V121 M1559 104 H1593"/>
-      </g>
-      <!-- right edge tick scale + scanning readout -->
-      <g class="ln" stroke-width="1">
-        <rect x="1632" y="150" width="16" height="5" fill="#e9f0ff" stroke="none"/>
-        <rect x="1632" y="160" width="16" height="5" fill="#e9f0ff" stroke="none"/>
-        <rect x="1632" y="170" width="16" height="5"/><rect x="1632" y="180" width="16" height="5"/>
-        <rect x="1632" y="190" width="11" height="5"/><rect x="1632" y="200" width="16" height="5"/>
-        <rect x="1632" y="210" width="9" height="5"/>
-        <rect x="1628" width="22" height="5" fill="#dfeaff" stroke="none"><animate attributeName="y" values="150;210;150" dur="3.2s" calcMode="linear" repeatCount="indefinite"/></rect>
-      </g>
-      <!-- left edge tick scale -->
-      <g class="ln" stroke-width="1">
-        <rect x="38" y="650" width="16" height="5" fill="#e9f0ff" stroke="none"/><rect x="38" y="660" width="11" height="5"/>
-        <rect x="38" y="670" width="16" height="5"/><rect x="38" y="680" width="16" height="5" fill="#e9f0ff" stroke="none"/>
-        <rect x="38" y="690" width="9" height="5"/><rect x="38" y="700" width="16" height="5"/>
-        <rect x="38" y="710" width="13" height="5"/><rect x="38" y="720" width="16" height="5"/>
+        <circle cx="1576" cy="104" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
       </g>
 
-      <!-- title (landing copy) · v17: hero sells the CATEGORY. The Wave name is demoted
-           to a small eyebrow; its full reveal lives in §6 "Meet Wave". -->
-      <text class="t-sub" x="95" y="118" style="letter-spacing:6px">AMPLITUDE WAVE · CLOSED BETA</text>
-      <text class="t-title" x="92" y="180">ENABLING</text>
-      <text class="t-title" x="92" y="244">SELF-IMPROVING</text>
-      <text class="t-title" x="92" y="308">PRODUCTS</text>
-      <text class="t-call" x="95" y="354" style="font-size:16px;letter-spacing:.5px;fill:#c3d2ff">Coding agents made building cheap. Deciding what's</text>
-      <text class="t-call" x="95" y="380" style="font-size:16px;letter-spacing:.5px;fill:#c3d2ff">worth building, and proving it worked, didn't. Wave</text>
-      <text class="t-call" x="95" y="406" style="font-size:16px;letter-spacing:.5px;fill:#c3d2ff">analyzes your data and code, surfaces what to build,</text>
-      <text class="t-call" x="95" y="432" style="font-size:16px;letter-spacing:.5px;fill:#c3d2ff">orchestrates the work — plans, PRs, experiments —</text>
-      <text class="t-call" x="95" y="458" style="font-size:16px;letter-spacing:.5px;fill:#c3d2ff">then proves whether it worked, so your product gets</text>
-      <text class="t-call" x="95" y="484" style="font-size:16px;letter-spacing:.5px;fill:#c3d2ff">better every cycle.</text>
+      <!-- title block (top-left) -->
+      <text class="t-sub" x="95" y="96" style="letter-spacing:5px;fill:#8aa2ff">AMPLITUDE WAVE · COHERENCE FIELD</text>
+      <text class="t-title" x="92" y="172">SIGNALS BECOME WAVES</text>
+      <text class="t-sub" x="95" y="214" style="font-size:16px;letter-spacing:6px;fill:#7f8cc4">SIGNALS &#8201;·&#8201; OPPORTUNITIES &#8201;·&#8201; OUTCOMES</text>
 
-      <!-- bottom-left version (squares blink) · 60px inset from BOTH left & bottom -->
-      <text class="t-sm" x="60" y="866" style="font-size:14px;fill:#e9f0ff">V1.0</text>
-      <g class="ln" stroke-width="1">
-        <rect x="60" y="878" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="0s" repeatCount="indefinite"/></rect>
-        <rect x="72" y="878" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-0.5s" repeatCount="indefinite"/></rect>
-        <rect x="84" y="878" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.0s" repeatCount="indefinite"/></rect>
-        <rect x="96" y="878" width="9" height="7"/>
-        <rect x="108" y="878" width="20" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.5s" repeatCount="indefinite"/></rect>
+      <!-- stage rail (loop stages across the top) -->
+      <g class="lnf" stroke-width="1" fill="none">
+        <path d="M520 300 H1600" stroke="rgba(233,240,255,0.22)"/>
+        <path d="M520 291 V309 M1600 291 V309" stroke="rgba(233,240,255,0.5)"/>
+        <path d="M540 300 v9 M810 300 v9 M1080 300 v9 M1350 300 v9 M1580 300 v9" stroke="rgba(233,240,255,0.4)"/>
       </g>
+      <text class="t-sm" x="540"  y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">SENSE</text>
+      <text class="t-sm" x="810"  y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">CORROBORATE</text>
+      <text class="t-sm" x="1080" y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">COMPOSE</text>
+      <text class="t-sm" x="1350" y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">APPROVE</text>
+      <text class="t-sm" x="1580" y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">LEARN</text>
 
-      <!-- bottom-right · right-aligned, 60px inset from BOTH right & bottom -->
-      <text class="t-2026" x="1620" y="835" text-anchor="end">[ 2026 ]</text>
-      <text class="t-sm" x="1620" y="865" text-anchor="end">THE PRODUCT LOOP</text>
-      <text class="t-sm" x="1620" y="884" text-anchor="end">AMPLITUDE WAVE</text>
+      <!-- left panel · INCOMING SIGNALS (colour-coded legend) -->
+      <g class="lnf" stroke-width="1.2" fill="none" stroke="rgba(233,240,255,0.45)">
+        <path d="M88 386 V362 H122"/><path d="M362 362 H396 V386"/>
+        <path d="M88 664 V690 H122"/><path d="M362 690 H396 V664"/>
+      </g>
+      <text class="t-call" x="120" y="392" style="letter-spacing:3px">INCOMING SIGNALS</text>
+      <path d="M120 406 H372" stroke="rgba(233,240,255,0.28)" stroke-width="1" fill="none"/>
+      <g stroke="rgba(233,240,255,0.12)" stroke-width="1" fill="none">
+        <path d="M120 458 H372"/><path d="M120 500 H372"/><path d="M120 542 H372"/><path d="M120 584 H372"/>
+      </g>
+      <circle cx="132" cy="437" r="4" fill="#e9f0ff"/><text class="t-call" x="154" y="442" style="letter-spacing:2px">ANALYTICS</text>
+      <circle cx="132" cy="479" r="4" fill="#4083FF"/><text class="t-call" x="154" y="484" style="letter-spacing:2px">SESSION REPLAYS</text>
+      <circle cx="132" cy="521" r="4" fill="#a373ff"/><text class="t-call" x="154" y="526" style="letter-spacing:2px">FEEDBACK</text>
+      <circle cx="132" cy="563" r="4" fill="#57e3a4"/><text class="t-call" x="154" y="568" style="letter-spacing:2px">AGENT TRACES</text>
+      <circle cx="132" cy="605" r="4" fill="#ff7d78"/><text class="t-call" x="154" y="610" style="letter-spacing:2px">WEB VITALS</text>
 
-      <!-- slow pulse accent (rides the relocated target) -->
-      <circle cx="1576" cy="104" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
+      <!-- centre · OPPORTUNITY LOCK reticle (sits over the wave) -->
+      <g class="ln" stroke-width="1.2" fill="none" opacity="0.7">
+        <path d="M1140 486 h-20 v-20 M1240 486 h20 v-20 M1140 560 h-20 v20 M1240 560 h20 v20"/>
+        <circle cx="1190" cy="523" r="20" opacity="0.55"/>
+      </g>
+      <circle cx="1190" cy="523" r="2" fill="#e9f0ff"/>
+      <text class="t-sm" x="1190" y="598" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">OPPORTUNITY LOCK</text>
+
+      <!-- right panel · OPPORTUNITY (the composed output) -->
+      <g class="lnf" stroke-width="1.2" fill="none" stroke="rgba(233,240,255,0.45)">
+        <path d="M1452 466 V442 H1486"/><path d="M1596 442 H1620 V466"/>
+        <path d="M1452 660 V684 H1486"/><path d="M1596 684 H1620 V660"/>
+      </g>
+      <text class="t-call" x="1474" y="472" style="letter-spacing:3px">OPPORTUNITY</text>
+      <path d="M1474 486 H1600" stroke="rgba(233,240,255,0.28)" stroke-width="1" fill="none"/>
+      <text class="t-call" x="1474" y="520" style="letter-spacing:2px;fill:#e9f0ff">EVIDENCE</text>
+      <text class="t-call" x="1474" y="552" style="letter-spacing:2px;fill:#7f8cc4">CROSS-SOURCE</text>
+      <text class="t-call" x="1474" y="584" style="letter-spacing:2px;fill:#7f8cc4">ACTION</text>
+      <text class="t-call" x="1474" y="616" style="letter-spacing:2px;fill:#e9f0ff">READY TO REVIEW</text>
+      <text class="t-call" x="1474" y="648" style="letter-spacing:2px;fill:#7f8cc4">OUTCOME</text>
+      <text class="t-call" x="1474" y="676" style="letter-spacing:2px;fill:#9fffd0">MEASURED</text>
+
+      <!-- bottom-left caption -->
+      <text class="t-lab" x="92" y="874" style="font-size:25px;font-weight:500;letter-spacing:.4px;fill:#e9f0ff">Wave turns scattered product signals into the next improvement worth making.</text>
+      <text class="t-sm" x="92" y="902" style="letter-spacing:3px;fill:#7f8cc4">A PROACTIVE PRODUCT AGENT FROM AMPLITUDE</text>
+
+      <!-- bottom-right -->
+      <text class="t-2026" x="1620" y="890" text-anchor="end">[ 2026 ]</text>
     </svg>
   </div>
   <a class="bp-cta" href="#cta">Request access <span class="arr">→</span></a>
