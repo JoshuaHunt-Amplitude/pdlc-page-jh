@@ -1753,11 +1753,203 @@
 
         <!-- ── Side labels ── -->
         <g>
-          <text x="80" y="325" font-family="Inter, sans-serif" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="start" fill="#4083FF">FAST</text>
+          <text x="80" y="325" font-family="Inter, sans-serif" font-size="11" font-weight="500" letter-spacing="0.22em" text-anchor="start" fill="#4083FF">FAST</text>
         </g>
         <g>
-          <text x="820" y="325" font-family="Inter, sans-serif" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="end" fill="#FF7D78">BOTTLENECK</text>
+          <text x="820" y="325" font-family="Inter, sans-serif" font-size="11" font-weight="500" letter-spacing="0.22em" text-anchor="end" fill="#FF7D78">BOTTLENECK</text>
         </g>
+      </svg>
+    </div>
+
+    <div class="eyebrow reveal" style="display:block; text-align:center; margin:56px 0 14px; color:rgba(255,255,255,0.48);">Josh v4</div>
+    <div class="loop-viz reveal" aria-hidden="true">
+      <svg viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="fl5-bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="54.83%" stop-color="rgba(21,24,39,0.10)"/>
+            <stop offset="100%"   stop-color="rgba(75,87,141,0.10)"/>
+          </linearGradient>
+          <linearGradient id="fl5-name-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#93A6F8"/>
+            <stop offset="1" stop-color="#FFFFFF"/>
+          </linearGradient>
+          <!-- Subtle SIDE GLOWS — radial gradients that soak each half of the ring
+               in a faint color wash without competing with the ring itself. -->
+          <linearGradient id="fl5-blue-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.26"/>
+            <stop offset="60%"  stop-color="#4083FF" stop-opacity="0.10"/>
+            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="fl5-red-grad" x1="1" y1="0" x2="0" y2="0">
+            <stop offset="0%"   stop-color="#FF7D78" stop-opacity="0.26"/>
+            <stop offset="60%"  stop-color="#FF7D78" stop-opacity="0.10"/>
+            <stop offset="100%" stop-color="#FF7D78" stop-opacity="0"/>
+          </linearGradient>
+          <!-- Text gradients (50% color over white) for the FAST/BOTTLENECK corner labels -->
+          <linearGradient id="fl5-fast-text" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8FCFF7"/>
+            <stop offset="1" stop-color="#FFFFFF"/>
+          </linearGradient>
+          <linearGradient id="fl5-slow-text" x1="1" y1="0" x2="0" y2="0">
+            <stop offset="0" stop-color="#FF9F9F"/>
+            <stop offset="1" stop-color="#FFFFFF"/>
+          </linearGradient>
+          <filter id="fl5-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
+        </defs>
+
+        <!-- ── Background gradient panel ── -->
+        <rect x="50" y="40" width="800" height="560" fill="url(#fl5-bg)"/>
+
+        <!-- ── Corner brackets ── -->
+        <g stroke="rgba(255,255,255,0.30)" stroke-width="1" fill="none" stroke-linecap="square">
+          <line x1="40"  y1="35"  x2="50"  y2="35"/>
+          <line x1="45"  y1="30"  x2="45"  y2="40"/>
+          <line x1="55"  y1="35"  x2="145" y2="35" stroke-dasharray="3 6"/>
+          <line x1="45"  y1="45"  x2="45"  y2="135" stroke-dasharray="3 6"/>
+          <line x1="850" y1="35"  x2="860" y2="35"/>
+          <line x1="855" y1="30"  x2="855" y2="40"/>
+          <line x1="755" y1="35"  x2="845" y2="35" stroke-dasharray="3 6"/>
+          <line x1="855" y1="45"  x2="855" y2="135" stroke-dasharray="3 6"/>
+          <line x1="40"  y1="605" x2="50"  y2="605"/>
+          <line x1="45"  y1="600" x2="45"  y2="610"/>
+          <line x1="55"  y1="605" x2="145" y2="605" stroke-dasharray="3 6"/>
+          <line x1="45"  y1="505" x2="45"  y2="595" stroke-dasharray="3 6"/>
+          <line x1="850" y1="605" x2="860" y2="605"/>
+          <line x1="855" y1="600" x2="855" y2="610"/>
+          <line x1="755" y1="605" x2="845" y2="605" stroke-dasharray="3 6"/>
+          <line x1="855" y1="505" x2="855" y2="595" stroke-dasharray="3 6"/>
+        </g>
+
+        <!-- ── Subtle side glows — blue blob on the FAST half, red on the BOTTLENECK half.
+             Sized large enough (r≈250) to spill into the ring band and out into the frame. -->
+        <!-- Left half blue wash + right half red wash, filling the framed panel -->
+        <rect x="50"  y="40" width="400" height="560" fill="url(#fl5-blue-grad)"/>
+        <rect x="450" y="40" width="400" height="560" fill="url(#fl5-red-grad)"/>
+
+        <!-- ── Monochrome dotted ring band (matches loop-v2 visual language) ── -->
+        <circle cx="450" cy="320" r="180" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
+        <circle cx="450" cy="320" r="190" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
+        <circle cx="450" cy="320" r="200" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
+
+        <!-- ── Invisible motion paths (clockwise; left = BUILD→SHIP→USE, right = USE→LEARN→BUILD) -->
+        <path id="fl5-left-180"  d="M 450 500 A 180 180 0 0 1 450 140" fill="none" stroke="none"/>
+        <path id="fl5-left-190"  d="M 450 510 A 190 190 0 0 1 450 130" fill="none" stroke="none"/>
+        <path id="fl5-left-200"  d="M 450 520 A 200 200 0 0 1 450 120" fill="none" stroke="none"/>
+        <path id="fl5-right-190" d="M 450 130 A 190 190 0 0 1 450 510" fill="none" stroke="none"/>
+
+        <!-- ── PARTICLES (3× density) ────────────────────────────────────
+             LEFT (fast): 75 across 3 lanes at 3.2s/half-rev
+             RIGHT (slow): 12 on r=190 at 13s/half-rev — they visibly pool
+        ──────────────────────────────────────────────────────────── -->
+        <g>
+          <!-- LEFT lane r=180, lane r=190, lane r=200 -->
+          <circle r="2.08" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.0s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.0s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.66;0.66;0"/></circle>
+          <circle r="1.4" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.128s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.128s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.48;0.48;0"/></circle>
+          <circle r="1.17" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.256s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.256s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.48;0.48;0"/></circle>
+          <circle r="1.75" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.384s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.384s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.73;0.73;0"/></circle>
+          <circle r="1.34" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.512s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.512s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.12" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.64s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.64s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.44;0.44;0"/></circle>
+          <circle r="2.12" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.768s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.768s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.73;0.73;0"/></circle>
+          <circle r="1.54" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.896s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.896s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
+          <circle r="1.2" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.024s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.024s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.33;0.33;0"/></circle>
+          <circle r="1.95" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.152s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.152s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.71;0.71;0"/></circle>
+          <circle r="1.68" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.28s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.28s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.52;0.52;0"/></circle>
+          <circle r="1.05" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.408s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.408s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.37;0.37;0"/></circle>
+          <circle r="1.91" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.536s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.536s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.7;0.7;0"/></circle>
+          <circle r="1.59" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.664s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.664s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.56;0.56;0"/></circle>
+          <circle r="0.93" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.792s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.792s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.36;0.36;0"/></circle>
+          <circle r="2.08" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.92s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.92s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.83;0.83;0"/></circle>
+          <circle r="1.53" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.048s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.048s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.59;0.59;0"/></circle>
+          <circle r="1.16" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.176s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.176s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="2.29" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.304s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.304s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.82;0.82;0"/></circle>
+          <circle r="1.45" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.432s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.432s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
+          <circle r="0.97" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.56s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.56s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.37;0.37;0"/></circle>
+          <circle r="2.1" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.688s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.688s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.79;0.79;0"/></circle>
+          <circle r="1.54" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.816s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.816s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.48;0.48;0"/></circle>
+          <circle r="0.97" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.944s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.944s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.38;0.38;0"/></circle>
+          <circle r="2.29" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.072s" repeatCount="indefinite"><mpath href="#fl5-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.072s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.78;0.78;0"/></circle>
+
+          <circle r="2.11" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.0s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.0s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.82;0.82;0"/></circle>
+          <circle r="1.39" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.128s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.128s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="1.06" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.256s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.256s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.31;0.31;0"/></circle>
+          <circle r="2.25" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.384s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.384s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.76;0.76;0"/></circle>
+          <circle r="1.39" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.512s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.512s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.55;0.55;0"/></circle>
+          <circle r="0.96" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.64s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.64s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.33;0.33;0"/></circle>
+          <circle r="2.15" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.768s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.768s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.76;0.76;0"/></circle>
+          <circle r="1.66" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.896s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.896s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.53;0.53;0"/></circle>
+          <circle r="1.3" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.024s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.024s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.33;0.33;0"/></circle>
+          <circle r="2.0" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.152s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.152s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.8;0.8;0"/></circle>
+          <circle r="1.36" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.28s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.28s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.48;0.48;0"/></circle>
+          <circle r="1.14" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.408s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.408s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.38;0.38;0"/></circle>
+          <circle r="2.06" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.536s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.536s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.74;0.74;0"/></circle>
+          <circle r="1.69" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.664s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.664s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.62;0.62;0"/></circle>
+          <circle r="1.17" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.792s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.792s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="2.23" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.92s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.92s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.8;0.8;0"/></circle>
+          <circle r="1.34" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.048s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.048s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
+          <circle r="0.9" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.176s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.176s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.44;0.44;0"/></circle>
+          <circle r="2.13" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.304s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.304s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.84;0.84;0"/></circle>
+          <circle r="1.5" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.432s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.432s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.47;0.47;0"/></circle>
+          <circle r="1.24" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.56s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.56s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.4;0.4;0"/></circle>
+          <circle r="1.82" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.688s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.688s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.72;0.72;0"/></circle>
+          <circle r="1.52" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.816s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.816s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
+          <circle r="1.14" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.944s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.944s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.4;0.4;0"/></circle>
+          <circle r="1.77" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-3.072s" repeatCount="indefinite"><mpath href="#fl5-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.072s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.72;0.72;0"/></circle>
+
+          <circle r="1.84" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.0s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.0s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.7;0.7;0"/></circle>
+          <circle r="1.33" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.128s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.128s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.55;0.55;0"/></circle>
+          <circle r="1.29" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.256s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.256s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.41;0.41;0"/></circle>
+          <circle r="1.78" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.384s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.384s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.78;0.78;0"/></circle>
+          <circle r="1.41" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.512s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.512s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.62;0.62;0"/></circle>
+          <circle r="1.29" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.64s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.64s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.49;0.49;0"/></circle>
+          <circle r="2.15" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.768s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.768s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.79;0.79;0"/></circle>
+          <circle r="1.46" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.896s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.896s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.58;0.58;0"/></circle>
+          <circle r="1.08" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.024s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.024s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.4;0.4;0"/></circle>
+          <circle r="1.77" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.152s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.152s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.69;0.69;0"/></circle>
+          <circle r="1.31" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.28s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.28s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.56;0.56;0"/></circle>
+          <circle r="0.9" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.408s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.408s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.44;0.44;0"/></circle>
+          <circle r="1.74" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.536s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.536s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.66;0.66;0"/></circle>
+          <circle r="1.64" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.664s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.664s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="1.01" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.792s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.792s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.4;0.4;0"/></circle>
+          <circle r="2.02" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.92s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.92s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.79;0.79;0"/></circle>
+          <circle r="1.4" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.048s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.048s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
+          <circle r="0.98" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.176s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.176s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="1.96" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.304s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.304s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.73;0.73;0"/></circle>
+          <circle r="1.65" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.432s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.432s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="0.92" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.56s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.56s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="2.18" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.688s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.688s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.67;0.67;0"/></circle>
+          <circle r="1.38" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.816s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.816s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
+          <circle r="0.97" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.944s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.944s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.39;0.39;0"/></circle>
+          <circle r="2.22" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.072s" repeatCount="indefinite"><mpath href="#fl5-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.072s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.67;0.67;0"/></circle>
+
+          <!-- RIGHT lane r=190 (slow) -->
+          <circle r="1.34" opacity="0" fill="#fff"><animateMotion dur="13s" begin="-0.0s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-0.0s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.98" opacity="0" fill="#fff"><animateMotion dur="13s" begin="-1.083s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-1.083s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.49;0.49;0"/></circle>
+          <circle r="1.42" opacity="0" fill="#fff"><animateMotion dur="13s" begin="-2.167s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-2.167s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.4;0.4;0"/></circle>
+          <circle r="1.91" opacity="0" fill="#fff"><animateMotion dur="13s" begin="-3.25s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-3.25s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.48;0.48;0"/></circle>
+          <circle r="1.57" opacity="0" fill="#FFB8B5"><animateMotion dur="13s" begin="-4.333s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-4.333s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.95" opacity="0" fill="#FFB8B5"><animateMotion dur="13s" begin="-5.417s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-5.417s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="1.6" opacity="0" fill="#FFB8B5"><animateMotion dur="13s" begin="-6.5s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-6.5s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.49;0.49;0"/></circle>
+          <circle r="1.41" opacity="0" fill="#fff"><animateMotion dur="13s" begin="-7.583s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-7.583s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.36;0.36;0"/></circle>
+          <circle r="1.71" opacity="0" fill="#FFB8B5"><animateMotion dur="13s" begin="-8.667s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-8.667s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.41;0.41;0"/></circle>
+          <circle r="1.34" opacity="0" fill="#fff"><animateMotion dur="13s" begin="-9.75s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-9.75s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.42;0.42;0"/></circle>
+          <circle r="1.34" opacity="0" fill="#fff"><animateMotion dur="13s" begin="-10.833s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-10.833s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.4;0.4;0"/></circle>
+          <circle r="1.35" opacity="0" fill="#fff"><animateMotion dur="13s" begin="-11.917s" repeatCount="indefinite"><mpath href="#fl5-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-11.917s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.31;0.31;0"/></circle>
+        </g>
+
+        <!-- ── 4 Nodes (r=50) ── -->
+        <!-- USE — top (slight red-tint border, bottleneck side) -->
+        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.40)" stroke-width="1.5"/><text x="450" y="136" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl5-name-grad)">USE</text></g>
+        <!-- LEARN — right (red-tint border, bottleneck side) -->
+        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.40)" stroke-width="1.5"/><text x="640" y="326" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl5-name-grad)">LEARN</text></g>
+        <!-- BUILD — bottom (blue-tint border, fast side) -->
+        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="516" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl5-name-grad)">BUILD</text></g>
+        <!-- SHIP — left (blue-tint border, fast side) -->
+        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="260" y="326" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl5-name-grad)">SHIP</text></g>
+
+        <!-- ── Side labels ── -->
+        <!-- Corner labels — large, gradient-filled, inset from the panel corners -->
+        <text x="80"  y="82" font-family="Inter, sans-serif" font-size="22" font-weight="600" letter-spacing="0.14em" text-anchor="start" fill="url(#fl5-fast-text)">FAST</text>
+        <text x="820" y="82" font-family="Inter, sans-serif" font-size="22" font-weight="600" letter-spacing="0.14em" text-anchor="end"   fill="url(#fl5-slow-text)">BOTTLENECK</text>
       </svg>
     </div>
     <div class="manifesto-body reveal">
