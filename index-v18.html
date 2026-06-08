@@ -806,6 +806,34 @@
   .hero .waitlist button { padding: 9px 16px; font-size: 10px; }
   .hero .waitlist-help-wrap { margin-top: 22px; }
 
+  /* polished email success state — the form swaps to a confirmation card */
+  .waitlist-zone { position: relative; }
+  .waitlist-success { display: none; flex-direction: column; align-items: center; text-align: center; gap: 15px; max-width: 480px; margin: 0 auto; }
+  .waitlist-zone.is-done .waitlist,
+  .waitlist-zone.is-done .waitlist-help-row { display: none; }
+  .waitlist-zone.is-done .waitlist-success { display: flex; animation: ws-in .55s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes ws-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .ws-badge { position: relative; width: 64px; height: 64px; display: grid; place-items: center; }
+  .ws-badge::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; background: radial-gradient(circle, rgba(64,131,255,.5), transparent 68%); animation: ws-glow 2.8s ease-in-out infinite; }
+  @keyframes ws-glow { 0%,100% { opacity: .45; transform: scale(.85); } 50% { opacity: .9; transform: scale(1.08); } }
+  .ws-badge svg { position: relative; width: 64px; height: 64px; }
+  .ws-ring { fill: rgba(64,131,255,.12); stroke: var(--blue-d); stroke-width: 2; opacity: .6; }
+  .ws-ping { fill: none; stroke: var(--blue-d); stroke-width: 2; opacity: 0; transform-origin: 32px 32px; }
+  .waitlist-zone.is-done .ws-ping { animation: ws-ping 1s .12s ease-out; }
+  @keyframes ws-ping { 0% { opacity: .6; transform: scale(.55); } 100% { opacity: 0; transform: scale(1.6); } }
+  .ws-check { fill: none; stroke: #eaf1ff; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 44; stroke-dashoffset: 44; }
+  .waitlist-zone.is-done .ws-check { animation: ws-draw .45s .2s cubic-bezier(.6,0,.3,1) forwards; }
+  @keyframes ws-draw { to { stroke-dashoffset: 0; } }
+  .ws-title { font-family: var(--sans); font-weight: 400; font-size: clamp(24px,3.2vw,34px); letter-spacing: -0.02em; line-height: 1.1; color: var(--white); }
+  .ws-sub { font-size: 16px; line-height: 1.6; color: var(--dim); margin: 0; }
+  .ws-sub strong { color: var(--blue-d); font-weight: 500; }
+  .ws-meta { font-family: var(--mono); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim2); display: inline-flex; align-items: center; gap: 7px; margin-top: 2px; }
+  .ws-meta .dot { width: 5px; height: 5px; border-radius: 50%; background: #57e3a4; box-shadow: 0 0 7px #57e3a4; flex-shrink: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .ws-badge::before, .waitlist-zone.is-done .ws-ping, .waitlist-zone.is-done .ws-check { animation: none; }
+    .ws-check { stroke-dashoffset: 0; }
+  }
+
   /* Mobile: stack the signup so the button drops BELOW the input (instead of
      squeezing side-by-side), with a full-width, finger-friendly button. */
   @media (max-width: 560px) {
@@ -2084,14 +2112,40 @@
   <!-- v17: product-shot graphics removed; the loop returns as a donut band below the CTA -->
   <h2 class="reveal">Build products that<br><span class="a">improve themselves.</span></h2>
   <p class="reveal">Wave is rolling out to a first group of teams. Be one of them.</p>
-  <form class="waitlist reveal" onsubmit="event.preventDefault(); this.querySelector('button').innerHTML='Request received ✓'; this.querySelector('button').disabled = true;">
-    <input type="email" placeholder="you@company.com" required aria-label="Email address">
-    <button type="submit">Request access →</button>
-  </form>
-  <div class="reveal" style="display:flex;justify-content:center">
-    <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
+  <div class="waitlist-zone reveal" id="cta-zone">
+    <form class="waitlist" id="cta-form" onsubmit="event.preventDefault()">
+      <input type="email" id="cta-email" placeholder="you@company.com" required aria-label="Email address">
+      <button type="submit">Request access →</button>
+    </form>
+    <div class="waitlist-help-row" style="display:flex;justify-content:center">
+      <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
+    </div>
+    <div class="waitlist-success" role="status" aria-live="polite">
+      <span class="ws-badge" aria-hidden="true">
+        <svg viewBox="0 0 64 64">
+          <circle class="ws-ring" cx="32" cy="32" r="22"/>
+          <circle class="ws-ping" cx="32" cy="32" r="22"/>
+          <path class="ws-check" d="M21 33 l7 7 l15 -16"/>
+        </svg>
+      </span>
+      <div class="ws-title">You're on the list.</div>
+      <p class="ws-sub">We'll reach out to <strong id="cta-email-echo">your inbox</strong> the moment your spot in the closed beta opens.</p>
+      <div class="ws-meta"><span class="dot"></span>Request received</div>
+    </div>
   </div>
 </section>
+<script>
+(function(){
+  var z = document.getElementById('cta-zone'); if(!z) return;
+  var f = document.getElementById('cta-form'), em = document.getElementById('cta-email'), echo = document.getElementById('cta-email-echo');
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = (em.value || '').trim();
+    if (echo && v) echo.textContent = v;
+    z.classList.add('is-done');
+  });
+})();
+</script>
 
 <!-- ── footer loop · the product loop returns to close the page (ported from v16's hero) ── -->
 <style>
