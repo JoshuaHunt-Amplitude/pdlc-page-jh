@@ -17,7 +17,7 @@
   .ln{stroke:#cdd8ff;fill:none}
   .dimln{stroke:#5c6fac;fill:none}
   .ey{font-weight:500;font-size:18px;letter-spacing:5px;fill:#aebeff}
-  .title{font-weight:600;font-size:44px;letter-spacing:10px;fill:#f2f6ff}
+  .title{font-weight:600;font-size:36px;letter-spacing:8px;fill:#f2f6ff}
   .sub{font-weight:400;font-size:18px;letter-spacing:5px;fill:#91a3dc}
   .k{font-weight:400;font-size:14px;letter-spacing:2px;fill:#7686b6}
   .v{font-weight:400;font-size:15px;letter-spacing:2px;fill:#e9efff}
@@ -26,10 +26,10 @@
   .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
   .ghost{opacity:.48}
   .reveal{opacity:0;transition:opacity .5s ease}
-  .rv{font-weight:500;font-size:13px;letter-spacing:3px;fill:#ffffff}
-  .rv-sub{font-weight:400;font-size:12px;letter-spacing:2px;fill:#b0c4de}
-  .backing{fill:#05070e;opacity:0.65}
-  .veil{fill:#040918;opacity:.88;stroke:#4083FF;stroke-width:1.2}
+  .rv{font-weight:600;font-size:13px;letter-spacing:3px;fill:#ffffff}
+  .rv-sub{font-weight:500;font-size:12px;letter-spacing:2px;fill:#f1f5f9}
+  .backing{fill:#05070e;opacity:0.75}
+  .veil{fill:#040816;opacity:0.96;stroke:#60a5fa;stroke-width:1.5}
 </style>
 </head>
 <body>
@@ -48,8 +48,8 @@
     <!-- title -->
     <text class="title" x="80" y="172">
       <tspan x="80" dy="0">ENABLING</tspan>
-      <tspan x="80" dy="58">SELF-IMPROVING</tspan>
-      <tspan x="80" dy="58">PRODUCTS</tspan>
+      <tspan x="80" dy="48">SELF-IMPROVING</tspan>
+      <tspan x="80" dy="48">PRODUCTS</tspan>
     </text>
 
     <!-- coherence lock is a subtle hover overlay, not a permanent ripple -->
@@ -135,6 +135,7 @@
       <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
       <tspan x="82" dy="34">and prove it worked. Every release, on its own.</tspan>
     </text>
+    <text class="cap" x="1486" y="878">[ 2026 ]</text>
     <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
     <circle id="cursorRing" class="reveal" r="24" fill="none" stroke="#7d93ff" stroke-width="1.2"/>
   </svg>
@@ -179,16 +180,22 @@
   void main() {
     vec2 st = gl_FragCoord.xy / u_resolution;
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
-    float t = u_time;
+    float t = u_time * 0.2; // Slowed down by factor of 2
 
-    float curl = fbm(vec2(uv.x * 2.15 + t * 0.035, uv.y * 1.7 - t * 0.018)) - 0.5;
     float bgLock = smoothstep(-0.45, 0.05, uv.x);
+    float curl = fbm(vec2(uv.x * 2.15 + t * 0.035, uv.y * 1.7 - t * 0.018)) - 0.5;
+    
+    // Canyon center matching the vertex shader
+    float canyonCenter = 0.15 * (fbm(vec2(uv.x * 1.5, 1.0)) - 0.5);
     float leftY = 0.15 * curl + 0.08 * sin(uv.x * 3.0 - t * 0.5);
-    float rightY = 0.18 * sin(uv.x * 6.0 - t * 2.4);
+    float rightY = canyonCenter;
     float waveY = mix(leftY, rightY, bgLock);
+    
     float beam = exp(-pow((uv.y - waveY) * 3.0, 2.0));
     float beamCore = exp(-pow((uv.y - waveY) * 9.0, 2.0));
-    float opportunity = exp(-dot((uv - vec2(0.0, 0.0)) * vec2(1.5, 1.5), (uv - vec2(0.0, 0.0)) * vec2(1.5, 1.5)) * 12.0);
+    
+    // Center the opportunity spotlight at (0.0, 0.0)
+    float opportunity = exp(-dot(uv * vec2(1.5, 1.5), uv * vec2(1.5, 1.5)) * 12.0);
 
     float surf = 0.0;
     for (int i = 0; i < 4; i++) {
@@ -278,104 +285,126 @@
   }
 
   void main() {
-    float t = u_time;
-    float speed = 0.018 + a_seed.z * 0.052;
-    float lane = floor(a_extra.x * 5.0);
+    float t = u_time * 0.2; // Slowed down by factor of 2
+    float speed = 0.01 + a_seed.z * 0.0075; // Slowed down by factor of 2
     float cycle = fract(a_seed.x + t * speed);
-    float x = mix(-0.88, 0.94, cycle);
 
-    // Waves stay tall and structured across the left; coherence only takes hold
-    // as the field locks into the central opportunity.
-    float lock = smoothstep(-0.45, 0.05, x);
-    float phaseLock = lock * lock * (3.0 - 2.0 * lock);
-    float convergence = phaseLock * 0.94;
+    // Base coordinates: flow from x=-1.6 to x=1.2
+    float rawX = mix(-1.6, 1.2, cycle);
+    float rawY = (a_seed.y - 0.5) * 2.8; // Wider river
 
-    // Left side: Chaotic wavy oceany stack of ribbons.
-    // We use multi-frequency sine waves distorted by FBM to simulate waves breaking over a reef.
-    float nB = 7.0;
-    float bandIdx = floor(a_seed.y * nB);
-    float bandCenter = mix(0.86, -0.86, bandIdx / (nB - 1.0));
-    float inBand = fract(a_seed.y * nB) - 0.5;
-    float ribbon = bandCenter + inBand * 0.075;
+    // Coherence factor: 0 on left (chaotic), 1 on right (ordered)
+    float cohere = smoothstep(-0.5, 0.2, rawX); // Centered coherence transition
+    float phaseLock = cohere * cohere * (3.0 - 2.0 * cohere);
 
-    // Organic wave noise using FBM
-    float waveNoise = fbm(vec2(x * 1.8, t * 0.3 + bandIdx * 0.4)) - 0.5;
-    float swell =
-        0.130 * sin(x * 3.5 - t * 0.9 + bandIdx * 0.15 + waveNoise * 1.5)
-      + 0.055 * sin(x * 7.5 - t * 1.5 + bandIdx * 0.30 + waveNoise * 2.5)
-      + 0.025 * sin(x * 14.0 - t * 2.2 + waveNoise * 4.0);
+    // --- TERRAIN (ROCKS) ---
+    // Scale coordinates for noise
+    vec2 st = vec2(rawX * 2.0, rawY * 2.5);
+    float n1 = fbm(st + vec2(t * 0.05, 0.0)); // Slowly shifting terrain for organic feel
+    float n2 = fbm(st * 2.5 + vec2(3.2, 1.4));
+    float rockHeight = n1 * 0.75 + n2 * 0.25;
 
-    // Right side: A larger amplitude, clean, coherent sine wave.
-    float coherentWave = 0.18 * sin(x * 6.0 - t * 2.4);
+    // Canyon center and width matching the organic channel
+    float canyonCenter = 0.15 * (fbm(vec2(rawX * 1.5, 1.0)) - 0.5);
+    float canyonWidth = mix(2.8, 0.22, phaseLock);
 
-    float strandId = floor(a_seed.w * 15.0);
-    float strandPhase = strandId * 1.37 + a_seed.x * 4.0;
-    float streamOffset = (hash(strandId + 13.0) - 0.5) * 0.34;
-    float fall = smoothstep(-1.02, 0.58, x);
-    float gravity = 0.62 * fall * fall;
-    float slowCurl = fbm(vec2(x * 2.2 + strandPhase, t * 0.070 + a_seed.w * 2.4)) - 0.5;
-    float fastSpray = fbm(vec2(x * 8.4 + a_seed.x * 14.0, t * 0.18 + a_seed.y * 7.0)) - 0.5;
+    // Create a deep canyon profile on the right
+    float distToCanyon = abs(rawY - canyonCenter);
+    float canyonCarve = smoothstep(0.08, 0.25, distToCanyon);
+    // Inside the canyon, rock height is low (deep water). Outside, it is high (dry walls).
+    rockHeight = mix(rockHeight, mix(0.0, 0.85, canyonCarve), phaseLock);
 
-    // Swells are tall upstream and flatten as the field coheres into the lock.
-    float waveDamp = 1.0 - phaseLock;
-    float source = ribbon + swell * waveDamp + slowCurl * 0.04 * waveDamp;
-    float sprayWidth = (0.16 + 0.22 * smoothstep(0.40, 0.98, fall) + 0.07 * fastSpray) * waveDamp;
-    // Tiny scatter only, so the ribbons stay crisp wave lines.
-    float scatter = inBand * 0.045 * waveDamp + fastSpray * 0.025 * waveDamp;
+    // Create "terraces" or steps in the rock
+    float steps = 4.0;
+    float terracedRock = floor(rockHeight * steps) / steps + smoothstep(0.0, 0.3, fract(rockHeight * steps)) * (1.0/steps);
 
-    // Mix the chaotic left with the coherent right sine wave
-    float y = mix(source + scatter, coherentWave, convergence);
-    float waterfall = coherentWave;
+    // --- WATER ROUTING ---
+    // Water flows around high rocks. We perturb Y based on the rock gradient.
+    float rockDx = fbm(st + vec2(0.05, 0.0)) - rockHeight;
+    float rockDy = fbm(st + vec2(0.0, 0.05)) - rockHeight;
+    float flowY = rawY - rockDy * 0.8 * (1.0 - phaseLock);
 
-    float breakerPhase = fract(t * 0.060 + a_seed.w * 0.16);
-    float breakerX = mix(-0.82, 0.48, breakerPhase);
-    float breakerShape = exp(-pow((x - breakerX) * 7.5, 2.0));
-    float breakerLife = smoothstep(0.04, 0.18, breakerPhase) * (1.0 - smoothstep(0.72, 0.96, breakerPhase));
-    float breaker = breakerShape * breakerLife * (1.0 - smoothstep(0.15, 0.78, x));
-    y += breaker * (0.060 * sin(bandIdx * 1.7 + x * 9.0) + 0.035);
+    // Funnel into the narrow canyon
+    flowY = mix(flowY, canyonCenter + (a_seed.y - 0.5) * canyonWidth, phaseLock);
 
-    float cascadeMask = step(a_extra.z, 0.24);
-    float dropCycle = fract(a_seed.x + t * (0.035 + a_seed.z * 0.060));
-    float cascadeLife = smoothstep(0.04, 0.22, dropCycle) * (1.0 - smoothstep(0.78, 0.98, dropCycle));
-    float curtainX = -0.18 + (a_seed.y - 0.5) * 0.82 + streamOffset * 0.22
-      + (fbm(vec2(a_seed.y * 4.0 + t * 0.030, dropCycle * 2.6)) - 0.5) * (0.20 + 0.22 * dropCycle);
-    float curtainY = mix(0.66, -0.50, dropCycle)
-      + (fbm(vec2(curtainX * 3.1, dropCycle * 5.0 + t * 0.08)) - 0.5) * 0.16;
-    x = mix(x, curtainX, cascadeMask);
-    y = mix(y, curtainY, cascadeMask);
-    waterfall = mix(waterfall, curtainY, cascadeMask);
+    // --- WATER ELEVATION (Z) ---
+    // Base downhill slope
+    float slopeZ = -rawX * 0.3;
 
-    float crest = exp(-pow(x * 2.55, 2.0) - pow((y - waterfall) * 5.0, 2.0));
-    float packet = pow(sin((cycle + a_seed.w * 0.13) * 6.2831853) * 0.5 + 0.5, 7.0);
-    float shimmer = 0.56 + 0.44 * sin(t * 7.1 + a_seed.w * 39.0 + x * 11.0);
-    float coherence = smoothstep(0.18, 0.88, convergence);
+    // Water rides over the terraced rocks
+    float waterZ = slopeZ + terracedRock * 0.5 * (1.0 - phaseLock);
 
-    vec3 src = sourceColor(lane);
-    vec3 coherent = mix(vec3(0.16, 0.42, 1.00), vec3(0.56, 0.80, 1.00), coherence);
-    vec3 col = mix(src, coherent, phaseLock);
-    col += vec3(0.38, 0.74, 1.0) * crest * 0.30;
+    // Add whitewater turbulence (high frequency noise)
+    float turbulence = fbm(vec2(rawX * 10.0 - t * 4.0, flowY * 10.0)) * 0.18;
+    waterZ += turbulence * (1.0 - phaseLock * 0.8); // Keep some turbulence even when coherent
 
-    // Ridge glow concentrated on the ribbon centerline so the upstream wave
-    // crests read as bright swell lines, not a flat haze.
-    float ridge = exp(-inBand * inBand * 20.0) * (1.0 - cascadeMask);
+    // Organic canyon ripple (no sine wave)
+    float canyonRipple = 0.03 * sin(rawX * 8.0 - t * 3.0) + 0.015 * fbm(vec2(rawX * 4.0, t * 2.0));
+    waterZ = mix(waterZ, slopeZ + canyonRipple, phaseLock);
 
-    // Mouse attractor: particles near the cursor are gently drawn in and lit,
-    // so hovering nudges the field without disrupting the overall flow.
+    // --- PROJECTION (30 DEGREE ISOMETRIC) ---
+    // Rotate around X-axis to look down (tilt)
+    float tilt = 0.9; // Slightly less steep angle
+    float cosT = cos(tilt);
+    float sinT = sin(tilt);
+
+    // Rotate around Z-axis slightly for an isometric angle
+    float pan = 0.15;
+    float cosP = cos(pan);
+    float sinP = sin(pan);
+
+    float rx = rawX * cosP - flowY * sinP;
+    float ry = rawX * sinP + flowY * cosP;
+
+    float projX = rx;
+    float projY = ry * cosT - waterZ * sinT;
+
+    // --- COLOR & FOAM ---
+    // Foam occurs at steep drops (high rockDx) and high turbulence
+    float dropFoam = smoothstep(0.01, 0.06, rockDx);
+    float turbFoam = smoothstep(0.06, 0.14, turbulence);
+    float foam = max(dropFoam, turbFoam) * (1.0 - phaseLock * 0.9); // Keep a tiny bit of foam
+
+    // Bruarfoss colors
+    vec3 deepWater = vec3(0.01, 0.15, 0.50); // Darker deep blue
+    vec3 shallowWater = vec3(0.15, 0.65, 0.90); // Bright cyan
+    vec3 foamColor = vec3(0.95, 0.98, 1.0); // White
+
+    // Base color depends on rock height (shallower = more cyan)
+    vec3 col = mix(deepWater, shallowWater, rockHeight * 0.9);
+    col = mix(col, foamColor, foam);
+
+    // Coherent color (clean amplitude blue)
+    vec3 coherentCol = vec3(0.10, 0.35, 0.90) + canyonRipple * 1.5;
+    col = mix(col, coherentCol, phaseLock * 0.8); // Blend it slightly less harshly
+
+    // Mouse attractor (keep existing logic)
     float aspect = u_resolution.x / u_resolution.y;
-    vec2 clip = vec2(x * 2.0 / aspect, y);
+    vec2 clip = vec2(projX * 1.8 / aspect - 0.1, projY * 1.8 - 0.1); // Adjust scale/offset
     float md = distance(clip, u_mouse);
     float pull = exp(-md * md * 7.5) * u_hover;
     clip += (u_mouse - clip) * pull * 0.16;
 
     gl_Position = vec4(clip, 0.0, 1.0);
-    // Alpha is scaled down hard because density is ~10x; brightness accumulates
-    // additively across the many overlapping points.
-    gl_PointSize = (0.40 + a_extra.y * 0.70 + packet * 0.52 + crest * 1.70 + ridge * 0.45 + pull * 1.30) * (1.0 + coherence * 0.20);
-    v_alpha = (0.0110 + ridge * 0.0110 * waveDamp + coherence * 0.0210 + crest * 0.0240 + breaker * 0.0200 + cascadeMask * 0.0085) * shimmer;
-    v_alpha += pull * 0.030 * shimmer;
-    v_alpha *= mix(1.0, cascadeLife, cascadeMask);
-    v_glow = crest + breaker * 0.42 + packet * 0.16 + pull * 0.30;
-    v_color = vec4(col + vec3(0.20, 0.40, 0.85) * (pull * 0.6 + breaker * 0.35), 1.0);
+
+    // Point size and alpha
+    float packet = pow(sin((cycle + a_seed.w * 0.13) * 6.2831853) * 0.5 + 0.5, 7.0);
+    float shimmer = 0.6 + 0.4 * sin(t * 5.0 + a_seed.w * 20.0);
+
+    gl_PointSize = (0.6 + a_extra.y * 1.2 + foam * 2.5 + packet * 1.2 + pull * 2.0) * (1.0 + phaseLock * 0.3);
+    v_alpha = (0.03 + foam * 0.10 + phaseLock * 0.08) * shimmer;
+    v_alpha += pull * 0.06 * shimmer;
+
+    // Fade out particles outside the canyon on the right
+    float canyonFade = mix(1.0, 1.0 - smoothstep(0.10, 0.22, distToCanyon), phaseLock);
+    v_alpha *= canyonFade;
+
+    // Fade in/out at edges
+    float edgeFade = smoothstep(-1.6, -1.3, rawX) * (1.0 - smoothstep(0.9, 1.2, rawX));
+    v_alpha *= edgeFade;
+
+    v_glow = foam * 0.6 + packet * 0.3 + pull * 0.5;
+    v_color = vec4(col + vec3(0.1, 0.3, 0.7) * pull * 0.6, 1.0);
   }
 </script>
 
@@ -494,12 +523,12 @@
   let hover = 0, hoverTarget = 0;
   const ring = document.getElementById('cursorRing');
   const zones = [
-    { el: document.getElementById('rv-signals'), cx: 255, cy: 420, r: 220 },
-    { el: document.getElementById('rv-synthesis'), cx: 1069, cy: 404, r: 210 },
-    { el: document.getElementById('rv-lock'), cx: 840, cy: 473, r: 255 },
-    { el: document.getElementById('rv-experiments'), cx: 1327, cy: 352, r: 205 },
-    { el: document.getElementById('rv-opp'), cx: 1539, cy: 500, r: 190 },
-    { el: document.getElementById('rv-outcomes'), cx: 1460, cy: 570, r: 205 }
+    { el: document.getElementById('rv-signals'), cx: 255, cy: 673, r: 180 },
+    { el: document.getElementById('rv-synthesis'), cx: 555, cy: 663, r: 180 },
+    { el: document.getElementById('rv-lock'), cx: 840, cy: 473, r: 220 },
+    { el: document.getElementById('rv-experiments'), cx: 847, cy: 670, r: 180 },
+    { el: document.getElementById('rv-outcomes'), cx: 1163, cy: 668, r: 180 },
+    { el: document.getElementById('rv-opp'), cx: 1539, cy: 500, r: 190 }
   ];
 
   function onMove(e) {
