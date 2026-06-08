@@ -817,6 +817,21 @@
   /* ── FOOTER ─────────────────────────── */
   footer { border-top: 1px solid var(--line); padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
   .fc { color: var(--dim); font-size: 13px; font-family: var(--mono); letter-spacing: .1em; }
+  /* ── FOOTER SCENE — full-bleed Unicorn Studio embed sitting just above
+        the copyright strip. Responsive (16:10 aspect, capped height).
+        pointer-events:none so it doesn't intercept clicks; aria-hidden
+        because it's decorative. ─────────────────────────────────────── */
+  .footer-scene {
+    position: relative; width: 100vw; left: 50%; margin-left: -50vw;
+    max-width: 100vw;
+    aspect-ratio: 1440 / 900;
+    max-height: 720px;
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .footer-scene > div { position: absolute; inset: 0; width: 100%; height: 100%; }
+  @media (max-width: 720px) { .footer-scene { max-height: 480px; } }
 
   /* ── WHAT THIS IS (under-hero strip) ── */
   .whatis { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.015); }
@@ -3165,6 +3180,12 @@
 </script>
 
 </main>
+
+<!-- ── FOOTER SCENE (Unicorn Studio) ─────────────────────────────────── -->
+<section class="footer-scene" aria-hidden="true">
+  <div data-us-project="99heGC0BZLjolZlFn7NM"></div>
+</section>
+<script>!function(){var u=window.UnicornStudio;if(u&&u.init){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){u.init()})}else{u.init()}}else{window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.1/dist/unicornStudio.umd.js",i.onload=function(){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){UnicornStudio.init()})}else{UnicornStudio.init()}},(document.head||document.body).appendChild(i)}}();</script>
 
 <footer>
   <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" style="width:100px;height:20px;opacity:.4">
