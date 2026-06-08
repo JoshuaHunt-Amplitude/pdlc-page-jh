@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Footer Loop &mdash; Tuner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:#070b1c;display:flex;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace}
+  /* stage shrinks to leave room for the tuning panel; --panelW flips to 0 when hidden */
+  :root{--panelW:360px}
+  .wrap{flex:1;display:flex;align-items:center;justify-content:center;height:100vh;min-width:0}
+  /* bp-foot styles ported verbatim from index-v18 footer loop */
+  .bp-foot{position:relative;width:min(calc(100vw - var(--panelW)),177.78vh);aspect-ratio:16/9;overflow:hidden;background:#070b1c;font-family:'Geist Mono',ui-monospace,monospace;}
+  .bp-foot::before{content:"";position:absolute;left:0;right:0;top:0;height:140px;z-index:2;pointer-events:none;background:linear-gradient(to top, rgba(7,11,28,0), #070b1c);}
+  .bp-foot::after{content:"";position:absolute;left:0;right:0;bottom:0;height:150px;z-index:2;pointer-events:none;background:linear-gradient(to bottom, rgba(7,11,28,0), #070b1c);}
+  .bp-foot .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#070b1c;}
+  .bp-foot canvas,.bp-foot .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .bp-foot .hud{pointer-events:none;}
+  .bp-foot .hud text{fill:#e9f0ff;}
+  .bp-foot .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
+  .bp-foot .t-sub{font-weight:400;font-size:17px;letter-spacing:5px;fill:#c3d2ff;}
+  .bp-foot .t-lab{font-weight:500;font-size:22px;letter-spacing:3px;}
+  .bp-foot .t-call{font-weight:400;font-size:15px;letter-spacing:2px;}
+  .bp-foot .t-sm{font-weight:400;font-size:12px;letter-spacing:2px;fill:#bcccff;}
+  .bp-foot .t-2026{font-weight:500;font-size:22px;letter-spacing:4px;}
+  .bp-foot .ln{stroke:#e9f0ff;fill:none;}
+  .bp-foot .lnf{stroke:rgba(233,240,255,0.7);fill:none;}
+
+  /* ---- tuning panel (shared design with wave-coherence-tuner) ---- */
+  #panel{
+    width:var(--panelW);flex:0 0 var(--panelW);height:100vh;overflow-y:auto;
+    background:#070b16;border-left:1px solid #1b2740;color:#cdd8ff;
+    font-size:12px;letter-spacing:.5px;padding:0 0 40px;
+  }
+  #panel.hidden{display:none}
+  #panel::-webkit-scrollbar{width:9px}
+  #panel::-webkit-scrollbar-thumb{background:#22314f;border-radius:6px}
+  .p-head{position:sticky;top:0;z-index:2;background:#070b16;border-bottom:1px solid #1b2740;padding:12px 14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .p-head h1{font-size:12px;font-weight:600;letter-spacing:2px;color:#aebeff;flex:1 0 100%;margin-bottom:2px}
+  .p-presets{display:flex;gap:6px;width:100%;margin-top:4px}
+  .p-presets select{flex:1;min-width:0;background:#0c1424;border:1px solid #243352;color:#cdd8ff;border-radius:5px;padding:4px 6px;font-family:inherit;font-size:11px}
+  .btn{font-family:inherit;font-size:11px;letter-spacing:1px;cursor:pointer;background:#13203a;color:#cdd8ff;border:1px solid #2a3c61;border-radius:5px;padding:5px 9px}
+  .btn:hover{background:#1b2c4e}
+  .btn.primary{background:#0052F2;border-color:#2f6dff;color:#fff}
+  .btn.primary:hover{background:#2f6dff}
+  .grp{border-bottom:1px solid #121b2e}
+  .grp > summary{list-style:none;cursor:pointer;padding:9px 14px;font-weight:600;letter-spacing:2px;color:#8fa2d6;font-size:11px;user-select:none;display:flex;align-items:center;gap:6px}
+  .grp > summary::-webkit-details-marker{display:none}
+  .grp > summary::before{content:'▸';color:#4a5a82;font-size:9px}
+  .grp[open] > summary::before{content:'▾'}
+  .grp > summary:hover{color:#cdd8ff}
+  .row{display:grid;grid-template-columns:1fr 64px;gap:6px 8px;align-items:center;padding:5px 14px 9px}
+  .row label{grid-column:1 / -1;color:#9fb0e0;font-size:11px;display:flex;justify-content:space-between}
+  .row label .def{color:#475878;font-size:10px}
+  .row input[type=range]{grid-column:1;width:100%;accent-color:#4083FF;height:18px}
+  .row input[type=number]{grid-column:2;width:100%;background:#0c1424;border:1px solid #243352;color:#e9efff;border-radius:4px;padding:3px 4px;font-family:inherit;font-size:11px}
+  .row input[type=color]{grid-column:1 / -1;width:100%;height:26px;background:#0c1424;border:1px solid #243352;border-radius:4px;padding:2px;cursor:pointer}
+  .row.dirty input[type=number],.row.dirty input[type=color]{border-color:#4083FF}
+  #sheet{position:fixed;inset:0;background:rgba(3,4,9,.72);display:none;align-items:center;justify-content:center;z-index:50}
+  #sheet.open{display:flex}
+  #sheet .card{width:min(640px,90vw);max-height:80vh;background:#070b16;border:1px solid #2a3c61;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+  #sheet h2{font-size:12px;letter-spacing:2px;color:#aebeff}
+  #sheet textarea{flex:1;min-height:300px;background:#0c1424;border:1px solid #243352;color:#e9efff;border-radius:6px;padding:10px;font-family:inherit;font-size:12px;resize:vertical;white-space:pre}
+  #sheet .actions{display:flex;gap:8px;justify-content:flex-end}
+  #showTab{position:fixed;top:12px;right:12px;z-index:40;display:none}
+  body.panel-off #showTab{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="bp-foot" aria-hidden="true">
+  <div class="stage">
+    <canvas id="bp-foot"></canvas>
+    <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <!-- corner frames -->
+      <g class="ln" stroke-width="1.4">
+        <path d="M40 96 V40 H96"/><path d="M106 62 h18 M115 53 v18"/>
+        <path d="M1640 96 V40 H1584"/>
+        <path d="M40 849 V905 H96"/>
+        <path d="M1640 849 V905 H1584"/>
+        <circle cx="1600" cy="116" r="11"/><path d="M1600 99 V133 M1583 116 H1617"/>
+      </g>
+      <!-- right edge tick scale + scanning readout -->
+      <g class="ln" stroke-width="1">
+        <rect x="1632" y="150" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="1632" y="160" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="1632" y="170" width="16" height="5"/><rect x="1632" y="180" width="16" height="5"/>
+        <rect x="1632" y="190" width="11" height="5"/><rect x="1632" y="200" width="16" height="5"/>
+        <rect x="1632" y="210" width="9" height="5"/>
+        <rect x="1628" width="22" height="5" fill="#dfeaff" stroke="none"><animate attributeName="y" values="150;210;150" dur="3.2s" calcMode="linear" repeatCount="indefinite"/></rect>
+      </g>
+      <!-- left edge tick scale -->
+      <g class="ln" stroke-width="1">
+        <rect x="38" y="650" width="16" height="5" fill="#e9f0ff" stroke="none"/><rect x="38" y="660" width="11" height="5"/>
+        <rect x="38" y="670" width="16" height="5"/><rect x="38" y="680" width="16" height="5" fill="#e9f0ff" stroke="none"/>
+        <rect x="38" y="690" width="9" height="5"/><rect x="38" y="700" width="16" height="5"/>
+        <rect x="38" y="710" width="13" height="5"/><rect x="38" y="720" width="16" height="5"/>
+      </g>
+      <!-- title -->
+      <text class="t-title" x="92" y="150">AMPLITUDE WAVE</text>
+      <text class="t-sub" x="95" y="184">THE PRODUCT LOOP · ALWAYS RUNNING</text>
+      <!-- SENSE / DECIDE / ACT / LEARN -->
+      <path class="ln" stroke-width="1.3" d="M92 352 h-10 V500 h10"/>
+      <path class="ln" stroke-width="1.3" d="M360 352 h10 V500 h-10"/>
+      <text class="t-lab" x="106" y="372">SENSE</text><text class="t-lab" x="106" y="410">DECIDE</text>
+      <text class="t-lab" x="106" y="448">ACT</text><text class="t-lab" x="106" y="486">LEARN</text>
+      <g class="lnf" stroke-width="1.2" stroke-dasharray="4 6">
+        <animate attributeName="stroke-dashoffset" values="0;-20" dur="1.6s" repeatCount="indefinite"/>
+        <path d="M210 366 C 244 366, 250 478, 286 478"/><path d="M214 404 C 246 404, 252 442, 286 442"/>
+        <path d="M198 442 C 240 442, 250 404, 286 404"/><path d="M210 480 C 246 480, 252 366, 286 366"/>
+      </g>
+      <g class="ln" stroke-width="1.3">
+        <rect x="296" y="356" width="22" height="22" rx="2"/><path d="M300 356 v-3 M314 356 v-3 M300 378 v3 M314 378 v3"/><circle cx="307" cy="367" r="2.4" fill="#e9f0ff"/>
+        <circle cx="307" cy="404" r="11"/><rect x="296" y="431" width="22" height="22" rx="6"/>
+        <circle cx="307" cy="478" r="11"/><path d="M301 478 l4 4 l8 -9"/>
+      </g>
+      <!-- icon row -->
+      <g class="ln" stroke-width="1.3">
+        <circle cx="106" cy="552" r="5"/><path d="M97 569 a9 9 0 0 1 18 0"/>
+        <ellipse cx="148" cy="549" rx="9" ry="3.5"/><path d="M139 549 v15 a9 3.5 0 0 0 18 0 v-15"/>
+        <rect x="176" y="547" width="20" height="17" rx="3"/><path d="M180 555 h12"/>
+        <rect x="214" y="545" width="20" height="20" rx="3"/><circle cx="220" cy="551" r="1.6" fill="#e9f0ff"/><circle cx="228" cy="559" r="1.6" fill="#e9f0ff"/>
+        <rect x="252" y="549" width="26" height="13" rx="6"/>
+      </g>
+      <!-- callouts -->
+      <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
+        <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
+        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/>
+        <path d="M268 290 L570 302"/><path d="M268 632 L520 614"/><path d="M310 708 L720 690"/>
+      </g>
+      <g fill="#e9f0ff">
+        <circle cx="1180" cy="642" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
+        <circle cx="1280" cy="470" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="1180" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="570"  cy="302" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="520"  cy="614" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
+        <circle cx="720"  cy="690" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
+      </g>
+      <text class="t-call" x="1300" y="250">WEB VITALS</text>
+      <text class="t-call" x="1330" y="472">PRODUCT FEEDBACK</text>
+      <text class="t-call" x="1300" y="692">SESSION REPLAYS</text>
+      <text class="t-call" x="110" y="292">COMPETITIVE</text>
+      <text class="t-call" x="110" y="636">AGENT TRACES</text>
+      <text class="t-call" x="110" y="712">CUSTOM DATA · MCP</text>
+      <!-- bottom-left version (squares blink in sequence) -->
+      <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
+      <g class="ln" stroke-width="1">
+        <rect x="92" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="0s" repeatCount="indefinite"/></rect>
+        <rect x="104" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-0.5s" repeatCount="indefinite"/></rect>
+        <rect x="116" y="872" width="9" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.0s" repeatCount="indefinite"/></rect>
+        <rect x="128" y="872" width="9" height="7"/>
+        <rect x="140" y="872" width="20" height="7" fill="#e9f0ff" stroke="none"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" begin="-1.5s" repeatCount="indefinite"/></rect>
+      </g>
+      <!-- bottom-right -->
+      <text class="t-2026" x="1448" y="848">[ 2026 ]</text>
+      <text class="t-sm" x="1454" y="878">THE PRODUCT LOOP</text>
+      <text class="t-sm" x="1474" y="897">AMPLITUDE WAVE</text>
+      <circle cx="1600" cy="116" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
+    </svg>
+  </div>
+</section>
+</div>
+
+<!-- ===== TUNING PANEL ===== -->
+<aside id="panel">
+  <div class="p-head">
+    <h1>FOOTER LOOP — TUNER</h1>
+    <button class="btn primary" id="exportBtn">Export config</button>
+    <button class="btn" id="resetBtn">Reset</button>
+    <button class="btn" id="hideBtn">Hide ▸</button>
+    <div class="p-presets">
+      <select id="presetSelect"><option value="">— presets —</option></select>
+      <button class="btn" id="saveBtn">Save</button>
+      <button class="btn" id="delBtn">Delete</button>
+    </div>
+  </div>
+  <div id="controls"></div>
+</aside>
+<button class="btn primary" id="showTab">◂ Tuner</button>
+
+<!-- export sheet -->
+<div id="sheet">
+  <div class="card">
+    <h2>EXPORT CONFIG</h2>
+    <textarea id="sheetText" spellcheck="false"></textarea>
+    <div class="actions">
+      <button class="btn" id="sheetClose">Close</button>
+      <button class="btn" id="sheetDownload">Download .json</button>
+      <button class="btn primary" id="sheetCopy">Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const c=document.getElementById('bp-foot');if(!c)return;const x=c.getContext('2d');
+  let W=0,H=0,dpr=1;
+  function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+  const TAU=Math.PI*2;
+
+  // ============================================================
+  //  TUNABLE CONFIG SCHEMA
+  //  Floats render as slider+number; `type:'color'` renders a swatch.
+  //  Params flagged `rebuild:true` regenerate the particle/stream
+  //  swarms (their randomized seeds depend on these); everything
+  //  else is read live inside the frame loop.
+  // ============================================================
+  const SCHEMA = [
+    { group:'Rotation & camera', open:true, params:[
+      { k:'rotSpeed', label:'Rotation speed',  min:0, max:0.3,  step:0.001, def:0.055 },
+      { k:'tilt',     label:'Tilt (look-down)', min:0, max:1.57, step:0.01,  def:0.85 },
+      { k:'focal',    label:'Focal / perspective', min:1, max:8, step:0.05,  def:2.6 },
+    ]},
+    { group:'Torus geometry', open:true, params:[
+      { k:'majorR',    label:'Major radius',   min:0.10, max:0.50, step:0.005, def:0.300 },
+      { k:'tubeRatio', label:'Tube ratio',     min:0.10, max:0.90, step:0.01,  def:0.42 },
+      { k:'centerX',   label:'Center X',       min:0.30, max:0.70, step:0.005, def:0.575 },
+      { k:'centerY',   label:'Center Y',       min:0.20, max:0.80, step:0.005, def:0.50 },
+    ]},
+    { group:'Wireframe', params:[
+      { k:'ringsU',       label:'Longitude rings', min:4, max:120, step:1, def:56 },
+      { k:'segV',         label:'Longitude segs',  min:8, max:96,  step:1, def:36 },
+      { k:'ringsV',       label:'Latitude rings',  min:4, max:80,  step:1, def:22 },
+      { k:'segU',         label:'Latitude segs',   min:12,max:160, step:1, def:80 },
+      { k:'lonAlphaBase', label:'Longitude α base',  min:0, max:0.4, step:0.005, def:0.04 },
+      { k:'lonAlphaRange',label:'Longitude α range', min:0, max:0.5, step:0.005, def:0.13 },
+      { k:'latAlphaBase', label:'Latitude α base',   min:0, max:0.4, step:0.005, def:0.03 },
+      { k:'latAlphaRange',label:'Latitude α range',  min:0, max:0.5, step:0.005, def:0.10 },
+      { k:'shadowAlpha',  label:'Shadow ring α',     min:0, max:0.6, step:0.01,  def:0.22 },
+      { k:'shadowScaleX', label:'Shadow scale X',    min:0.5,max:1.6,step:0.01,  def:1.05 },
+      { k:'shadowScaleY', label:'Shadow scale Y',    min:0.2,max:1.2,step:0.01,  def:0.60 },
+    ]},
+    { group:'Particles', params:[
+      { k:'particleCount', label:'Particle count', min:0, max:12000, step:100, def:3800, rebuild:true },
+      { k:'speedMin',  label:'Orbit speed · min', min:0, max:0.5, step:0.005, def:0.10, rebuild:true },
+      { k:'speedVar',  label:'Orbit speed · var', min:0, max:0.5, step:0.005, def:0.12, rebuild:true },
+      { k:'vDrift',    label:'Cross drift',       min:0, max:0.4, step:0.005, def:0.05, rebuild:true },
+      { k:'pAlphaBase',label:'Alpha base',        min:0, max:0.4, step:0.005, def:0.05 },
+      { k:'pAlphaRange',label:'Alpha range (depth)',min:0,max:0.6,step:0.005, def:0.30 },
+      { k:'pSizeBase', label:'Size base',         min:0, max:3,   step:0.05,  def:0.5 },
+      { k:'pSizeRand', label:'Size random',       min:0, max:3,   step:0.05,  def:1.0 },
+      { k:'pSizeNear', label:'Size · depth',      min:0, max:3,   step:0.05,  def:0.5 },
+    ]},
+    { group:'Streams (tracers)', params:[
+      { k:'streamCount', label:'Stream count', min:0, max:60, step:1, def:18, rebuild:true },
+      { k:'bigCount',    label:'Bright streams', min:0, max:30, step:1, def:5, rebuild:true },
+      { k:'streamSegs',  label:'Stream segments', min:16, max:160, step:1, def:72 },
+      { k:'turnsMin',    label:'Longitude turns · min', min:0, max:5, step:0.1, def:1.4, rebuild:true },
+      { k:'turnsVar',    label:'Longitude turns · var', min:0, max:5, step:0.1, def:1.8, rebuild:true },
+      { k:'vturnsMin',   label:'Latitude turns · min',  min:0, max:5, step:0.1, def:0.6, rebuild:true },
+      { k:'vturnsVar',   label:'Latitude turns · var',  min:0, max:5, step:0.1, def:1.4, rebuild:true },
+      { k:'streamSpeedMin', label:'Head speed · min', min:0, max:0.2, step:0.002, def:0.018, rebuild:true },
+      { k:'streamSpeedVar', label:'Head speed · var', min:0, max:0.2, step:0.002, def:0.024, rebuild:true },
+      { k:'lineAlphaBig',  label:'Trail line α · bright', min:0, max:1, step:0.01, def:0.20 },
+      { k:'lineAlphaSmall',label:'Trail line α · faint',  min:0, max:1, step:0.01, def:0.06 },
+      { k:'lineWidthBig',  label:'Trail width · bright',  min:0, max:4, step:0.1, def:1.3 },
+      { k:'lineWidthSmall',label:'Trail width · faint',   min:0, max:4, step:0.1, def:0.8 },
+      { k:'trailLen',  label:'Comet length',  min:1, max:80, step:1, def:26 },
+      { k:'trailGap',  label:'Comet spacing',  min:0.001, max:0.05, step:0.001, def:0.012 },
+      { k:'headAlphaBig',  label:'Head α · bright', min:0, max:1, step:0.01, def:0.95 },
+      { k:'headAlphaSmall',label:'Head α · faint',  min:0, max:1, step:0.01, def:0.55 },
+      { k:'headSizeBig',   label:'Head size · bright', min:0, max:6, step:0.1, def:2.4 },
+      { k:'headSizeSmall', label:'Head size · faint',  min:0, max:6, step:0.1, def:1.4 },
+    ]},
+    { group:'Signal emission', open:true, params:[
+      { k:'convergence',    label:'Convergence (orbit→node)', min:0, max:1, step:0.01, def:0.7 },
+      { k:'convergeRadius', label:'Gather radius (×R)', min:0.1, max:2.0, step:0.02, def:0.9 },
+      { k:'emitX',          label:'Emission point X', min:0.3, max:0.95, step:0.005, def:0.78 },
+      { k:'emitY',          label:'Emission point Y', min:0.2, max:0.8,  step:0.005, def:0.50 },
+      { k:'emitBoost',      label:'Gather brightness', min:0, max:1.2, step:0.01, def:0.5 },
+      { k:'nodeSize',       label:'Node size',        min:0, max:30, step:0.5, def:7 },
+      { k:'nodePulseSpeed', label:'Node pulse speed',  min:0, max:8,  step:0.1, def:2.2 },
+      { k:'beamLength',     label:'Beam length (×min)', min:0, max:1.2, step:0.01, def:0.42 },
+      { k:'beamSpeed',      label:'Beam pulse speed',  min:0, max:3,  step:0.02, def:0.8 },
+      { k:'beamDots',       label:'Beam pulses',       min:0, max:40, step:1, def:14 },
+      { k:'beamDotSize',    label:'Beam pulse size',   min:0, max:6,  step:0.1, def:2.2 },
+      { k:'beamLineAlpha',  label:'Beam line α',       min:0, max:1,  step:0.01, def:0.18 },
+      { k:'emitColor',      label:'Signal color', type:'color', def:'#cfe2ff' },
+    ]},
+    { group:'Colors', params:[
+      { k:'bgInner',      label:'Background · inner', type:'color', def:'#1b2c66' },
+      { k:'bgMid',        label:'Background · mid',   type:'color', def:'#0d1530' },
+      { k:'bgOuter',      label:'Background · outer', type:'color', def:'#070b1c' },
+      { k:'bgCenterX',    label:'Glow center X', min:0.3, max:0.7, step:0.005, def:0.575 },
+      { k:'bgCenterY',    label:'Glow center Y', min:0.2, max:0.8, step:0.005, def:0.48 },
+      { k:'bgRadius',     label:'Glow radius',   min:0.3, max:1.5, step:0.01,  def:0.80 },
+      { k:'particleColor',label:'Particle color', type:'color', def:'#eef4ff' },
+      { k:'streamColor',  label:'Stream line color', type:'color', def:'#dfeaff' },
+      { k:'headColor',    label:'Comet head color',  type:'color', def:'#ffffff' },
+    ]},
+  ];
+
+  const PARAMS=[]; SCHEMA.forEach(g=>g.params.forEach(p=>PARAMS.push(p)));
+  const DEFAULTS={}; PARAMS.forEach(p=>DEFAULTS[p.k]=p.def);
+
+  const STORE_KEY='footer-loop-tuner';
+  const config=Object.assign({},DEFAULTS);
+  try{const saved=JSON.parse(localStorage.getItem(STORE_KEY)||'{}');for(const k in saved)if(k in config)config[k]=saved[k];}catch(e){}
+  function persist(){try{localStorage.setItem(STORE_KEY,JSON.stringify(config));}catch(e){}}
+
+  // small helper: hex -> "r,g,b" for rgba() composition
+  function rgb(hex){const h=hex.replace('#','');return parseInt(h.substr(0,2),16)+','+parseInt(h.substr(2,2),16)+','+parseInt(h.substr(4,2),16);}
+
+  // ---- swarms (rebuildable) ----
+  let pts=[],streams=[];
+  function buildSwarm(){
+    const cf=config;
+    pts=[];streams=[];
+    for(let i=0;i<cf.particleCount;i++)pts.push({u:Math.random()*TAU,v:Math.random()*TAU,sp:cf.speedMin+Math.random()*cf.speedVar,dv:(Math.random()-0.5)*cf.vDrift,sz:Math.random()});
+    for(let i=0;i<cf.streamCount;i++){const big=i<cf.bigCount;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:cf.turnsMin+Math.random()*cf.turnsVar,vturns:cf.vturnsMin+Math.random()*cf.vturnsVar,off:Math.random(),sp:cf.streamSpeedMin+Math.random()*cf.streamSpeedVar,big:big});}
+  }
+  buildSwarm();
+
+  let last=0;
+  function frame(now){
+    const cf=config;
+    const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
+
+    const g=x.createRadialGradient(W*cf.bgCenterX,H*cf.bgCenterY,0,W*cf.bgCenterX,H*cf.bgCenterY,Math.max(W,H)*cf.bgRadius);
+    g.addColorStop(0,cf.bgInner);g.addColorStop(0.5,cf.bgMid);g.addColorStop(1,cf.bgOuter);
+    x.fillStyle=g;x.fillRect(0,0,W,H);
+
+    const cx=W*cf.centerX,cy=H*cf.centerY,R=Math.min(W,H)*cf.majorR,r=R*cf.tubeRatio,Rr=R+r;
+    const e=cf.tilt,a=t*cf.rotSpeed,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=cf.focal*Rr;
+    function proj(u,v){
+      const cu=Math.cos(u),su=Math.sin(u),cv=Math.cos(v),sv=Math.sin(v);
+      const X=(R+r*cv)*cu,Z=(R+r*cv)*su,Y=r*sv;
+      const X1=X*ca+Z*sa,Z1=-X*sa+Z*ca;
+      const Y2=Y*ce-Z1*se,Z2=Y*se+Z1*ce;
+      const p=fo/(fo+Z2);
+      return {sx:cx+X1*p,sy:cy+Y2*p,d:Z2,p:p};
+    }
+    // ground shadow ellipse
+    x.save();x.translate(cx,cy+R*0.04);x.strokeStyle='rgba(208,222,255,'+cf.shadowAlpha+')';x.lineWidth=1;x.setLineDash([5,8]);
+    x.beginPath();x.ellipse(0,0,Rr*cf.shadowScaleX,Rr*cf.shadowScaleY,0,0,TAU);x.stroke();x.setLineDash([]);x.restore();
+    x.lineWidth=1;
+    // longitude rings
+    const NU=cf.ringsU|0,SEGV=cf.segV|0;
+    for(let i=0;i<NU;i++){const u=i/NU*TAU;x.beginPath();for(let k=0;k<=SEGV;k++){const p=proj(u,k/SEGV*TAU);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(u,Math.PI/2).d/Rr;const al=cf.lonAlphaBase+cf.lonAlphaRange*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
+    // latitude rings
+    const NV=cf.ringsV|0,SEGU=cf.segU|0;
+    for(let j=0;j<NV;j++){const v=j/NV*TAU;x.beginPath();for(let k=0;k<=SEGU;k++){const p=proj(k/SEGU*TAU,v);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(Math.PI/2,v).d/Rr;const al=cf.latAlphaBase+cf.latAlphaRange*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
+    x.globalCompositeOperation='lighter';
+    // --- single emission point: front-facing particles near it get pulled in ---
+    // gather() lerps a projected position toward the emission node; weight peaks
+    // for front-facing points (near) close to the node (prox) scaled by convergence.
+    const Ex=W*cf.emitX,Ey=H*cf.emitY,ec=cf.emitColor;
+    const cw=Math.max(1,cf.convergeRadius*R);
+    function gather(sx,sy,near){
+      const dx=sx-Ex,dy=sy-Ey,sd2=dx*dx+dy*dy;
+      const prox=Math.exp(-sd2/(2*cw*cw));
+      const g=cf.convergence*prox*Math.max(0,near);
+      return {x:sx+(Ex-sx)*g,y:sy+(Ey-sy)*g,g:g};
+    }
+    // free particles orbiting the torus surface
+    const pCol=cf.particleColor;
+    for(let i=0;i<pts.length;i++){const pt=pts[i];pt.u+=pt.sp*dt;pt.v+=pt.dv*dt;const q=proj(pt.u,pt.v);const near=q.d/Rr*0.5+0.5;const gp=gather(q.sx,q.sy,near);x.globalAlpha=cf.pAlphaBase+near*cf.pAlphaRange+gp.g*cf.emitBoost;const s=(cf.pSizeBase+pt.sz*cf.pSizeRand+near*cf.pSizeNear)*q.p*(1+gp.g);x.fillStyle=pCol;x.beginPath();x.arc(gp.x,gp.y,s,0,TAU);x.fill();}
+    // helical stream tracers + comet heads
+    const sCol=cf.streamColor,hCol=cf.headColor,TT=cf.trailLen|0,segs=cf.streamSegs|0;
+    for(let i=0;i<streams.length;i++){const sm=streams[i];
+      x.beginPath();let started=false;
+      for(let k=0;k<=segs;k++){const s=k/segs;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);if(!started){x.moveTo(p.sx,p.sy);started=true;}else x.lineTo(p.sx,p.sy);}
+      x.globalAlpha=sm.big?cf.lineAlphaBig:cf.lineAlphaSmall;x.strokeStyle=sCol;x.lineWidth=sm.big?cf.lineWidthBig:cf.lineWidthSmall;x.stroke();
+      const head=(((t*sm.sp+sm.off)%1)+1)%1;
+      for(let k=0;k<TT;k++){const s=head-k*cf.trailGap;if(s<0||s>1)continue;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);const near=p.d/Rr*0.5+0.5;const gp=gather(p.sx,p.sy,near);const a2=(1-k/TT)*(sm.big?cf.headAlphaBig:cf.headAlphaSmall)*(0.4+near*0.6)+gp.g*cf.emitBoost*(1-k/TT);x.globalAlpha=a2;x.fillStyle=hCol;const ss=(sm.big?cf.headSizeBig:cf.headSizeSmall)*(1-k/TT*0.7)*p.p*(1+gp.g);x.beginPath();x.arc(gp.x,gp.y,ss,0,TAU);x.fill();}
+    }
+    // --- emission node + outgoing signal beam (the single output) ---
+    if(cf.convergence>0||cf.nodeSize>0){
+      const pulse=0.5+0.5*Math.sin(t*cf.nodePulseSpeed);
+      const ns=cf.nodeSize*(1+0.35*pulse);
+      // beam direction = outward from torus center through the node
+      let ux=Ex-cx,uy=Ey-cy;const L=Math.hypot(ux,uy)||1;ux/=L;uy/=L;
+      const beamPx=cf.beamLength*Math.min(W,H);
+      x.globalAlpha=cf.beamLineAlpha*(0.6+0.4*pulse);x.strokeStyle=ec;x.lineWidth=1.4;
+      x.beginPath();x.moveTo(Ex,Ey);x.lineTo(Ex+ux*beamPx,Ey+uy*beamPx);x.stroke();
+      const bd=cf.beamDots|0;
+      for(let k=0;k<bd;k++){const s=(((t*cf.beamSpeed+k/bd)%1)+1)%1;const px=Ex+ux*beamPx*s,py=Ey+uy*beamPx*s;x.globalAlpha=(1-s)*0.9;x.fillStyle=ec;const ss=cf.beamDotSize*(0.5+(1-s));x.beginPath();x.arc(px,py,ss,0,TAU);x.fill();}
+      // glowing node halo + white core
+      if(ns>0){const ng=x.createRadialGradient(Ex,Ey,0,Ex,Ey,ns*3);ng.addColorStop(0,ec);ng.addColorStop(1,'rgba('+rgb(ec)+',0)');x.globalAlpha=0.9;x.fillStyle=ng;x.beginPath();x.arc(Ex,Ey,ns*3,0,TAU);x.fill();x.globalAlpha=1;x.fillStyle='#ffffff';x.beginPath();x.arc(Ex,Ey,ns*0.5,0,TAU);x.fill();}
+    }
+    x.globalAlpha=1;x.globalCompositeOperation='source-over';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ============================================================
+  //  PANEL UI  (shared with wave-coherence-tuner)
+  // ============================================================
+  const controls=document.getElementById('controls');
+  const rowRefs={};
+  function fmt(v){return String(Math.round(v*1000)/1000);}
+
+  let rebuildTimer=null;
+  function scheduleRebuild(){clearTimeout(rebuildTimer);rebuildTimer=setTimeout(buildSwarm,200);}
+
+  SCHEMA.forEach(group=>{
+    const det=document.createElement('details');det.className='grp';if(group.open)det.open=true;
+    const sum=document.createElement('summary');sum.textContent=group.group;det.appendChild(sum);
+
+    group.params.forEach(p=>{
+      const row=document.createElement('div');row.className='row';
+      const label=document.createElement('label');
+
+      if(p.type==='color'){
+        label.innerHTML='<span>'+p.label+'</span><span class="def">def '+p.def+'</span>';
+        const col=document.createElement('input');col.type='color';col.value=config[p.k];
+        function markDirty(){row.classList.toggle('dirty',config[p.k]!==p.def);}
+        col.addEventListener('input',()=>{config[p.k]=col.value;markDirty();persist();});
+        row.appendChild(label);row.appendChild(col);
+        rowRefs[p.k]={col,row,p,markDirty};markDirty();
+      }else{
+        label.innerHTML='<span>'+p.label+'</span><span class="def">def '+fmt(p.def)+'</span>';
+        const range=document.createElement('input');range.type='range';range.min=p.min;range.max=p.max;range.step=p.step;range.value=config[p.k];
+        const num=document.createElement('input');num.type='number';num.min=p.min;num.max=p.max;num.step=p.step;num.value=config[p.k];
+        function markDirty(){row.classList.toggle('dirty',Math.abs(config[p.k]-p.def)>1e-9);}
+        function apply(v,fromRange){v=parseFloat(v);if(isNaN(v))return;config[p.k]=v;if(fromRange)num.value=v;else range.value=v;markDirty();persist();if(p.rebuild)scheduleRebuild();}
+        range.addEventListener('input',()=>apply(range.value,true));
+        num.addEventListener('input',()=>apply(num.value,false));
+        row.appendChild(label);row.appendChild(range);row.appendChild(num);
+        rowRefs[p.k]={range,num,row,p,markDirty};markDirty();
+      }
+      det.appendChild(row);
+    });
+    controls.appendChild(det);
+  });
+
+  function syncInputs(){
+    for(const k in rowRefs){const rf=rowRefs[k];
+      if(rf.col){rf.col.value=config[k];}else{rf.range.value=config[k];rf.num.value=config[k];}
+      rf.markDirty();
+    }
+  }
+
+  document.getElementById('resetBtn').addEventListener('click',()=>{Object.assign(config,DEFAULTS);persist();syncInputs();buildSwarm();});
+
+  // ---- named presets (saved alongside the working config in localStorage) ----
+  const PRESET_KEY=STORE_KEY+'-presets';
+  const presetSelect=document.getElementById('presetSelect');
+  function loadPresets(){try{return JSON.parse(localStorage.getItem(PRESET_KEY)||'{}');}catch(e){return {};}}
+  function storePresets(o){try{localStorage.setItem(PRESET_KEY,JSON.stringify(o));}catch(e){}}
+  function refreshPresets(selected){
+    const all=loadPresets();
+    presetSelect.innerHTML='<option value="">— presets —</option>';
+    Object.keys(all).sort().forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;if(name===selected)o.selected=true;presetSelect.appendChild(o);});
+  }
+  function snapshot(){const s={};PARAMS.forEach(p=>s[p.k]=config[p.k]);return s;}
+  function applyConfig(obj){for(const k in obj)if(k in config)config[k]=obj[k];persist();syncInputs();buildSwarm();}
+  presetSelect.addEventListener('change',()=>{const p=loadPresets()[presetSelect.value];if(p)applyConfig(p);});
+  document.getElementById('saveBtn').addEventListener('click',()=>{
+    const name=(window.prompt('Save preset as:',presetSelect.value||'')||'').trim();
+    if(!name)return;
+    const all=loadPresets();all[name]=snapshot();storePresets(all);refreshPresets(name);
+  });
+  document.getElementById('delBtn').addEventListener('click',()=>{
+    const name=presetSelect.value;
+    if(!name||!window.confirm('Delete preset "'+name+'"?'))return;
+    const all=loadPresets();delete all[name];storePresets(all);refreshPresets('');
+  });
+  refreshPresets('');
+
+  const root=document.documentElement;
+  function setPanel(on){
+    document.getElementById('panel').classList.toggle('hidden',!on);
+    document.body.classList.toggle('panel-off',!on);
+    root.style.setProperty('--panelW',on?'360px':'0px');
+    requestAnimationFrame(resize);
+  }
+  document.getElementById('hideBtn').addEventListener('click',()=>setPanel(false));
+  document.getElementById('showTab').addEventListener('click',()=>setPanel(true));
+
+  const sheet=document.getElementById('sheet'),sheetText=document.getElementById('sheetText');
+  function buildExport(){const out={};PARAMS.forEach(p=>out[p.k]=config[p.k]);return JSON.stringify(out,null,2);}
+  document.getElementById('exportBtn').addEventListener('click',()=>{sheetText.value=buildExport();sheet.classList.add('open');sheetText.focus();sheetText.select();});
+  document.getElementById('sheetClose').addEventListener('click',()=>sheet.classList.remove('open'));
+  document.getElementById('sheetDownload').addEventListener('click',()=>{
+    const blob=new Blob([sheetText.value],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='footer-loop-'+(presetSelect.value||'config')+'.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+  sheet.addEventListener('click',(e)=>{if(e.target===sheet)sheet.classList.remove('open');});
+  document.getElementById('sheetCopy').addEventListener('click',async()=>{const btn=document.getElementById('sheetCopy');try{await navigator.clipboard.writeText(sheetText.value);btn.textContent='Copied ✓';}catch(e){sheetText.select();document.execCommand('copy');btn.textContent='Copied ✓';}setTimeout(()=>btn.textContent='Copy to clipboard',1400);});
+})();
+</script>
+</body>
+</html>
