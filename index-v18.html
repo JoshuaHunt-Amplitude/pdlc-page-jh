@@ -1247,6 +1247,148 @@
   </div>
 </section>
 
+<!-- ── §2.5 · PROBLEM · BOTTLENECK LOOP v2 ────────────────────────────────
+     Iteration on Will's loop-viz above. Same conceptual mapping (USE top,
+     LEARN right, BUILD bottom, SHIP left; right half = bottleneck, left
+     half = fast) but the throughput differential is *much* more dramatic:
+
+       • LEFT half (BUILD → SHIP → USE):  thick blue arc, ~25 bright
+         particles cycling at 3s / half-rev — visually saturated
+       • RIGHT half (USE → LEARN → BUILD): thin violet arc, only 4
+         slow particles at 12s / half-rev — they visibly pool and queue
+
+     The pile-up at the slow side is structural: same particle count
+     and arc length but ~4× the duration, so density inverts.
+
+     viewBox 900 x 540, center (450, 270), ring r=190, node r=50.
+─────────────────────────────────────────────────────────────────────── -->
+<section class="manifesto" id="problem-v2">
+  <div class="manifesto-in">
+    <div class="manifesto-head reveal">
+      <div class="eyebrow">Loop · iteration v2</div>
+      <h2>The differential, made literal.</h2>
+      <p>Same loop — same four stages — but with the throughput inversion drawn to scale: <strong>build → ship → use</strong> rushes through a wide channel; <strong>use → learn → build</strong> crawls and backs up.</p>
+    </div>
+
+    <div class="loop-viz reveal" aria-hidden="true">
+      <svg viewBox="0 0 900 540" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <!-- FAST gradient (left half): bright blue, slight bottom-up brightness ramp -->
+          <linearGradient id="fl-fast" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%"   stop-color="#0052F2"/>
+            <stop offset="55%"  stop-color="#4083FF"/>
+            <stop offset="100%" stop-color="#9FC0FF"/>
+          </linearGradient>
+          <!-- SLOW gradient (right half): violet→pink, muted -->
+          <linearGradient id="fl-slow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#A373FF"/>
+            <stop offset="100%" stop-color="#FF7D78"/>
+          </linearGradient>
+          <radialGradient id="fl-node-fill" cx="50%" cy="38%" r="70%">
+            <stop offset="0%"   stop-color="#16233f"/>
+            <stop offset="100%" stop-color="#0A0A0F"/>
+          </radialGradient>
+          <radialGradient id="fl-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="#cfe0ff"/>
+            <stop offset="45%"  stop-color="#4083FF" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="fl-glow"    x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter>
+          <filter id="fl-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
+        </defs>
+
+        <!-- Center radial glow -->
+        <circle cx="450" cy="270" r="150" fill="url(#fl-core)" opacity="0.55"/>
+
+        <!-- Faint full base track (whole ring) -->
+        <circle cx="450" cy="270" r="190" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="44"/>
+
+        <!-- RIGHT half = BOTTLENECK (USE→LEARN→BUILD): thin violet arc -->
+        <path d="M 450 80 A 190 190 0 0 1 450 460" stroke="url(#fl-slow)" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.55"/>
+
+        <!-- LEFT half = FAST (BUILD→SHIP→USE): thick bright blue arc, glow underlay + saturated overlay -->
+        <path d="M 450 460 A 190 190 0 0 1 450 80" stroke="#4083FF" stroke-width="34" fill="none" stroke-linecap="round" opacity="0.45" filter="url(#fl-glow)"/>
+        <path d="M 450 460 A 190 190 0 0 1 450 80" stroke="url(#fl-fast)" stroke-width="34" fill="none" stroke-linecap="round"/>
+
+        <!-- Invisible motion paths (3 lanes inside the wide blue arc; 1 lane on the thin red arc) -->
+        <path id="fl-left-180" d="M 450 450 A 180 180 0 0 1 450 90"  fill="none" stroke="none"/>
+        <path id="fl-left-190" d="M 450 460 A 190 190 0 0 1 450 80"  fill="none" stroke="none"/>
+        <path id="fl-left-200" d="M 450 470 A 200 200 0 0 1 450 70"  fill="none" stroke="none"/>
+        <path id="fl-right-190" d="M 450 80  A 190 190 0 0 1 450 460" fill="none" stroke="none"/>
+
+        <!-- ── PARTICLES ──────────────────────────────────────────
+             LEFT HALF (fast): ~25 particles across 3 lanes at 3.2s /
+                               half-rev. Mix of bright leads (with glow
+                               halo) and small white dots. Each particle
+                               fades in at the start of the half-arc and
+                               out at the end (keyTimes 0;0.12;0.86;1).
+             RIGHT HALF (slow): 4 particles at 13s / half-rev. The 4×
+                                slower pace + same fade window = visible
+                                queue / pool through the bottleneck.
+        ──────────────────────────────────────────────────────── -->
+        <g fill="#fff">
+          <!-- LEFT · lane r=180 (inner) -->
+          <circle r="2.4" opacity="0"><animateMotion dur="3.2s" begin="-0.0s"  repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.0s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.85;0.85;0"/></circle>
+          <circle r="1.4" opacity="0"><animateMotion dur="3.2s" begin="-0.32s" repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.32s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.55;0.55;0"/></circle>
+          <circle r="1.8" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.66s" repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.66s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.7;0.7;0"/></circle>
+          <circle r="1.3" opacity="0"><animateMotion dur="3.2s" begin="-1.05s" repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.05s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.55;0.55;0"/></circle>
+          <circle r="1.7" opacity="0"><animateMotion dur="3.2s" begin="-1.42s" repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.42s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="1.1" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.85s" repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.85s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.6" opacity="0"><animateMotion dur="3.2s" begin="-2.22s" repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.22s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="1.5" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.65s" repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.65s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.6;0.6;0"/></circle>
+          <!-- LEFT · lane r=190 (center, brightest) -->
+          <circle r="2.6" opacity="0"><animateMotion dur="3.2s" begin="-0.18s" repeatCount="indefinite"><mpath href="#fl-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.18s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.9;0.9;0"/></circle>
+          <circle r="1.5" opacity="0"><animateMotion dur="3.2s" begin="-0.6s"  repeatCount="indefinite"><mpath href="#fl-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.6s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="1.7" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.96s" repeatCount="indefinite"><mpath href="#fl-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.96s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.7;0.7;0"/></circle>
+          <circle r="2.0" opacity="0"><animateMotion dur="3.2s" begin="-1.4s"  repeatCount="indefinite"><mpath href="#fl-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.4s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.75;0.75;0"/></circle>
+          <circle r="1.8" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.78s" repeatCount="indefinite"><mpath href="#fl-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.78s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.7;0.7;0"/></circle>
+          <circle r="1.4" opacity="0"><animateMotion dur="3.2s" begin="-2.2s"  repeatCount="indefinite"><mpath href="#fl-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.2s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.6;0.6;0"/></circle>
+          <circle r="1.2" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.6s"  repeatCount="indefinite"><mpath href="#fl-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.6s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.55;0.55;0"/></circle>
+          <!-- LEFT · lane r=200 (outer) -->
+          <circle r="1.5" opacity="0"><animateMotion dur="3.2s" begin="-0.08s" repeatCount="indefinite"><mpath href="#fl-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.08s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.6;0.6;0"/></circle>
+          <circle r="1.6" opacity="0"><animateMotion dur="3.2s" begin="-0.55s" repeatCount="indefinite"><mpath href="#fl-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.55s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="1.4" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.0s"  repeatCount="indefinite"><mpath href="#fl-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.0s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.55;0.55;0"/></circle>
+          <circle r="2.1" opacity="0"><animateMotion dur="3.2s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#fl-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.5s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.75;0.75;0"/></circle>
+          <circle r="1.8" opacity="0"><animateMotion dur="3.2s" begin="-1.95s" repeatCount="indefinite"><mpath href="#fl-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.95s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.7;0.7;0"/></circle>
+          <circle r="1.3" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.4s"  repeatCount="indefinite"><mpath href="#fl-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.4s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.55;0.55;0"/></circle>
+          <!-- LEFT · 3 bright "leads" with glow halo (one per lane) -->
+          <g opacity="0"><circle r="6.8" fill="#cfe0ff" opacity="0.40" filter="url(#fl-glow-sm)"/><circle r="2.8" fill="#fff"/><animateMotion dur="3.2s" begin="-0.42s" repeatCount="indefinite"><mpath href="#fl-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.42s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.35;0.35;0"/></g>
+          <g opacity="0"><circle r="6.4" fill="#cfe0ff" opacity="0.35" filter="url(#fl-glow-sm)"/><circle r="2.5" fill="#fff"/><animateMotion dur="3.2s" begin="-1.84s" repeatCount="indefinite"><mpath href="#fl-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.84s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></g>
+          <g opacity="0"><circle r="6.0" fill="#cfe0ff" opacity="0.30" filter="url(#fl-glow-sm)"/><circle r="2.3" fill="#fff"/><animateMotion dur="3.2s" begin="-2.6s"  repeatCount="indefinite"><mpath href="#fl-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.6s"  repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.30;0.30;0"/></g>
+
+          <!-- RIGHT HALF · only 4 slow particles, evenly spaced — they pool visibly -->
+          <circle r="2.0" opacity="0"><animateMotion dur="13s" begin="-0.5s"  repeatCount="indefinite"><mpath href="#fl-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-0.5s"  repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="1.7" opacity="0"><animateMotion dur="13s" begin="-3.75s" repeatCount="indefinite"><mpath href="#fl-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-3.75s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.40;0.40;0"/></circle>
+          <circle r="1.9" opacity="0"><animateMotion dur="13s" begin="-7.0s"  repeatCount="indefinite"><mpath href="#fl-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-7.0s"  repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.42;0.42;0"/></circle>
+          <circle r="1.5" opacity="0"><animateMotion dur="13s" begin="-10.25s" repeatCount="indefinite"><mpath href="#fl-right-190"/></animateMotion><animate attributeName="opacity" dur="13s" begin="-10.25s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.35;0.35;0"/></circle>
+        </g>
+
+        <!-- ── 4 Nodes (45 radius), positioned clockwise from top ── -->
+        <!-- USE — top — on the bottleneck side, dim violet stroke -->
+        <g><circle cx="450" cy="80"  r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.50)" stroke-width="1.5"/><text x="450" y="86" font-family="'Inter','JetBrains Mono',monospace" font-size="15" font-weight="500" letter-spacing="0.20em" text-anchor="middle" fill="rgba(255,255,255,0.80)">USE</text></g>
+        <!-- LEARN — right — bottleneck side, deepest dim -->
+        <g><circle cx="640" cy="270" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.50)" stroke-width="1.5"/><text x="640" y="276" font-family="'Inter','JetBrains Mono',monospace" font-size="15" font-weight="500" letter-spacing="0.20em" text-anchor="middle" fill="rgba(255,255,255,0.80)">LEARN</text></g>
+        <!-- BUILD — bottom — fast side, bright blue stroke + glow ring -->
+        <g><circle cx="450" cy="460" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.90)" stroke-width="1.5"/><circle cx="450" cy="460" r="50" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.45" filter="url(#fl-glow-sm)"/><text x="450" y="466" font-family="'Inter','JetBrains Mono',monospace" font-size="15" font-weight="500" letter-spacing="0.20em" text-anchor="middle" fill="#FFFFFF">BUILD</text></g>
+        <!-- SHIP — left — fast side, bright blue stroke + glow ring -->
+        <g><circle cx="260" cy="270" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.90)" stroke-width="1.5"/><circle cx="260" cy="270" r="50" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.45" filter="url(#fl-glow-sm)"/><text x="260" y="276" font-family="'Inter','JetBrains Mono',monospace" font-size="15" font-weight="500" letter-spacing="0.20em" text-anchor="middle" fill="#FFFFFF">SHIP</text></g>
+
+        <!-- Side labels: FAST (left) and BOTTLENECK (right) -->
+        <g>
+          <circle cx="80" cy="268" r="3.5" fill="#4083FF"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
+          <line x1="92" y1="268" x2="140" y2="268" stroke="rgba(64,131,255,0.55)" stroke-width="1"/>
+          <text x="80" y="248" font-family="'Inter','JetBrains Mono',monospace" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="start" fill="#4083FF">FAST</text>
+        </g>
+        <g>
+          <circle cx="820" cy="268" r="3.5" fill="#FF7D78" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
+          <line x1="760" y1="268" x2="808" y2="268" stroke="rgba(255,125,120,0.55)" stroke-width="1"/>
+          <text x="820" y="248" font-family="'Inter','JetBrains Mono',monospace" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="end" fill="#FF7D78">BOTTLENECK</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
 <!-- ── §3 · SOLUTION — the category, defined ───────────── -->
 <section class="manifesto" id="solution">
   <div class="manifesto-in">
