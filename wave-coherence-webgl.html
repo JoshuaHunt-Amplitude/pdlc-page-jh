@@ -28,7 +28,7 @@
   .reveal {
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     transform: translateY(15px);
   }
   .reveal.active {
@@ -191,7 +191,7 @@
   void main() {
     vec2 st = gl_FragCoord.xy / u_resolution;
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
-    float t = u_time * 0.3; // Slower than original but fast enough for beautiful tracers
+    float t = u_time * 0.15; // Slowed down by factor of 2 (50% of 0.3)
 
     float bgLock = smoothstep(0.05, 0.55, uv.x);
     float curl = fbm(vec2(uv.x * 2.15 + t * 0.035, uv.y * 1.7 - t * 0.018)) - 0.5;
@@ -296,9 +296,10 @@
   }
 
   void main() {
-    float t = u_time * 0.3; // Slower than original but fast enough for beautiful tracers
+    float t_flow = u_time * 0.3; // Fast flow speed for particle tracers
+    float t_wave = u_time * 0.15; // 50% slower wave oscillations
     float speed = 0.05 + a_seed.z * 0.03; // Faster flow speed for particle tracers
-    float cycle = fract(a_seed.x + t * speed);
+    float cycle = fract(a_seed.x + t_flow * speed);
 
     // Base coordinates: flow from x=-1.6 to x=1.2
     float rawX = mix(-1.6, 1.2, cycle);
@@ -312,7 +313,7 @@
     // --- TERRAIN (ROCKS) ---
     // Scale coordinates for noise
     vec2 st = vec2(rawX * 2.0, rawY * 2.5);
-    float n1 = fbm(st + vec2(t * 0.05, 0.0)); // Slowly shifting terrain for organic feel
+    float n1 = fbm(st + vec2(t_wave * 0.05, 0.0)); // Slowly shifting terrain for organic feel
     float n2 = fbm(st * 2.5 + vec2(3.2, 1.4));
     float rockHeight = n1 * 0.75 + n2 * 0.25;
 
@@ -347,11 +348,11 @@
     float waterZ = slopeZ + terracedRock * 0.5 * (1.0 - phaseLock);
 
     // Add whitewater turbulence (high frequency noise)
-    float turbulence = fbm(vec2(rawX * 10.0 - t * 4.0, flowY * 10.0)) * 0.18;
+    float turbulence = fbm(vec2(rawX * 10.0 - t_wave * 4.0, flowY * 10.0)) * 0.18;
     waterZ += turbulence * (1.0 - phaseLock * 0.8); // Keep some turbulence even when coherent
 
     // Organic canyon ripple (no sine wave)
-    float canyonRipple = 0.03 * sin(rawX * 8.0 - t * 3.0) + 0.015 * fbm(vec2(rawX * 4.0, t * 2.0));
+    float canyonRipple = 0.03 * sin(rawX * 8.0 - t_wave * 3.0) + 0.015 * fbm(vec2(rawX * 4.0, t_wave * 2.0));
     waterZ = mix(waterZ, slopeZ + canyonRipple, phaseLock);
 
     // --- PROJECTION (30 DEGREE ISOMETRIC) ---
@@ -401,7 +402,7 @@
 
     // Point size and alpha
     float packet = pow(sin((cycle + a_seed.w * 0.13) * 6.2831853) * 0.5 + 0.5, 7.0);
-    float shimmer = 0.6 + 0.4 * sin(t * 5.0 + a_seed.w * 20.0);
+    float shimmer = 0.6 + 0.4 * sin(t_wave * 5.0 + a_seed.w * 20.0);
 
     gl_PointSize = (0.6 + a_extra.y * 1.2 + foam * 2.5 + packet * 1.2 + pull * 2.0) * (1.0 + phaseLock * 0.3);
     v_alpha = (0.03 + foam * 0.10 + phaseLock * 0.08) * shimmer;
@@ -540,7 +541,7 @@
     { el: document.getElementById('rv-lock'), cx: 840, cy: 473, r: 220 },
     { el: document.getElementById('rv-experiments'), cx: 1048, cy: 670, r: 180 },
     { el: document.getElementById('rv-outcomes'), cx: 1513, cy: 668, r: 180 },
-    { el: document.getElementById('rv-opp'), cx: 1539, cy: 500, r: 190 }
+    { el: document.getElementById('rv-opp'), cx: 840, cy: 473, r: 220 }
   ];
 
   function onMove(e) {
