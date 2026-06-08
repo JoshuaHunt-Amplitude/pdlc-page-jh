@@ -1295,7 +1295,39 @@
           </radialGradient>
           <filter id="fl-glow"    x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter>
           <filter id="fl-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
+          <!-- Background gradient panel (matches loop-v2 visual frame) -->
+          <linearGradient id="fl-bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="54.83%" stop-color="rgba(21,24,39,0.10)"/>
+            <stop offset="100%"   stop-color="rgba(75,87,141,0.10)"/>
+          </linearGradient>
         </defs>
+
+        <!-- ── Background gradient panel (sits behind everything) ── -->
+        <rect x="50" y="40" width="800" height="460" fill="url(#fl-bg)"/>
+
+        <!-- ── Corner brackets (+ cross + 90px dashed guide lines) ── -->
+        <g stroke="rgba(255,255,255,0.30)" stroke-width="1" fill="none" stroke-linecap="square">
+          <!-- top-left: corner at (45, 35) -->
+          <line x1="40"  y1="35"  x2="50"  y2="35"/>
+          <line x1="45"  y1="30"  x2="45"  y2="40"/>
+          <line x1="55"  y1="35"  x2="145" y2="35" stroke-dasharray="3 6"/>
+          <line x1="45"  y1="45"  x2="45"  y2="135" stroke-dasharray="3 6"/>
+          <!-- top-right: corner at (855, 35) -->
+          <line x1="850" y1="35"  x2="860" y2="35"/>
+          <line x1="855" y1="30"  x2="855" y2="40"/>
+          <line x1="755" y1="35"  x2="845" y2="35" stroke-dasharray="3 6"/>
+          <line x1="855" y1="45"  x2="855" y2="135" stroke-dasharray="3 6"/>
+          <!-- bottom-left: corner at (45, 505) -->
+          <line x1="40"  y1="505" x2="50"  y2="505"/>
+          <line x1="45"  y1="500" x2="45"  y2="510"/>
+          <line x1="55"  y1="505" x2="145" y2="505" stroke-dasharray="3 6"/>
+          <line x1="45"  y1="405" x2="45"  y2="495" stroke-dasharray="3 6"/>
+          <!-- bottom-right: corner at (855, 505) -->
+          <line x1="850" y1="505" x2="860" y2="505"/>
+          <line x1="855" y1="500" x2="855" y2="510"/>
+          <line x1="755" y1="505" x2="845" y2="505" stroke-dasharray="3 6"/>
+          <line x1="855" y1="405" x2="855" y2="495" stroke-dasharray="3 6"/>
+        </g>
 
         <!-- Center radial glow -->
         <circle cx="450" cy="270" r="150" fill="url(#fl-core)" opacity="0.55"/>
