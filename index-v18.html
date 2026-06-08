@@ -1776,14 +1776,14 @@
           <!-- Subtle SIDE GLOWS — radial gradients that soak each half of the ring
                in a faint color wash without competing with the ring itself. -->
           <linearGradient id="fl5-blue-grad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.26"/>
-            <stop offset="60%"  stop-color="#4083FF" stop-opacity="0.10"/>
-            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
+            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.55"/>
+            <stop offset="70%"  stop-color="#4083FF" stop-opacity="0.40"/>
+            <stop offset="100%" stop-color="#4083FF" stop-opacity="0.22"/>
           </linearGradient>
           <linearGradient id="fl5-red-grad" x1="1" y1="0" x2="0" y2="0">
-            <stop offset="0%"   stop-color="#FF7D78" stop-opacity="0.26"/>
-            <stop offset="60%"  stop-color="#FF7D78" stop-opacity="0.10"/>
-            <stop offset="100%" stop-color="#FF7D78" stop-opacity="0"/>
+            <stop offset="0%"   stop-color="#FF7D78" stop-opacity="0.50"/>
+            <stop offset="70%"  stop-color="#FF7D78" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#FF7D78" stop-opacity="0.18"/>
           </linearGradient>
           <!-- Text gradients (50% color over white) for the FAST/BOTTLENECK corner labels -->
           <linearGradient id="fl5-fast-text" x1="0" y1="0" x2="1" y2="0">
@@ -1950,6 +1950,9 @@
         <!-- Corner labels — large, gradient-filled, inset from the panel corners -->
         <text x="80"  y="82" font-family="Inter, sans-serif" font-size="22" font-weight="400" letter-spacing="0.14em" text-anchor="start" fill="url(#fl5-fast-text)">FAST</text>
         <text x="820" y="82" font-family="Inter, sans-serif" font-size="22" font-weight="400" letter-spacing="0.14em" text-anchor="end"   fill="url(#fl5-slow-text)">BOTTLENECK</text>
+        <!-- Side labels — same gradients, smaller, on the SHIP/LEARN horizontal axis -->
+        <text x="80"  y="325" font-family="Inter, sans-serif" font-size="14" font-weight="400" letter-spacing="0.18em" text-anchor="start" fill="url(#fl5-fast-text)">FAST</text>
+        <text x="820" y="325" font-family="Inter, sans-serif" font-size="14" font-weight="400" letter-spacing="0.18em" text-anchor="end"   fill="url(#fl5-slow-text)">BOTTLENECK</text>
       </svg>
     </div>
 
