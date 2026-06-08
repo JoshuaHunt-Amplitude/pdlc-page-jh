@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# pdlc-page: sync the current state of index-v18.html on `main` over to the
+# `v18-loops` branch on `upstream` (amplitude/pdlc-page) so PR #2 picks it up.
+#
+# Usage:
+#   bin/sync-pr "commit message describing what changed"
+#   bin/sync-pr "msg" index-v18.html other-file.html   # sync extra files too
+#
+# Defaults: syncs only index-v18.html.
+
+set -euo pipefail
+
+MSG="${1:-}"
+shift || true
+FILES=("$@")
+[[ ${#FILES[@]} -eq 0 ]] && FILES=("index-v18.html")
+
+if [[ -z "$MSG" ]]; then
+  echo "usage: bin/sync-pr \"commit message\" [files...]" >&2
+  exit 1
+fi
+
+# Sanity checks
+CURRENT="$(git rev-parse --abbrev-ref HEAD)"
+if [[ "$CURRENT" != "main" ]]; then
+  echo "error: must be on 'main' (currently on '$CURRENT')" >&2
+  exit 1
+fi
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "error: working tree has uncommitted changes — commit or stash first" >&2
+  git status --short
+  exit 1
+fi
+
+# Make sure upstream is fresh so we cleanly fast-forward / catch any of Will's commits
+git fetch upstream --quiet
+
+# Switch to v18-loops (create from upstream if it doesn't exist locally)
+if git show-ref --verify --quiet refs/heads/v18-loops; then
+  git checkout v18-loops --quiet
+  git pull upstream v18-loops --ff-only --quiet
+else
+  git checkout -b v18-loops upstream/v18-loops --quiet
+fi
+
+# Bring the latest version of each file from main
+git checkout main -- "${FILES[@]}"
+
+# Commit only if there's actually something to commit
+if git diff --cached --quiet; then
+  echo "no changes to sync — v18-loops already matches main for: ${FILES[*]}"
+  git checkout main --quiet
+  exit 0
+fi
+
+git commit -m "$MSG" --quiet
+git push upstream v18-loops --quiet
+echo "✓ pushed to amplitude/pdlc-page:v18-loops — PR #2 updated"
+
+# Return to main
+git checkout main --quiet
