@@ -193,7 +193,7 @@
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
     float t = u_time * 0.15; // Slowed down by factor of 2 (50% of 0.3)
 
-    float bgLock = smoothstep(0.05, 0.55, uv.x);
+    float bgLock = smoothstep(-0.25, 0.35, uv.x);
     float curl = fbm(vec2(uv.x * 2.15 + t * 0.035, uv.y * 1.7 - t * 0.018)) - 0.5;
     
     // Canyon center matching the vertex shader
@@ -305,7 +305,7 @@
     float rawX = mix(-1.6, 1.2, cycle);
     
     // Coherence factor: 0 on left (chaotic), 1 on right (ordered)
-    float cohere = smoothstep(0.1, 1.0, rawX); // Moves transition to the right, extending left wavy region
+    float cohere = smoothstep(-0.2, 0.5, rawX); // Midpoint at 0.15, starts exactly at center (x_svg = 840)
     float phaseLock = cohere * cohere * (3.0 - 2.0 * cohere);
 
     float rawY = (a_seed.y - 0.5) * mix(1.96, 2.8, phaseLock); // 30% narrower on left to avoid title text
