@@ -138,7 +138,7 @@
   @keyframes pulse { 0%,100%{opacity:.7;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
 
   /* ── MANIFESTO ──────────────────────── */
-  .manifesto { border-top: 1px solid var(--line); padding: 140px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
+  .manifesto { border-top: 1px solid var(--line); padding: 98px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 64px; }
 
   /* Loop visual */
@@ -158,7 +158,7 @@
   @keyframes lv-spin { to { transform: rotate(360deg); } }
 
   /* Product loop (v4 end visual) */
-  .pl-section { padding: 140px 32px 160px; max-width: 1320px; margin: 0 auto; }
+  .pl-section { padding: 98px 32px 110px; max-width: 1320px; margin: 0 auto; }
   /* v18: §5 head left-aligned to match the manifesto sections (760-wide block,
      so its left edge lands at the same (vw−760)/2 as §2–§4). */
   .pl-head { max-width: 760px; margin: 0 auto 80px; text-align: left; }
@@ -1127,7 +1127,6 @@
 <section class="manifesto" id="problem">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><path class="ln d-dash" d="M80 55 C 62 33, 32 33, 32 55 C 32 77, 62 77, 80 55 C 98 33, 128 33, 128 55 C 128 77, 98 77, 80 55 Z" stroke-linejoin="round" stroke-dasharray="6 7" style="--sp:1.5s"/><circle class="nd d-throb" cx="44" cy="55" r="2.6" style="--sp:2.4s"/><circle class="nd d-throb" cx="116" cy="55" r="2.6" style="--sp:2.4s;animation-delay:.6s"/><circle class="acf d-throb" cx="80" cy="55" r="3.2" style="--sp:2s"/></svg>
       <h2>The new bottleneck: <span class="a">knowing what to build.</span></h2>
       <p>Quality comes from iteration — the strategist John Boyd showed that whoever cycles their OODA loop fastest wins the dogfight. Every product runs the same loop: build, ship, use, learn.</p>
     </div>
@@ -1222,7 +1221,6 @@
 <section class="manifesto" id="solution">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><g class="l2 d-pulse" style="--sp:3.4s"><path d="M40 30 L110 26 L128 70 L74 88 L34 64 Z"/><path d="M40 30 L128 70 M40 30 L74 88 M110 26 L74 88 M110 26 L34 64 M128 70 L34 64"/></g><g class="nd"><circle cx="40" cy="30" r="3.2"/><circle cx="110" cy="26" r="3.2"/><circle cx="128" cy="70" r="3.2"/><circle cx="74" cy="88" r="3.2"/><circle cx="34" cy="64" r="3.2"/></g><circle class="acf d-throb" cx="74" cy="50" r="3" style="--sp:2.4s"/></svg>
       <!-- loop micrographic (adapted from /micrographics COMP 07 "The Product Loop"):
            graduation rings + cardinal nodes + center reticle, a rotating radar sweep,
            and a clockwise particle stream (small + glowing leads). -->
@@ -1377,7 +1375,6 @@
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
   <div class="pl-head">
-    <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><g class="d-spin" style="transform-box:view-box;transform-origin:80px 55px;--sp:24s"><g class="l2"><ellipse cx="80" cy="55" rx="48" ry="15"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(36 80 55)"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(72 80 55)"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(108 80 55)"/></g><ellipse class="ln" cx="80" cy="55" rx="48" ry="15" transform="rotate(144 80 55)"/></g><circle class="acf d-throb" cx="80" cy="55" r="3" style="--sp:2.6s"/></svg>
     <h3>The loop that's always running.</h3>
   </div>
 
@@ -1737,284 +1734,12 @@
   </div>
 </section>
 
-<!-- ── THE PRODUCT LOOP · v2 (Figma spec match) ──────────────────────────
-     Static layout matched to Figma node 33:372 ("Wave Loop Diagram v2").
-     Coordinate system = Figma frame (1100×840).
-     · Center of ring:     (550, 424)
-     · Node orbit radius:  197      · Node radius: 45
-     · Ring outer/inner ellipses (decorative): r=239 / r=159
-     · Brackets at corners (51,53)/(1038,53)/(51,775)/(1038,775) with
-       108px dashed guide lines + a small + cross
-─────────────────────────────────────────────────────────────────────── -->
-<section class="pl-section reveal" id="loop-v2">
-  <div class="pl-head">
-    <h3>The loop that's always running.</h3>
-  </div>
-
-  <div class="product-loop">
-    <svg viewBox="0 0 1100 840" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <linearGradient id="pl2v-bg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="54.83%" stop-color="rgba(21,24,39,0.10)"/>
-          <stop offset="100%"   stop-color="rgba(75,87,141,0.10)"/>
-        </linearGradient>
-        <!-- NAME text gradient: blue tint → white (Figma overlay flattened on white) -->
-        <linearGradient id="pl2v-name-grad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0"   stop-color="#93A6F8"/>
-          <stop offset="1"   stop-color="#FFFFFF"/>
-        </linearGradient>
-        <!-- Particle glow filters -->
-        <filter id="pl2v-glow-sm" x="-100%" y="-100%" width="300%" height="300%">
-          <feGaussianBlur stdDeviation="3"/>
-        </filter>
-        <filter id="pl2v-glow-xs" x="-120%" y="-120%" width="340%" height="340%">
-          <feGaussianBlur stdDeviation="1.8"/>
-        </filter>
-      </defs>
-
-      <!-- Background gradient panel -->
-      <rect x="56" y="59" width="988" height="722" fill="url(#pl2v-bg)"/>
-
-      <!-- ── Corner brackets ── (10.938px + cross + 108.342px dashed lines) -->
-      <g stroke="rgba(255,255,255,0.30)" stroke-width="1" fill="none" stroke-linecap="square">
-        <!-- top-left: corner at (56.5, 58.8), lines go right and down -->
-        <line x1="51"  y1="58.8" x2="61.94" y2="58.8"/>
-        <line x1="56.5" y1="53.3" x2="56.5"  y2="64.24"/>
-        <line x1="66.63" y1="59.03" x2="174.97" y2="59.03" stroke-dasharray="3 6"/>
-        <line x1="57.25" y1="69.45" x2="57.25"  y2="177.79" stroke-dasharray="3 6"/>
-        <!-- top-right: corner at (1043.5, 58.8), lines go left and down -->
-        <line x1="1033.06" y1="58.8" x2="1044" y2="58.8"/>
-        <line x1="1038.53" y1="53.3" x2="1038.53" y2="64.24"/>
-        <line x1="925.03" y1="59.03" x2="1033.37" y2="59.03" stroke-dasharray="3 6"/>
-        <line x1="1042.75" y1="69.45" x2="1042.75" y2="177.79" stroke-dasharray="3 6"/>
-        <!-- bottom-left: corner at (56.5, 781.2), lines go right and up -->
-        <line x1="51"  y1="781.2" x2="61.94" y2="781.2"/>
-        <line x1="56.5" y1="775.76" x2="56.5"  y2="786.7"/>
-        <line x1="66.63" y1="780.97" x2="174.97" y2="780.97" stroke-dasharray="3 6"/>
-        <line x1="57.25" y1="662.21" x2="57.25"  y2="770.55" stroke-dasharray="3 6"/>
-        <!-- bottom-right: corner at (1043.5, 781.2), lines go left and up -->
-        <line x1="1033.06" y1="781.2" x2="1044" y2="781.2"/>
-        <line x1="1038.53" y1="775.76" x2="1038.53" y2="786.7"/>
-        <line x1="925.03" y1="780.97" x2="1033.37" y2="780.97" stroke-dasharray="3 6"/>
-        <line x1="1042.75" y1="662.21" x2="1042.75" y2="770.55" stroke-dasharray="3 6"/>
-      </g>
-
-      <!-- ── Decorative concentric ellipses (faint guides) ── -->
-      <circle cx="550" cy="424" r="239" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
-      <circle cx="550" cy="424" r="159" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
-
-      <!-- ── Faint base ring tracks (subtle dotted texture under the particles) -->
-      <circle cx="550" cy="424" r="186" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
-      <circle cx="550" cy="424" r="197" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
-      <circle cx="550" cy="424" r="208" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
-
-      <!-- ── Invisible motion paths (clockwise from top, 3 lanes) ── -->
-      <path id="pl2v-ring-i" d="M 550 238 A 186 186 0 1 1 549.9 238" fill="none" stroke="none"/>
-      <path id="pl2v-ring"   d="M 550 227 A 197 197 0 1 1 549.9 227" fill="none" stroke="none"/>
-      <path id="pl2v-ring-o" d="M 550 216 A 208 208 0 1 1 549.9 216" fill="none" stroke="none"/>
-
-      <!-- ── Particles ──────────────────────────────────────────────────
-           BRIGHT LEADS: glow halo + solid core, r 8–10 halo / 2.8–3.4 core
-           MEDIUM: r 1.8–2.4, opacity 0.55–0.75
-           SMALL DIM: r 0.9–1.4, opacity 0.22–0.40
-           Lanes: pl2v-ring-i (186), pl2v-ring (197), pl2v-ring-o (208)
-           Base period 10s/rev (faster than v1).
-      ──────────────────────────────────────────────────────────────── -->
-      <g fill="#fff">
-        <!-- BRIGHT LEADS — main lane (r=197), 3 evenly spaced -->
-        <g><circle r="10"  fill="rgba(255,255,255,0.16)" filter="url(#pl2v-glow-sm)"/><circle r="3.4" fill="#fff"/><animateMotion dur="10s" begin="0s"     repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></g>
-        <g><circle r="10"  fill="rgba(255,255,255,0.16)" filter="url(#pl2v-glow-sm)"/><circle r="3.4" fill="#fff"/><animateMotion dur="10s" begin="-3.33s" repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></g>
-        <g><circle r="10"  fill="rgba(255,255,255,0.16)" filter="url(#pl2v-glow-sm)"/><circle r="3.4" fill="#fff"/><animateMotion dur="10s" begin="-6.66s" repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></g>
-        <!-- BRIGHT LEADS — inner lane (r=186), 2 -->
-        <g><circle r="8.5" fill="rgba(255,255,255,0.12)" filter="url(#pl2v-glow-sm)"/><circle r="2.9" fill="#fff"/><animateMotion dur="10s" begin="-1.2s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></g>
-        <g><circle r="8.5" fill="rgba(255,255,255,0.12)" filter="url(#pl2v-glow-sm)"/><circle r="2.9" fill="#fff"/><animateMotion dur="10s" begin="-6.2s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></g>
-        <!-- BRIGHT LEADS — outer lane (r=208, slower 13s), 2 -->
-        <g><circle r="8"   fill="rgba(255,255,255,0.10)" filter="url(#pl2v-glow-xs)"/><circle r="2.8" fill="#fff"/><animateMotion dur="13s" begin="-2s"    repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></g>
-        <g><circle r="8"   fill="rgba(255,255,255,0.10)" filter="url(#pl2v-glow-xs)"/><circle r="2.8" fill="#fff"/><animateMotion dur="13s" begin="-8s"   repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></g>
-
-        <!-- MEDIUM — main lane -->
-        <circle r="2.2" opacity="0.72"><animateMotion dur="10s" begin="-0.7s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="2.0" opacity="0.65"><animateMotion dur="10s" begin="-1.6s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="2.3" opacity="0.76"><animateMotion dur="10s" begin="-2.5s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.9" opacity="0.62"><animateMotion dur="10s" begin="-4.1s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="2.4" opacity="0.74"><animateMotion dur="10s" begin="-5.3s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="2.0" opacity="0.62"><animateMotion dur="10s" begin="-7.0s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="2.2" opacity="0.70"><animateMotion dur="10s" begin="-8.4s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.9" opacity="0.58"><animateMotion dur="10s" begin="-9.3s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <!-- MEDIUM — inner lane -->
-        <circle r="2.1" opacity="0.66"><animateMotion dur="10s" begin="-0.4s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="2.0" opacity="0.62"><animateMotion dur="10s" begin="-2.2s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="2.3" opacity="0.70"><animateMotion dur="10s" begin="-3.6s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.9" opacity="0.58"><animateMotion dur="10s" begin="-5.0s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="2.2" opacity="0.66"><animateMotion dur="10s" begin="-7.4s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.8" opacity="0.55"><animateMotion dur="10s" begin="-8.9s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <!-- MEDIUM — outer lane (13s) -->
-        <circle r="2.0" opacity="0.60"><animateMotion dur="13s" begin="-1.0s"  repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-        <circle r="2.2" opacity="0.66"><animateMotion dur="13s" begin="-4.5s"  repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-        <circle r="1.9" opacity="0.58"><animateMotion dur="13s" begin="-7.5s"  repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-        <circle r="2.1" opacity="0.62"><animateMotion dur="13s" begin="-10.8s" repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-
-        <!-- SMALL DIM — main lane -->
-        <circle r="1.3" opacity="0.36"><animateMotion dur="10s" begin="-0.2s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.1" opacity="0.28"><animateMotion dur="10s" begin="-1.1s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.4" opacity="0.40"><animateMotion dur="10s" begin="-2.0s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.0" opacity="0.24"><animateMotion dur="10s" begin="-3.0s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.3" opacity="0.34"><animateMotion dur="10s" begin="-3.8s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.2" opacity="0.30"><animateMotion dur="10s" begin="-4.7s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.4" opacity="0.38"><animateMotion dur="10s" begin="-5.6s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.0" opacity="0.24"><animateMotion dur="10s" begin="-6.5s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.3" opacity="0.32"><animateMotion dur="10s" begin="-7.4s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.4" opacity="0.36"><animateMotion dur="10s" begin="-8.2s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <circle r="1.1" opacity="0.26"><animateMotion dur="10s" begin="-9.1s"  repeatCount="indefinite"><mpath href="#pl2v-ring"/></animateMotion></circle>
-        <!-- SMALL DIM — inner lane -->
-        <circle r="1.3" opacity="0.32"><animateMotion dur="10s" begin="-0.3s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.1" opacity="0.26"><animateMotion dur="10s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.4" opacity="0.36"><animateMotion dur="10s" begin="-2.7s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.2" opacity="0.30"><animateMotion dur="10s" begin="-4.0s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.3" opacity="0.34"><animateMotion dur="10s" begin="-5.5s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.1" opacity="0.27"><animateMotion dur="10s" begin="-6.7s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.4" opacity="0.36"><animateMotion dur="10s" begin="-7.9s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <circle r="1.0" opacity="0.24"><animateMotion dur="10s" begin="-9.4s"  repeatCount="indefinite"><mpath href="#pl2v-ring-i"/></animateMotion></circle>
-        <!-- SMALL DIM — outer lane (13s) -->
-        <circle r="1.3" opacity="0.30"><animateMotion dur="13s" begin="-1.6s"  repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-        <circle r="1.1" opacity="0.26"><animateMotion dur="13s" begin="-3.5s"  repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-        <circle r="1.4" opacity="0.32"><animateMotion dur="13s" begin="-5.7s"  repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-        <circle r="1.0" opacity="0.22"><animateMotion dur="13s" begin="-8.2s"  repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-        <circle r="1.3" opacity="0.30"><animateMotion dur="13s" begin="-10.5s" repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-        <circle r="1.2" opacity="0.26"><animateMotion dur="13s" begin="-12.4s" repeatCount="indefinite"><mpath href="#pl2v-ring-o"/></animateMotion></circle>
-      </g>
-
-      <!-- ── 6 Nodes (radius 45, centered on the r=197 orbit) ───────────
-           Order:  SENSE 0° / PRIORITIZE 60° / SPEC 120° /
-                   ACT 180° / VERIFY 240° / MEASURE 300°
-      ─────────────────────────────────────────────────────────────── -->
-      <g>
-        <circle cx="550" cy="229" r="45" fill="#080d18" stroke="rgba(255,255,255,0.62)" stroke-width="1"/>
-        <circle cx="721" cy="327" r="45" fill="#080d18" stroke="rgba(255,255,255,0.62)" stroke-width="1"/>
-        <circle cx="721" cy="524" r="45" fill="#080d18" stroke="rgba(255,255,255,0.62)" stroke-width="1"/>
-        <circle cx="550" cy="623" r="45" fill="#080d18" stroke="rgba(255,255,255,0.62)" stroke-width="1"/>
-        <circle cx="379" cy="524" r="45" fill="#080d18" stroke="rgba(255,255,255,0.62)" stroke-width="1"/>
-        <circle cx="379" cy="327" r="45" fill="#080d18" stroke="rgba(255,255,255,0.62)" stroke-width="1"/>
-      </g>
-
-      <!-- ── Icons (32×32 from Figma; Lucide 24-grid scaled 1.3333) ────
-           Position offset = (node_cx - 16, node_cy - 16)
-           Stroke 1.5 at native size (becomes ~2px after 1.333× scale).
-      ─────────────────────────────────────────────────────────────── -->
-      <!-- SENSE · radio -->
-      <g transform="translate(534,213) scale(1.3333)" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
-        <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/>
-        <circle cx="12" cy="12" r="2"/>
-        <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/>
-        <path d="M19.1 4.9c3.9 3.9 3.9 10.2 0 14.1"/>
-      </g>
-      <!-- PRIORITIZE · list -->
-      <g transform="translate(705,311) scale(1.3333)" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <line x1="8" y1="6"  x2="21" y2="6"/>
-        <line x1="8" y1="12" x2="21" y2="12"/>
-        <line x1="8" y1="18" x2="21" y2="18"/>
-        <line x1="3" y1="6"  x2="3.01" y2="6"/>
-        <line x1="3" y1="12" x2="3.01" y2="12"/>
-        <line x1="3" y1="18" x2="3.01" y2="18"/>
-      </g>
-      <!-- SPEC · file-text -->
-      <g transform="translate(705,508) scale(1.3333)" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="16" x2="8" y1="13" y2="13"/>
-        <line x1="16" x2="8" y1="17" y2="17"/>
-        <line x1="10" x2="8" y1="9"  y2="9"/>
-      </g>
-      <!-- ACT · zap (filled) -->
-      <g transform="translate(534,607) scale(1.3333)" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="#FFFFFF">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-      </g>
-      <!-- VERIFY · badge-check -->
-      <g transform="translate(363,508) scale(1.3333)" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/>
-        <path d="m9 12 2 2 4-4"/>
-      </g>
-      <!-- MEASURE · trending-up -->
-      <g transform="translate(363,311) scale(1.3333)" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
-        <polyline points="16 7 22 7 22 13"/>
-      </g>
-
-      <!-- ── Labels ──────────────────────────────────────────────────────
-           Each block uses Figma top-y; baselines computed from a 108px box:
-             y_fig  = top + 10    (FIG, 11px)
-             y_name = top + 32    (NAME, 18px, gradient fill)
-             y_rule = top + 50    (13.5px short rule)
-             y_d1   = top + 72    (desc line 1, 12px)
-             y_d2   = top + 86    (desc line 2)
-           text-anchor: middle for SENSE/ACT, start for right side,
-           start (left-aligned in 108px box) for left side too — Figma's
-           left labels are also items-start within their box.
-      ──────────────────────────────────────────────────────────────── -->
-
-      <!-- SENSE — (496, 72), middle-anchored at x=550 -->
-      <g text-anchor="middle" font-family="'Inter', system-ui, sans-serif">
-        <text x="550" y="82"  font-size="11" letter-spacing="0.21em" fill="#8991B3">FIG 1</text>
-        <text x="550" y="104" font-size="18" letter-spacing="0.31em" fill="url(#pl2v-name-grad)" font-weight="500">SENSE</text>
-        <line x1="543.25" y1="122" x2="556.75" y2="122" stroke="#8991B3" stroke-width="1"/>
-        <text x="550" y="144" font-size="12" fill="#8991B3">Find problems</text>
-        <text x="550" y="158" font-size="12" fill="#8991B3">worth solving</text>
-      </g>
-
-      <!-- PRIORITIZE — (834, 284), start-anchored at x=834 -->
-      <g text-anchor="start" font-family="'Inter', system-ui, sans-serif">
-        <text x="834" y="294" font-size="11" letter-spacing="0.21em" fill="#8991B3">FIG 2</text>
-        <text x="834" y="316" font-size="18" letter-spacing="0.31em" fill="url(#pl2v-name-grad)" font-weight="500">PRIORITIZE</text>
-        <line x1="834" y1="334" x2="847.5" y2="334" stroke="#8991B3" stroke-width="1"/>
-        <text x="834" y="356" font-size="12" fill="#8991B3">Rank by impact</text>
-        <text x="834" y="370" font-size="12" fill="#8991B3">and confidence</text>
-      </g>
-
-      <!-- SPEC — (834, 506) -->
-      <g text-anchor="start" font-family="'Inter', system-ui, sans-serif">
-        <text x="834" y="516" font-size="11" letter-spacing="0.21em" fill="#8991B3">FIG 3</text>
-        <text x="834" y="538" font-size="18" letter-spacing="0.31em" fill="url(#pl2v-name-grad)" font-weight="500">SPEC</text>
-        <line x1="834" y1="556" x2="847.5" y2="556" stroke="#8991B3" stroke-width="1"/>
-        <text x="834" y="578" font-size="12" fill="#8991B3">Define the solution</text>
-        <text x="834" y="592" font-size="12" fill="#8991B3">and acceptance criteria</text>
-      </g>
-
-      <!-- ACT — (496, 684), middle-anchored at x=550 -->
-      <g text-anchor="middle" font-family="'Inter', system-ui, sans-serif">
-        <text x="550" y="694" font-size="11" letter-spacing="0.21em" fill="#8991B3">FIG 4</text>
-        <text x="550" y="716" font-size="18" letter-spacing="0.31em" fill="url(#pl2v-name-grad)" font-weight="500">ACT</text>
-        <line x1="543.25" y1="734" x2="556.75" y2="734" stroke="#8991B3" stroke-width="1"/>
-        <text x="550" y="756" font-size="12" fill="#8991B3">Build the right</text>
-        <text x="550" y="770" font-size="12" fill="#8991B3">thing</text>
-      </g>
-
-      <!-- VERIFY — (168, 506), start-anchored at x=168 -->
-      <g text-anchor="start" font-family="'Inter', system-ui, sans-serif">
-        <text x="168" y="516" font-size="11" letter-spacing="0.21em" fill="#8991B3">FIG 5</text>
-        <text x="168" y="538" font-size="18" letter-spacing="0.31em" fill="url(#pl2v-name-grad)" font-weight="500">VERIFY</text>
-        <line x1="168" y1="556" x2="181.5" y2="556" stroke="#8991B3" stroke-width="1"/>
-        <text x="168" y="578" font-size="12" fill="#8991B3">Check the work</text>
-        <text x="168" y="592" font-size="12" fill="#8991B3">and capture replay</text>
-      </g>
-
-      <!-- MEASURE — (168, 284), start-anchored at x=168 -->
-      <g text-anchor="start" font-family="'Inter', system-ui, sans-serif">
-        <text x="168" y="294" font-size="11" letter-spacing="0.21em" fill="#8991B3">FIG 6</text>
-        <text x="168" y="316" font-size="18" letter-spacing="0.31em" fill="url(#pl2v-name-grad)" font-weight="500">MEASURE</text>
-        <line x1="168" y1="334" x2="181.5" y2="334" stroke="#8991B3" stroke-width="1"/>
-        <text x="168" y="356" font-size="12" fill="#8991B3">Track outcomes</text>
-        <text x="168" y="370" font-size="12" fill="#8991B3">and impact</text>
-      </g>
-    </svg>
-  </div>
-</section>
 
 <!-- ── §6 · MEET WAVE + PROOF — reveal & dogfooding, one left-aligned section ─── -->
 <section class="manifesto" id="wave">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><path class="ln d-dash" d="M80 55 C 62 33, 32 33, 32 55 C 32 77, 62 77, 80 55 C 98 33, 128 33, 128 55 C 128 77, 98 77, 80 55 Z" stroke-linejoin="round" stroke-dasharray="6 7" style="--sp:1.5s"/><circle class="nd d-throb" cx="44" cy="55" r="2.6" style="--sp:2.4s"/><circle class="nd d-throb" cx="116" cy="55" r="2.6" style="--sp:2.4s;animation-delay:.6s"/><circle class="acf d-throb" cx="80" cy="55" r="3.2" style="--sp:2s"/></svg>
+      <svg class="mg sec-mg" viewBox="0 0 200 110" aria-hidden="true"><g class="ln d-dash" stroke-linecap="round" stroke-dasharray="5 5" style="--sp:1.8s"><path d="M24 36 L70 55 M24 74 L70 55 M78 55 L100 38 M78 55 L100 72 M108 38 L130 55 M108 72 L130 55 M138 55 L160 38 M138 55 L160 72"/></g><g class="no"><circle cx="20" cy="36" r="5"/><circle cx="20" cy="74" r="5"/><circle cx="104" cy="36" r="5"/><circle cx="104" cy="74" r="5"/><circle cx="164" cy="36" r="5"/><circle cx="164" cy="74" r="5"/></g><g class="nd"><circle class="d-throb" cx="74" cy="55" r="5" style="--sp:2.4s"/><circle class="d-throb" cx="134" cy="55" r="5" style="--sp:2.4s;animation-delay:.6s"/></g></svg>
       <h2>Wave knows <span class="a">what to build.</span></h2>
       <p class="dagger">A proactive product agent that helps teams build self-improving products.</p>
     </div>
