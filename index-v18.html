@@ -4,7 +4,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Amplitude Wave · v18 — enabling self-improving products | Amplitude</title>
+<title>Amplitude Wave · v18 · enabling self-improving products | Amplitude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -950,9 +950,7 @@
 <nav>
   <div class="nav-in">
     <a class="brand" href="#" aria-label="Amplitude Wave — top">
-      <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
-        <path d="M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z"/>
-      </svg>
+      <img class="brand-mark" src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" width="26" height="26">
     </a>
     <a href="#cta" class="nav-btn">Request access</a>
   </div>
@@ -1001,7 +999,7 @@
   /* Reserve a bottom strip for the scroll indicator so the HUD (which centres via
      preserveAspectRatio="meet") always scales/sits ABOVE it — never overlapping,
      at any viewport aspect (incl. 16:9 fullscreen and ultrawide). Canvas stays full. */
-  .bp-hero .hud{inset:0 0 92px 0;width:auto;height:auto;}
+  .bp-hero .hud{top:0;left:0;right:auto;bottom:auto;width:100%;height:calc(100% - 92px);}
   .bp-hero .hud{pointer-events:none;}
   .bp-hero .hud text{fill:#e9f0ff;}
   .bp-hero .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
@@ -1040,7 +1038,7 @@
      and show the headline/story as plain flowing text on a static gradient, at a
      natural (non-full) height. Hidden on desktop. */
   .bp-hero-m{display:none;position:relative;z-index:3;width:100%;max-width:600px;}
-  .bp-hero-m h1{margin:0 0 16px;font-family:'Geist Mono',ui-monospace,monospace;font-weight:600;font-size:clamp(30px,8.4vw,46px);line-height:1.1;letter-spacing:.05em;color:#f2f6ff;text-transform:uppercase;}
+  .bp-hero-m h1{margin:0 0 16px;font-family:'Geist Mono',ui-monospace,monospace;font-weight:600;font-size:clamp(33px,9vw,46px);line-height:1.08;letter-spacing:.04em;color:#f2f6ff;text-transform:uppercase;}
   .bp-hero-m p{margin:0;font-family:'Geist Mono',ui-monospace,monospace;font-weight:400;font-size:clamp(14px,3.8vw,17px);line-height:1.55;letter-spacing:.02em;color:#c3d2ff;}
   @media(max-width:760px){
     /* headline at the top; extra bottom room so the particle field shows beneath it.
@@ -1048,6 +1046,9 @@
     .bp-hero{height:auto;min-height:0;display:block;padding:84px 22px 248px;background:#070b1c;}
     .bp-hero .stage{display:block;}     /* show the particle canvas (bg + particles) */
     .bp-hero .hud{display:none;}         /* but keep the SVG HUD chrome/tooltips hidden */
+    /* dim the field to 60% so it doesn't fight the text, and fade its bottom edge
+       into the hero navy (= the next section's bg) for a smooth, seam-free break. */
+    .bp-hero canvas{opacity:.6;-webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);}
     #heroBg{display:none;}               /* skip the separate persistent bg field on phones */
     .bp-scroll{display:none;}
     .bp-hero-m{display:block;position:relative;z-index:3;}
@@ -1061,7 +1062,7 @@
   .bp-hero .ln{stroke:#cdd8ff;fill:none}
   .bp-hero .dimln{stroke:#5c6fac;fill:none}
   .bp-hero .ey{font-weight:500;font-size:18px;letter-spacing:5px;fill:#aebeff}
-  .bp-hero .title{font-weight:600;font-size:36px;letter-spacing:8px;fill:#f2f6ff}
+  .bp-hero .title{font-weight:600;font-size:54px;letter-spacing:8px;fill:#f2f6ff}
   .bp-hero .sub{font-weight:400;font-size:18px;letter-spacing:5px;fill:#91a3dc}
   .bp-hero .k{font-weight:400;font-size:14px;letter-spacing:2px;fill:#7686b6}
   .bp-hero .v{font-weight:400;font-size:15px;letter-spacing:2px;fill:#e9efff}
@@ -1069,31 +1070,7 @@
   .bp-hero .cap{font-weight:500;font-size:18px;letter-spacing:4px;fill:#e9efff}
   .bp-hero .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
   .bp-hero .ghost{opacity:.48}
-  .bp-hero .reveal{opacity:0;pointer-events:none;transition:opacity .28s ease}
-  .bp-hero .reveal.active{opacity:1 !important;transform:translateY(0)}
-  .bp-hero .rv{font-weight:600;font-size:13px;letter-spacing:3px;fill:#fff}
-  .bp-hero .rv-sub{font-weight:500;font-size:12px;letter-spacing:2px;fill:#f1f5f9}
-  .bp-hero .backing{fill:#05070e;opacity:.75}
-  .bp-hero .veil{fill:#040816;opacity:.96;stroke:#60a5fa;stroke-width:1.5}
   .bp-hero .stage canvas{background:#030409}
-  /* hover tooltip cards (foreignObject): frosted glass — transparent + backdrop
-     blur picks up & softens the field behind for legibility. Micro-graphic on top,
-     wrapping caption below. */
-  .bp-hero foreignObject{overflow:visible;}
-  .bp-hero .tip{
-    box-sizing:border-box;width:100%;height:100%;
-    display:flex;flex-direction:column;justify-content:space-between;gap:8px;
-    padding:11px 13px;border-radius:12px;
-    border:1px solid rgba(120,160,255,0.30);
-    background:rgba(9,15,30,0.55);                 /* fallback if no backdrop-filter */
-    box-shadow:0 8px 34px rgba(0,0,0,0.30);
-    font-family:'Geist Mono',ui-monospace,monospace;
-  }
-  @supports ((backdrop-filter:blur(8px)) or (-webkit-backdrop-filter:blur(8px))){
-    .bp-hero .tip{background:rgba(12,20,38,0.14);-webkit-backdrop-filter:blur(13px) saturate(1.2);backdrop-filter:blur(13px) saturate(1.2);}
-  }
-  .bp-hero .tip-ico{display:block;width:100%;height:auto;color:#cdd8ff;}
-  .bp-hero .tip-cap{font-weight:500;font-size:12px;letter-spacing:.1em;line-height:1.5;color:#eaf1ff;text-transform:uppercase;}
 </style>
 
 <section class="bp-hero">
@@ -1113,81 +1090,12 @@
     <!-- title -->
     <text class="title" x="80" y="172">
       <tspan x="80" dy="0">ENABLING</tspan>
-      <tspan x="80" dy="48">SELF-IMPROVING</tspan>
-      <tspan x="80" dy="48">PRODUCTS</tspan>
+      <tspan x="80" dy="64">SELF-IMPROVING</tspan>
+      <tspan x="80" dy="64">PRODUCTS</tspan>
     </text>
 
 
     <!-- right readout -->
-
-    <!-- hover overlays: signal layer -> synthesis -> experiments -> outcomes -->
-    <g id="rv-signals" class="reveal">
-      <foreignObject x="42" y="540" width="200" height="140">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
-          <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <!-- SENSE: many source channels feeding one sensing bus -->
-            <path d="M96 10 V46" opacity=".55"/>
-            <path d="M16 16 H58 M62 16 q4 -7 8 0 t8 0 M80 16 H96" opacity=".85"/>
-            <path d="M16 28 H62 M66 28 q4 -6 8 0 t8 0 M84 28 H96" opacity=".85"/>
-            <path d="M16 40 H58 M62 40 q4 -7 8 0 t8 0 M80 40 H96" opacity=".85"/>
-            <circle cx="16" cy="16" r="3" fill="#a9c7ff" stroke="none"/>
-            <circle cx="16" cy="28" r="3" fill="#70e5bd" stroke="none"/>
-            <circle cx="16" cy="40" r="3" fill="#ff9bba" stroke="none"/>
-            <circle cx="96" cy="28" r="3.5" fill="#dbe6ff" stroke="none"/>
-          </svg>
-          <div class="tip-cap">Analytics &#183; Replays &#183; Feedback</div>
-        </div>
-      </foreignObject>
-    </g>
-    <g id="rv-synthesis" class="reveal">
-      <foreignObject x="448" y="540" width="200" height="140">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
-          <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <!-- DECIDE: corroborate — sources converge into one synthesized node -->
-            <path d="M16 14 C58 14 66 28 92 28"/>
-            <path d="M16 28 H92"/>
-            <path d="M16 42 C58 42 66 28 92 28"/>
-            <circle cx="16" cy="14" r="3" fill="#a9c7ff" stroke="none"/>
-            <circle cx="16" cy="28" r="3" fill="#70e5bd" stroke="none"/>
-            <circle cx="16" cy="42" r="3" fill="#ff9bba" stroke="none"/>
-            <circle cx="96" cy="28" r="6" fill="none"/>
-            <circle cx="96" cy="28" r="2.2" fill="#dbe6ff" stroke="none"/>
-          </svg>
-          <div class="tip-cap">Corroborate the signals</div>
-        </div>
-      </foreignObject>
-    </g>
-    <g id="rv-experiments" class="reveal">
-      <foreignObject x="928" y="540" width="200" height="140">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
-          <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <!-- ACT: an A/B experiment, the chosen branch approved (check) -->
-            <path d="M14 28 H44"/>
-            <path d="M44 28 C62 28 64 16 82 16"/>
-            <path d="M44 28 C62 28 64 40 82 40"/>
-            <circle cx="44" cy="28" r="3" fill="#dbe6ff" stroke="none"/>
-            <circle cx="86" cy="40" r="3.5" fill="none" opacity=".45"/>
-            <circle cx="86" cy="16" r="8" fill="none"/>
-            <path d="M81.5 16 l3 3 l5 -6"/>
-          </svg>
-          <div class="tip-cap">Ready to approve</div>
-        </div>
-      </foreignObject>
-    </g>
-    <g id="rv-outcomes" class="reveal">
-      <foreignObject x="1392" y="540" width="200" height="140">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
-          <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <!-- LEARN: a measured outcome — rising trend to a positive (green) result -->
-            <path d="M14 46 H114" opacity=".4"/>
-            <path d="M16 41 L44 35 L66 39 L90 22 L112 12"/>
-            <circle cx="66" cy="39" r="2.6" fill="#dbe6ff" stroke="none"/>
-            <circle cx="112" cy="12" r="4" fill="#70e5bd" stroke="none"/>
-          </svg>
-          <div class="tip-cap">Measure what moved</div>
-        </div>
-      </foreignObject>
-    </g>
 
     <!-- bottom process axis -->
     <g class="dimln" stroke-width="1.1" opacity="0.64">
@@ -1213,7 +1121,7 @@
   <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
   <div class="bp-hero-m">
     <h1>Enabling self-improving products</h1>
-    <p>Products that find what's worth building, ship it, and prove it worked &mdash; every release, on its own.</p>
+    <p>Products that find what's worth building, ship it, and prove it worked. Every release, on its own.</p>
   </div>
   <a class="bp-scroll" href="#demo" aria-label="Scroll to content">
     <span>Scroll</span>
@@ -1630,37 +1538,15 @@
   const pts = { seed: gl.getAttribLocation(ptProgram,'a_seed'), extra: gl.getAttribLocation(ptProgram,'a_extra'), resolution: gl.getUniformLocation(ptProgram,'u_resolution'), time: gl.getUniformLocation(ptProgram,'u_time'), mouse: gl.getUniformLocation(ptProgram,'u_mouse'), hover: gl.getUniformLocation(ptProgram,'u_hover') };
 
   let mouseClipX = -2, mouseClipY = -2, hover = 0, hoverTarget = 0;
-  const zones = [
-    { el: document.getElementById('rv-signals'), cx: 147, cy: 673, r: 180 },
-    { el: document.getElementById('rv-synthesis'), cx: 565, cy: 663, r: 180 },
-    { el: document.getElementById('rv-experiments'), cx: 1048, cy: 670, r: 180 },
-    { el: document.getElementById('rv-outcomes'), cx: 1513, cy: 668, r: 180 }
-  ];
 
+  // cursor → particle attractor (clip-space)
   function onMove(e) {
     const rect = stage.getBoundingClientRect();
-    const fx = (e.clientX - rect.left) / rect.width;
-    const fy = (e.clientY - rect.top) / rect.height;
-    mouseClipX = fx * 2 - 1;
-    mouseClipY = 1 - fy * 2;
+    mouseClipX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouseClipY = 1 - ((e.clientY - rect.top) / rect.height) * 2;
     hoverTarget = 1;
-    const vbX = fx * 1680, vbY = fy * 945;
-    for (const z of zones) {
-      if (!z.el) continue;
-      const d = Math.hypot(vbX - z.cx, vbY - z.cy);
-      if (d < z.r) {
-        z.el.classList.add('active');
-      } else {
-        z.el.classList.remove('active');
-      }
-    }
   }
-  function onLeave() {
-    hoverTarget = 0;
-    for (const z of zones) {
-      if (z.el) z.el.classList.remove('active');
-    }
-  }
+  function onLeave() { hoverTarget = 0; }
   stage.addEventListener('mousemove', onMove);
   stage.addEventListener('mouseleave', onLeave);
 
@@ -1727,7 +1613,7 @@
      Drop a real <video> into .film-media and delete .film-ph to go live.
      TUNING: .film-wrap width = max size · 0.8→1.0 = peek→full · 0.74 = max dim. -->
 <style>
-  .film { position: relative; padding: 12vh 0 16vh; }
+  .film { position: relative; padding: 12vh 0 16vh; background: var(--bg); }
   .film-scrim { position: fixed; inset: 0; background: #04060f; opacity: var(--dim, 0); pointer-events: none; z-index: 40; }
   .film-wrap { position: relative; z-index: 41; width: min(1280px, 94vw); aspect-ratio: 16 / 9; margin: 0 auto; }
   .film-frame {
@@ -1903,8 +1789,8 @@
 <section class="manifesto" id="problem">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <h2>The new bottleneck: <span class="a">knowing what to build.</span></h2>
-      <p>Quality comes from iteration — the strategist John Boyd showed that whoever cycles their OODA loop fastest wins the dogfight. Every product runs the same loop: build, ship, use, learn.</p>
+      <h2>The new bottleneck: <span class="a">knowing what to build</span></h2>
+      <p>Quality comes from iteration. The strategist John Boyd showed that whoever cycles their OODA loop fastest wins the dogfight. Every product runs the same loop: build, ship, use, learn.</p>
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
@@ -1987,8 +1873,8 @@
     </div>
 
     <div class="manifesto-body reveal">
-      <p>Coding agents are collapsing <strong>build</strong> to zero. But <strong>use</strong> and <strong>learn</strong> still crawl by hand — someone manually combs the data for signals, decides what's worth building, proves if the change worked, and reflects on the process.</p>
-      <p class="dagger">Shipping stopped being the bottleneck. <span class="a">Knowing what to build is.</span></p>
+      <p>Coding agents are collapsing <strong>build</strong> to zero. But <strong>use</strong> and <strong>learn</strong> still crawl by hand. Someone manually combs the data for signals, decides what's worth building, proves if the change worked, and reflects on the process.</p>
+      <p class="dagger">Shipping stopped being the bottleneck. Knowing what to build is.</p>
     </div>
   </div>
 </section>
@@ -2045,12 +1931,12 @@
           <g><circle r="4" fill="url(#c7-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
         </g>
       </svg>
-      <h2>Products can improve <span class="a">themselves now.</span></h2>
+      <h2>Products can improve themselves now</h2>
       <p class="dagger">A self-improving product runs the whole loop on its own.</p>
     </div>
 
     <div class="manifesto-body reveal">
-      <p>It reads the signals across your product, decides what's worth building, and orchestrates the people and agents who ship it. Then it measures what worked — monitoring outcomes, running experiments — and feeds the learning into the next cycle.</p>
+      <p>It reads the signals across your product, decides what's worth building, and orchestrates the people and agents who ship it. Then it measures what worked (monitoring outcomes, running experiments) and feeds the learning into the next cycle.</p>
       <p>So your product doesn't just grow, it <strong>compounds</strong>: every loop sharper than the last.</p>
     </div>
   </div>
@@ -2061,8 +1947,8 @@
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
       <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><g class="l2" fill="none"><rect x="65" y="22" width="13" height="13" rx="2"/><rect x="47" y="40" width="13" height="13" rx="2"/><rect x="83" y="40" width="13" height="13" rx="2"/><rect x="65" y="58" width="13" height="13" rx="2"/><rect x="101" y="58" width="13" height="13" rx="2"/><rect x="47" y="76" width="13" height="13" rx="2"/><rect x="65" y="76" width="13" height="13" rx="2"/><rect x="83" y="76" width="13" height="13" rx="2"/></g><g class="nd"><rect x="47" y="22" width="13" height="13" rx="2"/><rect class="d-pulse" x="83" y="22" width="13" height="13" rx="2" style="--sp:3.1s"/><rect class="d-pulse" x="65" y="40" width="13" height="13" rx="2" style="--sp:2.7s;animation-delay:.6s"/><rect class="d-pulse" x="101" y="40" width="13" height="13" rx="2" style="--sp:3.3s;animation-delay:1.1s"/><rect x="83" y="58" width="13" height="13" rx="2"/><rect class="d-pulse" x="101" y="76" width="13" height="13" rx="2" style="--sp:2.9s;animation-delay:.3s"/></g><g class="acf"><rect class="d-throb" x="101" y="22" width="13" height="13" rx="2" style="--sp:2.4s"/><rect class="d-throb" x="47" y="58" width="13" height="13" rx="2" style="--sp:2.4s;animation-delay:.8s"/></g></svg>
-      <h2>Your product already signals <span class="a">what to build.</span></h2>
-      <p class="dagger">Every click, session replay, customer feedback, log, and agent trace is a signal — and your next best idea is buried in them.</p>
+      <h2>Your product already signals what to build</h2>
+      <p class="dagger">Every click, session replay, customer feedback, log, and agent trace is a signal, and your next best idea is buried in them.</p>
     </div>
 
     <div class="manifesto-body reveal">
@@ -2151,7 +2037,7 @@
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
   <div class="pl-head">
-    <h3>The loop that's always running.</h3>
+    <h3>The loop that's always running</h3>
   </div>
 
   <div class="product-loop">
@@ -2351,11 +2237,9 @@
           <path d="M19.1 4.9c3.9 3.9 3.9 10.2 0 14.1"/>
         </g>
         <g text-anchor="middle" font-family="'Inter', 'JetBrains Mono', monospace">
-          <text x="450" y="34"  font-size="11" letter-spacing="0.22em" fill="rgba(255,255,255,0.40)">FIG 1</text>
           <text x="450" y="63"  font-size="20" letter-spacing="0.22em" fill="rgba(255,255,255,0.92)" font-weight="500">SENSE</text>
-          <line  x1="443" y1="76" x2="457" y2="76" stroke="rgba(255,255,255,0.40)" stroke-width="1"/>
-          <text x="450" y="96"  font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Find problems</text>
-          <text x="450" y="112" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">worth solving</text>
+          <text x="450" y="87"  font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Find problems</text>
+          <text x="450" y="103" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">worth solving</text>
           <line  x1="450" y1="122" x2="450" y2="133" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 4"/>
         </g>
       </g>
@@ -2383,11 +2267,9 @@
           <line x1="3" x2="3.01" y1="18" y2="18"/>
         </g>
         <g text-anchor="start" font-family="'Inter', 'JetBrains Mono', monospace">
-          <text x="656" y="227" font-size="11" letter-spacing="0.22em" fill="rgba(255,255,255,0.40)">FIG 2</text>
           <text x="656" y="256" font-size="20" letter-spacing="0.22em" fill="rgba(255,255,255,0.92)" font-weight="500">PRIORITIZE</text>
-          <line  x1="656" y1="269" x2="670" y2="269" stroke="rgba(255,255,255,0.40)" stroke-width="1"/>
-          <text x="656" y="289" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Rank by impact</text>
-          <text x="656" y="305" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">and confidence</text>
+          <text x="656" y="280" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Rank by impact</text>
+          <text x="656" y="296" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">and confidence</text>
           <line  x1="643" y1="260" x2="654" y2="260" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
         </g>
       </g>
@@ -2414,11 +2296,9 @@
           <line x1="10" x2="8" y1="9" y2="9"/>
         </g>
         <g text-anchor="start" font-family="'Inter', 'JetBrains Mono', monospace">
-          <text x="656" y="407" font-size="11" letter-spacing="0.22em" fill="rgba(255,255,255,0.40)">FIG 3</text>
           <text x="656" y="436" font-size="20" letter-spacing="0.22em" fill="rgba(255,255,255,0.92)" font-weight="500">SPEC</text>
-          <line  x1="656" y1="449" x2="670" y2="449" stroke="rgba(255,255,255,0.40)" stroke-width="1"/>
-          <text x="656" y="469" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Define the solution</text>
-          <text x="656" y="485" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">and acceptance criteria</text>
+          <text x="656" y="460" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Define the solution</text>
+          <text x="656" y="476" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">and acceptance criteria</text>
           <line  x1="643" y1="440" x2="654" y2="440" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
         </g>
       </g>
@@ -2442,11 +2322,9 @@
         </g>
         <g text-anchor="middle" font-family="'Inter', 'JetBrains Mono', monospace">
           <line  x1="450" y1="567" x2="450" y2="578" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 4"/>
-          <text x="450" y="592" font-size="11" letter-spacing="0.22em" fill="rgba(255,255,255,0.40)">FIG 4</text>
           <text x="450" y="621" font-size="20" letter-spacing="0.22em" fill="rgba(255,255,255,0.92)" font-weight="500">ACT</text>
-          <line  x1="443" y1="634" x2="457" y2="634" stroke="rgba(255,255,255,0.40)" stroke-width="1"/>
-          <text x="450" y="654" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Build the right</text>
-          <text x="450" y="670" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">thing</text>
+          <text x="450" y="645" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Build the right</text>
+          <text x="450" y="661" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">thing</text>
         </g>
       </g>
 
@@ -2469,11 +2347,9 @@
           <path d="m9 12 2 2 4-4"/>
         </g>
         <g text-anchor="end" font-family="'Inter', 'JetBrains Mono', monospace">
-          <text x="244" y="407" font-size="11" letter-spacing="0.22em" fill="rgba(255,255,255,0.40)">FIG 5</text>
           <text x="244" y="436" font-size="20" letter-spacing="0.22em" fill="rgba(255,255,255,0.92)" font-weight="500">VERIFY</text>
-          <line  x1="230" y1="449" x2="244" y2="449" stroke="rgba(255,255,255,0.40)" stroke-width="1"/>
-          <text x="244" y="469" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Check the work</text>
-          <text x="244" y="485" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">and capture replay</text>
+          <text x="244" y="460" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Check the work</text>
+          <text x="244" y="476" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">and capture replay</text>
           <line  x1="246" y1="440" x2="257" y2="440" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
         </g>
       </g>
@@ -2497,11 +2373,9 @@
           <polyline points="16 7 22 7 22 13"/>
         </g>
         <g text-anchor="end" font-family="'Inter', 'JetBrains Mono', monospace">
-          <text x="244" y="227" font-size="11" letter-spacing="0.22em" fill="rgba(255,255,255,0.40)">FIG 6</text>
           <text x="244" y="256" font-size="20" letter-spacing="0.22em" fill="rgba(255,255,255,0.92)" font-weight="500">MEASURE</text>
-          <line  x1="230" y1="269" x2="244" y2="269" stroke="rgba(255,255,255,0.40)" stroke-width="1"/>
-          <text x="244" y="289" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Track outcomes</text>
-          <text x="244" y="305" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">and impact</text>
+          <text x="244" y="280" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">Track outcomes</text>
+          <text x="244" y="296" font-size="13" letter-spacing="0.02em" fill="rgba(255,255,255,0.55)">and impact</text>
           <line  x1="246" y1="260" x2="257" y2="260" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="2 3"/>
         </g>
       </g>
@@ -2516,12 +2390,12 @@
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
       <svg class="mg sec-mg" viewBox="0 0 200 110" aria-hidden="true"><g class="ln d-dash" stroke-linecap="round" stroke-dasharray="5 5" style="--sp:1.8s"><path d="M24 36 L70 55 M24 74 L70 55 M78 55 L100 38 M78 55 L100 72 M108 38 L130 55 M108 72 L130 55 M138 55 L160 38 M138 55 L160 72"/></g><g class="no"><circle cx="20" cy="36" r="5"/><circle cx="20" cy="74" r="5"/><circle cx="104" cy="36" r="5"/><circle cx="104" cy="74" r="5"/><circle cx="164" cy="36" r="5"/><circle cx="164" cy="74" r="5"/></g><g class="nd"><circle class="d-throb" cx="74" cy="55" r="5" style="--sp:2.4s"/><circle class="d-throb" cx="134" cy="55" r="5" style="--sp:2.4s;animation-delay:.6s"/></g></svg>
-      <h2>Wave knows <span class="a">what to build.</span></h2>
+      <h2>Wave knows what to build</h2>
       <p class="dagger">A proactive product agent that helps teams build self-improving products.</p>
     </div>
 
     <div class="manifesto-body reveal">
-      <p>It continuously analyzes your Amplitude data for <strong>Signals</strong>, surfaces <strong>Opportunities</strong> you or your agents can approve and ship, and tracks the experiments and <strong>Outcomes</strong> — so your product learns what works and gets smarter every cycle.</p>
+      <p>It continuously analyzes your Amplitude data for <strong>Signals</strong>, surfaces <strong>Opportunities</strong> you or your agents can approve and ship, and tracks the experiments and <strong>Outcomes</strong>, so your product learns what works and gets smarter every cycle.</p>
 
       <!-- loop micrographic: the build→ship→use→learn loop, always running on
            Amplitude itself. Unique wl- ids so it never collides with §3's c7- loop. -->
@@ -2547,9 +2421,9 @@
         </g>
         <g><circle r="3.4" fill="url(#wl-lead)"/><circle r="1.5" fill="#fff"/><animateMotion dur="4.2s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></g>
       </svg>
-      <h3>We use Wave to build Amplitude.</h3>
-      <p>For months, Wave has run on Amplitude itself — auto-triaging bugs, optimizing our landing pages and product flows, and sharpening our own agents and tools by analyzing their traces.</p>
-      <p>It surfaced hundreds of <strong>Opportunities</strong> — and we've shipped better and faster than ever.</p>
+      <h3>We use Wave to build Amplitude</h3>
+      <p>For months, Wave has run on Amplitude itself, auto-triaging bugs, optimizing our landing pages and product flows, and sharpening our own agents and tools by analyzing their traces.</p>
+      <p>It surfaced hundreds of <strong>Opportunities</strong>. We've shipped better and faster than ever.</p>
     </div>
   </div>
 </section>
@@ -2557,7 +2431,7 @@
 <!-- ── §8 · CTA / WAITLIST ──────────────────────────────── -->
 <section id="cta" class="closer">
   <!-- v17: product-shot graphics removed; the loop returns as a donut band below the CTA -->
-  <h2 class="reveal">Build products that<br><span class="a">improve themselves.</span></h2>
+  <h2 class="reveal">Build products that<br>improve themselves</h2>
   <p class="reveal">Wave is rolling out to a first group of teams. Be one of them.</p>
   <div class="waitlist-zone reveal" id="cta-zone">
     <form class="waitlist" id="cta-form" onsubmit="event.preventDefault()">
@@ -2988,7 +2862,7 @@
         <span class="cmdk-num">V16</span>
         <span class="cmdk-text">
           <div class="cmdk-name">Seamless blueprint hero</div>
-          <div class="cmdk-desc">v15 fork · hero cobalt dropped to the page bg — torus floats on one continuous navy field</div>
+          <div class="cmdk-desc">v15 fork · hero cobalt dropped to the page bg, torus floats on one continuous navy field</div>
         </span>
         <span class="cmdk-current">Current</span>
       </a>
@@ -3020,7 +2894,7 @@
         <span class="cmdk-num">V12</span>
         <span class="cmdk-text">
           <div class="cmdk-name">Amplitude Wave (named)</div>
-          <div class="cmdk-desc">v11, product clearly named Amplitude Wave — helps customers build self-improving products</div>
+          <div class="cmdk-desc">v11, product clearly named Amplitude Wave, helps customers build self-improving products</div>
         </span>
         <span class="cmdk-current">Current</span>
       </a>
