@@ -998,6 +998,10 @@
   .bp-hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:transparent;font-family:'Geist Mono',ui-monospace,monospace;}
   .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:transparent;}
   .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  /* Reserve a bottom strip for the scroll indicator so the HUD (which centres via
+     preserveAspectRatio="meet") always scales/sits ABOVE it — never overlapping,
+     at any viewport aspect (incl. 16:9 fullscreen and ultrawide). Canvas stays full. */
+  .bp-hero .hud{inset:0 0 92px 0;width:auto;height:auto;}
   .bp-hero .hud{pointer-events:none;}
   .bp-hero .hud text{fill:#e9f0ff;}
   .bp-hero .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
@@ -1039,11 +1043,16 @@
   .bp-hero-m h1{margin:0 0 16px;font-family:'Geist Mono',ui-monospace,monospace;font-weight:600;font-size:clamp(30px,8.4vw,46px);line-height:1.1;letter-spacing:.05em;color:#f2f6ff;text-transform:uppercase;}
   .bp-hero-m p{margin:0;font-family:'Geist Mono',ui-monospace,monospace;font-weight:400;font-size:clamp(14px,3.8vw,17px);line-height:1.55;letter-spacing:.02em;color:#c3d2ff;}
   @media(max-width:760px){
-    .bp-hero{height:auto;min-height:0;display:flex;align-items:center;padding:76px 22px 56px;background:radial-gradient(130% 80% at 50% 24%, #16265c 0%, #0c1430 48%, var(--bg) 84%);}
-    .bp-hero .stage{display:none;}      /* hide WebGL particle canvas + SVG HUD chrome */
-    #heroBg{display:none;}               /* skip the persistent bg field on phones */
+    /* headline at the top; extra bottom room so the particle field shows beneath it.
+       Not full-height — the field fills this box (text + the padded space below). */
+    .bp-hero{height:auto;min-height:0;display:block;padding:84px 22px 248px;background:#070b1c;}
+    .bp-hero .stage{display:block;}     /* show the particle canvas (bg + particles) */
+    .bp-hero .hud{display:none;}         /* but keep the SVG HUD chrome/tooltips hidden */
+    #heroBg{display:none;}               /* skip the separate persistent bg field on phones */
     .bp-scroll{display:none;}
-    .bp-hero-m{display:block;}
+    .bp-hero-m{display:block;position:relative;z-index:3;}
+    .bp-hero-m h1{text-shadow:0 1px 16px rgba(3,6,15,.65);}
+    .bp-hero-m p{text-shadow:0 1px 12px rgba(3,6,15,.7);}
   }
 </style>
 
@@ -1060,7 +1069,7 @@
   .bp-hero .cap{font-weight:500;font-size:18px;letter-spacing:4px;fill:#e9efff}
   .bp-hero .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
   .bp-hero .ghost{opacity:.48}
-  .bp-hero .reveal{opacity:0;pointer-events:none;transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1);transform:translateY(15px)}
+  .bp-hero .reveal{opacity:0;pointer-events:none;transition:opacity .28s ease}
   .bp-hero .reveal.active{opacity:1 !important;transform:translateY(0)}
   .bp-hero .rv{font-weight:600;font-size:13px;letter-spacing:3px;fill:#fff}
   .bp-hero .rv-sub{font-weight:500;font-size:12px;letter-spacing:2px;fill:#f1f5f9}
@@ -1073,8 +1082,8 @@
   .bp-hero foreignObject{overflow:visible;}
   .bp-hero .tip{
     box-sizing:border-box;width:100%;height:100%;
-    display:flex;flex-direction:column;justify-content:space-between;gap:12px;
-    padding:16px 18px;border-radius:14px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:8px;
+    padding:11px 13px;border-radius:12px;
     border:1px solid rgba(120,160,255,0.30);
     background:rgba(9,15,30,0.55);                 /* fallback if no backdrop-filter */
     box-shadow:0 8px 34px rgba(0,0,0,0.30);
@@ -1083,7 +1092,7 @@
   @supports ((backdrop-filter:blur(8px)) or (-webkit-backdrop-filter:blur(8px))){
     .bp-hero .tip{background:rgba(12,20,38,0.14);-webkit-backdrop-filter:blur(13px) saturate(1.2);backdrop-filter:blur(13px) saturate(1.2);}
   }
-  .bp-hero .tip-ico{display:block;width:72%;max-width:122px;height:auto;color:#cdd8ff;}
+  .bp-hero .tip-ico{display:block;width:100%;height:auto;color:#cdd8ff;}
   .bp-hero .tip-cap{font-weight:500;font-size:12px;letter-spacing:.1em;line-height:1.5;color:#eaf1ff;text-transform:uppercase;}
 </style>
 
@@ -1108,33 +1117,12 @@
       <tspan x="80" dy="48">PRODUCTS</tspan>
     </text>
 
-    <!-- coherence lock is a subtle hover overlay, not a permanent ripple -->
-    <g id="rv-lock" class="ln reveal" stroke-width="1.4">
-      <path d="M794 426 h-18 v-18 M886 426 h18 v-18 M794 520 h-18 v18 M886 520 h18 v18"/>
-      <path d="M892 462 L1168 420 L1440 420" opacity="0.72"/>
-      <text class="sm" x="840" y="556" text-anchor="middle" style="fill:#e9efff">OPPORTUNITY LOCK</text>
-      <text class="rv" x="840" y="586" text-anchor="middle">CORROBORATED ACROSS SOURCES</text>
-    </g>
 
     <!-- right readout -->
-    <g id="rv-opp" class="reveal">
-      <rect class="backing" x="1446" y="384" width="186" height="232" rx="6"/>
-      <g class="ln" stroke-width="1.25" opacity="0.76">
-        <path d="M1452 384 h-14 V588 h14"/>
-        <path d="M1614 384 h14 V588 h-14"/>
-        <path d="M1464 452 H1600"/>
-        <path d="M1464 518 H1600"/>
-      </g>
-      <text class="cap" x="1464" y="414">OPPORTUNITY</text>
-      <text class="k" x="1464" y="440">EVIDENCE</text><text class="v" x="1464" y="472">CROSS-SOURCE</text>
-      <text class="k" x="1464" y="506">ACTION</text><text class="v" x="1464" y="538">REVIEW-READY</text>
-      <text class="k" x="1464" y="572">OUTCOME</text><text class="v" x="1464" y="604">MEASURED</text>
-      <text class="rv-sub" x="1626" y="640" text-anchor="end">REVIEW IN UI &#183; MCP &#183; CLI</text>
-    </g>
 
     <!-- hover overlays: signal layer -> synthesis -> experiments -> outcomes -->
     <g id="rv-signals" class="reveal">
-      <foreignObject x="42" y="588" width="240" height="156">
+      <foreignObject x="42" y="540" width="200" height="140">
         <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
           <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <!-- SENSE: many source channels feeding one sensing bus -->
@@ -1152,7 +1140,7 @@
       </foreignObject>
     </g>
     <g id="rv-synthesis" class="reveal">
-      <foreignObject x="448" y="588" width="240" height="156">
+      <foreignObject x="448" y="540" width="200" height="140">
         <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
           <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <!-- DECIDE: corroborate — sources converge into one synthesized node -->
@@ -1170,7 +1158,7 @@
       </foreignObject>
     </g>
     <g id="rv-experiments" class="reveal">
-      <foreignObject x="928" y="588" width="240" height="156">
+      <foreignObject x="928" y="540" width="200" height="140">
         <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
           <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <!-- ACT: an A/B experiment, the chosen branch approved (check) -->
@@ -1187,7 +1175,7 @@
       </foreignObject>
     </g>
     <g id="rv-outcomes" class="reveal">
-      <foreignObject x="1392" y="588" width="240" height="156">
+      <foreignObject x="1392" y="540" width="200" height="140">
         <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
           <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <!-- LEARN: a measured outcome — rising trend to a positive (green) result -->
@@ -1220,7 +1208,6 @@
     </text>
     <text class="cap" x="1486" y="878">[ 2026 ]</text>
     <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
-    <circle id="cursorRing" class="reveal" r="24" fill="none" stroke="#7d93ff" stroke-width="1.2"/>
   </svg>
   </div>
   <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
@@ -1597,9 +1584,9 @@
   const stage = document.querySelector('.bp-hero .stage');
   const canvas = document.getElementById('heroCanvas');
   if (!stage || !canvas) return;
-  // Skip the heavy 4M-particle field on small screens — mobile shows the plain HTML
-  // headline (.bp-hero-m) instead, so don't allocate buffers or run the GL loop here.
-  if (window.matchMedia && window.matchMedia('(max-width: 760px)').matches) return;
+  // Mobile still shows the field (behind the plain HTML headline), but at a much
+  // lighter particle count so it stays smooth on phone GPUs.
+  const isMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
   const gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl');
   if (!gl) { console.error('WebGL not supported'); return; }
 
@@ -1628,7 +1615,7 @@
 
   let seed = 20260605 >>> 0;
   function rnd(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
-  const count = 4000000;
+  const count = isMobile ? 600000 : 4000000;
   const seeds = new Float32Array(count * 4);
   const extras = new Float32Array(count * 4);
   for (let i = 0; i < count; i++) {
@@ -1643,14 +1630,11 @@
   const pts = { seed: gl.getAttribLocation(ptProgram,'a_seed'), extra: gl.getAttribLocation(ptProgram,'a_extra'), resolution: gl.getUniformLocation(ptProgram,'u_resolution'), time: gl.getUniformLocation(ptProgram,'u_time'), mouse: gl.getUniformLocation(ptProgram,'u_mouse'), hover: gl.getUniformLocation(ptProgram,'u_hover') };
 
   let mouseClipX = -2, mouseClipY = -2, hover = 0, hoverTarget = 0;
-  const ring = document.getElementById('cursorRing');
   const zones = [
     { el: document.getElementById('rv-signals'), cx: 147, cy: 673, r: 180 },
     { el: document.getElementById('rv-synthesis'), cx: 565, cy: 663, r: 180 },
-    { el: document.getElementById('rv-lock'), cx: 840, cy: 473, r: 220 },
     { el: document.getElementById('rv-experiments'), cx: 1048, cy: 670, r: 180 },
-    { el: document.getElementById('rv-outcomes'), cx: 1513, cy: 668, r: 180 },
-    { el: document.getElementById('rv-opp'), cx: 1539, cy: 500, r: 190 }
+    { el: document.getElementById('rv-outcomes'), cx: 1513, cy: 668, r: 180 }
   ];
 
   function onMove(e) {
@@ -1661,11 +1645,6 @@
     mouseClipY = 1 - fy * 2;
     hoverTarget = 1;
     const vbX = fx * 1680, vbY = fy * 945;
-    if (ring) {
-      ring.setAttribute('cx', vbX.toFixed(1));
-      ring.setAttribute('cy', vbY.toFixed(1));
-      ring.classList.add('active');
-    }
     for (const z of zones) {
       if (!z.el) continue;
       const d = Math.hypot(vbX - z.cx, vbY - z.cy);
@@ -1678,7 +1657,6 @@
   }
   function onLeave() {
     hoverTarget = 0;
-    if (ring) ring.classList.remove('active');
     for (const z of zones) {
       if (z.el) z.el.classList.remove('active');
     }
