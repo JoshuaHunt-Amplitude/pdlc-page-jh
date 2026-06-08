@@ -1037,7 +1037,7 @@
   <!-- TEMP: hero is the wave-coherence WebGL page, embedded as-is. Keep refining
        wave-coherence-webgl.html and this updates automatically; inline the final
        version here later. (Old v18 HUD/canvas/CTA removed.) -->
-  <iframe class="bp-hero-frame" src="wave-coherence-webgl.html" title="Amplitude Wave — coherence field" loading="eager" scrolling="no"></iframe>
+  <iframe id="bp-hero-frame" class="bp-hero-frame" src="wave-coherence-webgl.html" title="Amplitude Wave — coherence field" loading="eager" scrolling="no"></iframe>
   <a class="bp-scroll" href="#demo" aria-label="Scroll to content">
     <span>Scroll</span>
     <svg viewBox="0 0 24 28" fill="none" stroke="#c3d2ff" stroke-width="1.6"><path class="chev" d="M5 9 L12 17 L19 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1926,7 +1926,17 @@
   const NS=18,streams=[];
   for(let i=0;i<NS;i++){const big=i<5;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:1.4+Math.random()*1.8,vturns:0.6+Math.random()*1.4,off:Math.random(),sp:0.018+Math.random()*0.024,big:big});}
   let last=0;
+  // PERF: this loop redraws a full torus mesh + 3800 additive particles every
+  // frame. The footer sits below the fold, so don't burn CPU on it until it's
+  // near the viewport; pause again once it scrolls away. `last` resets on resume
+  // so dt doesn't spike. (No visual change — it's idle while unseen.)
+  let rafId=0,paused=true;
+  function setPaused(p){ if(p===paused)return; paused=p; if(!paused){ last=performance.now()/1000; rafId=requestAnimationFrame(frame); } }
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(es=>setPaused(!es[0].isIntersecting),{rootMargin:'200px 0px'}).observe(c.parentElement||c);
+  } else { paused=false; rafId=requestAnimationFrame(frame); }
   function frame(now){
+    if(paused)return;
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
     const g=x.createRadialGradient(W*0.575,H*0.48,0,W*0.575,H*0.48,Math.max(W,H)*0.80);
     g.addColorStop(0,'#1b2c66');g.addColorStop(0.5,'#0d1530');g.addColorStop(1,'#070b1c');
@@ -1958,9 +1968,8 @@
       for(let k=0;k<TT;k++){const s=head-k*0.012;if(s<0||s>1)continue;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);const near=p.d/Rr*0.5+0.5;const a2=(1-k/TT)*(sm.big?0.95:0.55)*(0.4+near*0.6);x.globalAlpha=a2;x.fillStyle='#ffffff';const ss=(sm.big?2.4:1.4)*(1-k/TT*0.7)*p.p;x.beginPath();x.arc(p.sx,p.sy,ss,0,TAU);x.fill();}
     }
     x.globalAlpha=1;x.globalCompositeOperation='source-over';
-    requestAnimationFrame(frame);
+    rafId=requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
 })();
 </script>
 
@@ -2232,6 +2241,19 @@
   addEventListener('scroll', ()=>{ if(!ticking){ requestAnimationFrame(update); ticking=true; } }, {passive:true});
   addEventListener('resize', update);
   update();
+
+  // PERF: the hero is a WebGL particle field running its own rAF loop inside an
+  // iframe. Browsers don't throttle a same-origin iframe just because it has
+  // scrolled out of the parent viewport, so tell it to pause/resume rendering as
+  // the hero enters/leaves view. (The iframe also self-pauses on tab hide.)
+  const frame = document.getElementById('bp-hero-frame');
+  if (frame && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      const msg = entries[0].isIntersecting ? 'resume' : 'pause';
+      try { frame.contentWindow.postMessage({ waveHero: msg }, '*'); } catch (_) {}
+    }, { threshold: 0 });
+    io.observe(hero);
+  }
 })();
 </script>
 

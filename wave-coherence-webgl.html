@@ -404,9 +404,13 @@
     float packet = pow(sin((cycle + a_seed.w * 0.13) * 6.2831853) * 0.5 + 0.5, 7.0);
     float shimmer = 0.6 + 0.4 * sin(t_wave * 5.0 + a_seed.w * 20.0);
 
-    gl_PointSize = (0.6 + a_extra.y * 1.2 + foam * 2.5 + packet * 1.2 + pull * 2.0) * (1.0 + phaseLock * 0.3);
-    v_alpha = (0.03 + foam * 0.10 + phaseLock * 0.08) * shimmer;
-    v_alpha += pull * 0.06 * shimmer;
+    // NOTE: alpha/size are scaled up to compensate for the lower particle count
+    // (was 2.8M @ ~0.03 base alpha). Additive density ≈ count × alpha, so with
+    // ~9x fewer points these per-point values are ~2.8x brighter/larger to keep
+    // a similar accumulated glow. Fine-tune alongside `count` above.
+    gl_PointSize = (0.9 + a_extra.y * 1.5 + foam * 2.8 + packet * 1.4 + pull * 2.2) * (1.0 + phaseLock * 0.3);
+    v_alpha = (0.085 + foam * 0.22 + phaseLock * 0.18) * shimmer;
+    v_alpha += pull * 0.14 * shimmer;
 
     // Fade out particles outside the canyon on the right
     float canyonFade = mix(1.0, 1.0 - smoothstep(0.10, 0.22, distToCanyon), phaseLock);
@@ -491,7 +495,13 @@
     return seed / 4294967296;
   }
 
-  const count = 2800000;
+  // PERF: each particle runs the heavy fbm-laden vertex shader every frame, so
+  // cost scales ~linearly with this. 2.8M hung/crashed the GPU process (billions
+  // of noise evals/frame). 320k keeps the field dense while staying safe on
+  // integrated GPUs. Tune density live in wave-coherence-tuner.html, then port
+  // the value here. (If you raise this, raise alpha in the point shader to match;
+  // they trade off — fewer brighter points vs. more fainter ones.)
+  const count = 320000;
   const seeds = new Float32Array(count * 4);
   const extras = new Float32Array(count * 4);
   for (let i = 0; i < count; i++) {
@@ -588,7 +598,24 @@
   resize();
   window.addEventListener('resize', resize);
 
+  // PERF: pause rendering when the tab is hidden or when the embedding page
+  // tells us the hero has scrolled offscreen (postMessage from index-v18.html).
+  // The heavy per-particle vertex shader should not keep the GPU busy when the
+  // hero isn't visible. `last` is reset on resume so `dt` doesn't spike.
+  let rafId = 0, paused = false;
+  function setPaused(p) {
+    if (p === paused) return;
+    paused = p;
+    if (!paused) { last = performance.now() * 0.001; rafId = requestAnimationFrame(draw); }
+  }
+  document.addEventListener('visibilitychange', function(){ setPaused(document.hidden); });
+  window.addEventListener('message', function(e){
+    if (e.data && e.data.waveHero === 'pause') setPaused(true);
+    else if (e.data && e.data.waveHero === 'resume') setPaused(false);
+  });
+
   function draw(now) {
+    if (paused) return;
     now *= 0.001;
     let dt = now - last;
     last = now;
@@ -620,9 +647,9 @@
     gl.uniform1f(pts.hover, hover);
     gl.drawArrays(gl.POINTS, 0, count);
 
-    requestAnimationFrame(draw);
+    rafId = requestAnimationFrame(draw);
   }
-  requestAnimationFrame(draw);
+  rafId = requestAnimationFrame(draw);
 })();
 </script>
 </body>
