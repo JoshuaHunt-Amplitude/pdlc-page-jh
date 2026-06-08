@@ -1887,7 +1887,7 @@
 
     <div class="manifesto-body reveal">
       <p>Coding agents are collapsing <strong>build</strong> to zero. But <strong>use</strong> and <strong>learn</strong> still crawl by hand. Someone manually combs the data for signals, decides what's worth building, proves if the change worked, and reflects on the process.</p>
-      <p class="dagger">Shipping stopped being the bottleneck. Knowing what to build is.</p>
+      <p class="dagger">Knowing the right thing to ship is more important than ever.</p>
     </div>
   </div>
 </section>
@@ -1968,83 +1968,6 @@
       <p>Most of it goes unread. A self-improving product continuously analyzes every signal, corroborates evidence across sources, and turns that context into <strong>opportunities</strong> to improve and grow.</p>
     </div>
   </div>
-</section>
-
-<!-- ── FUNNEL TRANSITION · signals collapse into one ranked point ───────────────
-     Decorative bridge between "every signal" (above) and the ranked backlog (below).
-     Orbs (signals) rain down and funnel along two long diagonals into a single
-     glowing focal point. Pure decoration (aria-hidden, pointer-events:none).
-
-     KEY DIMENSIONS
-       • viewBox 1200×320; the SVG has overflow:visible, so content above y=0 spills
-         up into the section above (with .funnel's negative top margin) — that is how
-         the diagonals "underlap" the element above. No bottom line / beam.
-       • Two long diagonals (no horizontal flags): mouth at (150,-70) & (1050,-70),
-         both meeting the focal point at (600,246).
-       • Focal point (600,250): pulsing glow (r 18→28, 3s) + bright core. No beam.
-       • Orbs travel a quadratic path  M ox -8  Q cx 140  600 244  (control y=140),
-         cx=(ox+600)/2 bends them inward. They fade in at top, fade out as "absorbed"
-         (opacity keyTimes 0;.15;.8;1).
-     TUNING: orb COUNT = signal volume; DUR/begin spread = how busy the stream feels;
-             diagonal top-y (−70) = how far they reach up into the section above. -->
-<section class="funnel-band">
-<div class="funnel reveal" aria-hidden="true">
-  <svg viewBox="0 0 1200 320" preserveAspectRatio="xMidYMid meet">
-    <defs>
-      <linearGradient id="fn-wall" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"  stop-color="#4083FF" stop-opacity="0.10"/>
-        <stop offset="100%" stop-color="#4083FF" stop-opacity="0.9"/>
-      </linearGradient>
-      <radialGradient id="fn-core" cx="50%" cy="50%" r="50%">
-        <stop offset="0%"  stop-color="#cfe0ff"/>
-        <stop offset="45%" stop-color="#4083FF" stop-opacity="0.55"/>
-        <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-      </radialGradient>
-      <filter id="fn-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
-    </defs>
-
-    <!-- Two long converging diagonals (no horizontal flags); extend above y=0 to
-         underlap the section above. -->
-    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M 150 -70 L 600 246" stroke="#4083FF" stroke-width="3" opacity="0.32" filter="url(#fn-glow)"/>
-      <path d="M 1050 -70 L 600 246" stroke="#4083FF" stroke-width="3" opacity="0.32" filter="url(#fn-glow)"/>
-      <path d="M 150 -70 L 600 246" stroke="url(#fn-wall)" stroke-width="1.6"/>
-      <path d="M 1050 -70 L 600 246" stroke="url(#fn-wall)" stroke-width="1.6"/>
-    </g>
-
-    <!-- Orbs: signals raining down and funnelling to the point.
-         Each group carries both the motion path and a synced opacity fade. -->
-    <g fill="#fff">
-      <g opacity="0"><circle r="2.6" fill="#cfe0ff"/><animateMotion dur="4.0s" begin="0s"    repeatCount="indefinite" path="M 160 -8 Q 380 140 600 244"/><animate attributeName="opacity" dur="4.0s" begin="0s"    repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.0" fill="#fff"/><animateMotion    dur="4.6s" begin="-0.5s" repeatCount="indefinite" path="M 250 -8 Q 425 140 600 244"/><animate attributeName="opacity" dur="4.6s" begin="-0.5s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.8" fill="#9FC0FF"/><animateMotion dur="3.6s" begin="-1.0s" repeatCount="indefinite" path="M 330 -8 Q 465 140 600 244"/><animate attributeName="opacity" dur="3.6s" begin="-1.0s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.8" fill="#fff"/><animateMotion    dur="5.0s" begin="-1.5s" repeatCount="indefinite" path="M 410 -8 Q 505 140 600 244"/><animate attributeName="opacity" dur="5.0s" begin="-1.5s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.4" fill="#cfe0ff"/><animateMotion dur="3.9s" begin="-2.0s" repeatCount="indefinite" path="M 480 -8 Q 540 140 600 244"/><animate attributeName="opacity" dur="3.9s" begin="-2.0s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.8" fill="#fff"/><animateMotion    dur="4.4s" begin="-2.6s" repeatCount="indefinite" path="M 540 -8 Q 570 140 600 244"/><animate attributeName="opacity" dur="4.4s" begin="-2.6s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="3.0" fill="#cfe0ff"/><animateMotion dur="3.5s" begin="-3.1s" repeatCount="indefinite" path="M 600 -8 Q 600 140 600 244"/><animate attributeName="opacity" dur="3.5s" begin="-3.1s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.0" fill="#fff"/><animateMotion    dur="4.7s" begin="-0.8s" repeatCount="indefinite" path="M 660 -8 Q 630 140 600 244"/><animate attributeName="opacity" dur="4.7s" begin="-0.8s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.6" fill="#9FC0FF"/><animateMotion dur="3.3s" begin="-1.3s" repeatCount="indefinite" path="M 720 -8 Q 660 140 600 244"/><animate attributeName="opacity" dur="3.3s" begin="-1.3s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.8" fill="#fff"/><animateMotion    dur="4.9s" begin="-1.9s" repeatCount="indefinite" path="M 790 -8 Q 695 140 600 244"/><animate attributeName="opacity" dur="4.9s" begin="-1.9s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.4" fill="#cfe0ff"/><animateMotion dur="3.7s" begin="-2.4s" repeatCount="indefinite" path="M 860 -8 Q 730 140 600 244"/><animate attributeName="opacity" dur="3.7s" begin="-2.4s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.0" fill="#fff"/><animateMotion    dur="4.5s" begin="-3.0s" repeatCount="indefinite" path="M 930 -8 Q 765 140 600 244"/><animate attributeName="opacity" dur="4.5s" begin="-3.0s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.8" fill="#cfe0ff"/><animateMotion dur="3.8s" begin="-3.6s" repeatCount="indefinite" path="M 1000 -8 Q 800 140 600 244"/><animate attributeName="opacity" dur="3.8s" begin="-3.6s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.8" fill="#9FC0FF"/><animateMotion dur="4.3s" begin="-4.1s" repeatCount="indefinite" path="M 1040 -8 Q 820 140 600 244"/><animate attributeName="opacity" dur="4.3s" begin="-4.1s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.6" fill="#fff"/><animateMotion    dur="5.0s" begin="-2.8s" repeatCount="indefinite" path="M 290 -8 Q 445 140 600 244"/><animate attributeName="opacity" dur="5.0s" begin="-2.8s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.6" fill="#fff"/><animateMotion    dur="4.8s" begin="-3.9s" repeatCount="indefinite" path="M 700 -8 Q 650 140 600 244"/><animate attributeName="opacity" dur="4.8s" begin="-3.9s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="1.6" fill="#cfe0ff"/><animateMotion dur="4.6s" begin="-4.6s" repeatCount="indefinite" path="M 880 -8 Q 740 140 600 244"/><animate attributeName="opacity" dur="4.6s" begin="-4.6s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-      <g opacity="0"><circle r="2.2" fill="#9FC0FF"/><animateMotion dur="4.0s" begin="-4.3s" repeatCount="indefinite" path="M 470 -8 Q 535 140 600 244"/><animate attributeName="opacity" dur="4.0s" begin="-4.3s" repeatCount="indefinite" keyTimes="0;0.15;0.8;1" values="0;1;0.95;0"/></g>
-    </g>
-
-    <!-- Single focal point (no beam) -->
-    <circle cx="600" cy="250" r="22" fill="url(#fn-core)">
-      <animate attributeName="r"       values="18;28;18"   dur="3s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.7;1;0.7"  dur="3s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="600" cy="250" r="4.5" fill="#fff">
-      <animate attributeName="r" values="4;5.5;4" dur="3s" repeatCount="indefinite"/>
-    </circle>
-  </svg>
-</div>
 </section>
 
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
