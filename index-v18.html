@@ -2092,89 +2092,222 @@
 })();
 </script>
 
-<!-- ── signal-wave hero canvas (datapoints cascade → resolve into one waveform) ── -->
+<!-- ── hero background · WebGL coherence field + particle river ────────────────────
+     Ported from wave-coherence-webgl.html. An opaque background shader (ink→blue→
+     violet field, travelling beam, centre "opportunity" spotlight, vignette) plus a
+     5-source particle flow that runs chaotic on the left and coheres into one channel
+     on the right, with a soft mouse attractor. Renders behind the HUD; the loop pauses
+     when the hero scrolls out of view. PERF KNOB: `count` = particle volume. -->
+<script id="bp-bg-vert" type="x-shader/x-vertex">
+  attribute vec2 a_position;
+  void main(){ gl_Position = vec4(a_position, 0.0, 1.0); }
+</script>
+<script id="bp-bg-frag" type="x-shader/x-fragment">
+  precision highp float;
+  uniform vec2 u_resolution;
+  uniform float u_time;
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453123); }
+  float noise(vec2 p){
+    vec2 i=floor(p); vec2 f=fract(p); vec2 u=f*f*(3.0-2.0*f);
+    return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x), mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x), u.y);
+  }
+  float fbm(vec2 p){
+    float v=0.0; float a=0.5; mat2 r=mat2(0.82,0.57,-0.57,0.82);
+    for(int i=0;i<5;i++){ v+=a*noise(p); p=r*p*2.02+vec2(19.1,7.7); a*=0.5; }
+    return v;
+  }
+  void main(){
+    vec2 st=gl_FragCoord.xy/u_resolution;
+    vec2 uv=(gl_FragCoord.xy-0.5*u_resolution)/u_resolution.y;
+    float t=u_time*0.2;
+    float bgLock=smoothstep(-0.45,0.05,uv.x);
+    float curl=fbm(vec2(uv.x*2.15+t*0.035, uv.y*1.7-t*0.018))-0.5;
+    float canyonCenter=0.15*(fbm(vec2(uv.x*1.5,1.0))-0.5);
+    float leftY=0.15*curl+0.08*sin(uv.x*3.0-t*0.5);
+    float rightY=canyonCenter;
+    float waveY=mix(leftY,rightY,bgLock);
+    float beam=exp(-pow((uv.y-waveY)*3.0,2.0));
+    float beamCore=exp(-pow((uv.y-waveY)*9.0,2.0));
+    float opportunity=exp(-dot(uv*vec2(1.5,1.5), uv*vec2(1.5,1.5))*12.0);
+    float surf=0.0;
+    for(int i=0;i<4;i++){
+      float fi=float(i);
+      float crest=sin(uv.x*(4.8+fi*1.1)+uv.y*(2.8+fi*0.9)-t*(0.28+fi*0.04)+fi*1.7);
+      float shore=smoothstep(-0.95,-0.12,uv.x)*(1.0-smoothstep(0.18,0.82,uv.x));
+      surf+=smoothstep(0.72,1.0,crest)*shore*(0.035-fi*0.006);
+    }
+    float grain=hash(gl_FragCoord.xy+floor(t*18.0));
+    float field=fbm(uv*2.2+vec2(t*0.025,-t*0.018));
+    float verticalMist=pow(clamp(1.0-abs(uv.x-0.10)*1.25,0.0,1.0),2.0)*smoothstep(0.58,-0.42,uv.y);
+    float leftShade=smoothstep(0.0,0.24,st.x);
+    float rightShade=1.0-smoothstep(0.70,1.0,st.x);
+    float vgn=smoothstep(0.93,0.28,length(st-0.5));
+    vec3 ink=vec3(0.006,0.010,0.026);
+    vec3 blue=vec3(0.010,0.090,0.320);
+    vec3 violet=vec3(0.180,0.130,0.430);
+    vec3 laser=vec3(0.370,0.640,1.000);
+    vec3 white=vec3(0.880,0.950,1.000);
+    vec3 col=mix(ink,blue,0.32+0.30*field);
+    col+=violet*(beam*0.075+surf);
+    col+=laser*beam*0.052;
+    col+=white*beamCore*0.024;
+    col+=vec3(0.05,0.16,0.42)*verticalMist*0.20;
+    col+=vec3(0.32,0.74,1.0)*opportunity*0.18;
+    col*=vgn*leftShade*rightShade;
+    col+=(grain-0.5)*0.018;
+    gl_FragColor=vec4(col,1.0);
+  }
+</script>
+<script id="bp-pt-vert" type="x-shader/x-vertex">
+  precision highp float;
+  attribute vec4 a_seed; attribute vec4 a_extra;
+  uniform vec2 u_resolution; uniform float u_time; uniform vec2 u_mouse; uniform float u_hover;
+  varying vec4 v_color; varying float v_alpha; varying float v_glow;
+  float hash2(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453123); }
+  float noise(vec2 p){
+    vec2 i=floor(p); vec2 f=fract(p); vec2 u=f*f*(3.0-2.0*f);
+    return mix(mix(hash2(i),hash2(i+vec2(1.0,0.0)),u.x), mix(hash2(i+vec2(0.0,1.0)),hash2(i+vec2(1.0,1.0)),u.x), u.y);
+  }
+  float fbm(vec2 p){
+    float v=0.0; float a=0.5; mat2 r=mat2(0.80,0.60,-0.60,0.80);
+    for(int i=0;i<4;i++){ v+=a*noise(p); p=r*p*2.03+vec2(11.7,4.2); a*=0.5; }
+    return v;
+  }
+  void main(){
+    float t=u_time*0.2;
+    float speed=0.01+a_seed.z*0.0075;
+    float cycle=fract(a_seed.x+t*speed);
+    float rawX=mix(-1.6,1.2,cycle);
+    float rawY=(a_seed.y-0.5)*2.8;
+    float cohere=smoothstep(-0.5,0.2,rawX);
+    float phaseLock=cohere*cohere*(3.0-2.0*cohere);
+    vec2 st=vec2(rawX*2.0, rawY*2.5);
+    float n1=fbm(st+vec2(t*0.05,0.0));
+    float n2=fbm(st*2.5+vec2(3.2,1.4));
+    float rockHeight=n1*0.75+n2*0.25;
+    float canyonCenter=0.15*(fbm(vec2(rawX*1.5,1.0))-0.5);
+    float canyonWidth=mix(2.8,0.22,phaseLock);
+    float distToCanyon=abs(rawY-canyonCenter);
+    float canyonCarve=smoothstep(0.08,0.25,distToCanyon);
+    rockHeight=mix(rockHeight, mix(0.0,0.85,canyonCarve), phaseLock);
+    float steps=4.0;
+    float terracedRock=floor(rockHeight*steps)/steps+smoothstep(0.0,0.3,fract(rockHeight*steps))*(1.0/steps);
+    float rockDx=fbm(st+vec2(0.05,0.0))-rockHeight;
+    float rockDy=fbm(st+vec2(0.0,0.05))-rockHeight;
+    float flowY=rawY-rockDy*0.8*(1.0-phaseLock);
+    flowY=mix(flowY, canyonCenter+(a_seed.y-0.5)*canyonWidth, phaseLock);
+    float slopeZ=-rawX*0.3;
+    float waterZ=slopeZ+terracedRock*0.5*(1.0-phaseLock);
+    float turbulence=fbm(vec2(rawX*10.0-t*4.0, flowY*10.0))*0.18;
+    waterZ+=turbulence*(1.0-phaseLock*0.8);
+    float canyonRipple=0.03*sin(rawX*8.0-t*3.0)+0.015*fbm(vec2(rawX*4.0,t*2.0));
+    waterZ=mix(waterZ, slopeZ+canyonRipple, phaseLock);
+    float tilt=0.9; float cosT=cos(tilt); float sinT=sin(tilt);
+    float pan=0.15; float cosP=cos(pan); float sinP=sin(pan);
+    float rx=rawX*cosP-flowY*sinP;
+    float ry=rawX*sinP+flowY*cosP;
+    float projX=rx;
+    float projY=ry*cosT-waterZ*sinT;
+    float dropFoam=smoothstep(0.01,0.06,rockDx);
+    float turbFoam=smoothstep(0.06,0.14,turbulence);
+    float foam=max(dropFoam,turbFoam)*(1.0-phaseLock*0.9);
+    vec3 deepWater=vec3(0.01,0.15,0.50);
+    vec3 shallowWater=vec3(0.15,0.65,0.90);
+    vec3 foamColor=vec3(0.95,0.98,1.0);
+    vec3 col=mix(deepWater,shallowWater,rockHeight*0.9);
+    col=mix(col,foamColor,foam);
+    vec3 coherentCol=vec3(0.10,0.35,0.90)+canyonRipple*1.5;
+    col=mix(col,coherentCol,phaseLock*0.8);
+    float aspect=u_resolution.x/u_resolution.y;
+    vec2 clip=vec2(projX*1.8/aspect-0.1, projY*1.8-0.1);
+    float md=distance(clip,u_mouse);
+    float pull=exp(-md*md*7.5)*u_hover;
+    clip+=(u_mouse-clip)*pull*0.16;
+    gl_Position=vec4(clip,0.0,1.0);
+    float packet=pow(sin((cycle+a_seed.w*0.13)*6.2831853)*0.5+0.5,7.0);
+    float shimmer=0.6+0.4*sin(t*5.0+a_seed.w*20.0);
+    gl_PointSize=(0.6+a_extra.y*1.2+foam*2.5+packet*1.2+pull*2.0)*(1.0+phaseLock*0.3);
+    v_alpha=(0.03+foam*0.10+phaseLock*0.08)*shimmer;
+    v_alpha+=pull*0.06*shimmer;
+    float canyonFade=mix(1.0, 1.0-smoothstep(0.10,0.22,distToCanyon), phaseLock);
+    v_alpha*=canyonFade;
+    float edgeFade=smoothstep(-1.6,-1.3,rawX)*(1.0-smoothstep(0.9,1.2,rawX));
+    v_alpha*=edgeFade;
+    v_glow=foam*0.6+packet*0.3+pull*0.5;
+    v_color=vec4(col+vec3(0.1,0.3,0.7)*pull*0.6, 1.0);
+  }
+</script>
+<script id="bp-pt-frag" type="x-shader/x-fragment">
+  precision mediump float;
+  varying vec4 v_color; varying float v_alpha; varying float v_glow;
+  void main(){
+    vec2 p=gl_PointCoord-vec2(0.5);
+    float d=length(p);
+    if(d>0.5) discard;
+    float core=smoothstep(0.50,0.02,d);
+    float halo=exp(-d*d*13.0);
+    float alpha=(core*0.72+halo*0.28)*v_alpha;
+    vec3 col=v_color.rgb+vec3(0.22,0.48,0.90)*v_glow;
+    gl_FragColor=vec4(col,alpha);
+  }
+</script>
 <script>
 (function(){
-  const c=document.getElementById('bp-c');if(!c)return;const x=c.getContext('2d');
-  let W=0,H=0,dpr=1;
-  function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
-  resize();
-  const TAU=Math.PI*2, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // ── SIGNAL WAVE ────────────────────────────────────────────────────────────
-  // Many "datapoints" rain in from above (cascade / waterfall) and get pulled onto
-  // a travelling centre-line — raw noise self-organising into one coherent signal.
-  // Held to the centre-right so the left headline stays clear; fades out on the
-  // left tail (band) and into --bg at the edges (so the hero melts into the page).
-  //   yc(x) = base + envelope(x)·Σ sin(k·x ± speed·t)
-  // TUNING KNOBS: FOCUS/SPREAD = where the wave lives across the width · AMP (in yc)
-  //   = wave height · fade alpha (0.16) = trail length (higher = shorter/cleaner
-  //   strands) · NP cap = datapoint volume · p.dim spread = opacity layering.
-  const FOCUS=0.62, SPREAD=0.27;
-  function env(nx){const d=(nx-FOCUS)/SPREAD;return Math.exp(-0.5*d*d);}          // amplitude swell 0..1
-  function band(nx){return Math.min(1,Math.max(0,(nx-0.20)/0.16));}              // fade the left tail
-  function yc(px,t){const nx=px/W, A=H*0.12*env(nx);
-    return H*0.585 + A*Math.sin(px*(TAU/(W*0.60)) + t*0.55)
-                   + A*0.40*Math.sin(px*(TAU/(W*0.26)) - t*0.95);}
-
-  let NP=0,pts=[];
-  function spawn(p,seed){
-    p.x=W*0.30+Math.random()*W*0.78;            // centre-right only (left = headline)
-    p.y=-0.14*H+Math.random()*0.32*H;           // rain in from above
-    p.vx=6+Math.random()*22; p.vy=8+Math.random()*26;
-    p.sz=0.5+Math.random()*1.0;
-    p.lead=!seed && Math.random()<0.014; if(p.lead)p.sz=1.9+Math.random()*1.1;
-    // persistent opacity tier → distinct layers instead of one merged mass.
-    // Math.random()² skews most strands dim; a minority ride bright.
-    p.dim=p.lead?1:(0.22+Math.random()*Math.random()*0.95);
-    p.tone=Math.random()<0.5?'#eef4ff':'#cfe0ff';
+  var canvas=document.getElementById('bp-c'); if(!canvas) return;
+  var gl=canvas.getContext('webgl',{antialias:true,alpha:false,powerPreference:'high-performance'})||canvas.getContext('experimental-webgl');
+  if(!gl) return;
+  var dpr=1,last=0,time=0;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function shader(type,src){ var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
+  function program(v,f){ var p=gl.createProgram(); gl.attachShader(p,shader(gl.VERTEX_SHADER,document.getElementById(v).textContent)); gl.attachShader(p,shader(gl.FRAGMENT_SHADER,document.getElementById(f).textContent)); gl.linkProgram(p); return p; }
+  var bgProgram=program('bp-bg-vert','bp-bg-frag');
+  var ptProgram=program('bp-pt-vert','bp-pt-frag');
+  var quad=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,quad);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]),gl.STATIC_DRAW);
+  var seed=20260605>>>0;
+  function rnd(){ seed=(seed*1664525+1013904223)>>>0; return seed/4294967296; }
+  var count=1600000;
+  var seeds=new Float32Array(count*4), extras=new Float32Array(count*4);
+  for(var i=0;i<count;i++){
+    var lane=Math.floor(rnd()*5);
+    seeds[i*4]=rnd(); seeds[i*4+1]=rnd(); seeds[i*4+2]=rnd(); seeds[i*4+3]=rnd();
+    extras[i*4]=(lane+rnd()*0.96)/5; extras[i*4+1]=rnd(); extras[i*4+2]=rnd(); extras[i*4+3]=rnd();
   }
-  function build(){NP=Math.min(2100,Math.round(W*H/640));pts=[];for(let i=0;i<NP;i++){const p={};spawn(p,true);p.y=Math.random()*H;pts.push(p);}}
-  build();window.addEventListener('resize',function(){resize();build();});
-  let last=0;
-  function frame(now){
-    const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
-    // v17: fade the previous frame toward FULLY TRANSPARENT (alpha→0), not toward a
-    // colour. Trails decay to nothing and never leave a painted halo; the static navy
-    // glow is a CSS background on .stage and shows through cleanly underneath.
-    // (destination-out multiplies existing alpha by 1−0.16 each frame.)
-    if(reduce){x.clearRect(0,0,W,H);}
-    else{x.globalCompositeOperation='destination-out';x.globalAlpha=0.16;x.fillStyle='#000';x.fillRect(0,0,W,H);x.globalAlpha=1;}
-    x.globalCompositeOperation='source-over';
-
-    // faint stacked wavelengths (the "beach wave" bands) — opacity falls off with
-    // distance from the core so they read as separate layers, not one fill.
-    x.lineWidth=1;
-    for(let b=-2;b<=2;b++){x.strokeStyle='rgba(170,196,255,'+(0.10-Math.abs(b)*0.022).toFixed(3)+')';x.beginPath();let started=false;
-      for(let px=W*0.16;px<=W;px+=14){const nx=px/W;if(band(nx)<=0.02){started=false;continue;}const yy=yc(px,t)+b*19;if(!started){x.moveTo(px,yy);started=true;}else x.lineTo(px,yy);}
-      x.stroke();}
-
-    // datapoints → signal
-    x.globalCompositeOperation='lighter';
-    for(let i=0;i<NP;i++){const p=pts[i];
-      const target=yc(p.x,t), dist=target-p.y;
-      p.vy+=dist*2.6*dt; p.vy*=0.955;                          // fall / spring toward the line
-      const near=Math.max(0,1-Math.abs(dist)/(H*0.17));
-      const vxT=20+150*near; p.vx+=(vxT-p.vx)*Math.min(1,dt*3); // drift right, faster once joined
-      p.x+=p.vx*dt; p.y+=p.vy*dt;
-      if(p.x>W+30||p.y>H+60){spawn(p);}
-      const a=(0.04+near*0.40)*band(p.x/W)*(p.lead?1.9:1)*p.dim;
-      x.globalAlpha=Math.min(1,a);x.fillStyle=p.tone;
-      const s=p.sz*(0.7+near*0.8);
-      x.beginPath();x.arc(p.x,p.y,s,0,TAU);x.fill();
-      if(p.lead){x.globalAlpha=Math.min(1,a*0.45);x.beginPath();x.arc(p.x,p.y,s*3.4,0,TAU);x.fill();}
-    }
-
-    // the resolved signal — crisp glowing core riding the wave
-    x.beginPath();let st2=false;
-    for(let px=W*0.16;px<=W;px+=8){const yy=yc(px,t);if(!st2){x.moveTo(px,yy);st2=true;}else x.lineTo(px,yy);}
-    x.globalAlpha=0.85;x.shadowColor='#7da0ff';x.shadowBlur=14;x.strokeStyle='rgba(180,205,255,0.5)';x.lineWidth=2.4;x.stroke();
-    x.shadowBlur=0;x.strokeStyle='rgba(233,240,255,0.92)';x.lineWidth=1.1;x.stroke();
-
-    x.globalAlpha=1;x.globalCompositeOperation='source-over';
-    if(!reduce) requestAnimationFrame(frame);
+  var seedBuffer=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,seedBuffer); gl.bufferData(gl.ARRAY_BUFFER,seeds,gl.STATIC_DRAW);
+  var extraBuffer=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,extraBuffer); gl.bufferData(gl.ARRAY_BUFFER,extras,gl.STATIC_DRAW);
+  var bg={ position:gl.getAttribLocation(bgProgram,'a_position'), resolution:gl.getUniformLocation(bgProgram,'u_resolution'), time:gl.getUniformLocation(bgProgram,'u_time') };
+  var pts={ seed:gl.getAttribLocation(ptProgram,'a_seed'), extra:gl.getAttribLocation(ptProgram,'a_extra'), resolution:gl.getUniformLocation(ptProgram,'u_resolution'), time:gl.getUniformLocation(ptProgram,'u_time'), mouse:gl.getUniformLocation(ptProgram,'u_mouse'), hover:gl.getUniformLocation(ptProgram,'u_hover') };
+  // soft mouse attractor (clip-space cursor + eased hover amount)
+  var stage=canvas.parentElement;
+  var mouseClipX=-2, mouseClipY=-2, hover=0, hoverTarget=0;
+  stage.addEventListener('mousemove',function(e){ var r=stage.getBoundingClientRect(); mouseClipX=((e.clientX-r.left)/r.width)*2-1; mouseClipY=1-((e.clientY-r.top)/r.height)*2; hoverTarget=1; });
+  stage.addEventListener('mouseleave',function(){ hoverTarget=0; });
+  function resize(){ dpr=Math.min(window.devicePixelRatio||1,2); var w=canvas.clientWidth,h=canvas.clientHeight; canvas.width=Math.max(1,(w*dpr)|0); canvas.height=Math.max(1,(h*dpr)|0); gl.viewport(0,0,canvas.width,canvas.height); }
+  resize(); window.addEventListener('resize',resize);
+  var visible=true, running=false;
+  function draw(now){
+    running=true;
+    now*=0.001; var dt=now-last; last=now; if(dt>0.1)dt=0.1; if(dt<0)dt=0; time+=dt;
+    gl.disable(gl.BLEND);
+    gl.useProgram(bgProgram);
+    gl.bindBuffer(gl.ARRAY_BUFFER,quad);
+    gl.enableVertexAttribArray(bg.position); gl.vertexAttribPointer(bg.position,2,gl.FLOAT,false,0,0);
+    gl.uniform2f(bg.resolution,canvas.width,canvas.height); gl.uniform1f(bg.time,time);
+    gl.drawArrays(gl.TRIANGLES,0,6);
+    gl.useProgram(ptProgram);
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
+    gl.bindBuffer(gl.ARRAY_BUFFER,seedBuffer); gl.enableVertexAttribArray(pts.seed); gl.vertexAttribPointer(pts.seed,4,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,extraBuffer); gl.enableVertexAttribArray(pts.extra); gl.vertexAttribPointer(pts.extra,4,gl.FLOAT,false,0,0);
+    hover+=(hoverTarget-hover)*Math.min(1,dt*6);
+    gl.uniform2f(pts.resolution,canvas.width,canvas.height); gl.uniform1f(pts.time,time);
+    gl.uniform2f(pts.mouse,mouseClipX,mouseClipY); gl.uniform1f(pts.hover,hover);
+    gl.drawArrays(gl.POINTS,0,count);
+    if(!reduce && visible){ requestAnimationFrame(draw); } else { running=false; }
   }
-  requestAnimationFrame(frame);
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ visible=es[0].isIntersecting; if(visible && !reduce && !running){ last=performance.now()*0.001; requestAnimationFrame(draw); } },{threshold:0}).observe(canvas);
+  }
+  requestAnimationFrame(draw);
 })();
 </script>
 
