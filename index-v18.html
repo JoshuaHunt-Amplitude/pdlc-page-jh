@@ -134,7 +134,7 @@
 
   /* ── MANIFESTO ──────────────────────── */
   .manifesto { padding: 98px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
-  .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 64px; }
+  .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 32px; }
 
   /* Loop visual */
   .loop-viz { max-width: 820px; margin: 8px auto 0; width: 100%; }
@@ -2323,7 +2323,41 @@
 <section class="manifesto" id="wave">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <svg class="mg sec-mg" viewBox="0 0 200 110" aria-hidden="true"><g class="ln d-dash" stroke-linecap="round" stroke-dasharray="5 5" style="--sp:1.8s"><path d="M24 36 L70 55 M24 74 L70 55 M78 55 L100 38 M78 55 L100 72 M108 38 L130 55 M108 72 L130 55 M138 55 L160 38 M138 55 L160 72"/></g><g class="no"><circle cx="20" cy="36" r="5"/><circle cx="20" cy="74" r="5"/><circle cx="104" cy="36" r="5"/><circle cx="104" cy="74" r="5"/><circle cx="164" cy="36" r="5"/><circle cx="164" cy="74" r="5"/></g><g class="nd"><circle class="d-throb" cx="74" cy="55" r="5" style="--sp:2.4s"/><circle class="d-throb" cx="134" cy="55" r="5" style="--sp:2.4s;animation-delay:.6s"/></g></svg>
+      <!-- COMP 10 · Find What Matters — raw signals fan in, funnel through a pulsing
+           rank pipeline, and diverge to candidates; the top pick pings (ported from
+           micrographics.html, accf→acf / acc→ac, arrowheads dropped). -->
+      <svg class="mg" viewBox="0 0 300 170" aria-hidden="true" style="width:210px;max-width:62vw;height:auto;margin:0 0 24px">
+        <defs>
+          <path id="c10-f1" d="M30 20 L142 86" fill="none"/><path id="c10-f2" d="M30 44 L142 86" fill="none"/>
+          <path id="c10-f3" d="M30 92 L142 86" fill="none"/><path id="c10-f4" d="M30 140 L142 86" fill="none"/>
+          <path id="c10-f5" d="M58 14 L142 86" fill="none"/><path id="c10-pick" d="M178 86 L268 42" fill="none"/>
+        </defs>
+        <!-- HUD corner frame + ticked baseline -->
+        <path class="l2 thin" opacity=".5" d="M10 14 H24 M10 14 V28 M290 14 H276 M290 14 V28 M10 156 H24 M10 156 V142 M290 156 H276 M290 156 V142"/>
+        <path class="l2 thin" opacity=".4" d="M26 150 H274 M40 150 v5 M72 150 v5 M104 150 v5 M136 150 v5 M168 150 v5 M200 150 v5 M232 150 v5 M264 150 v5"/>
+        <!-- fan-in -->
+        <g class="l2 thin"><path d="M30 20 L142 86"/><path d="M30 44 L142 86"/><path d="M30 68 L142 86"/><path d="M30 92 L142 86"/><path d="M30 116 L142 86"/><path d="M30 140 L142 86"/><path d="M58 14 L142 86"/><path d="M58 146 L142 86"/></g>
+        <g class="no thin"><circle cx="30" cy="20" r="4"/><circle cx="30" cy="44" r="4"/><circle cx="30" cy="68" r="4"/><circle cx="30" cy="92" r="4"/><circle cx="30" cy="116" r="4"/><circle cx="30" cy="140" r="4"/><circle cx="58" cy="14" r="4"/><circle cx="58" cy="146" r="4"/></g>
+        <!-- signals streaming toward the rank node -->
+        <g fill="#fff">
+          <circle r="1.7"><animateMotion dur="2.2s" begin="0s"    repeatCount="indefinite"><mpath href="#c10-f1"/></animateMotion></circle>
+          <circle r="1.3"><animateMotion dur="2.2s" begin="-0.5s" repeatCount="indefinite"><mpath href="#c10-f2"/></animateMotion></circle>
+          <circle r="1.7"><animateMotion dur="2.2s" begin="-0.9s" repeatCount="indefinite"><mpath href="#c10-f3"/></animateMotion></circle>
+          <circle r="1.3"><animateMotion dur="2.2s" begin="-1.3s" repeatCount="indefinite"><mpath href="#c10-f4"/></animateMotion></circle>
+          <circle r="1.7"><animateMotion dur="2.2s" begin="-1.7s" repeatCount="indefinite"><mpath href="#c10-f5"/></animateMotion></circle>
+        </g>
+        <!-- rank pipeline -->
+        <path class="ln" stroke-linecap="round" d="M146 86 L172 86"/>
+        <circle class="l2 thin" cx="146" cy="86" r="9" fill="none"><animate attributeName="r" values="9;12.5;9" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;.15;.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <g class="nd"><circle cx="146" cy="86" r="5.5"/><circle cx="172" cy="86" r="5.5"/></g>
+        <!-- diverge to candidates -->
+        <g class="l2 thin" stroke-linecap="round"><path d="M178 86 L268 42"/><path d="M178 86 L268 86"/><path d="M178 86 L268 130"/></g>
+        <g class="no thin"><circle cx="272" cy="42" r="5"/><circle cx="272" cy="86" r="5"/><circle cx="272" cy="130" r="5"/></g>
+        <!-- the pick (pings) + a particle delivered to it -->
+        <circle r="1.7" fill="#4083FF"><animateMotion dur="1.6s" begin="-0.3s" repeatCount="indefinite"><mpath href="#c10-pick"/></animateMotion></circle>
+        <circle class="acf" cx="272" cy="42" r="3"/>
+        <circle class="ac thin" cx="272" cy="42" r="9" fill="none"><animate attributeName="r" values="6;13;6" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".85;0;.85" dur="2.2s" repeatCount="indefinite"/></circle>
+      </svg>
       <h2>Wave knows what to build</h2>
       <p class="dagger">A proactive product agent that helps teams build self-improving products.</p>
     </div>
@@ -2366,7 +2400,7 @@
 <section id="cta" class="closer">
   <!-- v17: product-shot graphics removed; the loop returns as a donut band below the CTA -->
   <h2 class="reveal">Build products that<br>improve themselves</h2>
-  <p class="reveal">Wave is rolling out to a first group of teams. Be one of them.</p>
+  <p class="reveal">Wave is rolling out to design partners. Be one of them.</p>
   <div class="waitlist-zone reveal" id="cta-zone">
     <form class="waitlist" id="cta-form" onsubmit="event.preventDefault()">
       <input type="email" id="cta-email" placeholder="you@company.com" required aria-label="Email address">
