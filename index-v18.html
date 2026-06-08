@@ -50,15 +50,6 @@
   /* v14: simplified type — no bold, no italic (emphasis carried by color) */
   strong, b { font-weight: 400; }
   em, i { font-style: normal; }
-  body::before {
-    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image: linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size: 72px 72px;
-    /* blueprint grid persists down the page, fading near the bottom */
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
-    mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
-    opacity: .6;
-  }
   main, nav, footer { position: relative; z-index: 1; }
 
   /* ── NAV ────────────────────────────── */
@@ -139,7 +130,7 @@
   @keyframes pulse { 0%,100%{opacity:.7;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
 
   /* ── MANIFESTO ──────────────────────── */
-  .manifesto { border-top: 1px solid var(--line); padding: 98px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
+  .manifesto { padding: 98px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 64px; }
 
   /* Loop visual */
@@ -851,7 +842,7 @@
   }
 
   /* ── FOOTER ─────────────────────────── */
-  footer { border-top: 1px solid var(--line); padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer { padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
   .fc { color: var(--dim); font-size: 13px; font-family: var(--mono); letter-spacing: .1em; }
 
   /* ── WHAT THIS IS (under-hero strip) ── */
@@ -999,7 +990,6 @@
      fade its trails to 0 — no permanent "painted" residue from the animation. */
   .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(95% 120% at 62% 58%, #16265c 0%, #0c1430 46%, var(--bg) 82%);}
   .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
-  .bp-hero-frame{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#030409;}
   .bp-hero .hud{pointer-events:none;}
   .bp-hero .hud text{fill:#e9f0ff;}
   .bp-hero .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
@@ -1035,16 +1025,621 @@
   .bp-cta:hover .arr{transform:translateX(4px);}
   @media(max-width:760px){.bp-hero{height:100svh}.bp-cta{left:22px;top:auto;bottom:120px}}
 </style>
+
+<style>
+  /* inlined wave-coherence HUD styles, scoped to the hero (was an iframe) */
+  .bp-hero .ln{stroke:#cdd8ff;fill:none}
+  .bp-hero .dimln{stroke:#5c6fac;fill:none}
+  .bp-hero .ey{font-weight:500;font-size:18px;letter-spacing:5px;fill:#aebeff}
+  .bp-hero .title{font-weight:600;font-size:36px;letter-spacing:8px;fill:#f2f6ff}
+  .bp-hero .sub{font-weight:400;font-size:18px;letter-spacing:5px;fill:#91a3dc}
+  .bp-hero .k{font-weight:400;font-size:14px;letter-spacing:2px;fill:#7686b6}
+  .bp-hero .v{font-weight:400;font-size:15px;letter-spacing:2px;fill:#e9efff}
+  .bp-hero .sm{font-weight:400;font-size:13px;letter-spacing:2px;fill:#8fa2d6}
+  .bp-hero .cap{font-weight:500;font-size:18px;letter-spacing:4px;fill:#e9efff}
+  .bp-hero .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
+  .bp-hero .ghost{opacity:.48}
+  .bp-hero .reveal{opacity:0;pointer-events:none;transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1);transform:translateY(15px)}
+  .bp-hero .reveal.active{opacity:1 !important;transform:translateY(0)}
+  .bp-hero .rv{font-weight:600;font-size:13px;letter-spacing:3px;fill:#fff}
+  .bp-hero .rv-sub{font-weight:500;font-size:12px;letter-spacing:2px;fill:#f1f5f9}
+  .bp-hero .backing{fill:#05070e;opacity:.75}
+  .bp-hero .veil{fill:#040816;opacity:.96;stroke:#60a5fa;stroke-width:1.5}
+  .bp-hero .stage canvas{background:#030409}
+</style>
+
 <section class="bp-hero">
-  <!-- TEMP: hero is the wave-coherence WebGL page, embedded as-is. Keep refining
-       wave-coherence-webgl.html and this updates automatically; inline the final
-       version here later. (Old v18 HUD/canvas/CTA removed.) -->
-  <iframe id="bp-hero-frame" class="bp-hero-frame" src="wave-coherence-webgl.html" title="Amplitude Wave — coherence field" loading="eager" scrolling="no"></iframe>
+  <!-- hero coherence field: inlined from wave-coherence-tuner.html, baked to the USE_ME_FOR_MAIN config -->
+  <div class="stage">
+    <canvas id="heroCanvas"></canvas>
+    <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
+    <!-- instrument frame -->
+    <g class="ln" stroke-width="1.35" opacity="0.78">
+      <path d="M42 98 V42 H98"/><path d="M110 62 h18 M119 53 v18"/>
+      <path d="M1638 98 V42 H1582"/>
+      <path d="M42 847 V903 H98"/>
+      <path d="M1638 847 V903 H1582"/>
+      <circle cx="1598" cy="116" r="11"/><path d="M1598 99 V133 M1581 116 H1615"/>
+    </g>
+
+    <!-- title -->
+    <text class="title" x="80" y="172">
+      <tspan x="80" dy="0">ENABLING</tspan>
+      <tspan x="80" dy="48">SELF-IMPROVING</tspan>
+      <tspan x="80" dy="48">PRODUCTS</tspan>
+    </text>
+
+    <!-- coherence lock is a subtle hover overlay, not a permanent ripple -->
+    <g id="rv-lock" class="ln reveal" stroke-width="1.4">
+      <path d="M794 426 h-18 v-18 M886 426 h18 v-18 M794 520 h-18 v18 M886 520 h18 v18"/>
+      <path d="M892 462 L1168 420 L1440 420" opacity="0.72"/>
+      <text class="sm" x="840" y="556" text-anchor="middle" style="fill:#e9efff">OPPORTUNITY LOCK</text>
+      <text class="rv" x="840" y="586" text-anchor="middle">CORROBORATED ACROSS SOURCES</text>
+    </g>
+
+    <!-- right readout -->
+    <g id="rv-opp" class="reveal">
+      <rect class="backing" x="1446" y="384" width="186" height="232" rx="6"/>
+      <g class="ln" stroke-width="1.25" opacity="0.76">
+        <path d="M1452 384 h-14 V588 h14"/>
+        <path d="M1614 384 h14 V588 h-14"/>
+        <path d="M1464 452 H1600"/>
+        <path d="M1464 518 H1600"/>
+      </g>
+      <text class="cap" x="1464" y="414">OPPORTUNITY</text>
+      <text class="k" x="1464" y="440">EVIDENCE</text><text class="v" x="1464" y="472">CROSS-SOURCE</text>
+      <text class="k" x="1464" y="506">ACTION</text><text class="v" x="1464" y="538">REVIEW-READY</text>
+      <text class="k" x="1464" y="572">OUTCOME</text><text class="v" x="1464" y="604">MEASURED</text>
+      <text class="rv-sub" x="1626" y="640" text-anchor="end">REVIEW IN UI &#183; MCP &#183; CLI</text>
+    </g>
+
+    <!-- hover overlays: signal layer -> synthesis -> experiments -> outcomes -->
+    <g id="rv-signals" class="reveal">
+      <rect class="veil" x="42" y="620" width="210" height="106" rx="8"/>
+      <g class="dimln" stroke-width="1" opacity="0.72">
+        <path d="M70 672 H210 M94 646 v52 M122 646 v52 M150 646 v52 M178 646 v52"/>
+        <circle cx="94" cy="662" r="3" fill="#a9c7ff"/>
+        <circle cx="150" cy="685" r="3" fill="#70e5bd"/>
+        <circle cx="178" cy="654" r="3" fill="#ff9bba"/>
+      </g>
+      <text class="rv" x="68" y="642">SIGNALS LAYER</text>
+      <text class="rv-sub" x="68" y="716">ANALYTICS &#183; REPLAYS &#183; FEEDBACK</text>
+    </g>
+    <g id="rv-synthesis" class="reveal">
+      <rect class="veil" x="460" y="620" width="210" height="86" rx="8"/>
+      <g class="dimln" stroke-width="1.1" opacity="0.8">
+        <path d="M499 676 C547 644 591 644 639 676"/>
+        <path d="M499 652 C553 686 585 686 639 652"/>
+        <circle cx="564" cy="664" r="5" fill="#dbe6ff"/>
+      </g>
+      <text class="rv" x="485" y="644">SYNTHESIS</text>
+      <text class="rv-sub" x="485" y="698">CORROBORATE THE SIGNALS</text>
+    </g>
+    <g id="rv-experiments" class="reveal">
+      <rect class="veil" x="951" y="620" width="194" height="100" rx="8"/>
+      <g class="dimln" stroke-width="1" opacity="0.74">
+        <path d="M981 686 H1111"/>
+        <path d="M981 686 C1007 656 1041 656 1067 686 C1083 704 1099 708 1111 686"/>
+        <path d="M981 664 H1027 M1065 664 H1111"/>
+      </g>
+      <text class="rv" x="979" y="646">WEB EXPERIMENTS</text>
+      <text class="rv-sub" x="979" y="710">READY TO APPROVE</text>
+    </g>
+    <g id="rv-outcomes" class="reveal">
+      <rect class="veil" x="1400" y="620" width="226" height="96" rx="8"/>
+      <g class="dimln" stroke-width="1.2" opacity="0.82">
+        <path d="M1432 692 H1596 M1432 692 V648"/>
+        <path d="M1432 682 C1468 674 1496 688 1526 664 C1548 644 1570 652 1592 636"/>
+        <circle cx="1526" cy="664" r="3" fill="#dbe6ff"/>
+        <circle cx="1592" cy="636" r="3" fill="#70e5bd"/>
+      </g>
+      <text class="rv" x="1430" y="642">OUTCOMES GRAPH</text>
+      <text class="rv-sub" x="1430" y="710">MEASURE WHAT MOVED</text>
+    </g>
+
+    <!-- bottom process axis -->
+    <g class="dimln" stroke-width="1.1" opacity="0.64">
+      <path d="M82 766 H1532"/>
+      <path d="M82 766 v18 M565 766 v18 M1048 766 v18 M1532 766 v18"/>
+    </g>
+    <g>
+      <text class="sm" x="82" y="748">SENSE</text>
+      <text class="sm" x="565" y="748">DECIDE</text>
+      <text class="sm" x="1048" y="748">ACT</text>
+      <text class="sm" x="1532" y="748" text-anchor="end">LEARN</text>
+    </g>
+
+    <!-- bottom story line -->
+    <text class="hero" x="82" y="836">
+      <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
+      <tspan x="82" dy="34">and prove it worked. Every release, on its own.</tspan>
+    </text>
+    <text class="cap" x="1486" y="878">[ 2026 ]</text>
+    <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
+    <circle id="cursorRing" class="reveal" r="24" fill="none" stroke="#7d93ff" stroke-width="1.2"/>
+  </svg>
+  </div>
   <a class="bp-scroll" href="#demo" aria-label="Scroll to content">
     <span>Scroll</span>
     <svg viewBox="0 0 24 28" fill="none" stroke="#c3d2ff" stroke-width="1.6"><path class="chev" d="M5 9 L12 17 L19 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </a>
 </section>
+<script id="hero-bg-vertex" type="x-shader/x-vertex">
+  attribute vec2 a_position;
+  void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+  }
+</script>
+
+<script id="hero-bg-fragment" type="x-shader/x-fragment">
+  precision highp float;
+  uniform vec2 u_resolution;
+  uniform float u_time;
+  // --- tunable uniforms (background light) ---
+  uniform float 0.03;
+  uniform float 2.8;
+  uniform float 11.7;
+  uniform float 1.0;
+  uniform float 0.82;
+  uniform float 0.0;
+  uniform float 0.035;
+  uniform float 0.052;
+  uniform float 0.024;
+  uniform float 0.37;
+  uniform float 0.02;
+
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+  }
+
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    mat2 r = mat2(0.82, 0.57, -0.57, 0.82);
+    for (int i = 0; i < 5; i++) {
+      v += a * noise(p);
+      p = r * p * 2.02 + vec2(19.1, 7.7);
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  void main() {
+    vec2 st = gl_FragCoord.xy / u_resolution;
+    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
+    float t = u_time * 0.03;
+
+    float bgLock = smoothstep(0.05, 0.55, uv.x);
+    float curl = fbm(vec2(uv.x * 2.15 + t * 0.035, uv.y * 1.7 - t * 0.018)) - 0.5;
+
+    // Canyon center matching the vertex shader
+    float canyonCenter = 0.15 * (fbm(vec2(uv.x * 1.5, 1.0)) - 0.5);
+    float leftY = (0.15 * curl + 0.08 * sin(uv.x * 3.0 - t * 0.5)) * 0.7; // 30% narrower on left
+    float rightY = canyonCenter;
+    float waveY = mix(leftY, rightY, bgLock);
+
+    float beam = exp(-pow((uv.y - waveY) * 2.8, 2.0));
+    float beamCore = exp(-pow((uv.y - waveY) * 11.7, 2.0));
+
+    // Opportunity spotlight, position tunable via 0.82/0.0
+    vec2 od = (uv - vec2(0.82, 0.0)) * vec2(1.5, 1.5);
+    float opportunity = exp(-dot(od, od) * 1.0);
+
+    float surf = 0.0;
+    for (int i = 0; i < 4; i++) {
+      float fi = float(i);
+      float crest = sin(uv.x * (4.8 + fi * 1.1) + uv.y * (2.8 + fi * 0.9) - t * (0.28 + fi * 0.04) + fi * 1.7);
+      float shore = smoothstep(-0.95, -0.12, uv.x) * (1.0 - smoothstep(0.18, 0.82, uv.x));
+      surf += smoothstep(0.72, 1.0, crest) * shore * (0.035 - fi * 0.006);
+    }
+
+    float grain = hash(gl_FragCoord.xy + floor(t * 18.0));
+    float field = fbm(uv * 2.2 + vec2(t * 0.025, -t * 0.018));
+    float verticalMist = pow(clamp(1.0 - abs(uv.x - 0.10) * 1.25, 0.0, 1.0), 2.0)
+      * smoothstep(0.58, -0.42, uv.y);
+    float leftShade = smoothstep(0.0, 0.24, st.x);
+    float rightShade = 1.0 - smoothstep(0.70, 1.0, st.x);
+    float vgn = smoothstep(0.93, 0.28, length(st - 0.5));
+
+    vec3 ink = vec3(0.006, 0.010, 0.026);
+    vec3 blue = vec3(0.010, 0.090, 0.320);
+    vec3 violet = vec3(0.180, 0.130, 0.430);
+    vec3 laser = vec3(0.370, 0.640, 1.000);
+    vec3 white = vec3(0.880, 0.950, 1.000);
+
+    vec3 col = mix(ink, blue, 0.32 + 0.30 * field);
+    col += violet * (beam * 0.035 + surf);
+    col += laser * beam * 0.052;
+    col += white * beamCore * 0.024;
+    col += vec3(0.05, 0.16, 0.42) * verticalMist * 0.37;
+    col += vec3(0.32, 0.74, 1.0) * opportunity * 0.02;
+    col *= vgn * leftShade * rightShade;
+    col += (grain - 0.5) * 0.018;
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+</script>
+
+<script id="hero-particle-vertex" type="x-shader/x-vertex">
+  precision highp float;
+  attribute vec4 a_seed;
+  attribute vec4 a_extra;
+  uniform vec2 u_resolution;
+  uniform float u_time;
+  uniform vec2 u_mouse;
+  uniform float u_hover;
+  // --- tunable uniforms (motion / terrain / projection) ---
+  uniform float 0.03;
+  uniform float 0.205;
+  uniform float 0.14;
+  uniform float -2.5;
+  uniform float 1.2;
+  uniform float -0.88;
+  uniform float 1.82;
+  uniform float 2.76;
+  uniform float 0.46;
+  uniform float 0.15;
+  uniform float 0.42;
+  uniform float 0.76;
+  uniform float 0.185;
+  uniform float 0.36;
+  uniform float 9.0;
+  uniform float 0.88;
+  uniform float 0.0;
+  uniform float 0.29;
+  uniform float 0.315;
+  uniform float 5.0;
+  uniform float 7.0;
+  uniform float 0.142;
+  uniform float 8.0;
+  uniform float 5.4;
+  uniform float 1.39;
+  uniform float 0.17;
+  uniform float 2.52;
+  uniform float -0.47;
+  uniform float 0.47;
+  uniform float 6.0;
+  uniform float 0.4;
+  uniform float 1.4;
+  uniform float 0.0;
+  varying vec4 v_color;
+  varying float v_alpha;
+  varying float v_glow;
+
+  float hash(float n) {
+    return fract(sin(n) * 43758.5453123);
+  }
+
+  float hash2(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash2(i), hash2(i + vec2(1.0, 0.0)), u.x),
+               mix(hash2(i + vec2(0.0, 1.0)), hash2(i + vec2(1.0, 1.0)), u.x), u.y);
+  }
+
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    mat2 r = mat2(0.80, 0.60, -0.60, 0.80);
+    for (int i = 0; i < 4; i++) {
+      v += a * noise(p);
+      p = r * p * 2.03 + vec2(11.7, 4.2);
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  float sourceBand(float id) {
+    return mix(0.72, -0.72, id / 4.0);
+  }
+
+  vec3 sourceColor(float id) {
+    if (id < 0.5) return vec3(0.82, 0.92, 1.00);
+    if (id < 1.5) return vec3(0.50, 0.72, 1.00);
+    if (id < 2.5) return vec3(0.72, 0.52, 1.00);
+    if (id < 3.5) return vec3(0.32, 0.92, 0.72);
+    return vec3(1.00, 0.52, 0.70);
+  }
+
+  void main() {
+    float t = u_time * 0.03;
+    float speed = 0.205 + a_seed.z * 0.14; // flow speed for particle tracers
+    float cycle = fract(a_seed.x + t * speed);
+
+    // Base coordinates: flow from x=flowXStart to x=flowXEnd
+    float rawX = mix(-2.5, 1.2, cycle);
+
+    // Coherence factor: 0 on left (chaotic), 1 on right (ordered)
+    float cohere = smoothstep(-0.88, 1.82, rawX);
+    float phaseLock = cohere * cohere * (3.0 - 2.0 * cohere);
+
+    float rawY = (a_seed.y - 0.5) * mix(2.76, 0.46, phaseLock); // narrower on left to avoid title text
+
+    // --- TERRAIN (ROCKS) ---
+    // Scale coordinates for noise
+    vec2 st = vec2(rawX * 2.0, rawY * 2.5);
+    float n1 = fbm(st + vec2(t * 0.05, 0.0)); // Slowly shifting terrain for organic feel
+    float n2 = fbm(st * 2.5 + vec2(3.2, 1.4));
+    float rockHeight = n1 * 0.75 + n2 * 0.25;
+
+    // Canyon center and width matching the organic channel
+    float canyonCenter = 0.15 * (fbm(vec2(rawX * 1.5, 1.0)) - 0.5);
+    float canyonWidth = mix(0.42, 0.76, phaseLock);
+
+    // Create a deep canyon profile on the right
+    float distToCanyon = abs(rawY - canyonCenter);
+    float canyonCarve = smoothstep(0.185, 0.36, distToCanyon);
+    // Inside the canyon, rock height is low (deep water). Outside, it is high (dry walls).
+    rockHeight = mix(rockHeight, mix(0.0, 0.85, canyonCarve), phaseLock);
+
+    // Create "terraces" or steps in the rock
+    float steps = 9.0;
+    float terracedRock = floor(rockHeight * steps) / steps + smoothstep(0.0, 0.3, fract(rockHeight * steps)) * (1.0/steps);
+
+    // --- WATER ROUTING ---
+    // Water flows around high rocks. We perturb Y based on the rock gradient.
+    float rockDx = fbm(st + vec2(0.05, 0.0)) - rockHeight;
+    float rockDy = fbm(st + vec2(0.0, 0.05)) - rockHeight;
+    float flowY = rawY - rockDy * 0.88 * (1.0 - phaseLock);
+
+    // Funnel into the narrow canyon
+    flowY = mix(flowY, canyonCenter + (a_seed.y - 0.5) * canyonWidth, phaseLock);
+
+    // --- WATER ELEVATION (Z) ---
+    // Base downhill slope
+    float slopeZ = -rawX * 0.0;
+
+    // Water rides over the terraced rocks
+    float waterZ = slopeZ + terracedRock * 0.29 * (1.0 - phaseLock);
+
+    // Add whitewater turbulence (high frequency noise)
+    float turbulence = fbm(vec2(rawX * 5.0 - t * 7.0, flowY * 5.0)) * 0.315;
+    waterZ += turbulence * (1.0 - phaseLock * 0.8); // Keep some turbulence even when coherent
+
+    // Organic canyon ripple (no sine wave)
+    float canyonRipple = 0.142 * sin(rawX * 8.0 - t * 5.4) + 0.015 * fbm(vec2(rawX * 4.0, t * 2.0));
+    waterZ = mix(waterZ, slopeZ + canyonRipple, phaseLock);
+
+    // --- PROJECTION (ISOMETRIC) ---
+    // Rotate around X-axis to look down (tilt)
+    float tilt = 1.39;
+    float cosT = cos(tilt);
+    float sinT = sin(tilt);
+
+    // Rotate around Z-axis slightly for an isometric angle
+    float pan = 0.17;
+    float cosP = cos(pan);
+    float sinP = sin(pan);
+
+    float rx = rawX * cosP - flowY * sinP;
+    float ry = rawX * sinP + flowY * cosP;
+
+    float projX = rx;
+    float projY = ry * cosT - waterZ * sinT;
+
+    // --- COLOR & FOAM ---
+    // Foam occurs at steep drops (high rockDx) and high turbulence
+    float dropFoam = smoothstep(0.01, 0.06, rockDx);
+    float turbFoam = smoothstep(0.06, 0.14, turbulence);
+    float foam = max(dropFoam, turbFoam) * (1.0 - phaseLock * 0.9); // Keep a tiny bit of foam
+
+    // Bruarfoss colors
+    vec3 deepWater = vec3(0.01, 0.15, 0.50); // Darker deep blue
+    vec3 shallowWater = vec3(0.15, 0.65, 0.90); // Bright cyan
+    vec3 foamColor = vec3(0.95, 0.98, 1.0); // White
+
+    // Base color depends on rock height (shallower = more cyan)
+    vec3 col = mix(deepWater, shallowWater, rockHeight * 0.9);
+    col = mix(col, foamColor, foam);
+
+    // Coherent color (clean amplitude blue)
+    vec3 coherentCol = vec3(0.10, 0.35, 0.90) + canyonRipple * 1.5;
+    col = mix(col, coherentCol, phaseLock * 0.8); // Blend it slightly less harshly
+
+    // Mouse attractor (keep existing logic)
+    float aspect = u_resolution.x / u_resolution.y;
+    vec2 clip = vec2(projX * 2.52 / aspect + -0.47, projY * 2.52 + 0.47);
+    float md = distance(clip, u_mouse);
+    float pull = exp(-md * md * 6.0) * u_hover;
+    clip += (u_mouse - clip) * pull * 0.4;
+
+    gl_Position = vec4(clip, 0.0, 1.0);
+
+    // Point size and alpha
+    float packet = pow(sin((cycle + a_seed.w * 0.13) * 6.2831853) * 0.5 + 0.5, 7.0);
+    float shimmer = 0.6 + 0.4 * sin(t * 5.0 + a_seed.w * 20.0);
+
+    gl_PointSize = (1.4 + a_extra.y * 1.2 + foam * 2.5 + packet * 1.2 + pull * 2.0) * (1.0 + phaseLock * 0.3);
+    v_alpha = (0.0 + foam * 0.10 + phaseLock * 0.08) * shimmer;
+    v_alpha += pull * 0.06 * shimmer;
+
+    // Fade out particles outside the canyon on the right
+    float canyonFade = mix(1.0, 1.0 - smoothstep(0.10, 0.22, distToCanyon), phaseLock);
+    v_alpha *= canyonFade;
+
+    // Fade in/out at edges
+    float edgeFade = smoothstep(-2.5, -2.5 + 0.3, rawX) * (1.0 - smoothstep(1.2 - 0.3, 1.2, rawX));
+    v_alpha *= edgeFade;
+
+    v_glow = foam * 0.6 + packet * 0.3 + pull * 0.5;
+    v_color = vec4(col + vec3(0.1, 0.3, 0.7) * pull * 0.6, 1.0);
+  }
+</script>
+
+<script id="hero-particle-fragment" type="x-shader/x-fragment">
+  precision mediump float;
+  varying vec4 v_color;
+  varying float v_alpha;
+  varying float v_glow;
+
+  void main() {
+    vec2 p = gl_PointCoord - vec2(0.5);
+    float d = length(p);
+    if (d > 0.5) discard;
+    float core = smoothstep(0.50, 0.02, d);
+    float halo = exp(-d * d * 13.0);
+    float alpha = (core * 0.72 + halo * 0.28) * v_alpha;
+    vec3 col = v_color.rgb + vec3(0.22, 0.48, 0.90) * v_glow;
+    gl_FragColor = vec4(col, alpha);
+  }
+</script>
+
+<script>
+(function(){
+  const stage = document.querySelector('.bp-hero .stage');
+  const canvas = document.getElementById('heroCanvas');
+  if (!stage || !canvas) return;
+  const gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl');
+  if (!gl) { console.error('WebGL not supported'); return; }
+
+  let width = 0, height = 0, dpr = 1, last = 0, time = 0;
+
+  function shader(type, source) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, source); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s) || 'compile');
+    return s;
+  }
+  function program(vsId, fsId) {
+    const p = gl.createProgram();
+    gl.attachShader(p, shader(gl.VERTEX_SHADER, document.getElementById(vsId).textContent));
+    gl.attachShader(p, shader(gl.FRAGMENT_SHADER, document.getElementById(fsId).textContent));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p) || 'link');
+    return p;
+  }
+  const bgProgram = program('hero-bg-vertex', 'hero-bg-fragment');
+  const ptProgram = program('hero-particle-vertex', 'hero-particle-fragment');
+
+  const quad = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+
+  let seed = 20260605 >>> 0;
+  function rnd(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+  const count = 4000000;
+  const seeds = new Float32Array(count * 4);
+  const extras = new Float32Array(count * 4);
+  for (let i = 0; i < count; i++) {
+    const lane = Math.floor(rnd() * 5);
+    seeds[i*4]=rnd(); seeds[i*4+1]=rnd(); seeds[i*4+2]=rnd(); seeds[i*4+3]=rnd();
+    extras[i*4]=(lane+rnd()*0.96)/5; extras[i*4+1]=rnd(); extras[i*4+2]=rnd(); extras[i*4+3]=rnd();
+  }
+  const seedBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, seedBuffer); gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
+  const extraBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, extraBuffer); gl.bufferData(gl.ARRAY_BUFFER, extras, gl.STATIC_DRAW);
+
+  const bg = { position: gl.getAttribLocation(bgProgram,'a_position'), resolution: gl.getUniformLocation(bgProgram,'u_resolution'), time: gl.getUniformLocation(bgProgram,'u_time') };
+  const pts = { seed: gl.getAttribLocation(ptProgram,'a_seed'), extra: gl.getAttribLocation(ptProgram,'a_extra'), resolution: gl.getUniformLocation(ptProgram,'u_resolution'), time: gl.getUniformLocation(ptProgram,'u_time'), mouse: gl.getUniformLocation(ptProgram,'u_mouse'), hover: gl.getUniformLocation(ptProgram,'u_hover') };
+
+  let mouseClipX = -2, mouseClipY = -2, hover = 0, hoverTarget = 0;
+  const ring = document.getElementById('cursorRing');
+  const zones = [
+    { el: document.getElementById('rv-signals'), cx: 147, cy: 673, r: 180 },
+    { el: document.getElementById('rv-synthesis'), cx: 565, cy: 663, r: 180 },
+    { el: document.getElementById('rv-lock'), cx: 840, cy: 473, r: 220 },
+    { el: document.getElementById('rv-experiments'), cx: 1048, cy: 670, r: 180 },
+    { el: document.getElementById('rv-outcomes'), cx: 1513, cy: 668, r: 180 },
+    { el: document.getElementById('rv-opp'), cx: 1539, cy: 500, r: 190 }
+  ];
+
+  function onMove(e) {
+    const rect = stage.getBoundingClientRect();
+    const fx = (e.clientX - rect.left) / rect.width;
+    const fy = (e.clientY - rect.top) / rect.height;
+    mouseClipX = fx * 2 - 1;
+    mouseClipY = 1 - fy * 2;
+    hoverTarget = 1;
+    const vbX = fx * 1680, vbY = fy * 945;
+    if (ring) {
+      ring.setAttribute('cx', vbX.toFixed(1));
+      ring.setAttribute('cy', vbY.toFixed(1));
+      ring.classList.add('active');
+    }
+    for (const z of zones) {
+      if (!z.el) continue;
+      const d = Math.hypot(vbX - z.cx, vbY - z.cy);
+      if (d < z.r) {
+        z.el.classList.add('active');
+      } else {
+        z.el.classList.remove('active');
+      }
+    }
+  }
+  function onLeave() {
+    hoverTarget = 0;
+    if (ring) ring.classList.remove('active');
+    for (const z of zones) {
+      if (z.el) z.el.classList.remove('active');
+    }
+  }
+  stage.addEventListener('mousemove', onMove);
+  stage.addEventListener('mouseleave', onLeave);
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = canvas.clientWidth; height = canvas.clientHeight;
+    canvas.width = Math.max(1, Math.floor(width * dpr));
+    canvas.height = Math.max(1, Math.floor(height * dpr));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // PERF: pause the rAF loop while the hero is offscreen or the tab is hidden.
+  let paused = true;
+  function setPaused(p){ if (p === paused) return; paused = p; if (!paused) { last = performance.now() * 0.001; requestAnimationFrame(draw); } }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => setPaused(!es[0].isIntersecting), { rootMargin: '200px 0px' }).observe(stage);
+  } else { paused = false; requestAnimationFrame(draw); }
+  document.addEventListener('visibilitychange', () => { if (document.hidden) setPaused(true); });
+
+  function draw(now) {
+    if (paused) return;
+    now *= 0.001;
+    let dt = now - last; last = now; if (dt > 0.1) dt = 0.1; time += dt;
+
+    gl.disable(gl.BLEND);
+    gl.useProgram(bgProgram);
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.enableVertexAttribArray(bg.position);
+    gl.vertexAttribPointer(bg.position, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform2f(bg.resolution, canvas.width, canvas.height);
+    gl.uniform1f(bg.time, time);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    gl.useProgram(ptProgram);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.bindBuffer(gl.ARRAY_BUFFER, seedBuffer);
+    gl.enableVertexAttribArray(pts.seed);
+    gl.vertexAttribPointer(pts.seed, 4, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, extraBuffer);
+    gl.enableVertexAttribArray(pts.extra);
+    gl.vertexAttribPointer(pts.extra, 4, gl.FLOAT, false, 0, 0);
+    hover += (hoverTarget - hover) * Math.min(1, dt * 6);
+    gl.uniform2f(pts.resolution, canvas.width, canvas.height);
+    gl.uniform1f(pts.time, time);
+    gl.uniform2f(pts.mouse, mouseClipX, mouseClipY);
+    gl.uniform1f(pts.hover, hover);
+    gl.drawArrays(gl.POINTS, 0, count);
+
+    requestAnimationFrame(draw);
+  }
+})();
+</script>
 
 <!-- ── SCROLL-DRIVEN VIDEO TRANSITION (placeholder, à la ramp.com/stack) ──────────
      A video embedded below the hero. It scrolls NORMALLY — no pin, no scroll-jack.
@@ -1071,7 +1666,48 @@
   .film-play { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; border: 1px solid rgba(180,200,255,.4); background: rgba(180,200,255,.08); color: #e9f0ff; font-size: 24px; padding-left: 5px; box-shadow: 0 0 44px rgba(64,131,255,.35); }
   .film-ph-label { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #7f8cc4; }
   .film-tag { position: absolute; left: 16px; top: 14px; z-index: 1; font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #9fb0d8; opacity: .85; }
-  @media (prefers-reduced-motion: reduce) { .film-frame { transform: scale(.94); } .film-scrim { display: none; } }
+
+  /* ── cursor-attached "click for sound" micrographic ───────────────────
+     A HUD crosshair + speaker that trails the pointer over the demo, so the
+     click-to-unmute affordance is obvious. The native cursor stays a pointer;
+     this ring frames it and a mono chip spells out the action. Position is set
+     by JS via --fx/--fy (lerped for a slick trailing feel). */
+  .film-wrap { cursor: pointer; }
+  .film-cursor {
+    position: absolute; left: 0; top: 0; z-index: 42; pointer-events: none;
+    transform: translate3d(var(--fx, 0px), var(--fy, 0px), 0);
+  }
+  .fc-inner {
+    position: absolute; left: 0; top: 0;
+    opacity: 0; transform: scale(.82); transform-origin: 0 0;
+    transition: opacity .28s ease, transform .28s cubic-bezier(.2,.7,.2,1);
+  }
+  .film-wrap.cursor-on .fc-inner { opacity: 1; transform: scale(1); }
+  .fc-ring { position: absolute; left: -26px; top: -26px; width: 52px; height: 52px; overflow: visible; }
+  .fc-stroke { fill: none; stroke: #cfe0ff; stroke-width: 1.3; }
+  .fc-vol { fill: none; stroke: #eaf1ff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .fc-cone { fill: #eaf1ff; stroke: #eaf1ff; stroke-width: 1.4; stroke-linejoin: round; }
+  /* two states: speaker+waves while muted ("click for sound"),
+     muted speaker+X while playing ("click to mute") */
+  .fc-ico-mute { display: none; }
+  .film-wrap.sound-on .fc-ico-sound { display: none; }
+  .film-wrap.sound-on .fc-ico-mute { display: block; }
+  .fc-ping { fill: none; stroke: var(--blue-d); stroke-width: 1.4; transform-origin: 24px 24px; }
+  /* the attention pulse runs only while still muted */
+  .film-wrap:not(.sound-on) .fc-ping { animation: fc-ping 2.4s ease-out infinite; }
+  @keyframes fc-ping { 0% { opacity: .6; transform: scale(.5); } 70%, 100% { opacity: 0; transform: scale(1.3); } }
+  .fc-label {
+    position: absolute; left: 34px; top: -10px; white-space: nowrap;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #eaf1ff;
+    padding: 5px 10px; border: 1px solid rgba(180,200,255,.28); border-radius: 7px;
+    background: rgba(8,12,28,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .film-frame { transform: scale(.94); } .film-scrim { display: none; }
+    .fc-ping { animation: none; } .fc-inner { transition: none; }
+  }
+  /* no hover pointer on touch — tapping still toggles sound */
+  @media (hover: none) { .film-cursor { display: none; } }
 </style>
 <section class="film" id="demo" aria-label="Product demo">
   <div class="film-scrim"></div>
@@ -1084,8 +1720,30 @@
         <span class="film-play">&#9654;</span>
         <span class="film-ph-label">Product demo · video placeholder</span>
       </div>
-      <!-- click-to-unmute badge (enable alongside a real video):
-      <button class="film-sound" type="button">&#128266; Play with sound</button> -->
+    </div>
+    <!-- cursor-attached "click for sound" micrographic (position driven by JS) -->
+    <div class="film-cursor" aria-hidden="true">
+      <div class="fc-inner">
+        <svg class="fc-ring" viewBox="0 0 48 48" fill="none">
+          <circle class="fc-ping" cx="24" cy="24" r="20"/>
+          <circle class="fc-stroke" cx="24" cy="24" r="20"/>
+          <path class="fc-stroke" d="M24 0 v7 M24 41 v7 M0 24 h7 M41 24 h7"/>
+          <svg class="fc-vol" x="13" y="13" width="22" height="22" viewBox="0 0 24 24">
+            <!-- sound state: speaker + waves (shown while muted → "click for sound") -->
+            <g class="fc-ico-sound">
+              <path class="fc-cone" d="M4 9 H7 L12 5 V19 L7 15 H4 Z"/>
+              <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+              <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+            </g>
+            <!-- mute state: speaker + X (shown while sound on → "click to mute") -->
+            <g class="fc-ico-mute">
+              <path class="fc-cone" d="M4 9 H7 L12 5 V19 L7 15 H4 Z"/>
+              <path d="M16.5 9.5 L21.5 14.5 M21.5 9.5 L16.5 14.5" />
+            </g>
+          </svg>
+        </svg>
+        <span class="fc-label">Click for sound</span>
+      </div>
     </div>
   </div>
 </section>
@@ -1093,6 +1751,39 @@
 (function(){
   var film = document.getElementById('demo'); if(!film) return;
   var wrap = film.querySelector('.film-wrap');
+
+  // ── cursor-attached "click for sound" micrographic + click-to-unmute ──
+  // Runs regardless of reduced-motion (the scroll-scale effect below does not).
+  (function(){
+    var cur = wrap.querySelector('.film-cursor'); if(!cur) return;
+    var vid = film.querySelector('.film-media');
+    var label = cur.querySelector('.fc-label');
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var tx=0, ty=0, cx=0, cy=0, raf=0, on=false;
+    function loop(){
+      var k = reduce ? 1 : 0.18;                 // lerp toward the pointer → trailing feel
+      cx += (tx-cx)*k; cy += (ty-cy)*k;
+      cur.style.setProperty('--fx', cx.toFixed(1)+'px');
+      cur.style.setProperty('--fy', cy.toFixed(1)+'px');
+      raf = (on || Math.abs(tx-cx)>0.4 || Math.abs(ty-cy)>0.4) ? requestAnimationFrame(loop) : 0;
+    }
+    wrap.addEventListener('pointermove', function(e){
+      if(e.pointerType === 'touch') return;
+      var r = wrap.getBoundingClientRect();      // wrap is NOT scaled → coords map 1:1
+      tx = e.clientX - r.left; ty = e.clientY - r.top;
+      if(!on){ on = true; cx = tx; cy = ty; wrap.classList.add('cursor-on'); }
+      if(!raf) raf = requestAnimationFrame(loop);
+    });
+    wrap.addEventListener('pointerleave', function(){ on = false; wrap.classList.remove('cursor-on'); });
+    wrap.addEventListener('click', function(){
+      if(!vid) return;
+      vid.muted = !vid.muted;
+      if(!vid.muted){ var p = vid.play && vid.play(); if(p && p.catch) p.catch(function(){}); }
+      wrap.classList.toggle('sound-on', !vid.muted);
+      if(label) label.textContent = vid.muted ? 'Click for sound' : 'Click to mute';
+    });
+  })();
+
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
   function smooth(v){ return v*v*(3-2*v); }
@@ -1933,15 +2624,19 @@
   function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
   resize();window.addEventListener('resize',resize);
   const TAU=Math.PI*2;
-  const NP=3800,pts=[];
-  for(let i=0;i<NP;i++)pts.push({u:Math.random()*TAU,v:Math.random()*TAU,sp:0.10+Math.random()*0.12,dv:(Math.random()-0.5)*0.05,sz:Math.random()});
-  const NS=18,streams=[];
-  for(let i=0;i<NS;i++){const big=i<5;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:1.4+Math.random()*1.8,vturns:0.6+Math.random()*1.4,off:Math.random(),sp:0.018+Math.random()*0.024,big:big});}
+  // baked from footer-loop-tuner.html USE_DONUT config (signal-emission build)
+  const config={"rotSpeed": 0.25, "tilt": 0.85, "focal": 1.25, "majorR": 0.36, "tubeRatio": 0.42, "centerX": 0.54, "centerY": 0.5, "ringsU": 56, "segV": 36, "ringsV": 22, "segU": 80, "lonAlphaBase": 0.04, "lonAlphaRange": 0.13, "latAlphaBase": 0.03, "latAlphaRange": 0.1, "shadowAlpha": 0.22, "shadowScaleX": 1.05, "shadowScaleY": 0.6, "particleCount": 500, "speedMin": 0.18, "speedVar": 0.295, "vDrift": 0.05, "pAlphaBase": 0.05, "pAlphaRange": 0.3, "pSizeBase": 0.5, "pSizeRand": 1, "pSizeNear": 0.5, "streamCount": 56, "bigCount": 3, "streamSegs": 99, "turnsMin": 1.4, "turnsVar": 1.8, "vturnsMin": 0.6, "vturnsVar": 1.4, "streamSpeedMin": 0.018, "streamSpeedVar": 0.024, "lineAlphaBig": 0.2, "lineAlphaSmall": 0.06, "lineWidthBig": 1.3, "lineWidthSmall": 0.8, "trailLen": 26, "trailGap": 0.012, "headAlphaBig": 0.95, "headAlphaSmall": 0.55, "headSizeBig": 2.4, "headSizeSmall": 1.4, "convergence": 0.46, "convergeRadius": 0.5, "emitX": 0.35, "emitY": 0.59, "emitBoost": 1.2, "nodeSize": 5, "nodePulseSpeed": 0, "beamLength": 0.18, "beamSpeed": 0.8, "beamDots": 14, "beamDotSize": 2.2, "beamLineAlpha": 0.18, "emitColor": "#111822", "bgInner": "#1b2c66", "bgMid": "#0d1530", "bgOuter": "#070b1c", "bgCenterX": 0.575, "bgCenterY": 0.48, "bgRadius": 0.8, "particleColor": "#eef4ff", "streamColor": "#dfeaff", "headColor": "#ffffff"};
+  function rgb(hex){const h=hex.replace('#','');return parseInt(h.substr(0,2),16)+','+parseInt(h.substr(2,2),16)+','+parseInt(h.substr(4,2),16);}
+  let pts=[],streams=[];
+  function buildSwarm(){
+    const cf=config;
+    pts=[];streams=[];
+    for(let i=0;i<cf.particleCount;i++)pts.push({u:Math.random()*TAU,v:Math.random()*TAU,sp:cf.speedMin+Math.random()*cf.speedVar,dv:(Math.random()-0.5)*cf.vDrift,sz:Math.random()});
+    for(let i=0;i<cf.streamCount;i++){const big=i<cf.bigCount;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:cf.turnsMin+Math.random()*cf.turnsVar,vturns:cf.vturnsMin+Math.random()*cf.vturnsVar,off:Math.random(),sp:cf.streamSpeedMin+Math.random()*cf.streamSpeedVar,big:big});}
+  }
+  buildSwarm();
   let last=0;
-  // PERF: this loop redraws a full torus mesh + 3800 additive particles every
-  // frame. The footer sits below the fold, so don't burn CPU on it until it's
-  // near the viewport; pause again once it scrolls away. `last` resets on resume
-  // so dt doesn't spike. (No visual change — it's idle while unseen.)
+  // PERF: pause while the footer is offscreen (it sits below the fold).
   let rafId=0,paused=true;
   function setPaused(p){ if(p===paused)return; paused=p; if(!paused){ last=performance.now()/1000; rafId=requestAnimationFrame(frame); } }
   if('IntersectionObserver' in window){
@@ -1949,12 +2644,15 @@
   } else { paused=false; rafId=requestAnimationFrame(frame); }
   function frame(now){
     if(paused)return;
+    const cf=config;
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
-    const g=x.createRadialGradient(W*0.575,H*0.48,0,W*0.575,H*0.48,Math.max(W,H)*0.80);
-    g.addColorStop(0,'#1b2c66');g.addColorStop(0.5,'#0d1530');g.addColorStop(1,'#070b1c');
+
+    const g=x.createRadialGradient(W*cf.bgCenterX,H*cf.bgCenterY,0,W*cf.bgCenterX,H*cf.bgCenterY,Math.max(W,H)*cf.bgRadius);
+    g.addColorStop(0,cf.bgInner);g.addColorStop(0.5,cf.bgMid);g.addColorStop(1,cf.bgOuter);
     x.fillStyle=g;x.fillRect(0,0,W,H);
-    const cx=W*0.575,cy=H*0.50,R=Math.min(W,H)*0.300,r=R*0.42,Rr=R+r;
-    const e=0.85,a=t*0.055,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=2.6*Rr;
+
+    const cx=W*cf.centerX,cy=H*cf.centerY,R=Math.min(W,H)*cf.majorR,r=R*cf.tubeRatio,Rr=R+r;
+    const e=cf.tilt,a=t*cf.rotSpeed,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=cf.focal*Rr;
     function proj(u,v){
       const cu=Math.cos(u),su=Math.sin(u),cv=Math.cos(v),sv=Math.sin(v);
       const X=(R+r*cv)*cu,Z=(R+r*cv)*su,Y=r*sv;
@@ -1963,21 +2661,53 @@
       const p=fo/(fo+Z2);
       return {sx:cx+X1*p,sy:cy+Y2*p,d:Z2,p:p};
     }
-    x.save();x.translate(cx,cy+R*0.04);x.strokeStyle='rgba(208,222,255,0.22)';x.lineWidth=1;x.setLineDash([5,8]);
-    x.beginPath();x.ellipse(0,0,Rr*1.05,Rr*0.60,0,0,TAU);x.stroke();x.setLineDash([]);x.restore();
+    // ground shadow ellipse
+    x.save();x.translate(cx,cy+R*0.04);x.strokeStyle='rgba(208,222,255,'+cf.shadowAlpha+')';x.lineWidth=1;x.setLineDash([5,8]);
+    x.beginPath();x.ellipse(0,0,Rr*cf.shadowScaleX,Rr*cf.shadowScaleY,0,0,TAU);x.stroke();x.setLineDash([]);x.restore();
     x.lineWidth=1;
-    const NU=56,SEGV=36;
-    for(let i=0;i<NU;i++){const u=i/NU*TAU;x.beginPath();for(let k=0;k<=SEGV;k++){const p=proj(u,k/SEGV*TAU);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(u,Math.PI/2).d/Rr;const al=0.04+0.13*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
-    const NV=22,SEGU=80;
-    for(let j=0;j<NV;j++){const v=j/NV*TAU;x.beginPath();for(let k=0;k<=SEGU;k++){const p=proj(k/SEGU*TAU,v);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(Math.PI/2,v).d/Rr;const al=0.03+0.10*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
+    // longitude rings
+    const NU=cf.ringsU|0,SEGV=cf.segV|0;
+    for(let i=0;i<NU;i++){const u=i/NU*TAU;x.beginPath();for(let k=0;k<=SEGV;k++){const p=proj(u,k/SEGV*TAU);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(u,Math.PI/2).d/Rr;const al=cf.lonAlphaBase+cf.lonAlphaRange*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
+    // latitude rings
+    const NV=cf.ringsV|0,SEGU=cf.segU|0;
+    for(let j=0;j<NV;j++){const v=j/NV*TAU;x.beginPath();for(let k=0;k<=SEGU;k++){const p=proj(k/SEGU*TAU,v);if(k===0)x.moveTo(p.sx,p.sy);else x.lineTo(p.sx,p.sy);}const dd=proj(Math.PI/2,v).d/Rr;const al=cf.latAlphaBase+cf.latAlphaRange*(dd*0.5+0.5);x.strokeStyle='rgba(214,228,255,'+al.toFixed(3)+')';x.stroke();}
     x.globalCompositeOperation='lighter';
-    for(let i=0;i<NP;i++){const pt=pts[i];pt.u+=pt.sp*dt;pt.v+=pt.dv*dt;const q=proj(pt.u,pt.v);const near=q.d/Rr*0.5+0.5;x.globalAlpha=0.05+near*0.30;const s=(0.5+pt.sz*1.0+near*0.5)*q.p;x.fillStyle='#eef4ff';x.beginPath();x.arc(q.sx,q.sy,s,0,TAU);x.fill();}
-    for(let i=0;i<NS;i++){const sm=streams[i];
-      const segs=72;x.beginPath();let started=false;
+    // --- single emission point: front-facing particles near it get pulled in ---
+    // gather() lerps a projected position toward the emission node; weight peaks
+    // for front-facing points (near) close to the node (prox) scaled by convergence.
+    const Ex=W*cf.emitX,Ey=H*cf.emitY,ec=cf.emitColor;
+    const cw=Math.max(1,cf.convergeRadius*R);
+    function gather(sx,sy,near){
+      const dx=sx-Ex,dy=sy-Ey,sd2=dx*dx+dy*dy;
+      const prox=Math.exp(-sd2/(2*cw*cw));
+      const g=cf.convergence*prox*Math.max(0,near);
+      return {x:sx+(Ex-sx)*g,y:sy+(Ey-sy)*g,g:g};
+    }
+    // free particles orbiting the torus surface
+    const pCol=cf.particleColor;
+    for(let i=0;i<pts.length;i++){const pt=pts[i];pt.u+=pt.sp*dt;pt.v+=pt.dv*dt;const q=proj(pt.u,pt.v);const near=q.d/Rr*0.5+0.5;const gp=gather(q.sx,q.sy,near);x.globalAlpha=cf.pAlphaBase+near*cf.pAlphaRange+gp.g*cf.emitBoost;const s=(cf.pSizeBase+pt.sz*cf.pSizeRand+near*cf.pSizeNear)*q.p*(1+gp.g);x.fillStyle=pCol;x.beginPath();x.arc(gp.x,gp.y,s,0,TAU);x.fill();}
+    // helical stream tracers + comet heads
+    const sCol=cf.streamColor,hCol=cf.headColor,TT=cf.trailLen|0,segs=cf.streamSegs|0;
+    for(let i=0;i<streams.length;i++){const sm=streams[i];
+      x.beginPath();let started=false;
       for(let k=0;k<=segs;k++){const s=k/segs;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);if(!started){x.moveTo(p.sx,p.sy);started=true;}else x.lineTo(p.sx,p.sy);}
-      x.globalAlpha=sm.big?0.20:0.06;x.strokeStyle='#dfeaff';x.lineWidth=sm.big?1.3:0.8;x.stroke();
-      const head=(((t*sm.sp+sm.off)%1)+1)%1,TT=26;
-      for(let k=0;k<TT;k++){const s=head-k*0.012;if(s<0||s>1)continue;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);const near=p.d/Rr*0.5+0.5;const a2=(1-k/TT)*(sm.big?0.95:0.55)*(0.4+near*0.6);x.globalAlpha=a2;x.fillStyle='#ffffff';const ss=(sm.big?2.4:1.4)*(1-k/TT*0.7)*p.p;x.beginPath();x.arc(p.sx,p.sy,ss,0,TAU);x.fill();}
+      x.globalAlpha=sm.big?cf.lineAlphaBig:cf.lineAlphaSmall;x.strokeStyle=sCol;x.lineWidth=sm.big?cf.lineWidthBig:cf.lineWidthSmall;x.stroke();
+      const head=(((t*sm.sp+sm.off)%1)+1)%1;
+      for(let k=0;k<TT;k++){const s=head-k*cf.trailGap;if(s<0||s>1)continue;const u=sm.u0+s*TAU*sm.turns,v=sm.v0+s*TAU*sm.vturns;const p=proj(u,v);const near=p.d/Rr*0.5+0.5;const gp=gather(p.sx,p.sy,near);const a2=(1-k/TT)*(sm.big?cf.headAlphaBig:cf.headAlphaSmall)*(0.4+near*0.6)+gp.g*cf.emitBoost*(1-k/TT);x.globalAlpha=a2;x.fillStyle=hCol;const ss=(sm.big?cf.headSizeBig:cf.headSizeSmall)*(1-k/TT*0.7)*p.p*(1+gp.g);x.beginPath();x.arc(gp.x,gp.y,ss,0,TAU);x.fill();}
+    }
+    // --- emission node + outgoing signal beam (the single output) ---
+    if(cf.convergence>0||cf.nodeSize>0){
+      const pulse=0.5+0.5*Math.sin(t*cf.nodePulseSpeed);
+      const ns=cf.nodeSize*(1+0.35*pulse);
+      // beam direction = outward from torus center through the node
+      let ux=Ex-cx,uy=Ey-cy;const L=Math.hypot(ux,uy)||1;ux/=L;uy/=L;
+      const beamPx=cf.beamLength*Math.min(W,H);
+      x.globalAlpha=cf.beamLineAlpha*(0.6+0.4*pulse);x.strokeStyle=ec;x.lineWidth=1.4;
+      x.beginPath();x.moveTo(Ex,Ey);x.lineTo(Ex+ux*beamPx,Ey+uy*beamPx);x.stroke();
+      const bd=cf.beamDots|0;
+      for(let k=0;k<bd;k++){const s=(((t*cf.beamSpeed+k/bd)%1)+1)%1;const px=Ex+ux*beamPx*s,py=Ey+uy*beamPx*s;x.globalAlpha=(1-s)*0.9;x.fillStyle=ec;const ss=cf.beamDotSize*(0.5+(1-s));x.beginPath();x.arc(px,py,ss,0,TAU);x.fill();}
+      // glowing node halo + white core
+      if(ns>0){const ng=x.createRadialGradient(Ex,Ey,0,Ex,Ey,ns*3);ng.addColorStop(0,ec);ng.addColorStop(1,'rgba('+rgb(ec)+',0)');x.globalAlpha=0.9;x.fillStyle=ng;x.beginPath();x.arc(Ex,Ey,ns*3,0,TAU);x.fill();x.globalAlpha=1;x.fillStyle='#ffffff';x.beginPath();x.arc(Ex,Ey,ns*0.5,0,TAU);x.fill();}
     }
     x.globalAlpha=1;x.globalCompositeOperation='source-over';
     rafId=requestAnimationFrame(frame);
@@ -2254,22 +2984,10 @@
   addEventListener('resize', update);
   update();
 
-  // PERF: the hero is a WebGL particle field running its own rAF loop inside an
-  // iframe. Browsers don't throttle a same-origin iframe just because it has
-  // scrolled out of the parent viewport, so tell it to pause/resume rendering as
-  // the hero enters/leaves view. (The iframe also self-pauses on tab hide.)
-  const frame = document.getElementById('bp-hero-frame');
-  if (frame && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      const msg = entries[0].isIntersecting ? 'resume' : 'pause';
-      try { frame.contentWindow.postMessage({ waveHero: msg }, '*'); } catch (_) {}
-    }, { threshold: 0 });
-    io.observe(hero);
-  }
 })();
 </script>
 
-<!-- hero WebGL now lives in wave-coherence-webgl.html (embedded via iframe above) -->
+<!-- hero coherence field is now inlined above (no iframe) -->
 
 </body>
 </html>
