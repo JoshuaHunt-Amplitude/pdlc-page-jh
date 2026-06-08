@@ -1077,12 +1077,14 @@
 
 <!-- ── SCROLL-DRIVEN VIDEO TRANSITION (placeholder, à la ramp.com/stack) ──────────
      A video sits embedded below the hero; as you scroll it grows to a modal-size
-     focal point and a scrim dims the page, then it releases and undims as you keep
-     scrolling — no clicks. A tall .film runway pins .film-pin to the viewport while
-     JS drives a 0→1→0 progress into --scale (the frame) and --dim (the scrim).
+     focal point and a scrim dims the page; then the size HOLDS and only the tint
+     fades as you keep scrolling — no clicks. A tall .film runway pins .film-pin to
+     the viewport. JS grows + dims the moment the frame enters the viewport (driven
+     by the pin's position, so it doesn't wait to reach centre), then undims at the
+     end while the frame stays full size.
      Drop a real <video> source into .film-media and delete .film-ph to go live.
-     TUNING: .film height = how much scroll the moment takes · 0.56→1.0 = embedded→
-     modal size · 0.72 = max page dim. -->
+     TUNING: .film height = runway · 0.78→1.0 = enter→full size · 0.72 = max dim ·
+     enter/0.7 = how early it hits full · (sp−0.55)/0.4 = when the tint releases. -->
 <style>
   .film { position: relative; height: 230vh; }
   .film-pin { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; z-index: 4; }
@@ -1094,7 +1096,7 @@
     border: 1px solid rgba(180,200,255,.18);
     background: linear-gradient(160deg, #101a3a, #0a1024);
     box-shadow: 0 40px 140px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.04);
-    transform: scale(var(--scale, 0.56)); transform-origin: center; will-change: transform;
+    transform: scale(var(--scale, 0.78)); transform-origin: center; will-change: transform;
   }
   .film-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .film-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #c3d2ff; font-family: var(--mono); }
@@ -1124,17 +1126,24 @@
   var pin = film.querySelector('.film-pin');
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var ticking = false;
+  function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function smooth(v){ return v*v*(3-2*v); }
   function update(){
     ticking = false;
-    var total = film.offsetHeight - window.innerHeight;
+    var vh = window.innerHeight;
+    var rect = film.getBoundingClientRect();
+    var total = film.offsetHeight - vh;
     if (total <= 0) return;
-    var p = (-film.getBoundingClientRect().top) / total;
-    p = Math.max(0, Math.min(1, p));
-    var f = 1 - Math.abs(p - 0.5) / 0.5;   // 0 → 1 (centred) → 0
-    f = Math.max(0, Math.min(1, f));
-    var e = f*f*(3-2*f);                    // smoothstep
-    pin.style.setProperty('--scale', (0.56 + 0.44*e).toFixed(4));
-    pin.style.setProperty('--dim',   (0.72*e).toFixed(4));
+    // GROW + DIM the instant the frame enters the viewport (pin position drives it,
+    // so it starts at first sight and reaches full a touch before centre).
+    var prTop = pin.getBoundingClientRect().top;
+    var enter = clamp(1 - 2 * prTop / vh);          // 0 = frame at viewport bottom → 1 = centred
+    var g = smooth(clamp(enter / 0.7));
+    // HOLD full size; release only the tint in the last stretch of the runway.
+    var sp = clamp(-rect.top / total);
+    var exit = smooth(clamp((sp - 0.55) / 0.4));
+    pin.style.setProperty('--scale', (0.78 + 0.22 * g).toFixed(4));
+    pin.style.setProperty('--dim',   (0.72 * g * (1 - exit)).toFixed(4));
   }
   addEventListener('scroll', function(){ if(!ticking){ requestAnimationFrame(update); ticking = true; } }, {passive:true});
   addEventListener('resize', update);
