@@ -1240,36 +1240,7 @@
       </svg>
     </div>
 
-    <div class="manifesto-body reveal">
-      <p>Coding agents are collapsing <strong>build</strong> to zero. But <strong>use</strong> and <strong>learn</strong> still crawl by hand — someone manually combs the data for signals, decides what's worth building, proves if the change worked, and reflects on the process.</p>
-      <p class="dagger">Shipping stopped being the bottleneck. <span class="a">Knowing what to build is.</span></p>
-    </div>
-  </div>
-</section>
-
-<!-- ── §2.5 · PROBLEM · BOTTLENECK LOOP v2 ────────────────────────────────
-     Iteration on Will's loop-viz above. Same conceptual mapping (USE top,
-     LEARN right, BUILD bottom, SHIP left; right half = bottleneck, left
-     half = fast) but the throughput differential is *much* more dramatic:
-
-       • LEFT half (BUILD → SHIP → USE):  thick blue arc, ~25 bright
-         particles cycling at 3s / half-rev — visually saturated
-       • RIGHT half (USE → LEARN → BUILD): thin violet arc, only 4
-         slow particles at 12s / half-rev — they visibly pool and queue
-
-     The pile-up at the slow side is structural: same particle count
-     and arc length but ~4× the duration, so density inverts.
-
-     viewBox 900 x 540, center (450, 270), ring r=190, node r=50.
-─────────────────────────────────────────────────────────────────────── -->
-<section class="manifesto" id="problem-v2">
-  <div class="manifesto-in">
-    <div class="manifesto-head reveal">
-      <div class="eyebrow">Loop · iteration v2</div>
-      <h2>The differential, made literal.</h2>
-      <p>Same loop — same four stages — but with the throughput inversion drawn to scale: <strong>build → ship → use</strong> rushes through a wide channel; <strong>use → learn → build</strong> crawls and backs up.</p>
-    </div>
-
+    <div class="eyebrow reveal" style="display:block; text-align:center; margin:56px 0 14px; color:rgba(255,255,255,0.48);">Josh v1</div>
     <div class="loop-viz reveal" aria-hidden="true">
       <svg viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet">
         <defs>
@@ -1422,28 +1393,8 @@
         </g>
       </svg>
     </div>
-  </div>
-</section>
 
-
-<!-- ── §2.6 · PROBLEM · BOTTLENECK LOOP v3 ───────────────────────────────
-     Iteration on #problem-v2. Same conceptual mapping (USE/LEARN/BUILD/SHIP,
-     right = bottleneck, left = fast) but reads as monochrome — the thick
-     bright colored arcs and center radial glow are removed in favor of a
-     loop-v2-style dotted ring band. The fast/slow signal is preserved with:
-       • A subtle blue radial glow region on the left half
-       • A subtle red radial glow region on the right half
-       • 3× particle density (75 left, 12 right) to make the throughput
-         differential pop without coloring the ring itself
-─────────────────────────────────────────────────────────────────── -->
-<section class="manifesto" id="problem-v3">
-  <div class="manifesto-in">
-    <div class="manifesto-head reveal">
-      <div class="eyebrow">Loop · iteration v3</div>
-      <h2>Same loop. Monochrome read.</h2>
-      <p>Strip the colored channels and let the <strong>flow itself</strong> carry the message — dense, bright signal on the left; sparse, cold signal pooling on the right.</p>
-    </div>
-
+    <div class="eyebrow reveal" style="display:block; text-align:center; margin:56px 0 14px; color:rgba(255,255,255,0.48);">Josh v2</div>
     <div class="loop-viz reveal" aria-hidden="true">
       <svg viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet">
         <defs>
@@ -1630,6 +1581,11 @@
           <text x="820" y="298" font-family="'Inter','JetBrains Mono',monospace" font-size="14" font-weight="500" letter-spacing="0.26em" text-anchor="end" fill="#FF7D78">BOTTLENECK</text>
         </g>
       </svg>
+    </div>
+
+    <div class="manifesto-body reveal">
+      <p>Coding agents are collapsing <strong>build</strong> to zero. But <strong>use</strong> and <strong>learn</strong> still crawl by hand — someone manually combs the data for signals, decides what's worth building, proves if the change worked, and reflects on the process.</p>
+      <p class="dagger">Shipping stopped being the bottleneck. <span class="a">Knowing what to build is.</span></p>
     </div>
   </div>
 </section>
