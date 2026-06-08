@@ -25,7 +25,16 @@
   .cap{font-weight:500;font-size:18px;letter-spacing:4px;fill:#e9efff}
   .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
   .ghost{opacity:.48}
-  .reveal{opacity:0;transition:opacity .5s ease}
+  .reveal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(15px);
+  }
+  .reveal.active {
+    opacity: 1 !important;
+    transform: translateY(0);
+  }
   .rv{font-weight:600;font-size:13px;letter-spacing:3px;fill:#ffffff}
   .rv-sub{font-weight:500;font-size:12px;letter-spacing:2px;fill:#f1f5f9}
   .backing{fill:#05070e;opacity:0.75}
@@ -76,46 +85,46 @@
 
     <!-- hover overlays: signal layer -> synthesis -> experiments -> outcomes -->
     <g id="rv-signals" class="reveal">
-      <rect class="veil" x="150" y="620" width="210" height="106" rx="8"/>
+      <rect class="veil" x="42" y="620" width="210" height="106" rx="8"/>
       <g class="dimln" stroke-width="1" opacity="0.72">
-        <path d="M178 672 H318 M202 646 v52 M230 646 v52 M258 646 v52 M286 646 v52"/>
-        <circle cx="202" cy="662" r="3" fill="#a9c7ff"/>
-        <circle cx="258" cy="685" r="3" fill="#70e5bd"/>
-        <circle cx="286" cy="654" r="3" fill="#ff9bba"/>
+        <path d="M70 672 H210 M94 646 v52 M122 646 v52 M150 646 v52 M178 646 v52"/>
+        <circle cx="94" cy="662" r="3" fill="#a9c7ff"/>
+        <circle cx="150" cy="685" r="3" fill="#70e5bd"/>
+        <circle cx="178" cy="654" r="3" fill="#ff9bba"/>
       </g>
-      <text class="rv" x="176" y="642">SIGNALS LAYER</text>
-      <text class="rv-sub" x="176" y="716">ANALYTICS &#183; REPLAYS &#183; FEEDBACK</text>
+      <text class="rv" x="68" y="642">SIGNALS LAYER</text>
+      <text class="rv-sub" x="68" y="716">ANALYTICS &#183; REPLAYS &#183; FEEDBACK</text>
     </g>
     <g id="rv-synthesis" class="reveal">
-      <rect class="veil" x="450" y="620" width="210" height="86" rx="8"/>
+      <rect class="veil" x="460" y="620" width="210" height="86" rx="8"/>
       <g class="dimln" stroke-width="1.1" opacity="0.8">
-        <path d="M479 676 C527 644 581 644 629 676"/>
-        <path d="M479 652 C533 686 575 686 629 652"/>
-        <circle cx="554" cy="664" r="5" fill="#dbe6ff"/>
+        <path d="M499 676 C547 644 591 644 639 676"/>
+        <path d="M499 652 C553 686 585 686 639 652"/>
+        <circle cx="564" cy="664" r="5" fill="#dbe6ff"/>
       </g>
-      <text class="rv" x="475" y="644">SYNTHESIS</text>
-      <text class="rv-sub" x="475" y="698">CORROBORATE THE SIGNALS</text>
+      <text class="rv" x="485" y="644">SYNTHESIS</text>
+      <text class="rv-sub" x="485" y="698">CORROBORATE THE SIGNALS</text>
     </g>
     <g id="rv-experiments" class="reveal">
-      <rect class="veil" x="750" y="620" width="194" height="100" rx="8"/>
+      <rect class="veil" x="951" y="620" width="194" height="100" rx="8"/>
       <g class="dimln" stroke-width="1" opacity="0.74">
-        <path d="M780 686 H910"/>
-        <path d="M780 686 C806 656 840 656 866 686 C882 704 898 708 910 686"/>
-        <path d="M780 664 H826 M864 664 H910"/>
+        <path d="M981 686 H1111"/>
+        <path d="M981 686 C1007 656 1041 656 1067 686 C1083 704 1099 708 1111 686"/>
+        <path d="M981 664 H1027 M1065 664 H1111"/>
       </g>
-      <text class="rv" x="778" y="646">WEB EXPERIMENTS</text>
-      <text class="rv-sub" x="778" y="710">READY TO APPROVE</text>
+      <text class="rv" x="979" y="646">WEB EXPERIMENTS</text>
+      <text class="rv-sub" x="979" y="710">READY TO APPROVE</text>
     </g>
     <g id="rv-outcomes" class="reveal">
-      <rect class="veil" x="1050" y="620" width="226" height="96" rx="8"/>
+      <rect class="veil" x="1400" y="620" width="226" height="96" rx="8"/>
       <g class="dimln" stroke-width="1.2" opacity="0.82">
-        <path d="M1082 692 H1246 M1082 692 V648"/>
-        <path d="M1082 682 C1118 674 1146 688 1176 664 C1202 644 1224 652 1246 636"/>
-        <circle cx="1176" cy="664" r="3" fill="#dbe6ff"/>
-        <circle cx="1246" cy="636" r="3" fill="#70e5bd"/>
+        <path d="M1432 692 H1596 M1432 692 V648"/>
+        <path d="M1432 682 C1468 674 1496 688 1526 664 C1548 644 1570 652 1592 636"/>
+        <circle cx="1526" cy="664" r="3" fill="#dbe6ff"/>
+        <circle cx="1592" cy="636" r="3" fill="#70e5bd"/>
       </g>
-      <text class="rv" x="1080" y="642">OUTCOMES GRAPH</text>
-      <text class="rv-sub" x="1080" y="710">MEASURE WHAT MOVED</text>
+      <text class="rv" x="1430" y="642">OUTCOMES GRAPH</text>
+      <text class="rv-sub" x="1430" y="710">MEASURE WHAT MOVED</text>
     </g>
 
     <!-- bottom process axis -->
@@ -180,14 +189,14 @@
   void main() {
     vec2 st = gl_FragCoord.xy / u_resolution;
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
-    float t = u_time * 0.2; // Slowed down by factor of 2
+    float t = u_time * 0.3; // Slower than original but fast enough for beautiful tracers
 
-    float bgLock = smoothstep(-0.45, 0.05, uv.x);
+    float bgLock = smoothstep(0.05, 0.55, uv.x);
     float curl = fbm(vec2(uv.x * 2.15 + t * 0.035, uv.y * 1.7 - t * 0.018)) - 0.5;
     
     // Canyon center matching the vertex shader
     float canyonCenter = 0.15 * (fbm(vec2(uv.x * 1.5, 1.0)) - 0.5);
-    float leftY = 0.15 * curl + 0.08 * sin(uv.x * 3.0 - t * 0.5);
+    float leftY = (0.15 * curl + 0.08 * sin(uv.x * 3.0 - t * 0.5)) * 0.7; // 30% narrower on left
     float rightY = canyonCenter;
     float waveY = mix(leftY, rightY, bgLock);
     
@@ -285,17 +294,18 @@
   }
 
   void main() {
-    float t = u_time * 0.2; // Slowed down by factor of 2
-    float speed = 0.01 + a_seed.z * 0.0075; // Slowed down by factor of 2
+    float t = u_time * 0.3; // Slower than original but fast enough for beautiful tracers
+    float speed = 0.05 + a_seed.z * 0.03; // Faster flow speed for particle tracers
     float cycle = fract(a_seed.x + t * speed);
 
     // Base coordinates: flow from x=-1.6 to x=1.2
     float rawX = mix(-1.6, 1.2, cycle);
-    float rawY = (a_seed.y - 0.5) * 2.8; // Wider river
-
+    
     // Coherence factor: 0 on left (chaotic), 1 on right (ordered)
-    float cohere = smoothstep(-0.5, 0.2, rawX); // Centered coherence transition
+    float cohere = smoothstep(0.1, 1.0, rawX); // Moves transition to the right, extending left wavy region
     float phaseLock = cohere * cohere * (3.0 - 2.0 * cohere);
+
+    float rawY = (a_seed.y - 0.5) * mix(1.96, 2.8, phaseLock); // 30% narrower on left to avoid title text
 
     // --- TERRAIN (ROCKS) ---
     // Scale coordinates for noise
@@ -306,7 +316,7 @@
 
     // Canyon center and width matching the organic channel
     float canyonCenter = 0.15 * (fbm(vec2(rawX * 1.5, 1.0)) - 0.5);
-    float canyonWidth = mix(2.8, 0.22, phaseLock);
+    float canyonWidth = mix(1.96, 0.22, phaseLock);
 
     // Create a deep canyon profile on the right
     float distToCanyon = abs(rawY - canyonCenter);
@@ -380,7 +390,7 @@
 
     // Mouse attractor (keep existing logic)
     float aspect = u_resolution.x / u_resolution.y;
-    vec2 clip = vec2(projX * 1.8 / aspect - 0.1, projY * 1.8 - 0.1); // Adjust scale/offset
+    vec2 clip = vec2(projX * 1.8 / aspect - 0.1, projY * 1.8 - 0.25); // Shifted down by 0.15 to avoid top left text
     float md = distance(clip, u_mouse);
     float pull = exp(-md * md * 7.5) * u_hover;
     clip += (u_mouse - clip) * pull * 0.16;
@@ -523,11 +533,11 @@
   let hover = 0, hoverTarget = 0;
   const ring = document.getElementById('cursorRing');
   const zones = [
-    { el: document.getElementById('rv-signals'), cx: 255, cy: 673, r: 180 },
-    { el: document.getElementById('rv-synthesis'), cx: 555, cy: 663, r: 180 },
+    { el: document.getElementById('rv-signals'), cx: 147, cy: 673, r: 180 },
+    { el: document.getElementById('rv-synthesis'), cx: 565, cy: 663, r: 180 },
     { el: document.getElementById('rv-lock'), cx: 840, cy: 473, r: 220 },
-    { el: document.getElementById('rv-experiments'), cx: 847, cy: 670, r: 180 },
-    { el: document.getElementById('rv-outcomes'), cx: 1163, cy: 668, r: 180 },
+    { el: document.getElementById('rv-experiments'), cx: 1048, cy: 670, r: 180 },
+    { el: document.getElementById('rv-outcomes'), cx: 1513, cy: 668, r: 180 },
     { el: document.getElementById('rv-opp'), cx: 1539, cy: 500, r: 190 }
   ];
 
@@ -539,18 +549,27 @@
     mouseClipY = 1 - fy * 2;
     hoverTarget = 1;
     const vbX = fx * 1680, vbY = fy * 945;
-    if (ring) { ring.setAttribute('cx', vbX.toFixed(1)); ring.setAttribute('cy', vbY.toFixed(1)); ring.style.opacity = '0.5'; }
+    if (ring) {
+      ring.setAttribute('cx', vbX.toFixed(1));
+      ring.setAttribute('cy', vbY.toFixed(1));
+      ring.classList.add('active');
+    }
     for (const z of zones) {
       if (!z.el) continue;
       const d = Math.hypot(vbX - z.cx, vbY - z.cy);
-      const op = Math.max(0, Math.min(1, 1 - d / z.r));
-      z.el.style.opacity = (op * 0.85).toFixed(3);
+      if (d < z.r) {
+        z.el.classList.add('active');
+      } else {
+        z.el.classList.remove('active');
+      }
     }
   }
   function onLeave() {
     hoverTarget = 0;
-    if (ring) ring.style.opacity = '0';
-    for (const z of zones) { if (z.el) z.el.style.opacity = '0'; }
+    if (ring) ring.classList.remove('active');
+    for (const z of zones) {
+      if (z.el) z.el.classList.remove('active');
+    }
   }
   stage.addEventListener('mousemove', onMove);
   stage.addEventListener('mouseleave', onLeave);
