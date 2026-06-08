@@ -31,7 +31,10 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  html { scroll-behavior: auto; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  /* instant anchor jumps (no smooth glide) — but land targets below the fixed nav
+     so the jump feels clean instead of jamming the section under the header */
+  #demo, #cta { scroll-margin-top: 76px; }
 
   /* Headline orphans: `balance` evens out heading line lengths (no lone trailing
      word); `pretty` keeps body copy from leaving a single word on the last line. */
@@ -1022,16 +1025,23 @@
      meet) so its left edge sits exactly at the text gutter (SVG x=92) and its top
      just below the subhead (SVG y=415), at any viewport size/aspect. */
   .bp-cta{position:absolute;
-    --s:min(calc(100vw / 1680), calc(100vh / 945));
-    left:calc((100vw - var(--s)*1680)/2 + var(--s)*92);
-    top:calc((100vh - var(--s)*945)/2 + var(--s)*256);
+    /* match the HUD SVG's actual box: width 100vw, height calc(100% - 92px),
+       viewBox 1680×945 xMidYMid meet. Left edge sits at the title gutter (SVG
+       x=80); top sits just below the "PRODUCTS" baseline (y=300) at SVG y=342. */
+    --s:min(calc(100vw / 1680), calc((100vh - 92px) / 945));
+    left:calc((100vw - var(--s)*1680)/2 + var(--s)*80);
+    top:calc(((100vh - 92px) - var(--s)*945)/2 + var(--s)*342);
     z-index:3;pointer-events:auto;
-    display:inline-flex;align-items:center;gap:13px;font-family:'Geist Mono',ui-monospace,monospace;
-    font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:#0a1330;background:#e9f0ff;
-    text-decoration:none;padding:20px 42px;border-radius:999px;transition:transform .2s,box-shadow .2s;
+    display:inline-flex;align-items:center;gap:0.8em;font-family:'Geist Mono',ui-monospace,monospace;
+    /* size scales with the HUD (--s) so the pill stays proportional to the title
+       at every viewport, instead of looking oversized at medium widths. em-based
+       padding/gap so the whole pill tracks the font-size. */
+    font-size:clamp(11px, calc(var(--s) * 15px), 16px);
+    letter-spacing:.16em;text-transform:uppercase;color:#0a1330;background:#e9f0ff;
+    text-decoration:none;padding:0.95em 1.7em;border-radius:999px;transition:transform .2s,box-shadow .2s;
     box-shadow:0 0 0 1px rgba(233,240,255,.4),0 10px 48px rgba(64,131,255,.4);}
   .bp-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(233,240,255,.6),0 14px 60px rgba(64,131,255,.55);}
-  .bp-cta .arr{font-size:18px;transition:transform .2s;}
+  .bp-cta .arr{font-size:1.15em;transition:transform .2s;}
   .bp-cta:hover .arr{transform:translateX(4px);}
   /* mobile headline (HTML reflow). The SVG HUD scales to a tiny letterboxed band on
      narrow screens, so below 760px we hide the whole instrument HUD + WebGL canvas
@@ -1051,6 +1061,7 @@
     .bp-hero canvas{opacity:.6;-webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);}
     #heroBg{display:none;}               /* skip the separate persistent bg field on phones */
     .bp-scroll{display:none;}
+    .bp-cta{display:none;}               /* HUD-anchored CTA is desktop-only; mobile uses the nav + CTA section */
     .bp-hero-m{display:block;position:relative;z-index:3;}
     .bp-hero-m h1{text-shadow:0 1px 16px rgba(3,6,15,.65);}
     .bp-hero-m p{text-shadow:0 1px 12px rgba(3,6,15,.7);}
@@ -1118,6 +1129,8 @@
     <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
   </svg>
   </div>
+  <!-- hero CTA: HTML pill overlaid on the HUD, anchored under the title (see .bp-cta) -->
+  <a class="bp-cta" href="#cta">Request access <span class="arr">→</span></a>
   <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
   <div class="bp-hero-m">
     <h1>Enabling self-improving products</h1>
