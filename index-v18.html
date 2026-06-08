@@ -807,6 +807,8 @@
 
   /* polished email success state — the form swaps to a confirmation card */
   .waitlist-zone { position: relative; }
+  /* layout in CSS (not inline) so the is-done rule below can hide it on success */
+  .waitlist-help-row { display: flex; justify-content: center; }
   .waitlist-success { display: none; flex-direction: column; align-items: center; text-align: center; gap: 15px; max-width: 480px; margin: 0 auto; }
   .waitlist-zone.is-done .waitlist,
   .waitlist-zone.is-done .waitlist-help-row { display: none; }
@@ -939,6 +941,11 @@
 </head>
 <body>
 
+<!-- LAYER 3: persistent background field. Fixed full-viewport WebGL canvas behind
+     all page content (sections are transparent over body --bg, so it shows through
+     the whole page). The hero's particle + HUD layers scroll away over it. -->
+<canvas id="heroBg" aria-hidden="true"></canvas>
+
 <!-- NAV -->
 <nav>
   <div class="nav-in">
@@ -983,12 +990,13 @@
 <style>
   /* v16: hero shares the page's blueprint-navy ground (no cobalt block) so the
      torus floats on one continuous field that flows into the rest of the page */
-  .bp-hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:var(--bg);font-family:'Geist Mono',ui-monospace,monospace;}
-  /* gentle dissolve into the page below — both are --bg now, so the seam disappears */
-  .bp-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:200px;z-index:2;pointer-events:none;background:linear-gradient(to bottom, rgba(7,11,28,0), var(--bg));}
-  /* static navy glow lives on the stage (CSS) so the canvas can stay transparent and
-     fade its trails to 0 — no permanent "painted" residue from the animation. */
-  .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(95% 120% at 62% 58%, #16265c 0%, #0c1430 46%, var(--bg) 82%);}
+  /* layer 3: persistent background canvas — fixed full-viewport, behind all content
+     (content sits in main/nav/footer at z-index:1). Capped dpr in JS for perf. */
+  #heroBg{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none;background:var(--bg);}
+  /* hero + stage are now transparent so the fixed background shows through; the
+     particle canvas + HUD scroll away over it. */
+  .bp-hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:transparent;font-family:'Geist Mono',ui-monospace,monospace;}
+  .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:transparent;}
   .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
   .bp-hero .hud{pointer-events:none;}
   .bp-hero .hud text{fill:#e9f0ff;}
@@ -1032,8 +1040,8 @@
   .bp-hero-m p{margin:0;font-family:'Geist Mono',ui-monospace,monospace;font-weight:400;font-size:clamp(14px,3.8vw,17px);line-height:1.55;letter-spacing:.02em;color:#c3d2ff;}
   @media(max-width:760px){
     .bp-hero{height:auto;min-height:0;display:flex;align-items:center;padding:76px 22px 56px;background:radial-gradient(130% 80% at 50% 24%, #16265c 0%, #0c1430 48%, var(--bg) 84%);}
-    .bp-hero .stage{display:none;}      /* hide WebGL canvas + SVG HUD chrome */
-    .bp-hero::after{display:none;}       /* gradient already lands on --bg; no extra fade */
+    .bp-hero .stage{display:none;}      /* hide WebGL particle canvas + SVG HUD chrome */
+    #heroBg{display:none;}               /* skip the persistent bg field on phones */
     .bp-scroll{display:none;}
     .bp-hero-m{display:block;}
   }
@@ -1059,6 +1067,24 @@
   .bp-hero .backing{fill:#05070e;opacity:.75}
   .bp-hero .veil{fill:#040816;opacity:.96;stroke:#60a5fa;stroke-width:1.5}
   .bp-hero .stage canvas{background:#030409}
+  /* hover tooltip cards (foreignObject): frosted glass — transparent + backdrop
+     blur picks up & softens the field behind for legibility. Micro-graphic on top,
+     wrapping caption below. */
+  .bp-hero foreignObject{overflow:visible;}
+  .bp-hero .tip{
+    box-sizing:border-box;width:100%;height:100%;
+    display:flex;flex-direction:column;justify-content:space-between;gap:12px;
+    padding:16px 18px;border-radius:14px;
+    border:1px solid rgba(120,160,255,0.30);
+    background:rgba(9,15,30,0.55);                 /* fallback if no backdrop-filter */
+    box-shadow:0 8px 34px rgba(0,0,0,0.30);
+    font-family:'Geist Mono',ui-monospace,monospace;
+  }
+  @supports ((backdrop-filter:blur(8px)) or (-webkit-backdrop-filter:blur(8px))){
+    .bp-hero .tip{background:rgba(12,20,38,0.14);-webkit-backdrop-filter:blur(13px) saturate(1.2);backdrop-filter:blur(13px) saturate(1.2);}
+  }
+  .bp-hero .tip-ico{display:block;width:72%;max-width:122px;height:auto;color:#cdd8ff;}
+  .bp-hero .tip-cap{font-weight:500;font-size:12px;letter-spacing:.1em;line-height:1.5;color:#eaf1ff;text-transform:uppercase;}
 </style>
 
 <section class="bp-hero">
@@ -1108,46 +1134,71 @@
 
     <!-- hover overlays: signal layer -> synthesis -> experiments -> outcomes -->
     <g id="rv-signals" class="reveal">
-      <rect class="veil" x="42" y="620" width="210" height="106" rx="8"/>
-      <g class="dimln" stroke-width="1" opacity="0.72">
-        <path d="M70 672 H210 M94 646 v52 M122 646 v52 M150 646 v52 M178 646 v52"/>
-        <circle cx="94" cy="662" r="3" fill="#a9c7ff"/>
-        <circle cx="150" cy="685" r="3" fill="#70e5bd"/>
-        <circle cx="178" cy="654" r="3" fill="#ff9bba"/>
-      </g>
-      <text class="rv" x="68" y="642">SIGNALS LAYER</text>
-      <text class="rv-sub" x="68" y="716">ANALYTICS &#183; REPLAYS &#183; FEEDBACK</text>
+      <foreignObject x="42" y="588" width="240" height="156">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
+          <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- SENSE: many source channels feeding one sensing bus -->
+            <path d="M96 10 V46" opacity=".55"/>
+            <path d="M16 16 H58 M62 16 q4 -7 8 0 t8 0 M80 16 H96" opacity=".85"/>
+            <path d="M16 28 H62 M66 28 q4 -6 8 0 t8 0 M84 28 H96" opacity=".85"/>
+            <path d="M16 40 H58 M62 40 q4 -7 8 0 t8 0 M80 40 H96" opacity=".85"/>
+            <circle cx="16" cy="16" r="3" fill="#a9c7ff" stroke="none"/>
+            <circle cx="16" cy="28" r="3" fill="#70e5bd" stroke="none"/>
+            <circle cx="16" cy="40" r="3" fill="#ff9bba" stroke="none"/>
+            <circle cx="96" cy="28" r="3.5" fill="#dbe6ff" stroke="none"/>
+          </svg>
+          <div class="tip-cap">Analytics &#183; Replays &#183; Feedback</div>
+        </div>
+      </foreignObject>
     </g>
     <g id="rv-synthesis" class="reveal">
-      <rect class="veil" x="460" y="620" width="210" height="86" rx="8"/>
-      <g class="dimln" stroke-width="1.1" opacity="0.8">
-        <path d="M499 676 C547 644 591 644 639 676"/>
-        <path d="M499 652 C553 686 585 686 639 652"/>
-        <circle cx="564" cy="664" r="5" fill="#dbe6ff"/>
-      </g>
-      <text class="rv" x="485" y="644">SYNTHESIS</text>
-      <text class="rv-sub" x="485" y="698">CORROBORATE THE SIGNALS</text>
+      <foreignObject x="448" y="588" width="240" height="156">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
+          <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- DECIDE: corroborate — sources converge into one synthesized node -->
+            <path d="M16 14 C58 14 66 28 92 28"/>
+            <path d="M16 28 H92"/>
+            <path d="M16 42 C58 42 66 28 92 28"/>
+            <circle cx="16" cy="14" r="3" fill="#a9c7ff" stroke="none"/>
+            <circle cx="16" cy="28" r="3" fill="#70e5bd" stroke="none"/>
+            <circle cx="16" cy="42" r="3" fill="#ff9bba" stroke="none"/>
+            <circle cx="96" cy="28" r="6" fill="none"/>
+            <circle cx="96" cy="28" r="2.2" fill="#dbe6ff" stroke="none"/>
+          </svg>
+          <div class="tip-cap">Corroborate the signals</div>
+        </div>
+      </foreignObject>
     </g>
     <g id="rv-experiments" class="reveal">
-      <rect class="veil" x="951" y="620" width="194" height="100" rx="8"/>
-      <g class="dimln" stroke-width="1" opacity="0.74">
-        <path d="M981 686 H1111"/>
-        <path d="M981 686 C1007 656 1041 656 1067 686 C1083 704 1099 708 1111 686"/>
-        <path d="M981 664 H1027 M1065 664 H1111"/>
-      </g>
-      <text class="rv" x="979" y="646">WEB EXPERIMENTS</text>
-      <text class="rv-sub" x="979" y="710">READY TO APPROVE</text>
+      <foreignObject x="928" y="588" width="240" height="156">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
+          <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- ACT: an A/B experiment, the chosen branch approved (check) -->
+            <path d="M14 28 H44"/>
+            <path d="M44 28 C62 28 64 16 82 16"/>
+            <path d="M44 28 C62 28 64 40 82 40"/>
+            <circle cx="44" cy="28" r="3" fill="#dbe6ff" stroke="none"/>
+            <circle cx="86" cy="40" r="3.5" fill="none" opacity=".45"/>
+            <circle cx="86" cy="16" r="8" fill="none"/>
+            <path d="M81.5 16 l3 3 l5 -6"/>
+          </svg>
+          <div class="tip-cap">Ready to approve</div>
+        </div>
+      </foreignObject>
     </g>
     <g id="rv-outcomes" class="reveal">
-      <rect class="veil" x="1400" y="620" width="226" height="96" rx="8"/>
-      <g class="dimln" stroke-width="1.2" opacity="0.82">
-        <path d="M1432 692 H1596 M1432 692 V648"/>
-        <path d="M1432 682 C1468 674 1496 688 1526 664 C1548 644 1570 652 1592 636"/>
-        <circle cx="1526" cy="664" r="3" fill="#dbe6ff"/>
-        <circle cx="1592" cy="636" r="3" fill="#70e5bd"/>
-      </g>
-      <text class="rv" x="1430" y="642">OUTCOMES GRAPH</text>
-      <text class="rv-sub" x="1430" y="710">MEASURE WHAT MOVED</text>
+      <foreignObject x="1392" y="588" width="240" height="156">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="tip">
+          <svg class="tip-ico" viewBox="0 0 128 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- LEARN: a measured outcome — rising trend to a positive (green) result -->
+            <path d="M14 46 H114" opacity=".4"/>
+            <path d="M16 41 L44 35 L66 39 L90 22 L112 12"/>
+            <circle cx="66" cy="39" r="2.6" fill="#dbe6ff" stroke="none"/>
+            <circle cx="112" cy="12" r="4" fill="#70e5bd" stroke="none"/>
+          </svg>
+          <div class="tip-cap">Measure what moved</div>
+        </div>
+      </foreignObject>
     </g>
 
     <!-- bottom process axis -->
@@ -1262,12 +1313,16 @@
     vec3 laser = vec3(0.370, 0.640, 1.000);
     vec3 white = vec3(0.880, 0.950, 1.000);
 
+    // subtle slow "breath": gently pulses the glow so the persistent background
+    // stays alive without distracting (two summed sines → organic, ~8% amplitude).
+    float breath = 1.0 + 0.06 * sin(u_time * 0.11) + 0.03 * sin(u_time * 0.27 + 1.7);
+
     vec3 col = mix(ink, blue, 0.32 + 0.30 * field);
-    col += violet * (beam * 0.035 + surf);
-    col += laser * beam * 0.052;
-    col += white * beamCore * 0.024;
-    col += vec3(0.05, 0.16, 0.42) * verticalMist * 0.37;
-    col += vec3(0.32, 0.74, 1.0) * opportunity * 0.02;
+    col += violet * (beam * 0.035 * breath + surf);
+    col += laser * beam * 0.052 * breath;
+    col += white * beamCore * 0.024 * breath;
+    col += vec3(0.05, 0.16, 0.42) * verticalMist * 0.37 * breath;
+    col += vec3(0.32, 0.74, 1.0) * opportunity * 0.02 * breath;
     col *= vgn * leftShade * rightShade;
     col += (grain - 0.5) * 0.018;
 
@@ -1472,6 +1527,72 @@
 </script>
 
 <script>
+/* ── LAYER 3: persistent background field (fixed, full-viewport) ───────────── */
+(function(){
+  const canvas = document.getElementById('heroBg');
+  if (!canvas) return;
+  // skip on phones (the mobile hero shows the plain HTML headline instead)
+  if (window.matchMedia && window.matchMedia('(max-width: 760px)').matches) return;
+  const gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  let last = 0, time = 0;
+  function shader(type, src){ const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)||'compile'); return s; }
+  function program(v,f){ const p=gl.createProgram(); gl.attachShader(p,shader(gl.VERTEX_SHADER,document.getElementById(v).textContent)); gl.attachShader(p,shader(gl.FRAGMENT_SHADER,document.getElementById(f).textContent)); gl.linkProgram(p); if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)||'link'); return p; }
+  const prog = program('hero-bg-vertex', 'hero-bg-fragment');
+  const quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+  const loc = { position: gl.getAttribLocation(prog,'a_position'), resolution: gl.getUniformLocation(prog,'u_resolution'), time: gl.getUniformLocation(prog,'u_time') };
+  function resize(){
+    // cap dpr at 1.5 — it's a soft, blurry backdrop; full dpr is wasted here.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.max(1, Math.floor(window.innerWidth * dpr));
+    canvas.height = Math.max(1, Math.floor(window.innerHeight * dpr));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Dim the field once you scroll past the hero so it reads as a quiet, muted
+  // backdrop for the rest of the page (full strength at the top → ~0.4 below).
+  const heroEl = document.querySelector('.bp-hero');
+  let dimRAF = 0;
+  function applyDim(){
+    dimRAF = 0;
+    const span = (heroEl ? heroEl.offsetHeight : window.innerHeight) * 0.85;
+    const t = Math.min(1, Math.max(0, (window.scrollY || window.pageYOffset || 0) / Math.max(1, span)));
+    canvas.style.opacity = (1 - t * 0.6).toFixed(3);
+  }
+  function onScroll(){ if (!dimRAF) dimRAF = requestAnimationFrame(applyDim); }
+  applyDim();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', applyDim);
+
+  // persistent across the whole page; only pause when the tab is hidden.
+  let paused = false;
+  function setPaused(p){ if (p === paused) return; paused = p; if (!paused) { last = performance.now() * 0.001; requestAnimationFrame(draw); } }
+  document.addEventListener('visibilitychange', () => setPaused(document.hidden));
+  function draw(now){
+    if (paused) return;
+    now *= 0.001; let dt = now - last; last = now; if (dt > 0.1) dt = 0.1; time += dt;
+    gl.disable(gl.BLEND);
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.enableVertexAttribArray(loc.position);
+    gl.vertexAttribPointer(loc.position, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform2f(loc.resolution, canvas.width, canvas.height);
+    gl.uniform1f(loc.time, time);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ── LAYER 2: particle effect (scrolls away with the hero) ─────────────────────
+   Renders bg + particles OPAQUELY (the original combined look). The separate
+   fixed #heroBg layer draws the same field, so as this canvas scrolls away the
+   identical background is revealed behind it — seamless, no transparent
+   compositing. ── LAYER 1 interactions (HUD hover tooltips + cursor ring) live
+   here too. ─────────────────────────────────────────────────────────────────── */
 (function(){
   const stage = document.querySelector('.bp-hero .stage');
   const canvas = document.getElementById('heroCanvas');
@@ -1685,6 +1806,13 @@
   }
   /* no hover pointer on touch — tapping still toggles sound */
   @media (hover: none) { .film-cursor { display: none; } }
+  /* Mobile: the demo sits right under the hero, so the scroll-driven grow + the
+     full-page dim tint just read as an accidental darkening. Show it inline at
+     full size with no scrim. */
+  @media (max-width: 760px) {
+    .film-scrim { display: none; }
+    .film-frame { transform: none; }
+  }
 </style>
 <section class="film" id="demo" aria-label="Product demo">
   <div class="film-scrim"></div>
@@ -2417,7 +2545,30 @@
     <div class="manifesto-body reveal">
       <p>It continuously analyzes your Amplitude data for <strong>Signals</strong>, surfaces <strong>Opportunities</strong> you or your agents can approve and ship, and tracks the experiments and <strong>Outcomes</strong> — so your product learns what works and gets smarter every cycle.</p>
 
-      <svg class="mg" style="display:block;width:36px;height:36px;margin:46px 0 18px" viewBox="0 0 24 24" aria-hidden="true"><circle class="l2" cx="12" cy="12" r="9"/><path class="ln" d="M7.5 12.5 l3 3 l6 -7" stroke-linecap="round" stroke-linejoin="round"/><circle class="acf d-throb" cx="12" cy="12" r="1.5" style="--sp:2.4s"/></svg>
+      <!-- loop micrographic: the build→ship→use→learn loop, always running on
+           Amplitude itself. Unique wl- ids so it never collides with §3's c7- loop. -->
+      <svg class="mg" style="display:block;width:64px;height:64px;margin:44px 0 20px" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <radialGradient id="wl-lead" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff"/><stop offset="45%" stop-color="#fff" stop-opacity=".4"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <path id="wl-orbit" d="M32 8 A24 24 0 1 1 32 56 A24 24 0 1 1 32 8" fill="none"/>
+        </defs>
+        <circle class="l2 thin" cx="32" cy="32" r="29" stroke-dasharray="2 6" opacity=".55"/>
+        <circle class="l2" cx="32" cy="32" r="24"/>
+        <g><circle class="no" cx="32" cy="8" r="3.6"/><circle class="nd" cx="32" cy="8" r="1.5"/>
+           <circle class="no" cx="56" cy="32" r="3.6"/><circle class="nd" cx="56" cy="32" r="1.5"/>
+           <circle class="no" cx="32" cy="56" r="3.6"/><circle class="nd" cx="32" cy="56" r="1.5"/>
+           <circle class="no" cx="8" cy="32" r="3.6"/><circle class="nd" cx="8" cy="32" r="1.5"/></g>
+        <circle class="ln thin" cx="32" cy="32" r="5" fill="none"/>
+        <path class="l2 thin" d="M32 23 v4 M32 37 v4 M23 32 h4 M37 32 h4"/>
+        <circle class="nd d-throb" cx="32" cy="32" r="1.6" style="--sp:2.6s"/>
+        <g fill="#fff">
+          <circle r="1"><animateMotion dur="4.2s" begin="-1.4s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></circle>
+          <circle r="1.2"><animateMotion dur="4.2s" begin="-2.8s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></circle>
+        </g>
+        <g><circle r="3.4" fill="url(#wl-lead)"/><circle r="1.5" fill="#fff"/><animateMotion dur="4.2s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></g>
+      </svg>
       <h3>We use Wave to build Amplitude.</h3>
       <p>For months, Wave has run on Amplitude itself — auto-triaging bugs, optimizing our landing pages and product flows, and sharpening our own agents and tools by analyzing their traces.</p>
       <p>It surfaced hundreds of <strong>Opportunities</strong> — and we've shipped better and faster than ever.</p>
@@ -2427,14 +2578,6 @@
 
 <!-- ── §8 · CTA / WAITLIST ──────────────────────────────── -->
 <section id="cta" class="closer">
-  <!-- deco · slow orbital ring, top-left -->
-  <svg class="mg mg-deco" style="top:74px;left:38px;width:92px" viewBox="0 0 100 100" aria-hidden="true">
-    <g class="d-spin" style="transform-box:view-box;transform-origin:50px 50px;--sp:26s">
-      <ellipse class="l2" cx="50" cy="50" rx="42" ry="20" transform="rotate(-18 50 50)"/>
-      <circle class="acf" cx="89" cy="38" r="2.4"/><circle class="nd" cx="11" cy="62" r="2"/>
-    </g>
-    <circle class="nd d-throb" cx="50" cy="50" r="2.2" style="--sp:2.6s"/>
-  </svg>
   <!-- v17: product-shot graphics removed; the loop returns as a donut band below the CTA -->
   <h2 class="reveal">Build products that<br><span class="a">improve themselves.</span></h2>
   <p class="reveal">Wave is rolling out to a first group of teams. Be one of them.</p>
@@ -2443,7 +2586,7 @@
       <input type="email" id="cta-email" placeholder="you@company.com" required aria-label="Email address">
       <button type="submit">Request access →</button>
     </form>
-    <div class="waitlist-help-row" style="display:flex;justify-content:center">
+    <div class="waitlist-help-row">
       <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
     </div>
     <div class="waitlist-success" role="status" aria-live="polite">
@@ -2456,7 +2599,6 @@
       </span>
       <div class="ws-title">You're on the list.</div>
       <p class="ws-sub">We'll reach out to <strong id="cta-email-echo">your inbox</strong> the moment your spot in the closed beta opens.</p>
-      <div class="ws-meta"><span class="dot"></span>Request received</div>
     </div>
   </div>
 </section>
@@ -2477,10 +2619,8 @@
 <style>
   #cta.closer{padding-bottom:96px;}
   /* v17 close · the loop returns as a full HUD section, mirroring the top of v16 */
-  .bp-foot{position:relative;height:100vh;min-height:620px;overflow:hidden;background:var(--bg);font-family:'Geist Mono',ui-monospace,monospace;}
-  .bp-foot::before{content:"";position:absolute;left:0;right:0;top:0;height:140px;z-index:2;pointer-events:none;background:linear-gradient(to top, rgba(7,11,28,0), var(--bg));}
-  .bp-foot::after{content:"";position:absolute;left:0;right:0;bottom:0;height:150px;z-index:2;pointer-events:none;background:linear-gradient(to bottom, rgba(7,11,28,0), var(--bg));}
-  .bp-foot .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:var(--bg);}
+  .bp-foot{position:relative;height:100vh;min-height:620px;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace;}
+  .bp-foot .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;}
   .bp-foot canvas,.bp-foot .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
   .bp-foot .hud{pointer-events:none;}
   .bp-foot .hud text{fill:#e9f0ff;}
@@ -2501,8 +2641,6 @@
   @media (max-width: 760px){
     .bp-foot{height:auto;min-height:0;aspect-ratio:1/1;max-height:88svh;}
     .bp-foot .hud{display:none;}
-    .bp-foot::before{height:90px;}
-    .bp-foot::after{height:90px;}
     .bp-foot-mob{
       display:block;position:absolute;inset:0;z-index:3;pointer-events:none;
       font-family:'Geist Mono',ui-monospace,monospace;color:#e9f0ff;
@@ -2643,9 +2781,9 @@
     const cf=config;
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
 
-    const g=x.createRadialGradient(W*cf.bgCenterX,H*cf.bgCenterY,0,W*cf.bgCenterX,H*cf.bgCenterY,Math.max(W,H)*cf.bgRadius);
-    g.addColorStop(0,cf.bgInner);g.addColorStop(0.5,cf.bgMid);g.addColorStop(1,cf.bgOuter);
-    x.fillStyle=g;x.fillRect(0,0,W,H);
+    // transparent canvas — clear instead of painting a bg gradient so the page
+    // background (set on the section/body) shows through behind the loop
+    x.clearRect(0,0,W,H);
 
     const cx=W*cf.centerX,cy=H*cf.centerY,R=Math.min(W,H)*cf.majorR,r=R*cf.tubeRatio,Rr=R+r;
     const e=cf.tilt,a=t*cf.rotSpeed,ce=Math.cos(e),se=Math.sin(e),ca=Math.cos(a),sa=Math.sin(a),fo=cf.focal*Rr;

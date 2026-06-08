@@ -333,12 +333,16 @@
     vec3 laser = vec3(0.370, 0.640, 1.000);
     vec3 white = vec3(0.880, 0.950, 1.000);
 
+    // subtle slow "breath": gently pulses the glow so the persistent background
+    // stays alive without distracting (two summed sines → organic, ~8% amplitude).
+    float breath = 1.0 + 0.06 * sin(u_time * 0.11) + 0.03 * sin(u_time * 0.27 + 1.7);
+
     vec3 col = mix(ink, blue, 0.32 + 0.30 * field);
-    col += violet * (beam * u_iBeamViolet + surf);
-    col += laser * beam * u_iBeamLaser;
-    col += white * beamCore * u_iBeamCoreWhite;
-    col += vec3(0.05, 0.16, 0.42) * verticalMist * u_iMist;
-    col += vec3(0.32, 0.74, 1.0) * opportunity * u_iOpp;
+    col += violet * (beam * u_iBeamViolet * breath + surf);
+    col += laser * beam * u_iBeamLaser * breath;
+    col += white * beamCore * u_iBeamCoreWhite * breath;
+    col += vec3(0.05, 0.16, 0.42) * verticalMist * u_iMist * breath;
+    col += vec3(0.32, 0.74, 1.0) * opportunity * u_iOpp * breath;
     col *= vgn * leftShade * rightShade;
     col += (grain - 0.5) * 0.018;
 
