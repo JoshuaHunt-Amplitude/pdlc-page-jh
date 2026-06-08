@@ -55,27 +55,22 @@
      = where the glow blobs sit. ───────────────────────────────────── */
   body::before {
     content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image: radial-gradient(circle at center, rgba(96,132,232,.42) 0px, rgba(96,132,232,.42) .9px, transparent 1.5px);
-    background-size: 9px 9px;
-    /* dither persists down the page, fading near the bottom */
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 100%);
-    mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 100%);
-    opacity: .5;
+    /* faint base dither — tiny pinpoints, barely visible in the dark */
+    background-image: radial-gradient(circle at center, rgba(86,116,200,.13) 0px, rgba(86,116,200,.13) .6px, transparent 1.1px);
+    background-size: 11px 11px;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%);
+    opacity: .9;
   }
   body::after {
     content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image: radial-gradient(circle at center, rgba(110,150,255,.85) 0px, rgba(110,150,255,.85) 1px, transparent 1.5px);
-    background-size: 9px 9px;
-    /* brighter dots only where the glow blobs sit — union of soft ellipses */
-    -webkit-mask-image:
-      radial-gradient(ellipse 60% 42% at 50% 12%, #000 0%, transparent 68%),
-      radial-gradient(ellipse 46% 38% at 72% 52%, rgba(0,0,0,.8) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 36% at 22% 70%, rgba(0,0,0,.6) 0%, transparent 72%);
-    mask-image:
-      radial-gradient(ellipse 60% 42% at 50% 12%, #000 0%, transparent 68%),
-      radial-gradient(ellipse 46% 38% at 72% 52%, rgba(0,0,0,.8) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 36% at 22% 70%, rgba(0,0,0,.6) 0%, transparent 72%);
-    opacity: .75;
+    /* same lattice, brighter dots, revealed only through a soft central glow
+       with a gradual multi-stop falloff so the halftone fades smoothly out */
+    background-image: radial-gradient(circle at center, rgba(120,155,255,.5) 0px, rgba(120,155,255,.5) .7px, transparent 1.1px);
+    background-size: 11px 11px;
+    -webkit-mask-image: radial-gradient(ellipse 48% 40% at 52% 34%, #000 0%, rgba(0,0,0,.55) 38%, rgba(0,0,0,.18) 62%, transparent 82%);
+    mask-image: radial-gradient(ellipse 48% 40% at 52% 34%, #000 0%, rgba(0,0,0,.55) 38%, rgba(0,0,0,.18) 62%, transparent 82%);
+    opacity: .85;
   }
   main, nav, footer { position: relative; z-index: 1; }
 
