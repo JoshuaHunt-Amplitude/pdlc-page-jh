@@ -978,6 +978,9 @@
   .d-dash{animation:mgx-dash var(--sp,2s) linear infinite}
   @media (prefers-reduced-motion: reduce){.d-spin,.d-spinr,.d-throb,.d-pulse,.d-dash{animation:none}}
   .mg-eyb{width:22px;height:22px;flex:none;opacity:.9}
+  /* standalone section micrographic (no eyebrow text) — a ~square motif above the title */
+  .sec-mg{display:block;width:84px;height:84px;margin:0 0 26px}
+  @media(max-width:720px){ .sec-mg{width:64px;height:64px;margin-bottom:18px} }
   .mg-loop{width:148px;margin:-12px 0 12px -10px;opacity:.92}
   .mg-deco{position:absolute;pointer-events:none;z-index:2;opacity:.34}
   @media(max-width:760px){.mg-deco{display:none}}
@@ -1196,7 +1199,7 @@
 <section class="manifesto" id="problem">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <div class="eyebrow">The false summit<svg class="mg mg-eyb" style="width:38px;height:auto" viewBox="0 0 160 110" aria-hidden="true"><path class="ln d-dash" d="M80 55 C 62 33, 32 33, 32 55 C 32 77, 62 77, 80 55 C 98 33, 128 33, 128 55 C 128 77, 98 77, 80 55 Z" stroke-linejoin="round" stroke-dasharray="6 7" style="--sp:1.5s"/><circle class="nd d-throb" cx="44" cy="55" r="2.6" style="--sp:2.4s"/><circle class="nd d-throb" cx="116" cy="55" r="2.6" style="--sp:2.4s;animation-delay:.6s"/><circle class="acf d-throb" cx="80" cy="55" r="3.2" style="--sp:2s"/></svg></div>
+      <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><path class="ln d-dash" d="M80 55 C 62 33, 32 33, 32 55 C 32 77, 62 77, 80 55 C 98 33, 128 33, 128 55 C 128 77, 98 77, 80 55 Z" stroke-linejoin="round" stroke-dasharray="6 7" style="--sp:1.5s"/><circle class="nd d-throb" cx="44" cy="55" r="2.6" style="--sp:2.4s"/><circle class="nd d-throb" cx="116" cy="55" r="2.6" style="--sp:2.4s;animation-delay:.6s"/><circle class="acf d-throb" cx="80" cy="55" r="3.2" style="--sp:2s"/></svg>
       <h2>The new bottleneck: <span class="a">knowing what to build.</span></h2>
       <p>Quality comes from iteration — the strategist John Boyd showed that whoever cycles their OODA loop fastest wins the dogfight. Every product runs the same loop: build, ship, use, learn.</p>
     </div>
@@ -1291,7 +1294,7 @@
 <section class="manifesto" id="solution">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <div class="eyebrow">The shift<svg class="mg mg-eyb" style="width:38px;height:auto" viewBox="0 0 160 110" aria-hidden="true"><g class="l2 d-pulse" style="--sp:3.4s"><path d="M40 30 L110 26 L128 70 L74 88 L34 64 Z"/><path d="M40 30 L128 70 M40 30 L74 88 M110 26 L74 88 M110 26 L34 64 M128 70 L34 64"/></g><g class="nd"><circle cx="40" cy="30" r="3.2"/><circle cx="110" cy="26" r="3.2"/><circle cx="128" cy="70" r="3.2"/><circle cx="74" cy="88" r="3.2"/><circle cx="34" cy="64" r="3.2"/></g><circle class="acf d-throb" cx="74" cy="50" r="3" style="--sp:2.4s"/></svg></div>
+      <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><g class="l2 d-pulse" style="--sp:3.4s"><path d="M40 30 L110 26 L128 70 L74 88 L34 64 Z"/><path d="M40 30 L128 70 M40 30 L74 88 M110 26 L74 88 M110 26 L34 64 M128 70 L34 64"/></g><g class="nd"><circle cx="40" cy="30" r="3.2"/><circle cx="110" cy="26" r="3.2"/><circle cx="128" cy="70" r="3.2"/><circle cx="74" cy="88" r="3.2"/><circle cx="34" cy="64" r="3.2"/></g><circle class="acf d-throb" cx="74" cy="50" r="3" style="--sp:2.4s"/></svg>
       <!-- loop micrographic (adapted from /micrographics COMP 07 "The Product Loop"):
            graduation rings + cardinal nodes + center reticle, a rotating radar sweep,
            and a clockwise particle stream (small + glowing leads). -->
@@ -1355,7 +1358,7 @@
 <section class="manifesto" id="data">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <div class="eyebrow">The signal<svg class="mg mg-eyb" style="width:38px;height:auto" viewBox="0 0 160 110" aria-hidden="true"><g class="l2" fill="none"><rect x="65" y="22" width="13" height="13" rx="2"/><rect x="47" y="40" width="13" height="13" rx="2"/><rect x="83" y="40" width="13" height="13" rx="2"/><rect x="65" y="58" width="13" height="13" rx="2"/><rect x="101" y="58" width="13" height="13" rx="2"/><rect x="47" y="76" width="13" height="13" rx="2"/><rect x="65" y="76" width="13" height="13" rx="2"/><rect x="83" y="76" width="13" height="13" rx="2"/></g><g class="nd"><rect x="47" y="22" width="13" height="13" rx="2"/><rect class="d-pulse" x="83" y="22" width="13" height="13" rx="2" style="--sp:3.1s"/><rect class="d-pulse" x="65" y="40" width="13" height="13" rx="2" style="--sp:2.7s;animation-delay:.6s"/><rect class="d-pulse" x="101" y="40" width="13" height="13" rx="2" style="--sp:3.3s;animation-delay:1.1s"/><rect x="83" y="58" width="13" height="13" rx="2"/><rect class="d-pulse" x="101" y="76" width="13" height="13" rx="2" style="--sp:2.9s;animation-delay:.3s"/></g><g class="acf"><rect class="d-throb" x="101" y="22" width="13" height="13" rx="2" style="--sp:2.4s"/><rect class="d-throb" x="47" y="58" width="13" height="13" rx="2" style="--sp:2.4s;animation-delay:.8s"/></g></svg></div>
+      <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><g class="l2" fill="none"><rect x="65" y="22" width="13" height="13" rx="2"/><rect x="47" y="40" width="13" height="13" rx="2"/><rect x="83" y="40" width="13" height="13" rx="2"/><rect x="65" y="58" width="13" height="13" rx="2"/><rect x="101" y="58" width="13" height="13" rx="2"/><rect x="47" y="76" width="13" height="13" rx="2"/><rect x="65" y="76" width="13" height="13" rx="2"/><rect x="83" y="76" width="13" height="13" rx="2"/></g><g class="nd"><rect x="47" y="22" width="13" height="13" rx="2"/><rect class="d-pulse" x="83" y="22" width="13" height="13" rx="2" style="--sp:3.1s"/><rect class="d-pulse" x="65" y="40" width="13" height="13" rx="2" style="--sp:2.7s;animation-delay:.6s"/><rect class="d-pulse" x="101" y="40" width="13" height="13" rx="2" style="--sp:3.3s;animation-delay:1.1s"/><rect x="83" y="58" width="13" height="13" rx="2"/><rect class="d-pulse" x="101" y="76" width="13" height="13" rx="2" style="--sp:2.9s;animation-delay:.3s"/></g><g class="acf"><rect class="d-throb" x="101" y="22" width="13" height="13" rx="2" style="--sp:2.4s"/><rect class="d-throb" x="47" y="58" width="13" height="13" rx="2" style="--sp:2.4s;animation-delay:.8s"/></g></svg>
       <h2>Your product already signals <span class="a">what to build.</span></h2>
       <p class="dagger">Every click, session replay, customer feedback, log, and agent trace is a signal — and your next best idea is buried in them.</p>
     </div>
@@ -1446,7 +1449,7 @@
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
   <div class="pl-head">
-    <div class="eyebrow">The product loop<svg class="mg mg-eyb" style="width:38px;height:auto" viewBox="0 0 160 110" aria-hidden="true"><g class="d-spin" style="transform-box:view-box;transform-origin:80px 55px;--sp:24s"><g class="l2"><ellipse cx="80" cy="55" rx="48" ry="15"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(36 80 55)"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(72 80 55)"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(108 80 55)"/></g><ellipse class="ln" cx="80" cy="55" rx="48" ry="15" transform="rotate(144 80 55)"/></g><circle class="acf d-throb" cx="80" cy="55" r="3" style="--sp:2.6s"/></svg></div>
+    <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><g class="d-spin" style="transform-box:view-box;transform-origin:80px 55px;--sp:24s"><g class="l2"><ellipse cx="80" cy="55" rx="48" ry="15"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(36 80 55)"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(72 80 55)"/><ellipse cx="80" cy="55" rx="48" ry="15" transform="rotate(108 80 55)"/></g><ellipse class="ln" cx="80" cy="55" rx="48" ry="15" transform="rotate(144 80 55)"/></g><circle class="acf d-throb" cx="80" cy="55" r="3" style="--sp:2.6s"/></svg>
     <h3>The loop that's always running.</h3>
   </div>
 
@@ -1817,7 +1820,6 @@
 ─────────────────────────────────────────────────────────────────────── -->
 <section class="pl-section reveal" id="loop-v2">
   <div class="pl-head">
-    <div class="eyebrow">Iteration v2</div>
     <h3>The loop that's always running.</h3>
   </div>
 
@@ -2084,7 +2086,7 @@
 <section class="manifesto" id="wave">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <div class="eyebrow">Meet Wave<svg class="mg mg-eyb" style="width:38px;height:auto" viewBox="0 0 160 110" aria-hidden="true"><path class="ln d-dash" d="M80 55 C 62 33, 32 33, 32 55 C 32 77, 62 77, 80 55 C 98 33, 128 33, 128 55 C 128 77, 98 77, 80 55 Z" stroke-linejoin="round" stroke-dasharray="6 7" style="--sp:1.5s"/><circle class="nd d-throb" cx="44" cy="55" r="2.6" style="--sp:2.4s"/><circle class="nd d-throb" cx="116" cy="55" r="2.6" style="--sp:2.4s;animation-delay:.6s"/><circle class="acf d-throb" cx="80" cy="55" r="3.2" style="--sp:2s"/></svg></div>
+      <svg class="mg sec-mg" viewBox="0 0 160 110" aria-hidden="true"><path class="ln d-dash" d="M80 55 C 62 33, 32 33, 32 55 C 32 77, 62 77, 80 55 C 98 33, 128 33, 128 55 C 128 77, 98 77, 80 55 Z" stroke-linejoin="round" stroke-dasharray="6 7" style="--sp:1.5s"/><circle class="nd d-throb" cx="44" cy="55" r="2.6" style="--sp:2.4s"/><circle class="nd d-throb" cx="116" cy="55" r="2.6" style="--sp:2.4s;animation-delay:.6s"/><circle class="acf d-throb" cx="80" cy="55" r="3.2" style="--sp:2s"/></svg>
       <h2>Wave knows <span class="a">what to build.</span></h2>
       <p class="dagger">A proactive product agent that helps teams build self-improving products.</p>
     </div>
@@ -2092,7 +2094,7 @@
     <div class="manifesto-body reveal">
       <p>It continuously analyzes your Amplitude data for <strong>Signals</strong>, surfaces <strong>Opportunities</strong> you or your agents can approve and ship, and tracks the experiments and <strong>Outcomes</strong> — so your product learns what works and gets smarter every cycle.</p>
 
-      <div class="eyebrow" style="margin:46px 0 16px">Proof — we run it on ourselves<svg class="mg mg-eyb" viewBox="0 0 24 24" aria-hidden="true"><circle class="l2" cx="12" cy="12" r="9"/><path class="ln" d="M7.5 12.5 l3 3 l6 -7" stroke-linecap="round" stroke-linejoin="round"/><circle class="acf d-throb" cx="12" cy="12" r="1.5" style="--sp:2.4s"/></svg></div>
+      <svg class="mg" style="display:block;width:36px;height:36px;margin:46px 0 18px" viewBox="0 0 24 24" aria-hidden="true"><circle class="l2" cx="12" cy="12" r="9"/><path class="ln" d="M7.5 12.5 l3 3 l6 -7" stroke-linecap="round" stroke-linejoin="round"/><circle class="acf d-throb" cx="12" cy="12" r="1.5" style="--sp:2.4s"/></svg>
       <h3>We use Wave to build Amplitude.</h3>
       <p>For months, Wave has run on Amplitude itself — auto-triaging bugs, optimizing our landing pages and product flows, and sharpening our own agents and tools by analyzing their traces.</p>
       <p>It surfaced hundreds of <strong>Opportunities</strong> — and we've shipped better and faster than ever.</p>
