@@ -1023,7 +1023,20 @@
   .bp-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(233,240,255,.6),0 14px 60px rgba(64,131,255,.55);}
   .bp-cta .arr{font-size:18px;transition:transform .2s;}
   .bp-cta:hover .arr{transform:translateX(4px);}
-  @media(max-width:760px){.bp-hero{height:100svh}.bp-cta{left:22px;top:auto;bottom:120px}}
+  /* mobile headline (HTML reflow). The SVG HUD scales to a tiny letterboxed band on
+     narrow screens, so below 760px we hide the whole instrument HUD + WebGL canvas
+     and show the headline/story as plain flowing text on a static gradient, at a
+     natural (non-full) height. Hidden on desktop. */
+  .bp-hero-m{display:none;position:relative;z-index:3;width:100%;max-width:600px;}
+  .bp-hero-m h1{margin:0 0 16px;font-family:'Geist Mono',ui-monospace,monospace;font-weight:600;font-size:clamp(30px,8.4vw,46px);line-height:1.1;letter-spacing:.05em;color:#f2f6ff;text-transform:uppercase;}
+  .bp-hero-m p{margin:0;font-family:'Geist Mono',ui-monospace,monospace;font-weight:400;font-size:clamp(14px,3.8vw,17px);line-height:1.55;letter-spacing:.02em;color:#c3d2ff;}
+  @media(max-width:760px){
+    .bp-hero{height:auto;min-height:0;display:flex;align-items:center;padding:76px 22px 56px;background:radial-gradient(130% 80% at 50% 24%, #16265c 0%, #0c1430 48%, var(--bg) 84%);}
+    .bp-hero .stage{display:none;}      /* hide WebGL canvas + SVG HUD chrome */
+    .bp-hero::after{display:none;}       /* gradient already lands on --bg; no extra fade */
+    .bp-scroll{display:none;}
+    .bp-hero-m{display:block;}
+  }
 </style>
 
 <style>
@@ -1158,6 +1171,11 @@
     <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
     <circle id="cursorRing" class="reveal" r="24" fill="none" stroke="#7d93ff" stroke-width="1.2"/>
   </svg>
+  </div>
+  <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
+  <div class="bp-hero-m">
+    <h1>Enabling self-improving products</h1>
+    <p>Products that find what's worth building, ship it, and prove it worked &mdash; every release, on its own.</p>
   </div>
   <a class="bp-scroll" href="#demo" aria-label="Scroll to content">
     <span>Scroll</span>
@@ -1458,6 +1476,9 @@
   const stage = document.querySelector('.bp-hero .stage');
   const canvas = document.getElementById('heroCanvas');
   if (!stage || !canvas) return;
+  // Skip the heavy 4M-particle field on small screens — mobile shows the plain HTML
+  // headline (.bp-hero-m) instead, so don't allocate buffers or run the GL loop here.
+  if (window.matchMedia && window.matchMedia('(max-width: 760px)').matches) return;
   const gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl');
   if (!gl) { console.error('WebGL not supported'); return; }
 
@@ -2473,13 +2494,25 @@
   .bp-foot .lnf{stroke:rgba(233,240,255,0.7);fill:none;}
   /* Mobile: the HUD is a 16:9 instrument composition that letterboxes to a tiny
      centred band on a tall phone, and a full 100vh of mostly-empty navy reads as
-     dead space. Drop the desktop HUD overlay (it's decorative, aria-hidden) and
-     let the torus canvas fill a shorter band so the close stays a "vibe", not a gap. */
+     dead space. Drop the desktop instrument HUD (it's decorative, aria-hidden) and
+     let the torus canvas fill a shorter band — but keep the key labels as plain
+     text in roughly the desktop corners so the close still reads as titled, not bare. */
+  .bp-foot-mob{display:none;}
   @media (max-width: 760px){
     .bp-foot{height:auto;min-height:0;aspect-ratio:1/1;max-height:88svh;}
     .bp-foot .hud{display:none;}
     .bp-foot::before{height:90px;}
     .bp-foot::after{height:90px;}
+    .bp-foot-mob{
+      display:block;position:absolute;inset:0;z-index:3;pointer-events:none;
+      font-family:'Geist Mono',ui-monospace,monospace;color:#e9f0ff;
+    }
+    .bfm-title{position:absolute;left:24px;top:max(30px,5svh);font-weight:600;
+      font-size:clamp(18px,5.6vw,26px);letter-spacing:.1em;line-height:1.18;}
+    .bfm-sub{position:absolute;left:24px;top:calc(max(30px,5svh) + clamp(26px,8vw,38px));
+      font-weight:400;font-size:11px;letter-spacing:.3em;color:#c3d2ff;}
+    .bfm-year{position:absolute;right:24px;bottom:max(22px,3svh);
+      font-weight:500;font-size:14px;letter-spacing:.18em;}
   }
 </style>
 <section class="bp-foot" aria-hidden="true">
@@ -2511,8 +2544,8 @@
         <rect x="38" y="710" width="13" height="5"/><rect x="38" y="720" width="16" height="5"/>
       </g>
       <!-- title -->
-      <text class="t-title" x="92" y="150">AMPLITUDE WAVE</text>
-      <text class="t-sub" x="95" y="184">THE PRODUCT LOOP · ALWAYS RUNNING</text>
+      <text class="t-title" x="92" y="150">YOUR PRODUCT LOOP</text>
+      <text class="t-sub" x="95" y="184">ALWAYS RUNNING</text>
       <!-- SENSE / DECIDE / ACT / LEARN -->
       <path class="ln" stroke-width="1.3" d="M92 352 h-10 V500 h10"/>
       <path class="ln" stroke-width="1.3" d="M360 352 h10 V500 h-10"/>
@@ -2539,23 +2572,25 @@
       <!-- callouts -->
       <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
         <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
-        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/>
+        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/><path d="M1294 158 L1198 322"/>
         <path d="M268 290 L570 302"/><path d="M268 632 L520 614"/><path d="M310 708 L720 690"/>
       </g>
       <g fill="#e9f0ff">
         <circle cx="1180" cy="642" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
         <circle cx="1280" cy="470" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
         <circle cx="1180" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="1198" cy="322" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.5s" repeatCount="indefinite"/></circle>
         <circle cx="570"  cy="302" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
         <circle cx="520"  cy="614" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
         <circle cx="720"  cy="690" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
       </g>
+      <text class="t-call" x="1300" y="146">CONVERSION FUNNELS</text>
       <text class="t-call" x="1300" y="250">WEB VITALS</text>
       <text class="t-call" x="1330" y="472">PRODUCT FEEDBACK</text>
       <text class="t-call" x="1300" y="692">SESSION REPLAYS</text>
       <text class="t-call" x="110" y="292">COMPETITIVE</text>
       <text class="t-call" x="110" y="636">AGENT TRACES</text>
-      <text class="t-call" x="110" y="712">CUSTOM DATA · MCP</text>
+      <text class="t-call" x="110" y="712">CUSTOM METRICS · MCP</text>
       <!-- bottom-left version (squares blink in sequence) -->
       <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
       <g class="ln" stroke-width="1">
@@ -2567,10 +2602,15 @@
       </g>
       <!-- bottom-right -->
       <text class="t-2026" x="1448" y="848">[ 2026 ]</text>
-      <text class="t-sm" x="1454" y="878">THE PRODUCT LOOP</text>
-      <text class="t-sm" x="1474" y="897">AMPLITUDE WAVE</text>
       <circle cx="1600" cy="116" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
     </svg>
+  </div>
+  <!-- mobile-only: plain-text labels in roughly the desktop HUD positions
+       (the instrument SVG above is display:none on phones) -->
+  <div class="bp-foot-mob" aria-hidden="true">
+    <div class="bfm-title">YOUR PRODUCT LOOP</div>
+    <div class="bfm-sub">ALWAYS RUNNING</div>
+    <div class="bfm-year">[ 2026 ]</div>
   </div>
 </section>
 <script>
