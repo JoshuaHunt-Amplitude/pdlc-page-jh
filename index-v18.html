@@ -1069,13 +1069,79 @@
     </svg>
   </div>
   <a class="bp-cta" href="#cta">Request access <span class="arr">→</span></a>
-  <a class="bp-scroll" href="#problem" aria-label="Scroll to content">
+  <a class="bp-scroll" href="#demo" aria-label="Scroll to content">
     <span>Scroll</span>
     <svg viewBox="0 0 24 28" fill="none" stroke="#c3d2ff" stroke-width="1.6"><path class="chev" d="M5 9 L12 17 L19 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </a>
 </section>
 
-<!-- ── WHY ───────────────────────────────────────────── -->
+<!-- ── SCROLL-DRIVEN VIDEO TRANSITION (placeholder, à la ramp.com/stack) ──────────
+     A video sits embedded below the hero; as you scroll it grows to a modal-size
+     focal point and a scrim dims the page, then it releases and undims as you keep
+     scrolling — no clicks. A tall .film runway pins .film-pin to the viewport while
+     JS drives a 0→1→0 progress into --scale (the frame) and --dim (the scrim).
+     Drop a real <video> source into .film-media and delete .film-ph to go live.
+     TUNING: .film height = how much scroll the moment takes · 0.56→1.0 = embedded→
+     modal size · 0.72 = max page dim. -->
+<style>
+  .film { position: relative; height: 230vh; }
+  .film-pin { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; z-index: 4; }
+  .film-scrim { position: absolute; inset: 0; background: #04060f; opacity: var(--dim, 0); pointer-events: none; }
+  .film-frame {
+    position: relative; z-index: 2;
+    width: min(1080px, 90vw); aspect-ratio: 16 / 9;
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(180,200,255,.18);
+    background: linear-gradient(160deg, #101a3a, #0a1024);
+    box-shadow: 0 40px 140px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.04);
+    transform: scale(var(--scale, 0.56)); transform-origin: center; will-change: transform;
+  }
+  .film-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .film-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #c3d2ff; font-family: var(--mono); }
+  .film-play { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; border: 1px solid rgba(180,200,255,.4); background: rgba(180,200,255,.08); color: #e9f0ff; font-size: 24px; padding-left: 5px; box-shadow: 0 0 44px rgba(64,131,255,.35); }
+  .film-ph-label { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #7f8cc4; }
+  .film-tag { position: absolute; left: 16px; top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #9fb0d8; opacity: .85; }
+  @media (prefers-reduced-motion: reduce) { .film { height: auto; } .film-pin { position: static; height: auto; padding: 90px 0; } .film-frame { transform: scale(.86); } .film-scrim { display: none; } }
+  @media (max-width: 760px) { .film { height: 180vh; } }
+</style>
+<section class="film" id="demo" aria-label="Product demo">
+  <div class="film-pin">
+    <div class="film-scrim"></div>
+    <div class="film-frame">
+      <span class="film-tag">Wave · Demo</span>
+      <!-- drop the product demo here, then remove .film-ph -->
+      <video class="film-media" muted loop playsinline preload="none"><!-- <source src="wave-demo.mp4" type="video/mp4"> --></video>
+      <div class="film-ph">
+        <span class="film-play">&#9654;</span>
+        <span class="film-ph-label">Product demo · video placeholder</span>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var film = document.getElementById('demo'); if(!film) return;
+  var pin = film.querySelector('.film-pin');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var ticking = false;
+  function update(){
+    ticking = false;
+    var total = film.offsetHeight - window.innerHeight;
+    if (total <= 0) return;
+    var p = (-film.getBoundingClientRect().top) / total;
+    p = Math.max(0, Math.min(1, p));
+    var f = 1 - Math.abs(p - 0.5) / 0.5;   // 0 → 1 (centred) → 0
+    f = Math.max(0, Math.min(1, f));
+    var e = f*f*(3-2*f);                    // smoothstep
+    pin.style.setProperty('--scale', (0.56 + 0.44*e).toFixed(4));
+    pin.style.setProperty('--dim',   (0.72*e).toFixed(4));
+  }
+  addEventListener('scroll', function(){ if(!ticking){ requestAnimationFrame(update); ticking = true; } }, {passive:true});
+  addEventListener('resize', update);
+  update();
+})();
+</script>
+
 <!-- ── §2 · PROBLEM — the false summit ─────────────────── -->
 <section class="manifesto" id="problem">
   <div class="manifesto-in">
