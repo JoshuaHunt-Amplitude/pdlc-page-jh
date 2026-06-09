@@ -1150,11 +1150,19 @@
      particle canvas + HUD scroll away over it. */
   .bp-hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:transparent;font-family:'Geist Mono',ui-monospace,monospace;}
   .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:transparent;}
-  .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
-  /* Reserve a bottom strip for the scroll indicator so the HUD (which centres via
-     preserveAspectRatio="meet") always scales/sits ABOVE it — never overlapping,
-     at any viewport aspect (incl. 16:9 fullscreen and ultrawide). Canvas stays full. */
-  .bp-hero .hud{top:0;left:0;right:auto;bottom:auto;width:100%;height:calc(100% - 92px);}
+  .bp-hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  /* v19: the HUD is TWO edge-pinned instrument frames, not one centred SVG. Each is
+     full-width and scales by width (its intrinsic viewBox aspect = no letterboxing),
+     so the top frame hugs the top edge and the bottom frame hugs the bottom edge —
+     filling the screen at any aspect ratio instead of floating as a centred band.
+     The torus/particle canvas spans the full hero behind both, showing through the
+     transparent SVGs everywhere there's no line or text. */
+  .bp-hero .hud{position:absolute;display:block;}
+  .bp-hero .hud-top{top:0;left:0;right:0;bottom:auto;width:100%;height:auto;}
+  /* lift the bottom frame off the floor so the centred Scroll affordance has its
+     own clear strip beneath it (matches the old design's reserved bottom band).
+     --scroll-reserve = height of the scroll chevron + label + its bottom margin. */
+  .bp-hero .hud-bot{top:auto;left:0;right:0;bottom:var(--scroll-reserve,88px);width:100%;height:auto;}
   .bp-hero .hud{pointer-events:none;}
   .bp-hero .hud text{fill:#e9f0ff;}
   .bp-hero .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
@@ -1172,17 +1180,14 @@
   .bp-scroll .chev{animation:bp-bob 1.8s ease-in-out infinite;}
   @keyframes bp-bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
   @media(prefers-reduced-motion:reduce){.bp-scroll .chev{animation:none}}
-  /* hero CTA — HTML button overlaid on the HUD (the SVG is pointer-events:none).
-     Anchor it to the SVG-HUD's own coordinate space (viewBox 1680×945, xMidYMid
-     meet) so its left edge sits exactly at the text gutter (SVG x=92) and its top
-     just below the subhead (SVG y=415), at any viewport size/aspect. */
+  /* hero CTA — HTML button overlaid on the top HUD (the SVGs are pointer-events:none). */
   .bp-cta{position:absolute;
-    /* match the HUD SVG's actual box: width 100vw, height calc(100% - 92px),
-       viewBox 1680×945 xMidYMid meet. Left edge sits at the title gutter (SVG
-       x=80); top sits just below the "PRODUCTS" baseline (y=300) at SVG y=342. */
-    --s:min(calc(100vw / 1680), calc((100vh - 92px) / 945));
-    left:calc((100vw - var(--s)*1680)/2 + var(--s)*80);
-    top:calc(((100vh - 92px) - var(--s)*945)/2 + var(--s)*342);
+    /* anchored to the TOP instrument SVG, which is full-width and scales purely by
+       width (viewBox 1680 wide). So 1 viewBox unit = (100vw / 1680) px, and the pill
+       sits at SVG x=80 (the title gutter), y=360 (just below the PRODUCTS baseline). */
+    --s:calc(100vw / 1680);
+    left:calc(var(--s) * 80);
+    top:calc(var(--s) * 360);
     z-index:3;pointer-events:auto;
     display:inline-flex;align-items:center;gap:0.8em;font-family:'Geist Mono',ui-monospace,monospace;
     /* size scales with the HUD (--s) so the pill stays proportional to the title
@@ -1242,46 +1247,48 @@
   <!-- hero coherence field: inlined from wave-coherence-tuner.html, baked to the USE_ME_FOR_MAIN config -->
   <div class="stage">
     <canvas id="heroCanvas"></canvas>
-    <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
-    <!-- instrument frame -->
-    <g class="ln" stroke-width="1.35" opacity="0.78">
-      <path d="M42 98 V42 H98"/><path d="M110 62 h18 M119 53 v18"/>
-      <path d="M1638 98 V42 H1582"/>
-      <path d="M42 847 V903 H98"/>
-      <path d="M1638 847 V903 H1582"/>
-      <circle cx="1598" cy="116" r="11"/><path d="M1598 99 V133 M1581 116 H1615"/>
-    </g>
+    <!-- TOP instrument frame — pinned to the top edge: corners + crosshair + title.
+         viewBox is the top band of the original 945-tall composition (coords unchanged). -->
+    <svg class="hud hud-top" viewBox="0 0 1680 440" preserveAspectRatio="xMidYMin meet">
+      <g class="ln" stroke-width="1.35" opacity="0.78">
+        <path d="M42 98 V42 H98"/><path d="M110 62 h18 M119 53 v18"/>
+        <path d="M1638 98 V42 H1582"/>
+        <circle cx="1598" cy="116" r="11"/><path d="M1598 99 V133 M1581 116 H1615"/>
+      </g>
+      <!-- title -->
+      <text class="title" x="80" y="172">
+        <tspan x="80" dy="0">ENABLING</tspan>
+        <tspan x="80" dy="64">SELF-IMPROVING</tspan>
+        <tspan x="80" dy="64">PRODUCTS</tspan>
+      </text>
+    </svg>
 
-    <!-- title -->
-    <text class="title" x="80" y="172">
-      <tspan x="80" dy="0">ENABLING</tspan>
-      <tspan x="80" dy="64">SELF-IMPROVING</tspan>
-      <tspan x="80" dy="64">PRODUCTS</tspan>
-    </text>
-
-
-    <!-- right readout -->
-
-    <!-- bottom process axis -->
-    <g class="dimln" stroke-width="1.1" opacity="0.38">
-      <path d="M82 766 H1532"/>
-      <path d="M82 766 v18 M565 766 v18 M1048 766 v18 M1532 766 v18"/>
-    </g>
-    <g opacity="0.42">
-      <text class="sm" x="82" y="748">SENSE</text>
-      <text class="sm" x="565" y="748">DECIDE</text>
-      <text class="sm" x="1048" y="748">ACT</text>
-      <text class="sm" x="1532" y="748" text-anchor="end">LEARN</text>
-    </g>
-
-    <!-- bottom story line -->
-    <text class="hero" x="82" y="836">
-      <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
-      <tspan x="82" dy="34">and prove it worked. Every release, on its own.</tspan>
-    </text>
-    <text class="cap" x="1486" y="878">[ 2026 ]</text>
-    <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
-  </svg>
+    <!-- BOTTOM instrument frame — pinned to the bottom edge: corners + process axis +
+         story copy + year. viewBox is a window onto the lower band (y 735→945) so all
+         coords match the original composition unchanged. -->
+    <svg class="hud hud-bot" viewBox="0 722 1680 223" preserveAspectRatio="xMidYMax meet">
+      <g class="ln" stroke-width="1.35" opacity="0.78">
+        <path d="M42 847 V903 H98"/>
+        <path d="M1638 847 V903 H1582"/>
+      </g>
+      <!-- process axis -->
+      <g class="dimln" stroke-width="1.1" opacity="0.38">
+        <path d="M82 766 H1532"/>
+        <path d="M82 766 v18 M565 766 v18 M1048 766 v18 M1532 766 v18"/>
+      </g>
+      <g opacity="0.42">
+        <text class="sm" x="82" y="748">SENSE</text>
+        <text class="sm" x="565" y="748">DECIDE</text>
+        <text class="sm" x="1048" y="748">ACT</text>
+        <text class="sm" x="1532" y="748" text-anchor="end">LEARN</text>
+      </g>
+      <!-- bottom story line -->
+      <text class="hero" x="82" y="836">
+        <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
+        <tspan x="82" dy="34">and prove it worked. Every release, on its own.</tspan>
+      </text>
+      <text class="cap" x="1486" y="878">[ 2026 ]</text>
+    </svg>
   </div>
   <!-- hero CTA: HTML pill overlaid on the HUD, anchored under the title (see .bp-cta) -->
   <a class="bp-cta" href="#cta">Request access <span class="arr" aria-hidden="true">→</span></a>
