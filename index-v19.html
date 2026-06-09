@@ -4,7 +4,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Amplitude Wave · v19 · enabling self-improving products | Amplitude</title>
+<title>Amplitude Wave · v18 · enabling self-improving products | Amplitude</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -134,10 +134,6 @@
 
   /* ── MANIFESTO ──────────────────────── */
   .manifesto { padding: 98px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
-  /* extra bottom padding on §4 (data) so the top wave fade has room;
-     extra top padding on §3 (solution) so the bottom wave fade lands cleanly */
-  #data     { padding-bottom: 160px; }
-  #solution { padding-top:    160px; }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 32px; }
 
   /* Loop visual */
@@ -851,7 +847,7 @@
   }
 
   /* ── FOOTER ─────────────────────────── */
-  footer { padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: #00070e; }
+  footer { padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
   .fc { color: var(--dim); font-size: 13px; font-family: var(--mono); letter-spacing: .1em; }
 
   /* ── WHAT THIS IS (under-hero strip) ── */
@@ -930,84 +926,6 @@
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
   }
-
-  /* ── INTRODUCING WAVE (full-bleed Unicorn Studio embed) ── */
-  .intro-wave {
-    position: relative;
-    overflow: hidden;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  /* gradient fades — top dissolves from page bg; bottom dissolves into #00070E */
-  .intro-wave::before,
-  .intro-wave::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0;
-    pointer-events: none;
-    z-index: 2;
-  }
-  .intro-wave::before {
-    top: 0;
-    height: 260px;
-    background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
-  }
-  .intro-wave::after {
-    bottom: 0;
-    /* taller bottom fade; target is the new deep bg so the blend is seamless */
-    height: 340px;
-    background: linear-gradient(to top, #00070e 0%, transparent 100%);
-  }
-  /* text overlay: "AMPLITUDE PRESENTS" + tagline, centred over the embed */
-  .intro-wave-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    padding-bottom: 10%;
-    text-align: center;
-    gap: 10px;
-  }
-  .intro-wave-eyebrow {
-    font-family: var(--mono);
-    font-size: clamp(10px, 1vw, 13px);
-    letter-spacing: .28em;
-    text-transform: uppercase;
-    color: rgba(195,210,255,.52);
-  }
-  .intro-wave-tagline {
-    font-family: var(--mono);
-    font-size: clamp(11px, 1.1vw, 14px);
-    letter-spacing: .22em;
-    text-transform: uppercase;
-    color: rgba(195,210,255,.72);
-    line-height: 1.8;
-  }
-  .intro-wave-in {
-    max-width: 1440px;
-    margin: 0 auto;
-    position: relative;
-  }
-  .intro-wave-in > div {
-    /* override the embed's baked-in 1440×900 size */
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 1440 / 900;
-    display: block;
-  }
-
-  /* ── POST-WAVE: deep background for all content below the Wave reveal ── */
-  .post-wave-bg {
-    background: #00070e;
-    /* blend start: short gradient from transparent (#00070e 0%) so the wave's
-       bottom fade melts cleanly into this surface */
-    position: relative;
-  }
-  /* The #solution and #loops padding rules from earlier apply inside this wrapper */
 
   /* ── REVEAL ─────────────────────────── */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
@@ -1718,7 +1636,7 @@
      Drop a real <video> into .film-media and delete .film-ph to go live.
      TUNING: .film-wrap width = max size · 0.8→1.0 = peek→full · 0.74 = max dim. -->
 <style>
-  .film { position: relative; padding: 12vh 0 16vh; background: var(--bg); }
+  .film { position: relative; padding: 12vh 0 16vh; background: transparent; }
   .film-scrim { position: fixed; inset: 0; background: #04060f; opacity: var(--dim, 0); pointer-events: none; z-index: 40; }
   .film-wrap { position: relative; z-index: 41; width: min(1280px, 94vw); aspect-ratio: 16 / 9; margin: 0 auto; }
   .film-frame {
@@ -1984,39 +1902,7 @@
   </div>
 </section>
 
-<!-- ── §4 · THE DATA — signals become a spec ───────────── -->
-<section class="manifesto" id="data">
-  <div class="manifesto-in">
-    <div class="manifesto-head reveal">
-      <svg class="mg sec-mg" viewBox="47 21 70 70" aria-hidden="true" style="width:96px;height:96px"><g class="l2" fill="none"><rect x="65" y="22" width="13" height="13" rx="2"/><rect x="47" y="40" width="13" height="13" rx="2"/><rect x="83" y="40" width="13" height="13" rx="2"/><rect x="65" y="58" width="13" height="13" rx="2"/><rect x="101" y="58" width="13" height="13" rx="2"/><rect x="47" y="76" width="13" height="13" rx="2"/><rect x="65" y="76" width="13" height="13" rx="2"/><rect x="83" y="76" width="13" height="13" rx="2"/></g><g class="nd"><rect x="47" y="22" width="13" height="13" rx="2"/><rect class="d-pulse" x="83" y="22" width="13" height="13" rx="2" style="--sp:3.1s"/><rect class="d-pulse" x="65" y="40" width="13" height="13" rx="2" style="--sp:2.7s;animation-delay:.6s"/><rect class="d-pulse" x="101" y="40" width="13" height="13" rx="2" style="--sp:3.3s;animation-delay:1.1s"/><rect x="83" y="58" width="13" height="13" rx="2"/><rect class="d-pulse" x="101" y="76" width="13" height="13" rx="2" style="--sp:2.9s;animation-delay:.3s"/></g><g class="acf"><rect class="d-throb" x="101" y="22" width="13" height="13" rx="2" style="--sp:2.4s"/><rect class="d-throb" x="47" y="58" width="13" height="13" rx="2" style="--sp:2.4s;animation-delay:.8s"/></g></svg>
-      <h2>Your next best move is already in your data</h2>
-      <p class="dagger">Every click, session replay, customer feedback, log, and agent trace is a signal about what's working and what's not — and your next best idea is buried in them.</p>
-    </div>
-
-    <div class="manifesto-body reveal">
-      <p>A self-improving product continuously analyzes every signal, corroborates evidence across sources, and turns that context into <strong>Opportunities</strong> to improve and grow.</p>
-      <p>Then it tracks whether the ship actually moved the metric and remembers the result, so every cycle is sharper than the last.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── INTRODUCING WAVE (Unicorn Studio full-bleed embed) ─── -->
-<section class="intro-wave" aria-label="Introducing Wave">
-  <div class="intro-wave-in">
-    <div style="width: 1440px; height: 900px" data-us-project="CKe6dFknhkRJIEA3unTS"></div>
-  </div>
-  <!-- text overlay: centred in the lower half of the embed, above the bottom fade -->
-  <div class="intro-wave-overlay" aria-hidden="true">
-    <p class="intro-wave-eyebrow">Amplitude presents</p>
-    <p class="intro-wave-tagline">The world's first<br>self-improving product engine</p>
-  </div>
-</section>
-<script type="text/javascript">!function(){var u=window.UnicornStudio;if(u&&u.init){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){u.init()})}else{u.init()}}else{window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.1/dist/unicornStudio.umd.js",i.onload=function(){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){UnicornStudio.init()})}else{UnicornStudio.init()}},(document.head||document.body).appendChild(i)}}();</script>
-
-<!-- ── POST-WAVE: deeper background from here to footer ─── -->
-<div class="post-wave-bg">
-
-<!-- ── §3 · SOLUTION — the category, defined (moved after Wave reveal) ─── -->
+<!-- ── §3 · SOLUTION — the category, defined ───────────── -->
 <section class="manifesto" id="solution">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
@@ -2068,9 +1954,26 @@
           <g><circle r="4" fill="url(#c7-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
         </g>
       </svg>
-      <h2>A self-improving product runs the whole loop on its own.</h2>
+      <h2>Products can improve themselves now</h2>
+      <p class="dagger">A self-improving product runs the whole loop on its own.</p>
       <p>It reads the signals across your product, decides what's worth building, and orchestrates the people and agents who ship it. Then it measures what worked (monitoring outcomes, running experiments) and feeds the learning into the next cycle.</p>
       <p>So your product doesn't just grow, it <strong>compounds</strong>: every loop sharper than the last.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── §4 · THE DATA — signals become a spec ───────────── -->
+<section class="manifesto" id="data">
+  <div class="manifesto-in">
+    <div class="manifesto-head reveal">
+      <svg class="mg sec-mg" viewBox="47 21 70 70" aria-hidden="true" style="width:96px;height:96px"><g class="l2" fill="none"><rect x="65" y="22" width="13" height="13" rx="2"/><rect x="47" y="40" width="13" height="13" rx="2"/><rect x="83" y="40" width="13" height="13" rx="2"/><rect x="65" y="58" width="13" height="13" rx="2"/><rect x="101" y="58" width="13" height="13" rx="2"/><rect x="47" y="76" width="13" height="13" rx="2"/><rect x="65" y="76" width="13" height="13" rx="2"/><rect x="83" y="76" width="13" height="13" rx="2"/></g><g class="nd"><rect x="47" y="22" width="13" height="13" rx="2"/><rect class="d-pulse" x="83" y="22" width="13" height="13" rx="2" style="--sp:3.1s"/><rect class="d-pulse" x="65" y="40" width="13" height="13" rx="2" style="--sp:2.7s;animation-delay:.6s"/><rect class="d-pulse" x="101" y="40" width="13" height="13" rx="2" style="--sp:3.3s;animation-delay:1.1s"/><rect x="83" y="58" width="13" height="13" rx="2"/><rect class="d-pulse" x="101" y="76" width="13" height="13" rx="2" style="--sp:2.9s;animation-delay:.3s"/></g><g class="acf"><rect class="d-throb" x="101" y="22" width="13" height="13" rx="2" style="--sp:2.4s"/><rect class="d-throb" x="47" y="58" width="13" height="13" rx="2" style="--sp:2.4s;animation-delay:.8s"/></g></svg>
+      <h2>Your next best move is already in your data</h2>
+      <p class="dagger">Every click, session replay, customer feedback, log, and agent trace is a signal about what's working and what's not — and your next best idea is buried in them.</p>
+    </div>
+
+    <div class="manifesto-body reveal">
+      <p>A self-improving product continuously analyzes every signal, corroborates evidence across sources, and turns that context into <strong>Opportunities</strong> to improve and grow.</p>
+      <p>Then it tracks whether the ship actually moved the metric and remembers the result, so every cycle is sharper than the last.</p>
     </div>
   </div>
 </section>
@@ -2514,7 +2417,7 @@
       <button type="submit">Request access <span class="arr" aria-hidden="true">→</span></button>
     </form>
     <div class="waitlist-help-row">
-      <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
+      <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email. By submitting your email, you consent to Amplitude processing your personal data in accordance with our <a href="https://amplitude.com/privacy" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px;opacity:.7;">Privacy Policy</a>.</p>
     </div>
     <div class="waitlist-success" role="status" aria-live="polite">
       <span class="ws-badge" aria-hidden="true">
@@ -2785,8 +2688,6 @@
 })();
 </script>
 
-</div><!-- /post-wave-bg -->
-
 </main>
 
 <footer>
@@ -2931,8 +2832,8 @@
       <a class="cmdk-item" href="index-v19.html" data-page="index-v19.html">
         <span class="cmdk-num">V19</span>
         <span class="cmdk-text">
-          <div class="cmdk-name">Introducing Wave · full-bleed interstitial</div>
-          <div class="cmdk-desc">v18 fork · adds Unicorn Studio "Introducing Wave" section between §4 (data) and the product loop</div>
+          <div class="cmdk-name">V19</div>
+          <div class="cmdk-desc">v18 fork</div>
         </span>
         <span class="cmdk-current">Current</span>
       </a>
@@ -2942,7 +2843,7 @@
           <div class="cmdk-name">Wave messaging tearup · 8 beats</div>
           <div class="cmdk-desc">v17 fork · new copy · signal-wave hero · adds Proof (we run it on ourselves) section</div>
         </span>
-        <span class="cmdk-current"></span>
+        <span class="cmdk-current">Current</span>
       </a>
       <a class="cmdk-item" href="index-v17.html" data-page="index-v17.html">
         <span class="cmdk-num">V17</span>
@@ -2950,7 +2851,7 @@
           <div class="cmdk-name">Self-improving products · 7-beat narrative</div>
           <div class="cmdk-desc">v16 fork · category hero · problem/solution split · data → hypothesis → Meet Wave reveal</div>
         </span>
-        <span class="cmdk-current"></span>
+        <span class="cmdk-current">Current</span>
       </a>
       <a class="cmdk-item" href="index-v16.html" data-page="index-v16.html">
         <span class="cmdk-num">V16</span>
