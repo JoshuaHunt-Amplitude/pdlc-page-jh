@@ -1283,27 +1283,15 @@
       <text class="sm" x="1340" y="67" text-anchor="end">[ 2026 ]</text>
     </svg>
 
-    <!-- BOTTOM instrument chrome — pinned to the bottom edge: corners + process axis.
-         viewBox is a window onto the lower band (y 722→945) so coords are unchanged. -->
+    <!-- BOTTOM instrument chrome — pinned to the bottom edge: corner marks only
+         (the BUILD/SHIP/USE/LEARN timeline was removed). -->
     <svg class="hud hud-bot" viewBox="0 722 1680 223" preserveAspectRatio="xMidYMax meet">
-      <!-- bottom corners — matching minimal crosshair marks + dotted rules -->
       <path class="hud-mark" d="M52 903 h20 M62 893 v20"/>
       <path class="hud-rule" d="M88 903 H300"/>
       <path class="hud-rule" d="M62 879 V740"/>
       <path class="hud-mark" d="M1608 903 h20 M1618 893 v20"/>
       <path class="hud-rule" d="M1592 903 H1380"/>
       <path class="hud-rule" d="M1618 879 V740"/>
-      <!-- process axis -->
-      <g class="dimln" stroke-width="1.1" opacity="0.38">
-        <path d="M82 766 H1532"/>
-        <path d="M82 766 v18 M565 766 v18 M1048 766 v18 M1532 766 v18"/>
-      </g>
-      <g opacity="0.42">
-        <text class="sm" x="82" y="748">BUILD</text>
-        <text class="sm" x="565" y="748">SHIP</text>
-        <text class="sm" x="1048" y="748">USE</text>
-        <text class="sm" x="1532" y="748" text-anchor="end">LEARN</text>
-      </g>
     </svg>
   </div>
   <!-- hero copy — real HTML (Poppins), vertically centred over the field -->
@@ -1396,7 +1384,10 @@
       * smoothstep(0.58, -0.42, uv.y);
     float leftShade = smoothstep(0.0, 0.24, st.x);
     float rightShade = 1.0 - smoothstep(0.70, 1.0, st.x);
-    float vgn = smoothstep(0.93, 0.28, length(st - 0.5));
+    // horizontal-only vignette: darken left/right edges but NOT top/bottom, so the
+    // opaque hero canvas doesn't render a dark band at its bottom edge (which read as
+    // an inset "shadow" where the hero meets the next section).
+    float vgn = smoothstep(0.93, 0.28, abs(st.x - 0.5));
 
     vec3 ink = vec3(0.006, 0.010, 0.026);
     vec3 blue = vec3(0.010, 0.090, 0.320);
