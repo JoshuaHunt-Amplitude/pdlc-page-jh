@@ -1011,8 +1011,9 @@
   /* ── HOVER CARDS (inline term tooltips) ── */
   .hc {
     position: relative;
-    display: inline;
+    display: inline-block;
     cursor: default;
+    vertical-align: baseline;
   }
   /* underline only the visible term text, not the hidden card */
   .hc-term {
@@ -1034,8 +1035,9 @@
     border-radius: 10px;
     padding: 14px 16px;
     box-shadow: 0 16px 48px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
-    /* hidden by default */
+    /* hidden by default — visibility:hidden pulls it out of the text flow */
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
     transition: opacity .22s ease, transform .22s cubic-bezier(.2,.7,.2,1);
     z-index: 20;
@@ -1056,15 +1058,18 @@
   }
   .hc:hover .hc-card, .hc:focus-within .hc-card {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
     transform: translateX(-50%) translateY(0);
   }
   .hc-label {
+    display: block;
     font-family: var(--mono); font-size: 10px; letter-spacing: .2em;
     text-transform: uppercase; color: var(--blue-d);
     margin: 0 0 8px;
   }
   .hc-body {
+    display: block;
     font-family: var(--sans); font-size: 13px; line-height: 1.6;
     color: var(--dim); margin: 0;
   }
@@ -1956,7 +1961,7 @@
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
       <h2>The new bottleneck: <span class="a">knowing what to build</span></h2>
-      <p>Quality comes from iteration. The military strategist <span class="hc" tabindex="0"><span class="hc-term">John Boyd</span><span class="hc-card"><p class="hc-label">John Boyd</p><p class="hc-body">Placeholder — finesse this copy.</p></span></span> showed that whoever cycles their <span class="hc" tabindex="0"><span class="hc-term">OODA loop</span><span class="hc-card"><p class="hc-label">OODA Loop</p><p class="hc-body">Placeholder — finesse this copy.</p></span></span> fastest wins the dogfight. Every product runs the same loop: build, ship, use, learn.</p>
+      <p>Quality comes from iteration. The military strategist <span class="hc" tabindex="0"><span class="hc-term">John Boyd</span><span class="hc-card"><span class="hc-label">John Boyd</span><span class="hc-body">Placeholder — finesse this copy.</span></span></span> showed that whoever cycles their <span class="hc" tabindex="0"><span class="hc-term">OODA loop</span><span class="hc-card"><span class="hc-label">OODA Loop</span><span class="hc-body">Placeholder — finesse this copy.</span></span></span> fastest wins the dogfight. Every product runs the same loop: build, ship, use, learn.</p>
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
