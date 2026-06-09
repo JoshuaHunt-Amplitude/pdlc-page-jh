@@ -1054,11 +1054,13 @@
     /* headline at the top; extra bottom room so the particle field shows beneath it.
        Not full-height — the field fills this box (text + the padded space below). */
     .bp-hero{height:auto;min-height:0;display:block;padding:84px 22px 248px;background:#070b1c;}
-    .bp-hero .stage{display:block;}     /* show the particle canvas (bg + particles) */
+    /* push the field into the lower region so it fills the negative space below the
+       text instead of competing with the headline up top. */
+    .bp-hero .stage{display:block;top:46%;bottom:0;height:auto;}
     .bp-hero .hud{display:none;}         /* but keep the SVG HUD chrome/tooltips hidden */
     /* dim the field to 60% so it doesn't fight the text, and fade its bottom edge
        into the hero navy (= the next section's bg) for a smooth, seam-free break. */
-    .bp-hero canvas{opacity:.6;-webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);}
+    .bp-hero canvas{opacity:.6;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 16%,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 16%,#000 80%,transparent 100%);}
     #heroBg{display:none;}               /* skip the separate persistent bg field on phones */
     .bp-scroll{display:none;}
     .bp-cta{display:none;}               /* HUD-anchored CTA is desktop-only; mobile uses the nav + CTA section */
