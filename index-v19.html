@@ -1943,6 +1943,8 @@
     .film-frame { transform: scale(.94); } .film-scrim { display: none; }
     .fc-ping { animation: none; } .fc-inner { transition: none; }
   }
+  /* hide cursor ring while hovering/dragging the scrubber */
+  .film-wrap.scrub-hover .fc-inner { opacity: 0; pointer-events: none; }
   /* no hover pointer on touch — tapping still toggles sound */
   @media (hover: none) { .film-cursor { display: none; } }
   /* Mobile: the demo sits right under the hero, so the scroll-driven grow + the
@@ -2103,6 +2105,11 @@
       seekTo(e);
     });
     scrub.addEventListener('click', function(e){ e.stopPropagation(); });
+    scrub.addEventListener('pointerenter', function(){ wrap.classList.add('scrub-hover'); });
+    scrub.addEventListener('pointerleave', function(){ if(!dragging) wrap.classList.remove('scrub-hover'); });
+    scrub.addEventListener('pointerup', function(e){
+      wrap.classList.remove('scrub-hover');
+    }, true);
   })();
 
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
