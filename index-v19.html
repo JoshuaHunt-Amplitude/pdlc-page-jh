@@ -137,7 +137,7 @@
   /* extra bottom padding on §4 (data) so the top wave fade has room;
      extra top padding on §3 (solution) so the bottom wave fade lands cleanly */
   #data     { padding-bottom: 160px; }
-  #solution { padding-top:    160px; }
+  #solution { padding-top: 0; }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 32px; }
 
   /* Loop visual */
@@ -158,6 +158,7 @@
 
   /* Product loop (v4 end visual) */
   .pl-section { padding: 98px 32px 110px; max-width: 1320px; margin: 0 auto; }
+  #loops { padding-top: 0; }
   /* v18: §5 head left-aligned to match the manifesto sections (760-wide block,
      so its left edge lands at the same (vw−760)/2 as §2–§4). */
   .pl-head { max-width: 760px; margin: 0 auto 80px; text-align: left; }
@@ -791,13 +792,8 @@
     margin-top: 12px;
     font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
     color: var(--dim2); line-height: 1.6;
-    display: inline-flex; align-items: flex-start; gap: 9px;
+    display: block;
     max-width: 480px;
-  }
-  .waitlist-help .dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--blue-d); box-shadow: 0 0 5px var(--blue-d);
-    flex-shrink: 0; margin-top: 5px;
   }
   /* closer section: keep max-width in sync with the form (480px) */
   .closer .waitlist-help {
@@ -966,10 +962,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    padding-bottom: 10%;
+    justify-content: space-between;
+    padding: 6% 0 10%;
     text-align: center;
-    gap: 10px;
   }
   .intro-wave-eyebrow {
     font-family: var(--mono);
@@ -1029,7 +1024,7 @@
     bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%) translateY(6px);
-    width: 260px;
+    width: 320px;
     background: #0e1628;
     border: 1px solid rgba(64,131,255,.28);
     border-radius: 10px;
@@ -1039,13 +1034,21 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity .22s ease, transform .22s cubic-bezier(.2,.7,.2,1);
+    /* delay visibility on hide so opacity can fade first; snap on show */
+    transition: opacity .22s ease, transform .22s cubic-bezier(.2,.7,.2,1), visibility 0s .28s;
     z-index: 20;
-    /* keep it from wrapping the parent inline flow */
     white-space: normal;
     text-align: left;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+  }
+  /* invisible bridge fills the gap between card bottom and term, keeping :hover alive */
+  .hc-card::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: -16px; right: -16px;
+    height: 20px;
   }
   /* small arrow pointing down */
   .hc-card::after {
@@ -1061,6 +1064,7 @@
     visibility: visible;
     pointer-events: auto;
     transform: translateX(-50%) translateY(0);
+    transition: opacity .22s ease, transform .22s cubic-bezier(.2,.7,.2,1), visibility 0s 0s;
   }
   .hc-label {
     display: block;
@@ -1549,8 +1553,8 @@
     float packet = pow(sin((cycle + a_seed.w * 0.13) * 6.2831853) * 0.5 + 0.5, 7.0);
     float shimmer = 0.6 + 0.4 * sin(t * 5.0 + a_seed.w * 20.0);
 
-    gl_PointSize = (1.4 + a_extra.y * 1.2 + foam * 2.5 + packet * 1.2 + pull * 2.0) * (1.0 + phaseLock * 0.3);
-    v_alpha = (0.0 + foam * 0.10 + phaseLock * 0.08) * shimmer;
+    gl_PointSize = (1.0 + a_extra.y * 0.85 + foam * 1.6 + packet * 0.9 + pull * 2.0) * (1.0 + phaseLock * 0.3);
+    v_alpha = (0.0 + foam * 0.065 + phaseLock * 0.052) * shimmer;
     v_alpha += pull * 0.06 * shimmer;
 
     // Fade out particles outside the canyon on the right
@@ -1561,7 +1565,7 @@
     float edgeFade = smoothstep(-2.5, -2.5 + 0.3, rawX) * (1.0 - smoothstep(1.2 - 0.3, 1.2, rawX));
     v_alpha *= edgeFade;
 
-    v_glow = foam * 0.6 + packet * 0.3 + pull * 0.5;
+    v_glow = foam * 0.38 + packet * 0.18 + pull * 0.5;
     v_color = vec4(col + vec3(0.1, 0.3, 0.7) * pull * 0.6, 1.0);
   }
 </script>
@@ -1577,9 +1581,9 @@
     float d = length(p);
     if (d > 0.5) discard;
     float core = smoothstep(0.50, 0.02, d);
-    float halo = exp(-d * d * 13.0);
-    float alpha = (core * 0.72 + halo * 0.28) * v_alpha;
-    vec3 col = v_color.rgb + vec3(0.22, 0.48, 0.90) * v_glow;
+    float halo = exp(-d * d * 20.0);
+    float alpha = (core * 0.52 + halo * 0.18) * v_alpha;
+    vec3 col = v_color.rgb + vec3(0.14, 0.30, 0.62) * v_glow;
     gl_FragColor = vec4(col, alpha);
   }
 </script>
@@ -1961,7 +1965,7 @@
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
       <h2>The new bottleneck: <span class="a">knowing what to build</span></h2>
-      <p>Quality comes from iteration. The military strategist <span class="hc" tabindex="0"><span class="hc-term">John Boyd</span><span class="hc-card"><span class="hc-label">John Boyd · 1927–1997</span><span class="hc-body">USAF fighter pilot and Pentagon consultant. His theories on decision cycles shaped military, business, and legal strategy worldwide. <a href="https://en.wikipedia.org/wiki/John_Boyd_(military_strategist)" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> showed that whoever cycles their <span class="hc" tabindex="0"><span class="hc-term">OODA loop</span><span class="hc-card"><span class="hc-label">Observe · Orient · Decide · Act</span><span class="hc-body">Decision-making as an iterative cycle. Influential across litigation, business, law enforcement, military strategy, and cybersecurity. <a href="https://en.wikipedia.org/wiki/OODA_loop" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> fastest wins the dogfight. Whether it's a team of 1,000 or a solo developer - every product builder runs through roughly the same loop to build and iterate on a product: build, ship, use, learn.</p>
+      <p>Quality comes from iteration. The military strategist <span class="hc" tabindex="0"><span class="hc-term">John Boyd</span><span class="hc-card"><span class="hc-label">John Boyd · 1927–1997</span><span class="hc-body">USAF fighter pilot and Pentagon consultant. His theories on decision cycles shaped military, business, and legal strategy worldwide. <a href="https://en.wikipedia.org/wiki/John_Boyd_(military_strategist)" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> showed that whoever cycles their <span class="hc" tabindex="0"><span class="hc-term">OODA loop</span><span class="hc-card"><span class="hc-label">Observe, Orient, Decide, Act</span><span class="hc-body">Decision-making as an iterative cycle. Influential across litigation, business, law enforcement, military strategy, and cybersecurity. <a href="https://en.wikipedia.org/wiki/OODA_loop" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> fastest wins the dogfight. Whether it's a team of 1,000 or a solo developer - every product builder runs through roughly the same loop to build and iterate on a product: build, ship, use, learn.</p>
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
@@ -2073,7 +2077,7 @@
   </div>
   <!-- text overlay: centred in the lower half of the embed, above the bottom fade -->
   <div class="intro-wave-overlay" aria-hidden="true">
-    <p class="intro-wave-eyebrow">Amplitude presents</p>
+    <p class="intro-wave-eyebrow">Introducing</p>
     <p class="intro-wave-tagline">The world's first<br>self-improving product engine</p>
   </div>
 </section>
@@ -2143,10 +2147,6 @@
 
 <!-- ── THE PRODUCT LOOP (six stages, single ring) ─── -->
 <section class="pl-section reveal" id="loops">
-  <div class="pl-head">
-    <h3>The loop that's always running</h3>
-  </div>
-
   <div class="product-loop">
     <!-- ─────────────────────────────────────────────────────────────────
          BLUEPRINT PRODUCT LOOP  ·  v16
@@ -2580,7 +2580,7 @@
       <button type="submit">Request access <span class="arr" aria-hidden="true">→</span></button>
     </form>
     <div class="waitlist-help-row">
-      <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email. By submitting your email, you consent to Amplitude processing your personal data in accordance with our <a href="https://amplitude.com/privacy" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px;opacity:.7;">Privacy Policy</a>.</p>
+      <p class="waitlist-help">By submitting your email, you consent to Amplitude processing your personal data in accordance with our <a href="https://amplitude.com/privacy" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px;opacity:.7;">Privacy Policy</a>.</p>
     </div>
     <div class="waitlist-success" role="status" aria-live="polite">
       <span class="ws-badge" aria-hidden="true">
@@ -2855,10 +2855,6 @@
 
 </main>
 
-<footer>
-  <img src="https://design.lab.amplitude.com/brand/logo-white.svg" alt="Amplitude" style="width:100px;height:20px;opacity:.4">
-  <span class="fc">&#169; 2026 Amplitude, Inc. &middot; Amplitude Wave</span>
-</footer>
 
 <script>
   // ── Product loop step-by-step fade-in ───────────────
