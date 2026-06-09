@@ -788,6 +788,15 @@
     padding: 11px 18px;
   }
   .waitlist input::placeholder { color: var(--dim2); }
+  /* autofill: inset box-shadow paints over the browser's tint; transition freezes bg change */
+  .waitlist input:-webkit-autofill,
+  .waitlist input:-webkit-autofill:hover,
+  .waitlist input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #0c1226 inset !important;
+    -webkit-text-fill-color: #f2f6ff !important;
+    caret-color: #f2f6ff;
+    transition: background-color 9999s ease 0s;
+  }
   .waitlist button {
     background: var(--blue); color: var(--white);
     border: 0; cursor: pointer; padding: 11px 20px;
