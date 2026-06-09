@@ -2167,15 +2167,14 @@
           </linearGradient>
           <!-- Subtle SIDE GLOWS — radial gradients that soak each half of the ring
                in a faint color wash without competing with the ring itself. -->
-          <radialGradient id="fl3-blue-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.22"/>
-            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.06"/>
+          <!-- Bottom-up light: a single radial glow anchored to the bottom-center
+               of the frame, fading up to transparent so the lighting reads as if a
+               light source sits beneath the loop. Replaces the prior left/right
+               side glows. -->
+          <radialGradient id="fl3-bottom-glow" cx="50%" cy="100%" r="70%">
+            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.30"/>
+            <stop offset="40%"  stop-color="#4083FF" stop-opacity="0.10"/>
             <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="fl3-red-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#FF7D78" stop-opacity="0.18"/>
-            <stop offset="55%"  stop-color="#FF7D78" stop-opacity="0.05"/>
-            <stop offset="100%" stop-color="#FF7D78" stop-opacity="0"/>
           </radialGradient>
           <filter id="fl3-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
                   <radialGradient id="fl-node-fill" cx="50%" cy="38%" r="70%">
@@ -2207,10 +2206,9 @@
           <line x1="855" y1="505" x2="855" y2="595" stroke-dasharray="3 6"/>
         </g>
 
-        <!-- ── Subtle side glows — blue blob on the FAST half, red on the BOTTLENECK half.
-             Sized large enough (r≈250) to spill into the ring band and out into the frame. -->
-        <circle cx="200" cy="320" r="250" fill="url(#fl3-blue-glow)"/>
-        <circle cx="700" cy="320" r="250" fill="url(#fl3-red-glow)"/>
+        <!-- ── Bottom-up light: single soft blue glow rising from beneath the loop,
+             replacing the previous left/right side glows. -->
+        <ellipse cx="450" cy="640" rx="520" ry="380" fill="url(#fl3-bottom-glow)"/>
 
         <!-- ── Monochrome dotted ring band (matches loop-v2 visual language) ── -->
         <circle cx="450" cy="320" r="180" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
@@ -2366,13 +2364,13 @@
 
         <!-- ── 4 Nodes (r=50) ── -->
         <!-- USE — top (slight red-tint border, bottleneck side) -->
-        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.40)" stroke-width="1.5"/><text x="450" y="136" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="44" lengthAdjust="spacing" fill="url(#fl3-name-grad-red)">USE</text></g>
+        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.40)" stroke-width="1.5"/><text x="450" y="136" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="36" lengthAdjust="spacing" fill="url(#fl3-name-grad-red)">USE</text></g>
         <!-- LEARN — right (red-tint border, bottleneck side) -->
-        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.40)" stroke-width="1.5"/><text x="640" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="76" lengthAdjust="spacing" fill="url(#fl3-name-grad-red)">LEARN</text></g>
+        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.40)" stroke-width="1.5"/><text x="640" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="62" lengthAdjust="spacing" fill="url(#fl3-name-grad-red)">LEARN</text></g>
         <!-- BUILD — bottom (blue-tint border, fast side) -->
-        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="516" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="76" lengthAdjust="spacing" fill="url(#fl3-name-grad)">BUILD</text></g>
+        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="516" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="62" lengthAdjust="spacing" fill="url(#fl3-name-grad)">BUILD</text></g>
         <!-- SHIP — left (blue-tint border, fast side) -->
-        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="260" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="60" lengthAdjust="spacing" fill="url(#fl3-name-grad)">SHIP</text></g>
+        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="260" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="50" lengthAdjust="spacing" fill="url(#fl3-name-grad)">SHIP</text></g>
 
         <!-- ── Side labels ── -->
         <g>
@@ -2565,14 +2563,11 @@
           </linearGradient>
           <!-- Subtle SIDE GLOWS — radial gradients that soak each half of the ring
                in a faint color wash without competing with the ring itself. -->
-          <radialGradient id="fl3w-blue-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.22"/>
-            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.06"/>
-            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="fl3w-blue-glow-r" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.22"/>
-            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.06"/>
+          <!-- Bottom-up light: single radial glow anchored to bottom-center, replaces
+               the prior left/right side glows. -->
+          <radialGradient id="fl3w-bottom-glow" cx="50%" cy="100%" r="70%">
+            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.30"/>
+            <stop offset="40%"  stop-color="#4083FF" stop-opacity="0.10"/>
             <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
           </radialGradient>
           <filter id="fl3w-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
@@ -2614,10 +2609,9 @@
           <line x1="855" y1="505" x2="855" y2="595" stroke-dasharray="3 6"/>
         </g>
 
-        <!-- ── Subtle side glows — blue blob on the FAST half, red on the BOTTLENECK half.
-             Sized large enough (r≈250) to spill into the ring band and out into the frame. -->
-        <circle cx="200" cy="320" r="250" fill="url(#fl3w-blue-glow)"/>
-        <circle cx="700" cy="320" r="250" fill="url(#fl3w-blue-glow-r)"/>
+        <!-- ── Bottom-up light: single soft blue glow rising from beneath the loop,
+             replacing the previous left/right side glows. -->
+        <ellipse cx="450" cy="640" rx="520" ry="380" fill="url(#fl3w-bottom-glow)"/>
 
         <!-- ── Monochrome dotted ring band (matches loop-v2 visual language) ── -->
         <circle cx="450" cy="320" r="180" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
@@ -2943,13 +2937,13 @@
 
         <!-- ── 4 Nodes (r=50) ── -->
         <!-- USE — top (slight red-tint border, bottleneck side) -->
-        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="136" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="44" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">USE</text></g>
+        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="136" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="36" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">USE</text></g>
         <!-- LEARN — right (red-tint border, bottleneck side) -->
-        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="640" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="76" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">LEARN</text></g>
+        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="640" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="62" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">LEARN</text></g>
         <!-- BUILD — bottom (blue-tint border, fast side) -->
-        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="516" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="76" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">BUILD</text></g>
+        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="516" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="62" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">BUILD</text></g>
         <!-- SHIP — left (blue-tint border, fast side) -->
-        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="260" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="60" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">SHIP</text></g>
+        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="260" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="50" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">SHIP</text></g>
       </svg>
   </div>
 </section>
