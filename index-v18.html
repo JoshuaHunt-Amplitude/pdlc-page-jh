@@ -1041,8 +1041,8 @@
     text-decoration:none;padding:0.95em 1.7em;border-radius:999px;transition:transform .2s,box-shadow .2s;
     box-shadow:0 0 0 1px rgba(233,240,255,.4),0 10px 48px rgba(64,131,255,.4);}
   .bp-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(233,240,255,.6),0 14px 60px rgba(64,131,255,.55);}
-  .bp-cta .arr{font-size:1.15em;transition:transform .2s;}
-  .bp-cta:hover .arr{transform:translateX(4px);}
+  .bp-cta .arr,.waitlist button .arr{font-size:1.15em;transition:transform .2s;}
+  .bp-cta:hover .arr,.waitlist button:hover .arr{transform:translateX(4px);}
   /* mobile headline (HTML reflow). The SVG HUD scales to a tiny letterboxed band on
      narrow screens, so below 760px we hide the whole instrument HUD + WebGL canvas
      and show the headline/story as plain flowing text on a static gradient, at a
@@ -1130,7 +1130,7 @@
   </svg>
   </div>
   <!-- hero CTA: HTML pill overlaid on the HUD, anchored under the title (see .bp-cta) -->
-  <a class="bp-cta" href="#cta">Request access <span class="arr">→</span></a>
+  <a class="bp-cta" href="#cta">Request access <span class="arr" aria-hidden="true">→</span></a>
   <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
   <div class="bp-hero-m">
     <h1>Enabling self-improving products</h1>
@@ -2404,7 +2404,7 @@
   <div class="waitlist-zone reveal" id="cta-zone">
     <form class="waitlist" id="cta-form" onsubmit="event.preventDefault()">
       <input type="email" id="cta-email" placeholder="you@company.com" aria-label="Email address">
-      <button type="submit">Request access →</button>
+      <button type="submit">Request access <span class="arr" aria-hidden="true">→</span></button>
     </form>
     <div class="waitlist-help-row">
       <p class="waitlist-help"><span class="dot"></span>Please use your Amplitude account email.</p>
@@ -2432,6 +2432,14 @@
     if (!v) { em.focus(); return; }   // empty → drop focus into the field so they can type
     if (echo) echo.textContent = v;
     z.classList.add('is-done');
+  });
+
+  // "Request access" links jump to this section AND drop the cursor into the field.
+  // preventScroll keeps focus from fighting the anchor's smooth scroll.
+  document.querySelectorAll('a[href="#cta"]').forEach(function(a){
+    a.addEventListener('click', function(){
+      setTimeout(function(){ try { em.focus({ preventScroll: true }); } catch (_) { em.focus(); } }, 0);
+    });
   });
 })();
 </script>
