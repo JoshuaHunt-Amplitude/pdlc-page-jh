@@ -146,6 +146,7 @@
      extra top padding on §3 (solution) so the bottom wave fade lands cleanly */
   #data     { padding-bottom: 160px; }
   #solution { padding-top: 0; }
+  #wave     { padding-top: 0; }
   /* product loop: match the 760px text column so diagram edges align with copy */
   #loops .product-loop { max-width: 840px; }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 32px; }
@@ -1012,6 +1013,11 @@
     position: relative;
   }
   /* The #solution and #loops padding rules from earlier apply inside this wrapper */
+  /* bridge: tighten the solution section's top so the SVG connector leads directly into the heading */
+  #solution.manifesto { padding-top: 0; }
+
+  /* ── wave→solution animated bridge ── */
+  .wave-bridge { display: flex; justify-content: center; padding: 24px 0 16px; }
 
   /* ── HOVER CARDS (inline term tooltips) ── */
   .hc {
@@ -2389,7 +2395,40 @@
 <section class="manifesto" id="data">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <svg class="mg sec-mg" viewBox="47 21 70 70" aria-hidden="true" style="width:96px;height:96px"><g class="l2" fill="none"><rect x="65" y="22" width="13" height="13" rx="2"/><rect x="47" y="40" width="13" height="13" rx="2"/><rect x="83" y="40" width="13" height="13" rx="2"/><rect x="65" y="58" width="13" height="13" rx="2"/><rect x="101" y="58" width="13" height="13" rx="2"/><rect x="47" y="76" width="13" height="13" rx="2"/><rect x="65" y="76" width="13" height="13" rx="2"/><rect x="83" y="76" width="13" height="13" rx="2"/></g><g class="nd"><rect x="47" y="22" width="13" height="13" rx="2"/><rect class="d-pulse" x="83" y="22" width="13" height="13" rx="2" style="--sp:3.1s"/><rect class="d-pulse" x="65" y="40" width="13" height="13" rx="2" style="--sp:2.7s;animation-delay:.6s"/><rect class="d-pulse" x="101" y="40" width="13" height="13" rx="2" style="--sp:3.3s;animation-delay:1.1s"/><rect x="83" y="58" width="13" height="13" rx="2"/><rect class="d-pulse" x="101" y="76" width="13" height="13" rx="2" style="--sp:2.9s;animation-delay:.3s"/></g><g class="acf"><rect class="d-throb" x="101" y="22" width="13" height="13" rx="2" style="--sp:2.4s"/><rect class="d-throb" x="47" y="58" width="13" height="13" rx="2" style="--sp:2.4s;animation-delay:.8s"/></g></svg>
+      <!-- COMP 10 · Find What Matters — raw signals fan in, funnel through a pulsing
+           rank pipeline, and diverge to candidates; the top pick pings. (moved here
+           from §6; signals → ranked opportunity reads well as the §4 data motif) -->
+      <svg class="mg" viewBox="0 0 300 170" aria-hidden="true" style="width:210px;max-width:62vw;height:auto;margin:0 0 24px">
+        <defs>
+          <path id="c10-f1" d="M30 20 L142 86" fill="none"/><path id="c10-f2" d="M30 44 L142 86" fill="none"/>
+          <path id="c10-f3" d="M30 92 L142 86" fill="none"/><path id="c10-f4" d="M30 140 L142 86" fill="none"/>
+          <path id="c10-f5" d="M58 14 L142 86" fill="none"/><path id="c10-pick" d="M178 86 L268 42" fill="none"/>
+        </defs>
+        <!-- HUD corner frame -->
+        <path class="l2 thin" opacity=".5" d="M10 14 H24 M10 14 V28 M290 14 H276 M290 14 V28 M10 156 H24 M10 156 V142 M290 156 H276 M290 156 V142"/>
+        <!-- fan-in -->
+        <g class="l2 thin"><path d="M30 20 L142 86"/><path d="M30 44 L142 86"/><path d="M30 68 L142 86"/><path d="M30 92 L142 86"/><path d="M30 116 L142 86"/><path d="M30 140 L142 86"/><path d="M58 14 L142 86"/><path d="M58 146 L142 86"/></g>
+        <g class="no thin"><circle cx="30" cy="20" r="4"/><circle cx="30" cy="44" r="4"/><circle cx="30" cy="68" r="4"/><circle cx="30" cy="92" r="4"/><circle cx="30" cy="116" r="4"/><circle cx="30" cy="140" r="4"/><circle cx="58" cy="14" r="4"/><circle cx="58" cy="146" r="4"/></g>
+        <!-- signals streaming toward the rank node -->
+        <g fill="#fff">
+          <circle r="1.7"><animateMotion dur="2.2s" begin="0s"    repeatCount="indefinite"><mpath href="#c10-f1"/></animateMotion></circle>
+          <circle r="1.3"><animateMotion dur="2.2s" begin="-0.5s" repeatCount="indefinite"><mpath href="#c10-f2"/></animateMotion></circle>
+          <circle r="1.7"><animateMotion dur="2.2s" begin="-0.9s" repeatCount="indefinite"><mpath href="#c10-f3"/></animateMotion></circle>
+          <circle r="1.3"><animateMotion dur="2.2s" begin="-1.3s" repeatCount="indefinite"><mpath href="#c10-f4"/></animateMotion></circle>
+          <circle r="1.7"><animateMotion dur="2.2s" begin="-1.7s" repeatCount="indefinite"><mpath href="#c10-f5"/></animateMotion></circle>
+        </g>
+        <!-- rank pipeline -->
+        <path class="ln" stroke-linecap="round" d="M146 86 L172 86"/>
+        <circle class="l2 thin" cx="146" cy="86" r="9" fill="none"><animate attributeName="r" values="9;12.5;9" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;.15;.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <g class="nd"><circle cx="146" cy="86" r="5.5"/><circle cx="172" cy="86" r="5.5"/></g>
+        <!-- diverge to candidates -->
+        <g class="l2 thin" stroke-linecap="round"><path d="M178 86 L268 42"/><path d="M178 86 L268 86"/><path d="M178 86 L268 130"/></g>
+        <g class="no thin"><circle cx="272" cy="42" r="5"/><circle cx="272" cy="86" r="5"/><circle cx="272" cy="130" r="5"/></g>
+        <!-- the pick (pings) + a particle delivered to it -->
+        <circle r="1.7" fill="#4083FF"><animateMotion dur="1.6s" begin="-0.3s" repeatCount="indefinite"><mpath href="#c10-pick"/></animateMotion></circle>
+        <circle class="acf" cx="272" cy="42" r="3"/>
+        <circle class="ac thin" cx="272" cy="42" r="9" fill="none"><animate attributeName="r" values="6;13;6" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".85;0;.85" dur="2.2s" repeatCount="indefinite"/></circle>
+      </svg>
       <h2>Your next best move is already in your data</h2>
       <p class="dagger">Every click, session replay, customer feedback, log, and agent trace is a signal about what's working and what's not — and your next best idea is buried in them.</p>
     </div>
@@ -2441,6 +2480,63 @@
 
 <!-- ── POST-WAVE: deeper background from here to footer ─── -->
 <div class="post-wave-bg">
+
+<!-- ── wave→solution bridge: animated vertical connector ─────────────
+     Top flourish (HUD crosshair node) → animated dotted line → bottom
+     flourish (bracket frame + node). IntersectionObserver triggers the
+     SMIL clip-rect reveal so it fires on scroll, not on load.
+     Geometry: viewBox 0 0 48 240; line runs y 31→207; clip animates
+     height 0→240 over 1.5s eased; foot fades in at t=1.5s.          -->
+<div class="wave-bridge" aria-hidden="true">
+  <svg viewBox="0 0 48 240" width="48" height="240" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="wb-clip">
+        <rect id="wb-clip-rect" x="0" y="0" width="48" height="0">
+          <animate id="wb-anim" attributeName="height" from="0" to="240" dur="1.5s"
+                   calcMode="spline" keySplines="0.4 0 0.2 1" keyTimes="0;1"
+                   fill="freeze" begin="indefinite"/>
+        </rect>
+      </clipPath>
+    </defs>
+    <!-- top flourish: outer dashed ring + inner ring + center dot + cardinal ticks -->
+    <circle cx="24" cy="18" r="10.5" stroke="#4083FF" stroke-width="1" stroke-dasharray="2 3.2" opacity=".3"/>
+    <circle cx="24" cy="18" r="5"    stroke="#4083FF" stroke-width="1.3" opacity=".6"/>
+    <circle cx="24" cy="18" r="2"    fill="#4083FF" opacity=".75"/>
+    <path d="M24 5 V0 M24 31 V37 M11 18 H5 M37 18 H43" stroke="#4083FF" stroke-width="1" stroke-linecap="round" opacity=".2"/>
+    <!-- dotted connector — clip-path reveals top→bottom on scroll -->
+    <line x1="24" y1="31" x2="24" y2="207" stroke="#4083FF" stroke-width="1.3"
+          stroke-dasharray="3 6" opacity=".45" clip-path="url(#wb-clip)"/>
+    <!-- bottom flourish: bracket corners + node; fades in when line arrives -->
+    <g id="wb-foot" opacity="0">
+      <animate id="wb-foot-anim" attributeName="opacity" from="0" to="1"
+               dur="0.4s" begin="indefinite" fill="freeze"/>
+      <path d="M16 211 H8 V227"  stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+      <path d="M32 211 H40 V227" stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+      <circle cx="24" cy="228" r="4"   stroke="#4083FF" stroke-width="1.2" opacity=".6"/>
+      <circle cx="24" cy="228" r="1.8" fill="#4083FF" opacity=".7"/>
+    </g>
+  </svg>
+</div>
+<script>
+(function(){
+  var bridge   = document.querySelector('.wave-bridge'); if(!bridge) return;
+  var anim     = document.getElementById('wb-anim');
+  var footAnim = document.getElementById('wb-foot-anim');
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+    var r = document.getElementById('wb-clip-rect'); if(r) r.setAttribute('height','240');
+    var f = document.getElementById('wb-foot');      if(f) f.setAttribute('opacity','1');
+    return;
+  }
+  new IntersectionObserver(function(es, obs){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      if(anim) anim.beginElement();
+      setTimeout(function(){ if(footAnim) footAnim.beginElement(); }, 1500);
+      obs.unobserve(e.target);
+    });
+  }, { threshold: 0.3 }).observe(bridge);
+})();
+</script>
 
 <!-- ── §3 · SOLUTION — the category, defined (moved after Wave reveal) ─── -->
 <section class="manifesto" id="solution">
@@ -2911,40 +3007,6 @@
 <section class="manifesto" id="wave">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <!-- COMP 10 · Find What Matters — raw signals fan in, funnel through a pulsing
-           rank pipeline, and diverge to candidates; the top pick pings (ported from
-           micrographics.html, accf→acf / acc→ac, arrowheads dropped). -->
-      <svg class="mg" viewBox="0 0 300 170" aria-hidden="true" style="width:210px;max-width:62vw;height:auto;margin:0 0 24px">
-        <defs>
-          <path id="c10-f1" d="M30 20 L142 86" fill="none"/><path id="c10-f2" d="M30 44 L142 86" fill="none"/>
-          <path id="c10-f3" d="M30 92 L142 86" fill="none"/><path id="c10-f4" d="M30 140 L142 86" fill="none"/>
-          <path id="c10-f5" d="M58 14 L142 86" fill="none"/><path id="c10-pick" d="M178 86 L268 42" fill="none"/>
-        </defs>
-        <!-- HUD corner frame -->
-        <path class="l2 thin" opacity=".5" d="M10 14 H24 M10 14 V28 M290 14 H276 M290 14 V28 M10 156 H24 M10 156 V142 M290 156 H276 M290 156 V142"/>
-        <!-- fan-in -->
-        <g class="l2 thin"><path d="M30 20 L142 86"/><path d="M30 44 L142 86"/><path d="M30 68 L142 86"/><path d="M30 92 L142 86"/><path d="M30 116 L142 86"/><path d="M30 140 L142 86"/><path d="M58 14 L142 86"/><path d="M58 146 L142 86"/></g>
-        <g class="no thin"><circle cx="30" cy="20" r="4"/><circle cx="30" cy="44" r="4"/><circle cx="30" cy="68" r="4"/><circle cx="30" cy="92" r="4"/><circle cx="30" cy="116" r="4"/><circle cx="30" cy="140" r="4"/><circle cx="58" cy="14" r="4"/><circle cx="58" cy="146" r="4"/></g>
-        <!-- signals streaming toward the rank node -->
-        <g fill="#fff">
-          <circle r="1.7"><animateMotion dur="2.2s" begin="0s"    repeatCount="indefinite"><mpath href="#c10-f1"/></animateMotion></circle>
-          <circle r="1.3"><animateMotion dur="2.2s" begin="-0.5s" repeatCount="indefinite"><mpath href="#c10-f2"/></animateMotion></circle>
-          <circle r="1.7"><animateMotion dur="2.2s" begin="-0.9s" repeatCount="indefinite"><mpath href="#c10-f3"/></animateMotion></circle>
-          <circle r="1.3"><animateMotion dur="2.2s" begin="-1.3s" repeatCount="indefinite"><mpath href="#c10-f4"/></animateMotion></circle>
-          <circle r="1.7"><animateMotion dur="2.2s" begin="-1.7s" repeatCount="indefinite"><mpath href="#c10-f5"/></animateMotion></circle>
-        </g>
-        <!-- rank pipeline -->
-        <path class="ln" stroke-linecap="round" d="M146 86 L172 86"/>
-        <circle class="l2 thin" cx="146" cy="86" r="9" fill="none"><animate attributeName="r" values="9;12.5;9" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;.15;.6" dur="2.4s" repeatCount="indefinite"/></circle>
-        <g class="nd"><circle cx="146" cy="86" r="5.5"/><circle cx="172" cy="86" r="5.5"/></g>
-        <!-- diverge to candidates -->
-        <g class="l2 thin" stroke-linecap="round"><path d="M178 86 L268 42"/><path d="M178 86 L268 86"/><path d="M178 86 L268 130"/></g>
-        <g class="no thin"><circle cx="272" cy="42" r="5"/><circle cx="272" cy="86" r="5"/><circle cx="272" cy="130" r="5"/></g>
-        <!-- the pick (pings) + a particle delivered to it -->
-        <circle r="1.7" fill="#4083FF"><animateMotion dur="1.6s" begin="-0.3s" repeatCount="indefinite"><mpath href="#c10-pick"/></animateMotion></circle>
-        <circle class="acf" cx="272" cy="42" r="3"/>
-        <circle class="ac thin" cx="272" cy="42" r="9" fill="none"><animate attributeName="r" values="6;13;6" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".85;0;.85" dur="2.2s" repeatCount="indefinite"/></circle>
-      </svg>
       <h2>Wave knows what to build</h2>
       <p class="dagger">A proactive product agent that helps teams build self-improving products.</p>
     </div>
