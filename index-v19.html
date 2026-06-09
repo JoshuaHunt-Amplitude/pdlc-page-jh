@@ -2775,6 +2775,54 @@
 </section>
 
 
+<!-- proof card styles (replaces the dogfooding loop micrographic with a stat block) -->
+<style>
+  .proof-card{
+    margin: 36px 0 0;
+    background: var(--panel);
+    border: 1px solid var(--lines);
+    border-radius: 16px;
+    padding: 40px 44px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  @media (max-width: 720px){ .proof-card{ padding: 26px 22px; } }
+  .proof-card h3{
+    font-family: var(--sans); font-size: clamp(23px,2.6vw,29px); font-weight: 400;
+    letter-spacing: -0.02em; line-height: 1.2; color: var(--white); margin: 0 0 14px;
+  }
+  .proof-card p{
+    font-size: 16px; line-height: 1.65; color: var(--dim); margin: 0; max-width: 62ch;
+  }
+  .proof-stats{ display: grid; grid-template-columns: 1fr 1fr; margin: 34px 0 0; }
+  .proof-stat:nth-child(1){ padding-right: 44px; }
+  .proof-stat:nth-child(2){ border-left: 1px solid var(--line); padding-left: 44px; }
+  @media (max-width: 600px){
+    .proof-stats{ grid-template-columns: 1fr; gap: 26px; }
+    .proof-stat:nth-child(1){ padding-right: 0; }
+    .proof-stat:nth-child(2){ border-left: 0; border-top: 1px solid var(--line); padding: 26px 0 0; }
+  }
+  .ps-label{
+    font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--dim2); margin-bottom: 16px;
+  }
+  .ps-num{
+    font-family: var(--sans); font-size: clamp(44px,5.6vw,64px); font-weight: 600;
+    line-height: .92; letter-spacing: -0.03em; color: var(--white);
+  }
+  .ps-sub{ font-size: 14px; line-height: 1.5; color: var(--dim); margin-top: 16px; }
+  .ps-sub.up{ color: var(--blue-d); }
+  .proof-foot{
+    display: flex; justify-content: flex-end;
+    margin: 34px 0 0; padding-top: 22px; border-top: 1px solid var(--line);
+  }
+  .proof-link{
+    font-family: var(--sans); font-size: 15px; color: var(--blue-d);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: gap .2s;
+  }
+  .proof-link:hover{ gap: 12px; }
+  .proof-link .arr{ transition: transform .2s; }
+  .proof-link:hover .arr{ transform: translateX(3px); }
+</style>
 <!-- ── §6 · MEET WAVE + PROOF — reveal & dogfooding, one left-aligned section ─── -->
 <section class="manifesto" id="wave">
   <div class="manifesto-in">
@@ -2821,33 +2869,27 @@
     <div class="manifesto-body reveal">
       <p>It continuously analyzes your Amplitude data for <strong>Signals</strong>, surfaces <strong>Opportunities</strong> you or your agents can approve and ship, and tracks the experiments and <strong>Outcomes</strong>, so your product learns what works and gets smarter every cycle.</p>
 
-      <!-- loop micrographic: the build→ship→use→learn loop, always running on
-           Amplitude itself. Unique wl- ids so it never collides with §3's c7- loop. -->
-      <svg class="mg" style="display:block;width:96px;height:96px;margin:44px 0 20px" viewBox="0 0 64 64" aria-hidden="true">
-        <defs>
-          <radialGradient id="wl-lead" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#fff"/><stop offset="45%" stop-color="#fff" stop-opacity=".4"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-          </radialGradient>
-          <path id="wl-orbit" d="M32 8 A24 24 0 1 1 32 56 A24 24 0 1 1 32 8" fill="none"/>
-        </defs>
-        <circle class="l2 thin" cx="32" cy="32" r="29" stroke-dasharray="2 6" opacity=".55"/>
-        <circle class="l2" cx="32" cy="32" r="24"/>
-        <g><circle class="no" cx="32" cy="8" r="3.6"/><circle class="nd" cx="32" cy="8" r="1.5"/>
-           <circle class="no" cx="56" cy="32" r="3.6"/><circle class="nd" cx="56" cy="32" r="1.5"/>
-           <circle class="no" cx="32" cy="56" r="3.6"/><circle class="nd" cx="32" cy="56" r="1.5"/>
-           <circle class="no" cx="8" cy="32" r="3.6"/><circle class="nd" cx="8" cy="32" r="1.5"/></g>
-        <circle class="ln thin" cx="32" cy="32" r="5" fill="none"/>
-        <path class="l2 thin" d="M32 23 v4 M32 37 v4 M23 32 h4 M37 32 h4"/>
-        <circle class="nd d-throb" cx="32" cy="32" r="1.6" style="--sp:2.6s"/>
-        <g fill="#fff">
-          <circle r="1"><animateMotion dur="4.2s" begin="-1.4s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></circle>
-          <circle r="1.2"><animateMotion dur="4.2s" begin="-2.8s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></circle>
-        </g>
-        <g><circle r="3.4" fill="url(#wl-lead)"/><circle r="1.5" fill="#fff"/><animateMotion dur="4.2s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></g>
-      </svg>
-      <h3>We use Wave to build Amplitude</h3>
-      <p>For months, Wave has run on Amplitude itself, auto-triaging bugs, optimizing our landing pages and product flows, and sharpening our own agents and tools by analyzing their traces.</p>
-      <p>It surfaced hundreds of <strong>Opportunities</strong>. We've shipped better and faster than ever.</p>
+      <!-- dogfooding proof card: copy + two block stats + link to the blog -->
+      <div class="proof-card">
+        <h3>We use Wave to build Amplitude.</h3>
+        <p>For months, Wave has run on Amplitude itself — auto-triaging bugs, optimizing our landing pages and product flows, and sharpening our own agents by analyzing their traces.</p>
+        <div class="proof-stats">
+          <div class="proof-stat">
+            <div class="ps-label">Positive feedback</div>
+            <div class="ps-num">70%+</div>
+            <div class="ps-sub up">↑ up from 5% at launch</div>
+          </div>
+          <div class="proof-stat">
+            <div class="ps-label">Features in one week</div>
+            <div class="ps-num">101</div>
+            <div class="ps-sub">Shipped autonomously, end to end</div>
+          </div>
+        </div>
+        <div class="proof-foot">
+          <!-- TODO: point at the specific blog post -->
+          <a class="proof-link" href="https://amplitude.com/blog" target="_blank" rel="noopener">See how it works <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
