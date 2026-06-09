@@ -134,6 +134,10 @@
 
   /* ── MANIFESTO ──────────────────────── */
   .manifesto { padding: 98px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
+  /* extra bottom padding on §4 (data) and top padding on the product loop so
+     the intro-wave fade overlays have space to dissolve cleanly */
+  #data  { padding-bottom: 160px; }
+  #loops { padding-top:    160px; }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 32px; }
 
   /* Loop visual */
@@ -930,13 +934,30 @@
   /* ── INTRODUCING WAVE (full-bleed Unicorn Studio embed) ── */
   .intro-wave {
     position: relative;
-    /* no side padding — the embed fills the full viewport width */
     overflow: hidden;
-    /* nudge up slightly to underlap the §4 section's bottom padding */
-    margin-top: -40px;
+    /* breathing room above and below so the embed doesn't slam into copy */
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  /* gradient fades — sit above the embed, dissolve page bg into it top & bottom */
+  .intro-wave::before,
+  .intro-wave::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    height: 220px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .intro-wave::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+  }
+  .intro-wave::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
   }
   .intro-wave-in {
-    /* constrain the embed to page max-width so it doesn't stretch too far on ultrawide */
     max-width: 1440px;
     margin: 0 auto;
     position: relative;
