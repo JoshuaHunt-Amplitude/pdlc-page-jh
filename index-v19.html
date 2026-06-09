@@ -2181,13 +2181,15 @@
             <stop offset="0" stop-color="#FF9F9F"/>
             <stop offset="1" stop-color="#FFFFFF"/>
           </linearGradient>
-          <!-- Bottom-up light: linear gradient that fades from a soft blue at the
-               bottom of the diagram up to transparent at the top. Replaces the
-               prior left/right side glows. -->
-          <linearGradient id="fl3-bottom-glow" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.30"/>
-            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.08"/>
-            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
+          <!-- FAST → BOTTLENECK lighting: horizontal linear gradient with a soft
+               blue wash on the left (fast side) and a soft red wash on the right
+               (bottleneck side), fading out in the middle so the loop sits in
+               neutral space. -->
+          <linearGradient id="fl3-bottom-glow" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.28"/>
+            <stop offset="45%"  stop-color="#4083FF" stop-opacity="0.04"/>
+            <stop offset="55%"  stop-color="#FF7D78" stop-opacity="0.04"/>
+            <stop offset="100%" stop-color="#FF7D78" stop-opacity="0.28"/>
           </linearGradient>
           <filter id="fl3-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
                   <radialGradient id="fl-node-fill" cx="50%" cy="38%" r="70%">
