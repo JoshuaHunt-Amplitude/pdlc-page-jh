@@ -1022,7 +1022,7 @@
      left edge) and lands on the "A". Negative margin-top pulls the top ~290px up so
      the crosshair overlaps the wave diagram above. Hidden where the 760 block can't
      fit (alignment would break). */
-  .wave-bridge { display: flex; justify-content: center; margin-top: -220px; padding: 0; position: relative; z-index: 2; pointer-events: none; }
+  .wave-bridge { display: flex; justify-content: center; margin-top: -290px; padding: 0; position: relative; z-index: 2; pointer-events: none; }
   @media (max-width: 860px){ .wave-bridge { display: none; } }
 
   /* ── HOVER CARDS (inline term tooltips) ── */
@@ -2510,17 +2510,17 @@
     <circle cx="380" cy="24" r="5"    stroke="#4083FF" stroke-width="1.3" opacity=".6"/>
     <circle cx="380" cy="24" r="2"    fill="#4083FF" opacity=".75"/>
     <path d="M380 11 V5 M380 37 V43 M367 24 H361 M393 24 H399" stroke="#4083FF" stroke-width="1" stroke-linecap="round" opacity=".2"/>
-    <!-- dotted connector: down → left to text edge → down to heading -->
-    <path d="M380 40 V226 H16 V292" stroke="#4083FF" stroke-width="1.3"
+    <!-- dotted connector: down → gentle left step → down to heading -->
+    <path d="M380 40 V226 H300 V292" stroke="#4083FF" stroke-width="1.3"
           stroke-dasharray="3 6" stroke-linecap="round" opacity=".45" clip-path="url(#wb-clip)"/>
     <!-- bottom flourish: bracket corners + node; fades in as line arrives -->
     <g id="wb-foot" opacity="0">
       <animate id="wb-foot-anim" attributeName="opacity" from="0" to="1"
                dur="0.4s" begin="indefinite" fill="freeze"/>
-      <path d="M8 276 H0 V292"   stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
-      <path d="M24 276 H32 V292" stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
-      <circle cx="16" cy="293" r="4"   stroke="#4083FF" stroke-width="1.2" opacity=".6"/>
-      <circle cx="16" cy="293" r="1.8" fill="#4083FF" opacity=".7"/>
+      <path d="M292 276 H284 V292"  stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+      <path d="M308 276 H316 V292" stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+      <circle cx="300" cy="293" r="4"   stroke="#4083FF" stroke-width="1.2" opacity=".6"/>
+      <circle cx="300" cy="293" r="1.8" fill="#4083FF" opacity=".7"/>
     </g>
   </svg>
 </div>
@@ -3126,6 +3126,9 @@
   .bp-foot .t-2026{font-weight:500;font-size:22px;letter-spacing:4px;}
   .bp-foot .ln{stroke:#e9f0ff;fill:none;}
   .bp-foot .lnf{stroke:rgba(233,240,255,0.7);fill:none;}
+  /* minimal corner treatment — matches the hero: crosshair "+" + dotted rules */
+  .bp-foot .hud-mark{stroke:#9fb0d8;fill:none;stroke-width:1.2;opacity:.75}
+  .bp-foot .hud-rule{stroke:#9fb0d8;fill:none;stroke-width:1;opacity:.4;stroke-dasharray:4 10;stroke-linecap:round}
   /* Mobile: the HUD is a 16:9 instrument composition that letterboxes to a tiny
      centred band on a tall phone, and a full 100vh of mostly-empty navy reads as
      dead space. Drop the desktop instrument HUD (it's decorative, aria-hidden) and
@@ -3151,22 +3154,24 @@
   <div class="stage">
     <canvas id="bp-foot"></canvas>
     <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <!-- corner frames -->
-      <g class="ln" stroke-width="1.4">
-        <path d="M40 96 V40 H96"/><path d="M106 62 h18 M115 53 v18"/>
-        <path d="M1640 96 V40 H1584"/>
-        <path d="M40 849 V905 H96"/>
-        <path d="M1640 849 V905 H1584"/>
-        <circle cx="1600" cy="116" r="11"/><path d="M1600 99 V133 M1583 116 H1617"/>
+      <!-- corner marks: crosshair "+" + dotted rules, equidistant from each corner -->
+      <g>
+        <path class="hud-mark" d="M42 52 h20 M52 42 v20"/>
+        <path class="hud-rule" d="M78 52 H300"/><path class="hud-rule" d="M52 78 V300"/>
+        <path class="hud-mark" d="M1618 52 h20 M1628 42 v20"/>
+        <path class="hud-rule" d="M1602 52 H1380"/><path class="hud-rule" d="M1628 78 V300"/>
+        <path class="hud-mark" d="M42 893 h20 M52 883 v20"/>
+        <path class="hud-rule" d="M78 893 H300"/><path class="hud-rule" d="M52 867 V645"/>
+        <path class="hud-mark" d="M1618 893 h20 M1628 883 v20"/>
+        <path class="hud-rule" d="M1602 893 H1380"/><path class="hud-rule" d="M1628 867 V645"/>
       </g>
-      <!-- right edge tick scale + scanning readout -->
+      <!-- right edge tick scale (static; looping scanner removed) -->
       <g class="ln" stroke-width="1">
         <rect x="1632" y="150" width="16" height="5" fill="#e9f0ff" stroke="none"/>
         <rect x="1632" y="160" width="16" height="5" fill="#e9f0ff" stroke="none"/>
         <rect x="1632" y="170" width="16" height="5"/><rect x="1632" y="180" width="16" height="5"/>
         <rect x="1632" y="190" width="11" height="5"/><rect x="1632" y="200" width="16" height="5"/>
         <rect x="1632" y="210" width="9" height="5"/>
-        <rect x="1628" width="22" height="5" fill="#dfeaff" stroke="none"><animate attributeName="y" values="150;210;150" dur="3.2s" calcMode="linear" repeatCount="indefinite"/></rect>
       </g>
       <!-- left edge tick scale -->
       <g class="ln" stroke-width="1">
@@ -3177,9 +3182,9 @@
       </g>
       <!-- title -->
       <text class="t-title" x="92" y="150">YOUR PRODUCT LOOP</text>
-      <text class="t-sub" x="95" y="184">ALWAYS RUNNING</text>
-      <!-- SENSE / DECIDE / ACT / LEARN -->
-      <path class="ln" stroke-width="1.3" d="M92 352 h-10 V500 h10"/>
+      <text class="t-sub" x="92" y="184">ALWAYS RUNNING</text>
+      <!-- SENSE / DECIDE / ACT / LEARN — bracket left edge on the x92 key line -->
+      <path class="ln" stroke-width="1.3" d="M102 352 H92 V500 H102"/>
       <path class="ln" stroke-width="1.3" d="M360 352 h10 V500 h-10"/>
       <text class="t-lab" x="106" y="372">SENSE</text><text class="t-lab" x="106" y="410">DECIDE</text>
       <text class="t-lab" x="106" y="448">ACT</text><text class="t-lab" x="106" y="486">LEARN</text>
@@ -3193,36 +3198,36 @@
         <circle cx="307" cy="404" r="11"/><rect x="296" y="431" width="22" height="22" rx="6"/>
         <circle cx="307" cy="478" r="11"/><path d="M301 478 l4 4 l8 -9"/>
       </g>
-      <!-- icon row -->
+      <!-- icon row — shifted so the leftmost icon edge sits on the x92 key line -->
       <g class="ln" stroke-width="1.3">
-        <circle cx="106" cy="552" r="5"/><path d="M97 569 a9 9 0 0 1 18 0"/>
-        <ellipse cx="148" cy="549" rx="9" ry="3.5"/><path d="M139 549 v15 a9 3.5 0 0 0 18 0 v-15"/>
-        <rect x="176" y="547" width="20" height="17" rx="3"/><path d="M180 555 h12"/>
-        <rect x="214" y="545" width="20" height="20" rx="3"/><circle cx="220" cy="551" r="1.6" fill="#e9f0ff"/><circle cx="228" cy="559" r="1.6" fill="#e9f0ff"/>
-        <rect x="252" y="549" width="26" height="13" rx="6"/>
+        <circle cx="101" cy="552" r="5"/><path d="M92 569 a9 9 0 0 1 18 0"/>
+        <ellipse cx="143" cy="549" rx="9" ry="3.5"/><path d="M134 549 v15 a9 3.5 0 0 0 18 0 v-15"/>
+        <rect x="171" y="547" width="20" height="17" rx="3"/><path d="M175 555 h12"/>
+        <rect x="209" y="545" width="20" height="20" rx="3"/><circle cx="215" cy="551" r="1.6" fill="#e9f0ff"/><circle cx="223" cy="559" r="1.6" fill="#e9f0ff"/>
+        <rect x="247" y="549" width="26" height="13" rx="6"/>
       </g>
       <!-- callouts -->
       <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
         <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
-        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/><path d="M1294 158 L1198 322"/>
-        <path d="M268 290 L570 302"/><path d="M268 632 L520 614"/><path d="M310 708 L720 690"/>
+        <path d="M1180 642 H1292"/><path d="M1280 470 H1322"/><path d="M1180 270 H1292"/><path d="M1198 322 H1292"/>
+        <path d="M280 302 H570"/><path d="M290 614 H520"/><path d="M400 690 H720"/>
       </g>
       <g fill="#e9f0ff">
         <circle cx="1180" cy="642" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
         <circle cx="1280" cy="470" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
-        <circle cx="1180" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="1180" cy="270" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
         <circle cx="1198" cy="322" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.5s" repeatCount="indefinite"/></circle>
         <circle cx="570"  cy="302" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
         <circle cx="520"  cy="614" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
         <circle cx="720"  cy="690" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
       </g>
-      <text class="t-call" x="1300" y="146">CONVERSION FUNNELS</text>
-      <text class="t-call" x="1300" y="250">WEB VITALS</text>
-      <text class="t-call" x="1330" y="472">PRODUCT FEEDBACK</text>
-      <text class="t-call" x="1300" y="692">SESSION REPLAYS</text>
-      <text class="t-call" x="110" y="292">COMPETITIVE</text>
-      <text class="t-call" x="110" y="636">AGENT TRACES</text>
-      <text class="t-call" x="110" y="712">CUSTOM METRICS · MCP</text>
+      <text class="t-call" x="1300" y="327">CONVERSION FUNNELS</text>
+      <text class="t-call" x="1300" y="275">WEB VITALS</text>
+      <text class="t-call" x="1330" y="475">PRODUCT FEEDBACK</text>
+      <text class="t-call" x="1300" y="647">SESSION REPLAYS</text>
+      <text class="t-call" x="110" y="307">COMPETITIVE</text>
+      <text class="t-call" x="110" y="619">AGENT TRACES</text>
+      <text class="t-call" x="110" y="695">CUSTOM METRICS · MCP</text>
       <!-- bottom-left version (squares blink in sequence) -->
       <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
       <g class="ln" stroke-width="1">
@@ -3234,7 +3239,6 @@
       </g>
       <!-- bottom-right -->
       <text class="t-2026" x="1448" y="848">[ 2026 ]</text>
-      <circle cx="1600" cy="116" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
     </svg>
   </div>
   <!-- mobile-only: plain-text labels in roughly the desktop HUD positions
