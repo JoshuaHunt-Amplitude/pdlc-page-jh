@@ -1400,6 +1400,11 @@
   uniform float u_time;
   uniform vec2 u_mouse;
   uniform float u_hover;
+  // PERF: brightness compensation for a reduced particle count. With additive
+  // blending the field's total light ≈ count × alpha, so when we draw fewer
+  // points we scale each one's alpha/glow up to keep the same perceived density.
+  // Set from JS (see ALPHA_COMP); 1.0 = no compensation.
+  uniform float u_alpha;
   // --- tunable uniforms (motion / terrain / projection) ---
   varying vec4 v_color;
   varying float v_alpha;
@@ -1566,6 +1571,9 @@
     v_alpha *= edgeFade;
 
     v_glow = foam * 0.38 + packet * 0.18 + pull * 0.5;
+    // PERF: compensate alpha + glow for the reduced point count (see u_alpha).
+    v_alpha *= u_alpha;
+    v_glow  *= u_alpha;
     v_color = vec4(col + vec3(0.1, 0.3, 0.7) * pull * 0.6, 1.0);
   }
 </script>
@@ -1595,6 +1603,8 @@
   if (!canvas) return;
   // skip on phones (the mobile hero shows the plain HTML headline instead)
   if (window.matchMedia && window.matchMedia('(max-width: 760px)').matches) return;
+  // PERF/A11y: reduced-motion users get the static page background, no WebGL field.
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl');
   if (!gl) return;
   let last = 0, time = 0, lastMs = 0;
@@ -1618,23 +1628,28 @@
   // backdrop for the rest of the page (full strength at the top → ~0.4 below).
   const heroEl = document.querySelector('.bp-hero');
   let dimRAF = 0;
-  // Pause when tab is hidden OR when fully scrolled past the hero.
-  let paused = false;
+  // Pause when tab is hidden, when fully scrolled past the hero, OR while the
+  // opaque #heroCanvas is sitting on top of us at the very top of the page —
+  // there we'd be drawing an identical fullscreen field that nobody can see.
+  let paused = true;
   let scrolledPast = false;
+  let coveredAtTop = false;
   function setPaused(p){ if (p === paused) return; paused = p; if (!paused) { last = performance.now() * 0.001; requestAnimationFrame(draw); } }
-  function updatePaused(){ setPaused(document.hidden || scrolledPast); }
+  function updatePaused(){ setPaused(document.hidden || scrolledPast || coveredAtTop); }
   document.addEventListener('visibilitychange', updatePaused);
   function onScroll(){ if (!dimRAF) dimRAF = requestAnimationFrame(applyDimAndPause); }
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', applyDimAndPause);
   function applyDimAndPause(){
     dimRAF = 0;
+    const sy = window.scrollY || window.pageYOffset || 0;
     const span = (heroEl ? heroEl.offsetHeight : window.innerHeight) * 0.85;
-    const t = Math.min(1, Math.max(0, (window.scrollY || window.pageYOffset || 0) / Math.max(1, span)));
+    const t = Math.min(1, Math.max(0, sy / Math.max(1, span)));
     canvas.style.opacity = (1 - t * 0.6).toFixed(3);
-    const wasPast = scrolledPast;
+    const wasPast = scrolledPast, wasCovered = coveredAtTop;
     scrolledPast = t >= 1;
-    if (wasPast !== scrolledPast) updatePaused();
+    coveredAtTop = sy <= 0;   // heroCanvas fully overlaps the fixed field here
+    if (wasPast !== scrolledPast || wasCovered !== coveredAtTop) updatePaused();
   }
   function draw(nowMs){
     if (paused) return;
@@ -1651,8 +1666,11 @@
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     requestAnimationFrame(draw);
   }
-  requestAnimationFrame(draw);
+  // set scrolledPast/coveredAtTop for the current scroll position, then let
+  // updatePaused() decide whether to start the loop (it stays paused if we load
+  // at the very top, where #heroCanvas covers this field).
   applyDimAndPause();
+  updatePaused();
 })();
 
 /* ── LAYER 2: particle effect (scrolls away with the hero) ─────────────────────
@@ -1668,6 +1686,9 @@
   // Mobile still shows the field (behind the plain HTML headline), but at a much
   // lighter particle count so it stays smooth on phone GPUs.
   const isMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+  // PERF/A11y: skip the WebGL field entirely for reduced-motion users — they get
+  // the static HUD over the page's navy/radial background instead.
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl');
   if (!gl) { console.error('WebGL not supported'); return; }
 
@@ -1696,7 +1717,20 @@
 
   let seed = 20260605 >>> 0;
   function rnd(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
-  const count = isMobile ? 400000 : 2000000;
+  // ── PERF TUNING KNOBS ──────────────────────────────────────────────────────
+  // The hero field used to draw 2,000,000 points/frame (400k mobile) through a
+  // heavy per-vertex shader — the page's single biggest GPU cost and the likely
+  // cause of slowdown/crashes on integrated GPUs. We draw far fewer now and use
+  // u_alpha to keep the same perceived brightness (additive light ≈ count×alpha).
+  //   COUNT      → particle count (raise for denser grain, at GPU cost)
+  //   BASE_COUNT → the old count this density was authored at (for compensation)
+  //   DAMP       → 1 = fully restore brightness; <1 = let it read a touch sparser
+  //                so bright "lead" particles don't spike. Tune COUNT + DAMP by eye.
+  const COUNT = isMobile ? 120000 : 500000;
+  const BASE_COUNT = isMobile ? 400000 : 2000000;
+  const DAMP = 0.85;
+  const ALPHA_COMP = Math.pow(BASE_COUNT / COUNT, DAMP);
+  const count = COUNT;
   const seeds = new Float32Array(count * 4);
   const extras = new Float32Array(count * 4);
   for (let i = 0; i < count; i++) {
@@ -1708,7 +1742,7 @@
   const extraBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, extraBuffer); gl.bufferData(gl.ARRAY_BUFFER, extras, gl.STATIC_DRAW);
 
   const bg = { position: gl.getAttribLocation(bgProgram,'a_position'), resolution: gl.getUniformLocation(bgProgram,'u_resolution'), time: gl.getUniformLocation(bgProgram,'u_time') };
-  const pts = { seed: gl.getAttribLocation(ptProgram,'a_seed'), extra: gl.getAttribLocation(ptProgram,'a_extra'), resolution: gl.getUniformLocation(ptProgram,'u_resolution'), time: gl.getUniformLocation(ptProgram,'u_time'), mouse: gl.getUniformLocation(ptProgram,'u_mouse'), hover: gl.getUniformLocation(ptProgram,'u_hover') };
+  const pts = { seed: gl.getAttribLocation(ptProgram,'a_seed'), extra: gl.getAttribLocation(ptProgram,'a_extra'), resolution: gl.getUniformLocation(ptProgram,'u_resolution'), time: gl.getUniformLocation(ptProgram,'u_time'), mouse: gl.getUniformLocation(ptProgram,'u_mouse'), hover: gl.getUniformLocation(ptProgram,'u_hover'), alpha: gl.getUniformLocation(ptProgram,'u_alpha') };
 
   let mouseClipX = -2, mouseClipY = -2, hover = 0, hoverTarget = 0;
 
@@ -1771,6 +1805,7 @@
     gl.uniform1f(pts.time, time);
     gl.uniform2f(pts.mouse, mouseClipX, mouseClipY);
     gl.uniform1f(pts.hover, hover);
+    gl.uniform1f(pts.alpha, ALPHA_COMP);
     gl.drawArrays(gl.POINTS, 0, count);
 
     requestAnimationFrame(draw);
@@ -2081,7 +2116,34 @@
     <p class="intro-wave-tagline">The world's first<br>self-improving product engine</p>
   </div>
 </section>
-<script type="text/javascript">!function(){var u=window.UnicornStudio;if(u&&u.init){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){u.init()})}else{u.init()}}else{window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.1/dist/unicornStudio.umd.js",i.onload=function(){if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){UnicornStudio.init()})}else{UnicornStudio.init()}},(document.head||document.body).appendChild(i)}}();</script>
+<script type="text/javascript">
+/* PERF: the "Introducing Wave" embed is a 3rd WebGL context driven by an external
+   engine. Loading + initializing it at page-load made three WebGL scenes contend
+   for the GPU while the hero was still rendering. Defer the CDN load AND init until
+   this section approaches the viewport — by then the hero canvas has scrolled away
+   and paused, so at most two WebGL contexts are ever live at once. */
+(function(){
+  var section = document.querySelector('.intro-wave');
+  if(!section) return;
+  var started = false;
+  function start(){
+    if(started) return; started = true;
+    function go(){ try { window.UnicornStudio && window.UnicornStudio.init && window.UnicornStudio.init(); } catch(_){} }
+    if (window.UnicornStudio && window.UnicornStudio.init) { go(); return; }
+    window.UnicornStudio = { isInitialized: false };
+    var i = document.createElement('script');
+    i.src = 'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.1/dist/unicornStudio.umd.js';
+    i.onload = go;
+    (document.head || document.body).appendChild(i);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      if (es[0].isIntersecting) { io.disconnect(); start(); }
+    }, { rootMargin: '600px 0px' });   // preload ~one screen early so it's ready
+    io.observe(section);
+  } else { start(); }
+})();
+</script>
 
 <!-- ── POST-WAVE: deeper background from here to footer ─── -->
 <div class="post-wave-bg">
@@ -2755,7 +2817,11 @@
 </section>
 <script>
 (function(){
-  const c=document.getElementById('bp-foot');if(!c)return;const x=c.getContext('2d');
+  const c=document.getElementById('bp-foot');if(!c)return;
+  // PERF/A11y: the closing loop is decorative (aria-hidden) — skip it for
+  // reduced-motion users; the HUD frame + labels still read the section.
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const x=c.getContext('2d');
   let W=0,H=0,dpr=1;
   function resize(){const st=c.parentElement.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=st.width;H=st.height;c.width=Math.max(1,(W*dpr)|0);c.height=Math.max(1,(H*dpr)|0);x.setTransform(dpr,0,0,dpr,0,0);}
   resize();window.addEventListener('resize',resize);
@@ -2771,7 +2837,7 @@
     for(let i=0;i<cf.streamCount;i++){const big=i<cf.bigCount;streams.push({u0:Math.random()*TAU,v0:Math.random()*TAU,turns:cf.turnsMin+Math.random()*cf.turnsVar,vturns:cf.vturnsMin+Math.random()*cf.vturnsVar,off:Math.random(),sp:cf.streamSpeedMin+Math.random()*cf.streamSpeedVar,big:big});}
   }
   buildSwarm();
-  let last=0;
+  let last=0,lastMs=0;
   // PERF: pause while the footer is offscreen (it sits below the fold).
   let rafId=0,paused=true;
   function setPaused(p){ if(p===paused)return; paused=p; if(!paused){ last=performance.now()/1000; rafId=requestAnimationFrame(frame); } }
@@ -2780,6 +2846,9 @@
   } else { paused=false; rafId=requestAnimationFrame(frame); }
   function frame(now){
     if(paused)return;
+    // PERF: cap to ~30fps (match the hero). The line-heavy torus doesn't need 60.
+    if(now-lastMs<33.3){ rafId=requestAnimationFrame(frame); return; }
+    lastMs=now;
     const cf=config;
     const t=now/1000;let dt=t-last;last=t;if(dt>0.1)dt=0.1;if(dt<0)dt=0;
 
