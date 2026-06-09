@@ -1182,23 +1182,36 @@
   .bp-scroll .chev{animation:bp-bob 1.8s ease-in-out infinite;}
   @keyframes bp-bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
   @media(prefers-reduced-motion:reduce){.bp-scroll .chev{animation:none}}
-  /* hero CTA — HTML button overlaid on the top HUD (the SVGs are pointer-events:none). */
-  .bp-cta{position:absolute;
-    /* anchored to the TOP instrument SVG, which is full-width and scales purely by
-       width (viewBox 1680 wide). So 1 viewBox unit = (100vw / 1680) px, and the pill
-       sits at SVG x=80 (the title gutter), y=360 (just below the PRODUCTS baseline). */
-    --s:calc(100vw / 1680);
-    left:calc(var(--s) * 80);
-    top:calc(var(--s) * 360);
-    z-index:3;pointer-events:auto;
-    display:inline-flex;align-items:center;gap:0.8em;font-family:'Geist Mono',ui-monospace,monospace;
-    /* size scales with the HUD (--s) so the pill stays proportional to the title
-       at every viewport, instead of looking oversized at medium widths. em-based
-       padding/gap so the whole pill tracks the font-size. */
-    font-size:clamp(11px, calc(var(--s) * 15px), 16px);
-    letter-spacing:.16em;text-transform:uppercase;color:#0a1330;background:#e9f0ff;
-    text-decoration:none;padding:0.95em 1.7em;border-radius:999px;transition:transform .2s,box-shadow .2s;
-    box-shadow:0 0 0 1px rgba(233,240,255,.4),0 10px 48px rgba(64,131,255,.4);}
+  /* v19: hero copy is real HTML (Poppins), vertically centred & left-aligned over
+     the field. The instrument HUD (corners/axis/labels) is now pure SVG chrome
+     pinned to the top & bottom edges — the headline no longer lives inside it. */
+  .bp-hero-copy{
+    position:absolute; z-index:3;
+    top:50%; transform:translateY(-50%);
+    left:clamp(32px, 5vw, 104px);
+    max-width:min(620px, 54vw);
+    pointer-events:none;            /* let the field receive the cursor; CTA re-enables */
+  }
+  .bp-hero-copy h1{
+    margin:0; font-family:var(--sans); font-weight:600;
+    font-size:clamp(40px, 6.4vw, 96px); line-height:1.0; letter-spacing:-0.035em;
+    color:#f2f6ff;
+  }
+  .bp-hero-copy p{
+    margin:24px 0 0; font-family:var(--sans); font-weight:400;
+    font-size:clamp(15px, 1.25vw, 19px); line-height:1.5; color:var(--dim); max-width:42ch;
+  }
+  /* hero CTA — solid pill, now in the copy flow */
+  .bp-cta{
+    pointer-events:auto; margin-top:34px;
+    display:inline-flex; align-items:center; gap:0.7em;
+    font-family:'Geist Mono',ui-monospace,monospace;
+    font-size:14px; letter-spacing:.16em; text-transform:uppercase;
+    color:#0a1330; background:#e9f0ff;
+    text-decoration:none; padding:0.95em 1.7em; border-radius:999px;
+    transition:transform .2s,box-shadow .2s;
+    box-shadow:0 0 0 1px rgba(233,240,255,.4),0 10px 48px rgba(64,131,255,.4);
+  }
   .bp-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(233,240,255,.6),0 14px 60px rgba(64,131,255,.55);}
   .bp-cta .arr,.waitlist button .arr{font-size:1.15em;transition:transform .2s;}
   .bp-cta:hover .arr,.waitlist button:hover .arr{transform:translateX(4px);}
@@ -1222,7 +1235,8 @@
     .bp-hero canvas{opacity:.6;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 16%,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 16%,#000 80%,transparent 100%);}
     #heroBg{display:none;}               /* skip the separate persistent bg field on phones */
     .bp-scroll{display:none;}
-    .bp-cta{display:none;}               /* HUD-anchored CTA is desktop-only; mobile uses the nav + CTA section */
+    .bp-hero-copy{display:none;}         /* desktop centred copy off; mobile uses .bp-hero-m */
+    .bp-cta{display:none;}               /* CTA is desktop-only; mobile uses the nav + CTA section */
     .bp-hero-m{display:block;position:relative;z-index:3;}
     .bp-hero-m h1{text-shadow:0 1px 16px rgba(3,6,15,.65);}
     .bp-hero-m p{text-shadow:0 1px 12px rgba(3,6,15,.7);}
@@ -1249,25 +1263,20 @@
   <!-- hero coherence field: inlined from wave-coherence-tuner.html, baked to the USE_ME_FOR_MAIN config -->
   <div class="stage">
     <canvas id="heroCanvas"></canvas>
-    <!-- TOP instrument frame — pinned to the top edge: corners + crosshair + title.
-         viewBox is the top band of the original 945-tall composition (coords unchanged). -->
-    <svg class="hud hud-top" viewBox="0 0 1680 440" preserveAspectRatio="xMidYMin meet">
+    <!-- TOP instrument chrome — pinned to the top edge: corners + crosshair + the
+         brand tag (left) and year (right). The headline now lives in .bp-hero-copy. -->
+    <svg class="hud hud-top" viewBox="0 0 1680 160" preserveAspectRatio="xMidYMin meet">
       <g class="ln" stroke-width="1.35" opacity="0.78">
         <path d="M42 98 V42 H98"/><path d="M110 62 h18 M119 53 v18"/>
         <path d="M1638 98 V42 H1582"/>
         <circle cx="1598" cy="116" r="11"/><path d="M1598 99 V133 M1581 116 H1615"/>
       </g>
-      <!-- title -->
-      <text class="title" x="80" y="172">
-        <tspan x="80" dy="0">ENABLING</tspan>
-        <tspan x="80" dy="64">SELF-IMPROVING</tspan>
-        <tspan x="80" dy="64">PRODUCTS</tspan>
-      </text>
+      <text class="sm" x="152" y="72">AMPLITUDE WAVE</text>
+      <text class="sm" x="1544" y="72" text-anchor="end">[ 2026 ]</text>
     </svg>
 
-    <!-- BOTTOM instrument frame — pinned to the bottom edge: corners + process axis +
-         story copy + year. viewBox is a window onto the lower band (y 735→945) so all
-         coords match the original composition unchanged. -->
+    <!-- BOTTOM instrument chrome — pinned to the bottom edge: corners + process axis.
+         viewBox is a window onto the lower band (y 722→945) so coords are unchanged. -->
     <svg class="hud hud-bot" viewBox="0 722 1680 223" preserveAspectRatio="xMidYMax meet">
       <g class="ln" stroke-width="1.35" opacity="0.78">
         <path d="M42 847 V903 H98"/>
@@ -1284,16 +1293,14 @@
         <text class="sm" x="1048" y="748">ACT</text>
         <text class="sm" x="1532" y="748" text-anchor="end">LEARN</text>
       </g>
-      <!-- bottom story line -->
-      <text class="hero" x="82" y="836">
-        <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
-        <tspan x="82" dy="34">and prove it worked. Every release, on its own.</tspan>
-      </text>
-      <text class="cap" x="1486" y="878">[ 2026 ]</text>
     </svg>
   </div>
-  <!-- hero CTA: HTML pill overlaid on the HUD, anchored under the title (see .bp-cta) -->
-  <a class="bp-cta" href="#cta">Request access <span class="arr" aria-hidden="true">→</span></a>
+  <!-- hero copy — real HTML (Poppins), vertically centred over the field -->
+  <div class="bp-hero-copy">
+    <h1>Enabling self-improving products.</h1>
+    <p>Products that find what's worth building, ship it, and prove it worked. Every release, on its own.</p>
+    <a class="bp-cta" href="#cta">Request access <span class="arr" aria-hidden="true">→</span></a>
+  </div>
   <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
   <div class="bp-hero-m">
     <h1>Enabling self-improving products</h1>
@@ -2012,7 +2019,7 @@
       <p>Quality comes from iteration. The military strategist <span class="hc" tabindex="0"><span class="hc-term">John Boyd</span><span class="hc-card"><span class="hc-label">John Boyd · 1927–1997</span><span class="hc-body">USAF fighter pilot and Pentagon consultant. His theories on decision cycles shaped military, business, and legal strategy worldwide. <a href="https://en.wikipedia.org/wiki/John_Boyd_(military_strategist)" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> showed that whoever cycles their <span class="hc" tabindex="0"><span class="hc-term">OODA loop</span><span class="hc-card"><span class="hc-label">Observe, Orient, Decide, Act</span><span class="hc-body">Decision-making as an iterative cycle. Influential across litigation, business, law enforcement, military strategy, and cybersecurity. <a href="https://en.wikipedia.org/wiki/OODA_loop" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> fastest wins the dogfight. Whether it's a team of 1,000 or a solo developer - every product builder runs through roughly the same loop to build and iterate on a product: build, ship, use, learn.</p>
     </div>
 
-    <div class="loop-viz reveal" aria-hidden="true" style="max-width:760px;">
+    <div class="loop-viz reveal" aria-hidden="true">
       <svg viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="fl3-bg" x1="0" y1="0" x2="0" y2="1">
