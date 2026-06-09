@@ -13,6 +13,8 @@ Version families (current):
 - **V6–V8** — name-test forks of V5: **Loop** / **Product OS** / **Opportunities**.
 - **V9 — Vision** — pared to the narrative: hero → manifesto → funnel → loop → CTA.
 - **V10 — Product** — pared to the product: feed → map → brief → ways-in → loop → CTA.
+- **V18** — current working version; Wave messaging, 8-beat narrative, blueprint hero.
+- **V19** — active fork of V18; adds Unicorn Studio "Introducing Wave" interstitial, section reorder (data → Wave → solution → loop), `#00070E` deep background below the wave, hover cards on OODA/Boyd terms.
 
 ## How we work on it
 - **Make structural & diagram changes by editing the relevant version file directly** (whichever
@@ -20,12 +22,19 @@ Version families (current):
   (indentation, attribute style); don't reformat. Changes to one version don't propagate — apply
   to others explicitly when asked.
 - **The user refines copy inline** via a local editor: `node edit-server.js` →
-  `http://localhost:4321/index-v5.html` (swap in any `index-vN.html`). The editor is **injected only when served** (the file on
+  `http://localhost:4321/index-v18.html` (swap in any `index-vN.html`). The editor is **injected only when served** (the file on
   disk stays clean) and **each save writes the file + a git commit**. Therefore:
   - **Re-read the file before editing** — copy may have changed inline since you last saw it.
     Never clobber the user's inline copy edits.
   - Do large structural moves as **direct file edits**, not through the inline editor (its save
     path is tuned for small copy snippets, not block moves).
+  - **The edit-server can silently wipe large structural blocks.** It does a whitespace-tolerant
+    snippet replace against whatever HTML is in its in-memory buffer. If the buffer is stale (e.g.
+    from before you added a big new section), the save will overwrite the file with the older
+    version and drop your additions entirely — no warning. **After any session where you added a
+    substantial new section, check that the section is still present before closing.** If it goes
+    missing, restore from git (`git show <last-good-sha>:index-vN.html > index-vN.html`) and
+    re-apply only the small edits on top.
 - **Validate after every structural/SVG edit** (quick python check): every `url(#id)` / `href="#id"`
   resolves to a defined `id=`; `<svg>` / `<section>` / `<g>` tags balance; any strings you removed
   are actually gone. This repeatedly caught broken refs and half-moved blocks.
@@ -78,9 +87,29 @@ small group of teams (this replaced the earlier "Q3 cohort / design partner" lan
 
 ## Tech notes
 - Palette = CSS vars (`--blue #0052F2`, `--blue-d #4083FF`, `--lilac`, `--violet`, `--pink`,
-  `--green`, `--bg`, `--panel`, line tints). Fonts: Poppins (sans) + JetBrains Mono.
+  `--green`, `--bg #070b1c`, `--panel #0c1226`, line tints). Fonts: Poppins (sans) + JetBrains Mono + Geist Mono.
+- V19 introduces a second background register: **`#00070E`** (deeper navy) applied via a
+  `.post-wave-bg` wrapper div that starts after the Unicorn Studio Wave embed and runs to the
+  footer. The `::after` fade on `.intro-wave` targets this colour so the embed's bottom edge
+  dissolves directly into it.
 - SVG animation uses **SMIL** (`animateMotion` / `animate`). A `prefers-reduced-motion` block
   disables CSS animations; SMIL isn't covered by it (known limitation).
+- **Third-party full-bleed embeds (e.g. Unicorn Studio):** wrap in a `position:relative` container,
+  size with `width:100% !important; aspect-ratio: W/H` (overriding the embed's baked-in px size),
+  and add `::before`/`::after` gradient fades to dissolve into the surrounding page background.
+  The bottom fade should target the *next section's* background colour, not `--bg`, when the
+  background changes below the embed.
 - `edit-server.js` (Node, zero deps): serves the repo, injects `editor-client.js` into HTML
   responses, and exposes `/api/save` (whitespace-tolerant snippet replace + `git commit`),
   `/api/history`, `/api/revert`. `editor-client.js` is the in-browser toolbar.
+
+## HTML patterns learned from bugs
+- **Hover/tooltip cards inside inline text:** use `display: inline-block` (not `inline`) on the
+  trigger element so it forms a positioning context for `position: absolute` children. Hidden state
+  needs **both** `opacity: 0` and `visibility: hidden` — opacity alone still lets text leak into
+  flow on some browsers. Never put block-level elements (`<p>`, `<div>`) inside an inline `<span>`
+  inside a `<p>` — the browser's HTML repair closes the outer `<p>` early and ejects the card
+  content into the page. Use `<span>` with `display: block` in CSS instead.
+- **Section background changes mid-page:** wrap content in a `<div class="name">` with the new
+  `background` value rather than trying to override individual section rules. Ensure the preceding
+  transition element's fade gradient targets the wrapper's background colour, not the global `--bg`.
