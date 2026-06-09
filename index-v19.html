@@ -1016,8 +1016,14 @@
   /* bridge: tighten the solution section's top so the SVG connector leads directly into the heading */
   #solution.manifesto { padding-top: 0; }
 
-  /* ── wave→solution animated bridge ── */
-  .wave-bridge { display: flex; justify-content: center; padding: 24px 0 16px; }
+  /* ── wave→solution animated bridge ──
+     760-wide SVG centred to match the 760 text block: top crosshair sits over the
+     wave (viewBox x=380 = viewport centre), the path steps left to x≈16 (the text's
+     left edge) and lands on the "A". Negative margin-top pulls the top ~290px up so
+     the crosshair overlaps the wave diagram above. Hidden where the 760 block can't
+     fit (alignment would break). */
+  .wave-bridge { display: flex; justify-content: center; margin-top: -290px; padding: 0; position: relative; z-index: 2; pointer-events: none; }
+  @media (max-width: 860px){ .wave-bridge { display: none; } }
 
   /* ── HOVER CARDS (inline term tooltips) ── */
   .hc {
@@ -2952,13 +2958,23 @@
 <!-- proof card styles (replaces the dogfooding loop micrographic with a stat block) -->
 <style>
   .proof-card{
-    margin: 36px 0 0;
+    margin: 56px 0 0;
     background: var(--panel);
     border: 1px solid var(--lines);
     border-radius: 16px;
     padding: 40px 44px;
     box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+    position: relative; overflow: hidden;
   }
+  .proof-card::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(
+      500px circle at var(--mx, 50%) var(--my, -20%),
+      rgba(64,131,255,.09) 0%, transparent 65%
+    );
+    opacity: 0; transition: opacity .5s ease;
+  }
+  .proof-card:hover::before { opacity: 1; }
   @media (max-width: 720px){ .proof-card{ padding: 26px 22px; } }
   .proof-card h3{
     font-family: var(--sans); font-size: clamp(23px,2.6vw,29px); font-weight: 400;
@@ -3076,6 +3092,16 @@
     a.addEventListener('click', function(){
       setTimeout(function(){ try { em.focus({ preventScroll: true }); } catch (_) { em.focus(); } }, 0);
     });
+  });
+})();
+// proof card mouse-following spotlight
+(function(){
+  var card = document.querySelector('.proof-card');
+  if(!card) return;
+  card.addEventListener('mousemove', function(e){
+    var r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top)  + 'px');
   });
 })();
 </script>
