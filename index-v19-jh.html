@@ -1190,29 +1190,29 @@
   .bp-hero-copy{
     position:absolute; z-index:3;
     top:50%; transform:translateY(-50%);
-    left:clamp(32px, 5vw, 104px);
-    max-width:min(660px, 56vw);
+    left:clamp(48px, 9vw, 180px);
+    max-width:min(780px, 64vw);
     pointer-events:none;            /* let the field receive the cursor; CTA re-enables */
   }
   .bp-hero-copy h1{
     margin:0; font-family:var(--sans); font-weight:600;
-    /* sized so "self-improving" stays on one line (no hyphen break) at max width */
-    font-size:clamp(38px, 5vw, 72px); line-height:0.94; letter-spacing:-0.04em;
+    /* large display headline, breaks intentionally onto 3 lines via <br> */
+    font-size:clamp(48px, 7.2vw, 112px); line-height:1.0; letter-spacing:-0.035em;
     color:#f2f6ff;
   }
   .bp-hero-copy p{
-    margin:24px 0 0; font-family:var(--sans); font-weight:400;
-    font-size:clamp(15px, 1.25vw, 19px); line-height:1.5; color:var(--dim); max-width:42ch;
+    margin:28px 0 0; font-family:var(--sans); font-weight:400;
+    font-size:clamp(15px, 1.25vw, 19px); line-height:1.5; color:var(--dim); max-width:46ch;
   }
   /* hero CTA — outline pill, identical to the nav CTA (.nav-btn) */
   .bp-cta{
-    pointer-events:auto; margin-top:32px;
+    pointer-events:auto; margin-top:36px;
     display:inline-flex; align-items:center;
     font-family:var(--sans); font-size:13px; font-weight:500;
-    letter-spacing:.12em; text-transform:uppercase;
+    letter-spacing:.18em; text-transform:uppercase;
     color:var(--white); background:transparent;
     border:1px solid var(--lines); border-radius:999px;
-    padding:11px 22px; text-decoration:none;
+    padding:14px 28px; text-decoration:none;
     transition:border-color .2s, color .2s;
   }
   .bp-cta:hover{ border-color:var(--blue-d); color:var(--blue-d); }
@@ -1299,8 +1299,8 @@
   <!-- hero copy — real HTML (Poppins), vertically centred over the field -->
   <div class="bp-hero-copy">
     <div class="bp-eyebrow">Amplitude Wave · Closed Beta</div>
-    <h1>Enabling self-improving products.</h1>
-    <p>Products that reinforce what's working<br>and improve and fix what isn't<br>without explicit intervention.</p>
+    <h1>Enabling<br>self-improving<br>products.</h1>
+    <p>Products that reinforce what's working and improve<br>and fix what isn't without explicit intervention.</p>
     <a class="bp-cta" href="#cta">Request access</a>
   </div>
   <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
