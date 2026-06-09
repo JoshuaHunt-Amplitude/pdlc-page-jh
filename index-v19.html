@@ -1905,6 +1905,40 @@
     padding: 5px 10px; border: 1px solid rgba(180,200,255,.28); border-radius: 7px;
     background: rgba(8,12,28,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   }
+  /* ── timeline scrubber ──────────────────────────────────────────────
+     Sits at the bottom of the video frame. Invisible until cursor enters
+     the wrap; a gradient veil above it provides readability. Clicks on the
+     scrubber are stopPropagation'd so they don't trigger the sound toggle. */
+  .film-scrub {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+    padding: 28px 18px 14px; /* generous touch area above the bar */
+    cursor: ew-resize;
+    background: linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 100%);
+    opacity: 0; transition: opacity .3s ease;
+  }
+  .film-wrap.cursor-on .film-scrub,
+  .film-wrap:hover .film-scrub { opacity: 1; }
+  .film-scrub-track {
+    position: relative; height: 3px; border-radius: 3px;
+    background: rgba(255,255,255,.2);
+    transition: height .18s ease, border-radius .18s ease;
+  }
+  .film-scrub:hover .film-scrub-track { height: 5px; }
+  .film-scrub-fill {
+    position: absolute; inset: 0; right: auto; border-radius: inherit;
+    background: #fff; width: 0%; transition: width .1s linear;
+    pointer-events: none;
+  }
+  .film-scrub.is-dragging .film-scrub-fill { transition: none; }
+  .film-scrub-thumb {
+    position: absolute; top: 50%; width: 11px; height: 11px;
+    border-radius: 50%; background: #fff;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform .15s ease; pointer-events: none;
+  }
+  .film-scrub:hover .film-scrub-thumb { transform: translate(-50%, -50%) scale(1); }
+  .film-scrub.is-dragging .film-scrub-thumb { transform: translate(-50%, -50%) scale(1.2); }
+
   @media (prefers-reduced-motion: reduce) {
     .film-frame { transform: scale(.94); } .film-scrim { display: none; }
     .fc-ping { animation: none; } .fc-inner { transition: none; }
@@ -1926,6 +1960,12 @@
       <video class="film-media" muted loop playsinline preload="metadata">
         <source src="resources/Wave - Vision.mp4" type="video/mp4">
       </video>
+      <div class="film-scrub" aria-label="Video timeline">
+        <div class="film-scrub-track">
+          <div class="film-scrub-fill"></div>
+          <div class="film-scrub-thumb"></div>
+        </div>
+      </div>
     </div>
     <!-- cursor-attached "click for sound" micrographic (position driven by JS) -->
     <div class="film-cursor" aria-hidden="true">
@@ -2018,6 +2058,51 @@
       wrap.classList.toggle('sound-on', !vid.muted);
       setLabel(vid.muted ? 'Click to unmute' : 'Click to mute');
     });
+  })();
+
+  // ── timeline scrubber ──────────────────────────────────────────────
+  // Clicks stop-propagate so they never reach the sound-toggle handler.
+  (function(){
+    var scrub = wrap.querySelector('.film-scrub');
+    var fill  = wrap.querySelector('.film-scrub-fill');
+    var thumb = wrap.querySelector('.film-scrub-thumb');
+    var vid   = film.querySelector('.film-media');
+    if(!scrub || !vid) return;
+
+    function pct(){ return vid.duration ? vid.currentTime / vid.duration : 0; }
+    function applyPct(p){
+      var w = (p * 100).toFixed(2) + '%';
+      fill.style.width = w;
+      thumb.style.left = w;
+    }
+
+    vid.addEventListener('timeupdate', function(){ if(!dragging) applyPct(pct()); });
+
+    function seekTo(e){
+      var r = scrub.querySelector('.film-scrub-track').getBoundingClientRect();
+      var p = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+      if(vid.duration) vid.currentTime = p * vid.duration;
+      applyPct(p);
+    }
+
+    var dragging = false;
+    scrub.addEventListener('pointerdown', function(e){
+      e.stopPropagation();
+      dragging = true;
+      scrub.setPointerCapture(e.pointerId);
+      scrub.classList.add('is-dragging');
+      seekTo(e);
+    });
+    scrub.addEventListener('pointermove', function(e){
+      if(dragging) seekTo(e);
+    });
+    scrub.addEventListener('pointerup', function(e){
+      if(!dragging) return;
+      dragging = false;
+      scrub.classList.remove('is-dragging');
+      seekTo(e);
+    });
+    scrub.addEventListener('click', function(e){ e.stopPropagation(); });
   })();
 
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
