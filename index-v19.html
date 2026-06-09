@@ -795,6 +795,7 @@
     -webkit-box-shadow: 0 0 0 1000px #0c1226 inset !important;
     -webkit-text-fill-color: #f2f6ff !important;
     caret-color: #f2f6ff;
+    border-radius: 999px 0 0 999px;
     transition: background-color 9999s ease 0s;
   }
   .waitlist button {
@@ -1031,7 +1032,7 @@
      left edge) and lands on the "A". Negative margin-top pulls the top ~290px up so
      the crosshair overlaps the wave diagram above. Hidden where the 760 block can't
      fit (alignment would break). */
-  .wave-bridge { display: flex; justify-content: center; margin-top: -290px; padding: 0; position: relative; z-index: 2; pointer-events: none; }
+  .wave-bridge { display: flex; justify-content: center; margin-top: -330px; padding: 0 0 36px; position: relative; z-index: 2; pointer-events: none; }
   @media (max-width: 860px){ .wave-bridge { display: none; } }
 
   /* ── HOVER CARDS (inline term tooltips) ── */
