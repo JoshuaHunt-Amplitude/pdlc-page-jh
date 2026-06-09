@@ -979,6 +979,7 @@
      fade its trails to 0 — no permanent "painted" residue from the animation. */
   .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(95% 120% at 62% 58%, #16265c 0%, #0c1430 46%, var(--bg) 82%);}
   .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .bp-hero-frame{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#030409;}
   .bp-hero .hud{pointer-events:none;}
   .bp-hero .hud text{fill:#e9f0ff;}
   .bp-hero .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
@@ -1015,83 +1016,10 @@
   @media(max-width:760px){.bp-hero{height:100svh}.bp-cta{left:22px;top:auto;bottom:120px}}
 </style>
 <section class="bp-hero">
-  <div class="stage">
-    <canvas id="bp-c"></canvas>
-    <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <!-- corner frames · 40px brackets, TL crosshair, TR target (104px diagonal) -->
-      <g class="ln" stroke-width="1.4">
-        <path d="M40 96 V40 H96"/><path d="M112 74 h16 M120 66 v16"/>
-        <path d="M1640 96 V40 H1584"/>
-        <path d="M40 849 V905 H96"/>
-        <path d="M1640 849 V905 H1584"/>
-        <circle cx="1576" cy="104" r="11"/><path d="M1576 87 V121 M1559 104 H1593"/>
-        <circle cx="1576" cy="104" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
-      </g>
-
-      <!-- title block (top-left) -->
-      <text class="t-sub" x="95" y="96" style="letter-spacing:5px;fill:#8aa2ff">AMPLITUDE WAVE · COHERENCE FIELD</text>
-      <text class="t-title" x="92" y="172">SIGNALS BECOME WAVES</text>
-      <text class="t-sub" x="95" y="214" style="font-size:16px;letter-spacing:6px;fill:#7f8cc4">SIGNALS &#8201;·&#8201; OPPORTUNITIES &#8201;·&#8201; OUTCOMES</text>
-
-      <!-- stage rail (loop stages across the top) -->
-      <g class="lnf" stroke-width="1" fill="none">
-        <path d="M520 300 H1600" stroke="rgba(233,240,255,0.22)"/>
-        <path d="M520 291 V309 M1600 291 V309" stroke="rgba(233,240,255,0.5)"/>
-        <path d="M540 300 v9 M810 300 v9 M1080 300 v9 M1350 300 v9 M1580 300 v9" stroke="rgba(233,240,255,0.4)"/>
-      </g>
-      <text class="t-sm" x="540"  y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">SENSE</text>
-      <text class="t-sm" x="810"  y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">CORROBORATE</text>
-      <text class="t-sm" x="1080" y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">COMPOSE</text>
-      <text class="t-sm" x="1350" y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">APPROVE</text>
-      <text class="t-sm" x="1580" y="285" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">LEARN</text>
-
-      <!-- left panel · INCOMING SIGNALS (colour-coded legend) -->
-      <g class="lnf" stroke-width="1.2" fill="none" stroke="rgba(233,240,255,0.45)">
-        <path d="M88 386 V362 H122"/><path d="M362 362 H396 V386"/>
-        <path d="M88 664 V690 H122"/><path d="M362 690 H396 V664"/>
-      </g>
-      <text class="t-call" x="120" y="392" style="letter-spacing:3px">INCOMING SIGNALS</text>
-      <path d="M120 406 H372" stroke="rgba(233,240,255,0.28)" stroke-width="1" fill="none"/>
-      <g stroke="rgba(233,240,255,0.12)" stroke-width="1" fill="none">
-        <path d="M120 458 H372"/><path d="M120 500 H372"/><path d="M120 542 H372"/><path d="M120 584 H372"/>
-      </g>
-      <circle cx="132" cy="437" r="4" fill="#e9f0ff"/><text class="t-call" x="154" y="442" style="letter-spacing:2px">ANALYTICS</text>
-      <circle cx="132" cy="479" r="4" fill="#4083FF"/><text class="t-call" x="154" y="484" style="letter-spacing:2px">SESSION REPLAYS</text>
-      <circle cx="132" cy="521" r="4" fill="#a373ff"/><text class="t-call" x="154" y="526" style="letter-spacing:2px">FEEDBACK</text>
-      <circle cx="132" cy="563" r="4" fill="#57e3a4"/><text class="t-call" x="154" y="568" style="letter-spacing:2px">AGENT TRACES</text>
-      <circle cx="132" cy="605" r="4" fill="#ff7d78"/><text class="t-call" x="154" y="610" style="letter-spacing:2px">WEB VITALS</text>
-
-      <!-- centre · OPPORTUNITY LOCK reticle (sits over the wave) -->
-      <g class="ln" stroke-width="1.2" fill="none" opacity="0.7">
-        <path d="M1140 486 h-20 v-20 M1240 486 h20 v-20 M1140 560 h-20 v20 M1240 560 h20 v20"/>
-        <circle cx="1190" cy="523" r="20" opacity="0.55"/>
-      </g>
-      <circle cx="1190" cy="523" r="2" fill="#e9f0ff"/>
-      <text class="t-sm" x="1190" y="598" text-anchor="middle" style="letter-spacing:3px;fill:#9fb0d8">OPPORTUNITY LOCK</text>
-
-      <!-- right panel · OPPORTUNITY (the composed output) -->
-      <g class="lnf" stroke-width="1.2" fill="none" stroke="rgba(233,240,255,0.45)">
-        <path d="M1452 466 V442 H1486"/><path d="M1596 442 H1620 V466"/>
-        <path d="M1452 660 V684 H1486"/><path d="M1596 684 H1620 V660"/>
-      </g>
-      <text class="t-call" x="1474" y="472" style="letter-spacing:3px">OPPORTUNITY</text>
-      <path d="M1474 486 H1600" stroke="rgba(233,240,255,0.28)" stroke-width="1" fill="none"/>
-      <text class="t-call" x="1474" y="520" style="letter-spacing:2px;fill:#e9f0ff">EVIDENCE</text>
-      <text class="t-call" x="1474" y="552" style="letter-spacing:2px;fill:#7f8cc4">CROSS-SOURCE</text>
-      <text class="t-call" x="1474" y="584" style="letter-spacing:2px;fill:#7f8cc4">ACTION</text>
-      <text class="t-call" x="1474" y="616" style="letter-spacing:2px;fill:#e9f0ff">READY TO REVIEW</text>
-      <text class="t-call" x="1474" y="648" style="letter-spacing:2px;fill:#7f8cc4">OUTCOME</text>
-      <text class="t-call" x="1474" y="676" style="letter-spacing:2px;fill:#9fffd0">MEASURED</text>
-
-      <!-- bottom-left caption -->
-      <text class="t-lab" x="92" y="874" style="font-size:25px;font-weight:500;letter-spacing:.4px;fill:#e9f0ff">Wave turns scattered product signals into the next improvement worth making.</text>
-      <text class="t-sm" x="92" y="902" style="letter-spacing:3px;fill:#7f8cc4">A PROACTIVE PRODUCT AGENT FROM AMPLITUDE</text>
-
-      <!-- bottom-right -->
-      <text class="t-2026" x="1620" y="890" text-anchor="end">[ 2026 ]</text>
-    </svg>
-  </div>
-  <a class="bp-cta" href="#cta">Request access <span class="arr">→</span></a>
+  <!-- TEMP: hero is the wave-coherence WebGL page, embedded as-is. Keep refining
+       wave-coherence-webgl.html and this updates automatically; inline the final
+       version here later. (Old v18 HUD/canvas/CTA removed.) -->
+  <iframe id="bp-hero-frame" class="bp-hero-frame" src="wave-coherence-webgl.html" title="Amplitude Wave — coherence field" loading="eager" scrolling="no"></iframe>
   <a class="bp-scroll" href="#demo" aria-label="Scroll to content">
     <span>Scroll</span>
     <svg viewBox="0 0 24 28" fill="none" stroke="#c3d2ff" stroke-width="1.6"><path class="chev" d="M5 9 L12 17 L19 9" stroke-linecap="round" stroke-linejoin="round"/></svg>

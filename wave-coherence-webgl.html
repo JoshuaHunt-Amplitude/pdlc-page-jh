@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wave Coherence &mdash; Amplitude Wave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:#030409;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace}
+  .stage{position:relative;width:min(100vw,177.78vh);aspect-ratio:16/9;overflow:hidden;background:#030409}
+  canvas,.hud{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hud{pointer-events:none}
+  .ln{stroke:#cdd8ff;fill:none}
+  .dimln{stroke:#5c6fac;fill:none}
+  .ey{font-weight:500;font-size:18px;letter-spacing:5px;fill:#aebeff}
+  .title{font-weight:600;font-size:36px;letter-spacing:8px;fill:#f2f6ff}
+  .sub{font-weight:400;font-size:18px;letter-spacing:5px;fill:#91a3dc}
+  .k{font-weight:400;font-size:14px;letter-spacing:2px;fill:#7686b6}
+  .v{font-weight:400;font-size:15px;letter-spacing:2px;fill:#e9efff}
+  .sm{font-weight:400;font-size:13px;letter-spacing:2px;fill:#8fa2d6}
+  .cap{font-weight:500;font-size:18px;letter-spacing:4px;fill:#e9efff}
+  .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
+  .ghost{opacity:.48}
+  .reveal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(15px);
+  }
+  .reveal.active {
+    opacity: 1 !important;
+    transform: translateY(0);
+  }
+  .rv{font-weight:600;font-size:13px;letter-spacing:3px;fill:#ffffff}
+  .rv-sub{font-weight:500;font-size:12px;letter-spacing:2px;fill:#f1f5f9}
+  .backing{fill:#05070e;opacity:0.75}
+  .veil{fill:#040816;opacity:0.96;stroke:#60a5fa;stroke-width:1.5}
+
+  /* ── Mobile / portrait ──────────────────────────────────────────────
+     The 16:9 stage letterboxes to a thin centred band on a tall phone, and the
+     wide instrument HUD shrinks until its text is unreadable. Instead: let the
+     procedural particle field fill the whole viewport (it RE-RENDERS to the new
+     aspect — it's a shader, not a stretched bitmap), hide the wide SVG HUD, and
+     swap in a compact stacked title/subtitle sized for a phone. */
+  .mob-hud{display:none}
+  @media (max-aspect-ratio: 1/1), (max-width: 760px){
+    .stage{width:100vw;height:100svh;aspect-ratio:auto}
+    .hud{display:none}
+    .mob-hud{
+      display:block;position:absolute;left:0;top:0;z-index:3;
+      padding:max(72px,12svh) 28px 28px;pointer-events:none;color:#f2f6ff;
+      font-family:'Geist Mono',ui-monospace,monospace;
+    }
+    .mob-hud h1{
+      margin:0;font-weight:600;text-transform:uppercase;
+      letter-spacing:.12em;line-height:1.2;font-size:clamp(26px,8vw,40px);
+    }
+    .mob-hud p{
+      margin:18px 0 0;max-width:26ch;color:#c3d2ff;font-weight:400;
+      letter-spacing:.03em;line-height:1.55;font-size:clamp(13px,3.6vw,15px);
+    }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <canvas id="c"></canvas>
+  <!-- compact title for portrait/phone (the wide SVG HUD below is hidden there) -->
+  <div class="mob-hud">
+    <h1>Enabling<br>self&#8209;improving<br>products</h1>
+    <p>Products that find what&#8217;s worth building, ship it, and prove it worked. Every release, on its own.</p>
+  </div>
+  <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
+    <!-- instrument frame -->
+    <g class="ln" stroke-width="1.35" opacity="0.78">
+      <path d="M42 98 V42 H98"/><path d="M110 62 h18 M119 53 v18"/>
+      <path d="M1638 98 V42 H1582"/>
+      <path d="M42 847 V903 H98"/>
+      <path d="M1638 847 V903 H1582"/>
+      <circle cx="1598" cy="116" r="11"/><path d="M1598 99 V133 M1581 116 H1615"/>
+    </g>
+
+    <!-- title -->
+    <text class="title" x="80" y="172">
+      <tspan x="80" dy="0">ENABLING</tspan>
+      <tspan x="80" dy="48">SELF-IMPROVING</tspan>
+      <tspan x="80" dy="48">PRODUCTS</tspan>
+    </text>
+
+    <!-- coherence lock is a subtle hover overlay, not a permanent ripple -->
+    <g id="rv-lock" class="ln reveal" stroke-width="1.4">
+      <path d="M794 426 h-18 v-18 M886 426 h18 v-18 M794 520 h-18 v18 M886 520 h18 v18"/>
+      <path d="M892 462 L1168 420 L1440 420" opacity="0.72"/>
+      <text class="sm" x="840" y="556" text-anchor="middle" style="fill:#e9efff">OPPORTUNITY LOCK</text>
+      <text class="rv" x="840" y="586" text-anchor="middle">CORROBORATED ACROSS SOURCES</text>
+    </g>
+
+    <!-- right readout -->
+    <g id="rv-opp" class="reveal">
+      <rect class="backing" x="1446" y="384" width="186" height="232" rx="6"/>
+      <g class="ln" stroke-width="1.25" opacity="0.76">
+        <path d="M1452 384 h-14 V588 h14"/>
+        <path d="M1614 384 h14 V588 h-14"/>
+        <path d="M1464 452 H1600"/>
+        <path d="M1464 518 H1600"/>
+      </g>
+      <text class="cap" x="1464" y="414">OPPORTUNITY</text>
+      <text class="k" x="1464" y="440">EVIDENCE</text><text class="v" x="1464" y="472">CROSS-SOURCE</text>
+      <text class="k" x="1464" y="506">ACTION</text><text class="v" x="1464" y="538">REVIEW-READY</text>
+      <text class="k" x="1464" y="572">OUTCOME</text><text class="v" x="1464" y="604">MEASURED</text>
+      <text class="rv-sub" x="1626" y="640" text-anchor="end">REVIEW IN UI &#183; MCP &#183; CLI</text>
+    </g>
+
+    <!-- hover overlays: signal layer -> synthesis -> experiments -> outcomes -->
+    <g id="rv-signals" class="reveal">
+      <rect class="veil" x="42" y="620" width="210" height="106" rx="8"/>
+      <g class="dimln" stroke-width="1" opacity="0.72">
+        <path d="M70 672 H210 M94 646 v52 M122 646 v52 M150 646 v52 M178 646 v52"/>
+        <circle cx="94" cy="662" r="3" fill="#a9c7ff"/>
+        <circle cx="150" cy="685" r="3" fill="#70e5bd"/>
+        <circle cx="178" cy="654" r="3" fill="#ff9bba"/>
+      </g>
+      <text class="rv" x="68" y="642">SIGNALS LAYER</text>
+      <text class="rv-sub" x="68" y="716">ANALYTICS &#183; REPLAYS &#183; FEEDBACK</text>
+    </g>
+    <g id="rv-synthesis" class="reveal">
+      <rect class="veil" x="460" y="620" width="210" height="86" rx="8"/>
+      <g class="dimln" stroke-width="1.1" opacity="0.8">
+        <path d="M499 676 C547 644 591 644 639 676"/>
+        <path d="M499 652 C553 686 585 686 639 652"/>
+        <circle cx="564" cy="664" r="5" fill="#dbe6ff"/>
+      </g>
+      <text class="rv" x="485" y="644">SYNTHESIS</text>
+      <text class="rv-sub" x="485" y="698">CORROBORATE THE SIGNALS</text>
+    </g>
+    <g id="rv-experiments" class="reveal">
+      <rect class="veil" x="951" y="620" width="194" height="100" rx="8"/>
+      <g class="dimln" stroke-width="1" opacity="0.74">
+        <path d="M981 686 H1111"/>
+        <path d="M981 686 C1007 656 1041 656 1067 686 C1083 704 1099 708 1111 686"/>
+        <path d="M981 664 H1027 M1065 664 H1111"/>
+      </g>
+      <text class="rv" x="979" y="646">WEB EXPERIMENTS</text>
+      <text class="rv-sub" x="979" y="710">READY TO APPROVE</text>
+    </g>
+    <g id="rv-outcomes" class="reveal">
+      <rect class="veil" x="1400" y="620" width="226" height="96" rx="8"/>
+      <g class="dimln" stroke-width="1.2" opacity="0.82">
+        <path d="M1432 692 H1596 M1432 692 V648"/>
+        <path d="M1432 682 C1468 674 1496 688 1526 664 C1548 644 1570 652 1592 636"/>
+        <circle cx="1526" cy="664" r="3" fill="#dbe6ff"/>
+        <circle cx="1592" cy="636" r="3" fill="#70e5bd"/>
+      </g>
+      <text class="rv" x="1430" y="642">OUTCOMES GRAPH</text>
+      <text class="rv-sub" x="1430" y="710">MEASURE WHAT MOVED</text>
+    </g>
+
+    <!-- bottom process axis -->
+    <g class="dimln" stroke-width="1.1" opacity="0.64">
+      <path d="M82 766 H1532"/>
+      <path d="M82 766 v18 M565 766 v18 M1048 766 v18 M1532 766 v18"/>
+    </g>
+    <g>
+      <text class="sm" x="82" y="748">SENSE</text>
+      <text class="sm" x="565" y="748">DECIDE</text>
+      <text class="sm" x="1048" y="748">ACT</text>
+      <text class="sm" x="1532" y="748" text-anchor="end">LEARN</text>
+    </g>
+
+    <!-- bottom story line -->
+    <text class="hero" x="82" y="836">
+      <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
+      <tspan x="82" dy="34">and prove it worked. Every release, on its own.</tspan>
+    </text>
+    <text class="cap" x="1486" y="878">[ 2026 ]</text>
+    <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
+    <circle id="cursorRing" class="reveal" r="24" fill="none" stroke="#7d93ff" stroke-width="1.2"/>
+  </svg>
+</div>
+
+<script id="bg-vertex" type="x-shader/x-vertex">
+  attribute vec2 a_position;
+  void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+  }
+</script>
+
+<script id="bg-fragment" type="x-shader/x-fragment">
+  precision highp float;
+  uniform vec2 u_resolution;
+  uniform float u_time;
+
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+  }
+
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    mat2 r = mat2(0.82, 0.57, -0.57, 0.82);
+    for (int i = 0; i < 5; i++) {
+      v += a * noise(p);
+      p = r * p * 2.02 + vec2(19.1, 7.7);
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  void main() {
+    vec2 st = gl_FragCoord.xy / u_resolution;
+    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
+    float t = u_time * 0.15; // Slowed down by factor of 2 (50% of 0.3)
+
+    float bgLock = smoothstep(-0.25, 0.35, uv.x);
+    float curl = fbm(vec2(uv.x * 2.15 + t * 0.035, uv.y * 1.7 - t * 0.018)) - 0.5;
+    
+    // Canyon center matching the vertex shader
+    float canyonCenter = 0.15 * (fbm(vec2(uv.x * 1.5, 1.0)) - 0.5);
+    float leftY = (0.15 * curl + 0.08 * sin(uv.x * 3.0 - t * 0.5)) * 0.7; // 30% narrower on left
+    float rightY = canyonCenter;
+    float waveY = mix(leftY, rightY, bgLock);
+    
+    float beam = exp(-pow((uv.y - waveY) * 3.0, 2.0));
+    float beamCore = exp(-pow((uv.y - waveY) * 9.0, 2.0));
+    
+    // Center the opportunity spotlight at (0.0, 0.0)
+    float opportunity = exp(-dot(uv * vec2(1.5, 1.5), uv * vec2(1.5, 1.5)) * 12.0);
+
+    float surf = 0.0;
+    for (int i = 0; i < 4; i++) {
+      float fi = float(i);
+      float crest = sin(uv.x * (4.8 + fi * 1.1) + uv.y * (2.8 + fi * 0.9) - t * (0.28 + fi * 0.04) + fi * 1.7);
+      float shore = smoothstep(-0.95, -0.12, uv.x) * (1.0 - smoothstep(0.18, 0.82, uv.x));
+      surf += smoothstep(0.72, 1.0, crest) * shore * (0.035 - fi * 0.006);
+    }
+
+    float grain = hash(gl_FragCoord.xy + floor(t * 18.0));
+    float field = fbm(uv * 2.2 + vec2(t * 0.025, -t * 0.018));
+    float verticalMist = pow(clamp(1.0 - abs(uv.x - 0.10) * 1.25, 0.0, 1.0), 2.0)
+      * smoothstep(0.58, -0.42, uv.y);
+    float leftShade = smoothstep(0.0, 0.24, st.x);
+    float rightShade = 1.0 - smoothstep(0.70, 1.0, st.x);
+    float vgn = smoothstep(0.93, 0.28, length(st - 0.5));
+
+    vec3 ink = vec3(0.006, 0.010, 0.026);
+    vec3 blue = vec3(0.010, 0.090, 0.320);
+    vec3 violet = vec3(0.180, 0.130, 0.430);
+    vec3 laser = vec3(0.370, 0.640, 1.000);
+    vec3 white = vec3(0.880, 0.950, 1.000);
+
+    vec3 col = mix(ink, blue, 0.32 + 0.30 * field);
+    col += violet * (beam * 0.075 + surf);
+    col += laser * beam * 0.052;
+    col += white * beamCore * 0.024;
+    col += vec3(0.05, 0.16, 0.42) * verticalMist * 0.20;
+    col += vec3(0.32, 0.74, 1.0) * opportunity * 0.18;
+    col *= vgn * leftShade * rightShade;
+    col += (grain - 0.5) * 0.018;
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+</script>
+
+<script id="particle-vertex" type="x-shader/x-vertex">
+  precision highp float;
+  attribute vec4 a_seed;
+  attribute vec4 a_extra;
+  uniform vec2 u_resolution;
+  uniform float u_time;
+  uniform vec2 u_mouse;
+  uniform float u_hover;
+  varying vec4 v_color;
+  varying float v_alpha;
+  varying float v_glow;
+
+  float hash(float n) {
+    return fract(sin(n) * 43758.5453123);
+  }
+
+  float hash2(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash2(i), hash2(i + vec2(1.0, 0.0)), u.x),
+               mix(hash2(i + vec2(0.0, 1.0)), hash2(i + vec2(1.0, 1.0)), u.x), u.y);
+  }
+
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    mat2 r = mat2(0.80, 0.60, -0.60, 0.80);
+    for (int i = 0; i < 4; i++) {
+      v += a * noise(p);
+      p = r * p * 2.03 + vec2(11.7, 4.2);
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  float sourceBand(float id) {
+    return mix(0.72, -0.72, id / 4.0);
+  }
+
+  vec3 sourceColor(float id) {
+    if (id < 0.5) return vec3(0.82, 0.92, 1.00);
+    if (id < 1.5) return vec3(0.50, 0.72, 1.00);
+    if (id < 2.5) return vec3(0.72, 0.52, 1.00);
+    if (id < 3.5) return vec3(0.32, 0.92, 0.72);
+    return vec3(1.00, 0.52, 0.70);
+  }
+
+  void main() {
+    float t_flow = u_time * 0.3; // Fast flow speed for particle tracers
+    float t_wave = u_time * 0.15; // 50% slower wave oscillations
+    float speed = 0.05 + a_seed.z * 0.03; // Faster flow speed for particle tracers
+    float cycle = fract(a_seed.x + t_flow * speed);
+
+    // Base coordinates: flow from x=-1.6 to x=1.2
+    float rawX = mix(-1.6, 1.2, cycle);
+    
+    // Coherence factor: 0 on left (chaotic), 1 on right (ordered)
+    float cohere = smoothstep(-0.2, 0.5, rawX); // Midpoint at 0.15, starts exactly at center (x_svg = 840)
+    float phaseLock = cohere * cohere * (3.0 - 2.0 * cohere);
+
+    float rawY = (a_seed.y - 0.5) * mix(1.96, 2.8, phaseLock); // 30% narrower on left to avoid title text
+
+    // --- TERRAIN (ROCKS) ---
+    // Scale coordinates for noise
+    vec2 st = vec2(rawX * 2.0, rawY * 2.5);
+    float n1 = fbm(st + vec2(t_wave * 0.05, 0.0)); // Slowly shifting terrain for organic feel
+    float n2 = fbm(st * 2.5 + vec2(3.2, 1.4));
+    float rockHeight = n1 * 0.75 + n2 * 0.25;
+
+    // Canyon center and width matching the organic channel
+    float canyonCenter = 0.15 * (fbm(vec2(rawX * 1.5, 1.0)) - 0.5);
+    float canyonWidth = mix(1.96, 0.22, phaseLock);
+
+    // Create a deep canyon profile on the right
+    float distToCanyon = abs(rawY - canyonCenter);
+    float canyonCarve = smoothstep(0.08, 0.25, distToCanyon);
+    // Inside the canyon, rock height is low (deep water). Outside, it is high (dry walls).
+    rockHeight = mix(rockHeight, mix(0.0, 0.85, canyonCarve), phaseLock);
+
+    // Create "terraces" or steps in the rock
+    float steps = 4.0;
+    float terracedRock = floor(rockHeight * steps) / steps + smoothstep(0.0, 0.3, fract(rockHeight * steps)) * (1.0/steps);
+
+    // --- WATER ROUTING ---
+    // Water flows around high rocks. We perturb Y based on the rock gradient.
+    float rockDx = fbm(st + vec2(0.05, 0.0)) - rockHeight;
+    float rockDy = fbm(st + vec2(0.0, 0.05)) - rockHeight;
+    float flowY = rawY - rockDy * 0.8 * (1.0 - phaseLock);
+
+    // Funnel into the narrow canyon
+    flowY = mix(flowY, canyonCenter + (a_seed.y - 0.5) * canyonWidth, phaseLock);
+
+    // --- WATER ELEVATION (Z) ---
+    // Base downhill slope
+    float slopeZ = -rawX * 0.3;
+
+    // Water rides over the terraced rocks
+    float waterZ = slopeZ + terracedRock * 0.5 * (1.0 - phaseLock);
+
+    // Add whitewater turbulence (high frequency noise)
+    float turbulence = fbm(vec2(rawX * 10.0 - t_wave * 4.0, flowY * 10.0)) * 0.18;
+    waterZ += turbulence * (1.0 - phaseLock * 0.8); // Keep some turbulence even when coherent
+
+    // Organic canyon ripple (no sine wave)
+    float canyonRipple = 0.03 * sin(rawX * 8.0 - t_wave * 3.0) + 0.015 * fbm(vec2(rawX * 4.0, t_wave * 2.0));
+    waterZ = mix(waterZ, slopeZ + canyonRipple, phaseLock);
+
+    // --- PROJECTION (30 DEGREE ISOMETRIC) ---
+    // Rotate around X-axis to look down (tilt)
+    float tilt = 0.9; // Slightly less steep angle
+    float cosT = cos(tilt);
+    float sinT = sin(tilt);
+
+    // Rotate around Z-axis slightly for an isometric angle
+    float pan = 0.15;
+    float cosP = cos(pan);
+    float sinP = sin(pan);
+
+    float rx = rawX * cosP - flowY * sinP;
+    float ry = rawX * sinP + flowY * cosP;
+
+    float projX = rx;
+    float projY = ry * cosT - waterZ * sinT;
+
+    // --- COLOR & FOAM ---
+    // Foam occurs at steep drops (high rockDx) and high turbulence
+    float dropFoam = smoothstep(0.01, 0.06, rockDx);
+    float turbFoam = smoothstep(0.06, 0.14, turbulence);
+    float foam = max(dropFoam, turbFoam) * (1.0 - phaseLock * 0.9); // Keep a tiny bit of foam
+
+    // Bruarfoss colors
+    vec3 deepWater = vec3(0.01, 0.15, 0.50); // Darker deep blue
+    vec3 shallowWater = vec3(0.15, 0.65, 0.90); // Bright cyan
+    vec3 foamColor = vec3(0.95, 0.98, 1.0); // White
+
+    // Base color depends on rock height (shallower = more cyan)
+    vec3 col = mix(deepWater, shallowWater, rockHeight * 0.9);
+    col = mix(col, foamColor, foam);
+
+    // Coherent color (clean amplitude blue)
+    vec3 coherentCol = vec3(0.10, 0.35, 0.90) + canyonRipple * 1.5;
+    col = mix(col, coherentCol, phaseLock * 0.8); // Blend it slightly less harshly
+
+    // Mouse attractor (keep existing logic)
+    float aspect = u_resolution.x / u_resolution.y;
+    vec2 clip = vec2(projX * 1.8 / aspect - 0.1, projY * 1.8 - 0.25); // Shifted down by 0.15 to avoid top left text
+    float md = distance(clip, u_mouse);
+    float pull = exp(-md * md * 7.5) * u_hover;
+    clip += (u_mouse - clip) * pull * 0.16;
+
+    gl_Position = vec4(clip, 0.0, 1.0);
+
+    // Point size and alpha
+    float packet = pow(sin((cycle + a_seed.w * 0.13) * 6.2831853) * 0.5 + 0.5, 7.0);
+    float shimmer = 0.6 + 0.4 * sin(t_wave * 5.0 + a_seed.w * 20.0);
+
+    // NOTE: alpha/size are scaled up to compensate for the lower particle count
+    // (was 2.8M @ ~0.03 base alpha). Additive density ≈ count × alpha, so with
+    // ~9x fewer points these per-point values are ~2.8x brighter/larger to keep
+    // a similar accumulated glow. Fine-tune alongside `count` above.
+    gl_PointSize = (0.9 + a_extra.y * 1.5 + foam * 2.8 + packet * 1.4 + pull * 2.2) * (1.0 + phaseLock * 0.3);
+    v_alpha = (0.085 + foam * 0.22 + phaseLock * 0.18) * shimmer;
+    v_alpha += pull * 0.14 * shimmer;
+
+    // Fade out particles outside the canyon on the right
+    float canyonFade = mix(1.0, 1.0 - smoothstep(0.10, 0.22, distToCanyon), phaseLock);
+    v_alpha *= canyonFade;
+
+    // Fade in/out at edges
+    float edgeFade = smoothstep(-1.6, -1.3, rawX) * (1.0 - smoothstep(0.9, 1.2, rawX));
+    v_alpha *= edgeFade;
+
+    v_glow = foam * 0.6 + packet * 0.3 + pull * 0.5;
+    v_color = vec4(col + vec3(0.1, 0.3, 0.7) * pull * 0.6, 1.0);
+  }
+</script>
+
+<script id="particle-fragment" type="x-shader/x-fragment">
+  precision mediump float;
+  varying vec4 v_color;
+  varying float v_alpha;
+  varying float v_glow;
+
+  void main() {
+    vec2 p = gl_PointCoord - vec2(0.5);
+    float d = length(p);
+    if (d > 0.5) discard;
+    float core = smoothstep(0.50, 0.02, d);
+    float halo = exp(-d * d * 13.0);
+    float alpha = (core * 0.72 + halo * 0.28) * v_alpha;
+    vec3 col = v_color.rgb + vec3(0.22, 0.48, 0.90) * v_glow;
+    gl_FragColor = vec4(col, alpha);
+  }
+</script>
+
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl');
+  if (!gl) {
+    console.error('WebGL not supported');
+    return;
+  }
+
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let last = 0;
+  let time = 0;
+
+  function shader(type, source) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, source);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(s) || 'Shader compile failed');
+    }
+    return s;
+  }
+
+  function program(vsId, fsId) {
+    const p = gl.createProgram();
+    gl.attachShader(p, shader(gl.VERTEX_SHADER, document.getElementById(vsId).textContent));
+    gl.attachShader(p, shader(gl.FRAGMENT_SHADER, document.getElementById(fsId).textContent));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+      throw new Error(gl.getProgramInfoLog(p) || 'Program link failed');
+    }
+    return p;
+  }
+
+  const bgProgram = program('bg-vertex', 'bg-fragment');
+  const ptProgram = program('particle-vertex', 'particle-fragment');
+
+  const quad = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    -1, -1,  1, -1, -1,  1,
+    -1,  1,  1, -1,  1,  1
+  ]), gl.STATIC_DRAW);
+
+  let seed = 20260605 >>> 0;
+  function rnd() {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+
+  // PERF: each particle runs the heavy fbm-laden vertex shader every frame, so
+  // cost scales ~linearly with this. 2.8M hung/crashed the GPU process (billions
+  // of noise evals/frame). 320k keeps the field dense while staying safe on
+  // integrated GPUs. Tune density live in wave-coherence-tuner.html, then port
+  // the value here. (If you raise this, raise alpha in the point shader to match;
+  // they trade off — fewer brighter points vs. more fainter ones.)
+  const count = 320000;
+  const seeds = new Float32Array(count * 4);
+  const extras = new Float32Array(count * 4);
+  for (let i = 0; i < count; i++) {
+    const lane = Math.floor(rnd() * 5);
+    seeds[i * 4 + 0] = rnd();
+    seeds[i * 4 + 1] = rnd();
+    seeds[i * 4 + 2] = rnd();
+    seeds[i * 4 + 3] = rnd();
+    extras[i * 4 + 0] = (lane + rnd() * 0.96) / 5;
+    extras[i * 4 + 1] = rnd();
+    extras[i * 4 + 2] = rnd();
+    extras[i * 4 + 3] = rnd();
+  }
+
+  const seedBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, seedBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
+
+  const extraBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, extraBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, extras, gl.STATIC_DRAW);
+
+  const bg = {
+    position: gl.getAttribLocation(bgProgram, 'a_position'),
+    resolution: gl.getUniformLocation(bgProgram, 'u_resolution'),
+    time: gl.getUniformLocation(bgProgram, 'u_time')
+  };
+
+  const pts = {
+    seed: gl.getAttribLocation(ptProgram, 'a_seed'),
+    extra: gl.getAttribLocation(ptProgram, 'a_extra'),
+    resolution: gl.getUniformLocation(ptProgram, 'u_resolution'),
+    time: gl.getUniformLocation(ptProgram, 'u_time'),
+    mouse: gl.getUniformLocation(ptProgram, 'u_mouse'),
+    hover: gl.getUniformLocation(ptProgram, 'u_hover')
+  };
+
+  // Hover state: clip-space cursor for the shader attractor, eased hover amount,
+  // and proximity-driven reveal of hidden HUD signals.
+  const stage = document.querySelector('.stage');
+  let mouseClipX = -2, mouseClipY = -2;
+  let hover = 0, hoverTarget = 0;
+  const ring = document.getElementById('cursorRing');
+  const zones = [
+    { el: document.getElementById('rv-signals'), cx: 147, cy: 673, r: 180 },
+    { el: document.getElementById('rv-synthesis'), cx: 565, cy: 663, r: 180 },
+    { el: document.getElementById('rv-lock'), cx: 840, cy: 473, r: 220 },
+    { el: document.getElementById('rv-experiments'), cx: 1048, cy: 670, r: 180 },
+    { el: document.getElementById('rv-outcomes'), cx: 1513, cy: 668, r: 180 },
+    { el: document.getElementById('rv-opp'), cx: 840, cy: 473, r: 220 }
+  ];
+
+  function onMove(e) {
+    const rect = stage.getBoundingClientRect();
+    const fx = (e.clientX - rect.left) / rect.width;
+    const fy = (e.clientY - rect.top) / rect.height;
+    mouseClipX = fx * 2 - 1;
+    mouseClipY = 1 - fy * 2;
+    hoverTarget = 1;
+    const vbX = fx * 1680, vbY = fy * 945;
+    if (ring) {
+      ring.setAttribute('cx', vbX.toFixed(1));
+      ring.setAttribute('cy', vbY.toFixed(1));
+      ring.classList.add('active');
+    }
+    for (const z of zones) {
+      if (!z.el) continue;
+      const d = Math.hypot(vbX - z.cx, vbY - z.cy);
+      if (d < z.r) {
+        z.el.classList.add('active');
+      } else {
+        z.el.classList.remove('active');
+      }
+    }
+  }
+  function onLeave() {
+    hoverTarget = 0;
+    if (ring) ring.classList.remove('active');
+    for (const z of zones) {
+      if (z.el) z.el.classList.remove('active');
+    }
+  }
+  stage.addEventListener('mousemove', onMove);
+  stage.addEventListener('mouseleave', onLeave);
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = canvas.clientWidth;
+    height = canvas.clientHeight;
+    canvas.width = Math.max(1, Math.floor(width * dpr));
+    canvas.height = Math.max(1, Math.floor(height * dpr));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // PERF: pause rendering when the tab is hidden or when the embedding page
+  // tells us the hero has scrolled offscreen (postMessage from index-v18.html).
+  // The heavy per-particle vertex shader should not keep the GPU busy when the
+  // hero isn't visible. `last` is reset on resume so `dt` doesn't spike.
+  let rafId = 0, paused = false;
+  function setPaused(p) {
+    if (p === paused) return;
+    paused = p;
+    if (!paused) { last = performance.now() * 0.001; rafId = requestAnimationFrame(draw); }
+  }
+  document.addEventListener('visibilitychange', function(){ setPaused(document.hidden); });
+  window.addEventListener('message', function(e){
+    if (e.data && e.data.waveHero === 'pause') setPaused(true);
+    else if (e.data && e.data.waveHero === 'resume') setPaused(false);
+  });
+
+  function draw(now) {
+    if (paused) return;
+    now *= 0.001;
+    let dt = now - last;
+    last = now;
+    if (dt > 0.1) dt = 0.1;
+    time += dt;
+
+    gl.disable(gl.BLEND);
+    gl.useProgram(bgProgram);
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.enableVertexAttribArray(bg.position);
+    gl.vertexAttribPointer(bg.position, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform2f(bg.resolution, canvas.width, canvas.height);
+    gl.uniform1f(bg.time, time);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    gl.useProgram(ptProgram);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.bindBuffer(gl.ARRAY_BUFFER, seedBuffer);
+    gl.enableVertexAttribArray(pts.seed);
+    gl.vertexAttribPointer(pts.seed, 4, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, extraBuffer);
+    gl.enableVertexAttribArray(pts.extra);
+    gl.vertexAttribPointer(pts.extra, 4, gl.FLOAT, false, 0, 0);
+    hover += (hoverTarget - hover) * Math.min(1, dt * 6);
+    gl.uniform2f(pts.resolution, canvas.width, canvas.height);
+    gl.uniform1f(pts.time, time);
+    gl.uniform2f(pts.mouse, mouseClipX, mouseClipY);
+    gl.uniform1f(pts.hover, hover);
+    gl.drawArrays(gl.POINTS, 0, count);
+
+    rafId = requestAnimationFrame(draw);
+  }
+  rafId = requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
