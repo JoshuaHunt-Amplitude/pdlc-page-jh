@@ -1008,6 +1008,68 @@
   }
   /* The #solution and #loops padding rules from earlier apply inside this wrapper */
 
+  /* ── HOVER CARDS (inline term tooltips) ── */
+  .hc {
+    position: relative;
+    display: inline;
+    cursor: default;
+  }
+  /* underline only the visible term text, not the hidden card */
+  .hc-term {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: rgba(64,131,255,.55);
+    text-underline-offset: 3px;
+    transition: text-decoration-color .2s;
+  }
+  .hc:hover .hc-term { text-decoration-color: var(--blue-d); }
+  .hc-card {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    width: 260px;
+    background: #0e1628;
+    border: 1px solid rgba(64,131,255,.28);
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+    /* hidden by default */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease, transform .22s cubic-bezier(.2,.7,.2,1);
+    z-index: 20;
+    /* keep it from wrapping the parent inline flow */
+    white-space: normal;
+    text-align: left;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  /* small arrow pointing down */
+  .hc-card::after {
+    content: "";
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(64,131,255,.28);
+  }
+  .hc:hover .hc-card, .hc:focus-within .hc-card {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .hc-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--blue-d);
+    margin: 0 0 8px;
+  }
+  .hc-body {
+    font-family: var(--sans); font-size: 13px; line-height: 1.6;
+    color: var(--dim); margin: 0;
+  }
+  .hc-body strong { color: var(--white); font-weight: 500; }
+
   /* ── REVEAL ─────────────────────────── */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
   .reveal.in { opacity: 1; transform: none; }
@@ -1894,7 +1956,7 @@
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
       <h2>The new bottleneck: <span class="a">knowing what to build</span></h2>
-      <p>Quality comes from iteration. The military strategist John Boyd showed that whoever cycles their OODA loop fastest wins the dogfight. Every product runs the same loop: build, ship, use, learn.</p>
+      <p>Quality comes from iteration. The military strategist <span class="hc" tabindex="0"><span class="hc-term">John Boyd</span><span class="hc-card"><p class="hc-label">John Boyd</p><p class="hc-body">Placeholder — finesse this copy.</p></span></span> showed that whoever cycles their <span class="hc" tabindex="0"><span class="hc-term">OODA loop</span><span class="hc-card"><p class="hc-label">OODA Loop</p><p class="hc-body">Placeholder — finesse this copy.</p></span></span> fastest wins the dogfight. Every product runs the same loop: build, ship, use, learn.</p>
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
