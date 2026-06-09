@@ -45,10 +45,16 @@
   body {
     margin: 0; background: var(--bg); color: var(--white);
     font-family: var(--sans); font-weight: 400; line-height: 1.5; overflow-x: hidden;
+  }
+  /* PERF: the page glow used to sit on `body` with `background-attachment: fixed`,
+     which forces a full-viewport repaint on EVERY scroll frame (a classic cause of
+     intermittent scroll stutter). Move it to a fixed, GPU-composited layer instead —
+     identical static-glow look, but the compositor just holds it in place on scroll. */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
     background-image:
       radial-gradient(ellipse 1600px 800px at 50% -6%, rgba(39,71,230,.34), transparent 62%),
       radial-gradient(ellipse 900px 520px at 8% 22%, rgba(64,131,255,.08), transparent 60%);
-    background-attachment: fixed;
   }
   /* v14: simplified type — no bold, no italic (emphasis carried by color) */
   strong, b { font-weight: 400; }
@@ -70,7 +76,7 @@
   .nav-in { max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
   .brand { display: inline-flex; align-items: center; line-height: 0; }
   .brand-mark { width: 26px; height: 26px; display: block; fill: var(--white); }
-  .nav-btn { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--white); text-decoration: none; padding: 10px 18px; border: 1px solid var(--lines); border-radius: 999px; transition: all .2s; white-space: nowrap; }
+  .nav-btn { font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--white); text-decoration: none; padding: 11px 22px; border: 1px solid var(--lines); border-radius: 999px; transition: border-color .2s, color .2s; white-space: nowrap; }
   .nav-btn:hover { border-color: var(--blue-d); color: var(--blue-d); }
 
   /* ── SHARED ─────────────────────────── */
@@ -134,10 +140,15 @@
 
   /* ── MANIFESTO ──────────────────────── */
   .manifesto { padding: 98px 32px; background: linear-gradient(180deg, transparent 0%, rgba(0,82,242,.04) 50%, transparent 100%); }
+  /* Gradient divider — Figma spec: linear #2B73E8, 0% → 100% (at 48%) → 0%, 2px */
+  .grad-divider { display: block; width: 100%; max-width: 1320px; margin: 0 auto; height: 2px; border: 0; background: linear-gradient(90deg, rgba(43,115,232,0) 0%, rgba(43,115,232,1) 48%, rgba(43,115,232,0) 100%); }
   /* extra bottom padding on §4 (data) so the top wave fade has room;
      extra top padding on §3 (solution) so the bottom wave fade lands cleanly */
   #data     { padding-bottom: 160px; }
   #solution { padding-top: 0; }
+  #wave     { padding-top: 0; }
+  /* product loop: match the 760px text column so diagram edges align with copy */
+  #loops .product-loop { max-width: 840px; }
   .manifesto-in { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 32px; }
 
   /* Loop visual */
@@ -766,7 +777,7 @@
     display: flex; gap: 8px; max-width: 480px;
     margin: 0 auto;
     background: var(--panel); border: 1px solid var(--lines);
-    border-radius: 12px; padding: 6px;
+    border-radius: 999px; padding: 5px;
     transition: border-color .2s, box-shadow .2s;
   }
   .waitlist:focus-within { border-color: var(--blue-d); box-shadow: 0 0 0 3px rgba(64,131,255,.15); }
@@ -774,15 +785,25 @@
     flex: 1; min-width: 0;
     background: transparent; border: 0; outline: 0;
     color: var(--white); font-family: var(--sans); font-size: 15px;
-    padding: 12px 16px;
+    padding: 11px 18px;
   }
   .waitlist input::placeholder { color: var(--dim2); }
+  /* autofill: inset box-shadow paints over the browser's tint; transition freezes bg change */
+  .waitlist input:-webkit-autofill,
+  .waitlist input:-webkit-autofill:hover,
+  .waitlist input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #0c1226 inset !important;
+    -webkit-text-fill-color: #f2f6ff !important;
+    caret-color: #f2f6ff;
+    border-radius: 999px 0 0 999px;
+    transition: background-color 9999s ease 0s;
+  }
   .waitlist button {
     background: var(--blue); color: var(--white);
-    border: 0; cursor: pointer; padding: 12px 22px;
-    font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+    border: 0; cursor: pointer; padding: 11px 20px;
+    font-family: var(--sans); font-size: 13px; letter-spacing: .12em;
     text-transform: uppercase; font-weight: 500;
-    border-radius: 8px;
+    border-radius: 999px;
     transition: background .2s, transform .15s;
     display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
   }
@@ -804,7 +825,7 @@
   /* Hero waitlist variant (smaller, left-aligned) */
   .hero .waitlist { margin: 0; max-width: 460px; }
   .hero .waitlist input { font-size: 13px; padding: 9px 13px; }
-  .hero .waitlist button { padding: 9px 16px; font-size: 10px; }
+  .hero .waitlist button { padding: 9px 16px; font-size: 11px; }
   .hero .waitlist-help-wrap { margin-top: 22px; }
 
   /* polished email success state — the form swaps to a confirmation card */
@@ -982,7 +1003,7 @@
     line-height: 1.8;
   }
   .intro-wave-in {
-    max-width: 1440px;
+    width: 100%;
     margin: 0 auto;
     position: relative;
   }
@@ -1002,6 +1023,17 @@
     position: relative;
   }
   /* The #solution and #loops padding rules from earlier apply inside this wrapper */
+  /* bridge: tighten the solution section's top so the SVG connector leads directly into the heading */
+  #solution.manifesto { padding-top: 0; }
+
+  /* ── wave→solution animated bridge ──
+     760-wide SVG centred to match the 760 text block: top crosshair sits over the
+     wave (viewBox x=380 = viewport centre), the path steps left to x≈16 (the text's
+     left edge) and lands on the "A". Negative margin-top pulls the top ~290px up so
+     the crosshair overlaps the wave diagram above. Hidden where the 760 block can't
+     fit (alignment would break). */
+  .wave-bridge { display: flex; justify-content: center; margin-top: -330px; padding: 0 0 36px; position: relative; z-index: 2; pointer-events: none; }
+  @media (max-width: 860px){ .wave-bridge { display: none; } }
 
   /* ── HOVER CARDS (inline term tooltips) ── */
   .hc {
@@ -1150,11 +1182,19 @@
      particle canvas + HUD scroll away over it. */
   .bp-hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:transparent;font-family:'Geist Mono',ui-monospace,monospace;}
   .bp-hero .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:transparent;}
-  .bp-hero canvas,.bp-hero .hud{position:absolute;inset:0;width:100%;height:100%;display:block;}
-  /* Reserve a bottom strip for the scroll indicator so the HUD (which centres via
-     preserveAspectRatio="meet") always scales/sits ABOVE it — never overlapping,
-     at any viewport aspect (incl. 16:9 fullscreen and ultrawide). Canvas stays full. */
-  .bp-hero .hud{top:0;left:0;right:auto;bottom:auto;width:100%;height:calc(100% - 92px);}
+  .bp-hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  /* v19: the HUD is TWO edge-pinned instrument frames, not one centred SVG. Each is
+     full-width and scales by width (its intrinsic viewBox aspect = no letterboxing),
+     so the top frame hugs the top edge and the bottom frame hugs the bottom edge —
+     filling the screen at any aspect ratio instead of floating as a centred band.
+     The torus/particle canvas spans the full hero behind both, showing through the
+     transparent SVGs everywhere there's no line or text. */
+  .bp-hero .hud{position:absolute;display:block;}
+  .bp-hero .hud-top{top:0;left:0;right:0;bottom:auto;width:100%;height:auto;}
+  /* lift the bottom frame off the floor so the centred Scroll affordance has its
+     own clear strip beneath it (matches the old design's reserved bottom band).
+     --scroll-reserve = height of the scroll chevron + label + its bottom margin. */
+  .bp-hero .hud-bot{top:auto;left:0;right:0;bottom:var(--scroll-reserve,88px);width:100%;height:auto;}
   .bp-hero .hud{pointer-events:none;}
   .bp-hero .hud text{fill:#e9f0ff;}
   .bp-hero .t-title{font-weight:600;font-size:54px;letter-spacing:14px;}
@@ -1172,36 +1212,50 @@
   .bp-scroll .chev{animation:bp-bob 1.8s ease-in-out infinite;}
   @keyframes bp-bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
   @media(prefers-reduced-motion:reduce){.bp-scroll .chev{animation:none}}
-  /* hero CTA — HTML button overlaid on the HUD (the SVG is pointer-events:none).
-     Anchor it to the SVG-HUD's own coordinate space (viewBox 1680×945, xMidYMid
-     meet) so its left edge sits exactly at the text gutter (SVG x=92) and its top
-     just below the subhead (SVG y=415), at any viewport size/aspect. */
-  .bp-cta{position:absolute;
-    /* match the HUD SVG's actual box: width 100vw, height calc(100% - 92px),
-       viewBox 1680×945 xMidYMid meet. Left edge sits at the title gutter (SVG
-       x=80); top sits just below the "PRODUCTS" baseline (y=300) at SVG y=342. */
-    --s:min(calc(100vw / 1680), calc((100vh - 92px) / 945));
-    left:calc((100vw - var(--s)*1680)/2 + var(--s)*80);
-    top:calc(((100vh - 92px) - var(--s)*945)/2 + var(--s)*342);
-    z-index:3;pointer-events:auto;
-    display:inline-flex;align-items:center;gap:0.8em;font-family:'Geist Mono',ui-monospace,monospace;
-    /* size scales with the HUD (--s) so the pill stays proportional to the title
-       at every viewport, instead of looking oversized at medium widths. em-based
-       padding/gap so the whole pill tracks the font-size. */
-    font-size:clamp(11px, calc(var(--s) * 15px), 16px);
-    letter-spacing:.16em;text-transform:uppercase;color:#0a1330;background:#e9f0ff;
-    text-decoration:none;padding:0.95em 1.7em;border-radius:999px;transition:transform .2s,box-shadow .2s;
-    box-shadow:0 0 0 1px rgba(233,240,255,.4),0 10px 48px rgba(64,131,255,.4);}
-  .bp-cta:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(233,240,255,.6),0 14px 60px rgba(64,131,255,.55);}
-  .bp-cta .arr,.waitlist button .arr{font-size:1.15em;transition:transform .2s;}
-  .bp-cta:hover .arr,.waitlist button:hover .arr{transform:translateX(4px);}
+  /* v19: hero copy is real HTML (Poppins), vertically centred & left-aligned over
+     the field. The instrument HUD (corners/axis/labels) is now pure SVG chrome
+     pinned to the top & bottom edges — the headline no longer lives inside it. */
+  .bp-hero-copy{
+    position:absolute; z-index:3;
+    top:50%; transform:translateY(-50%);
+    left:clamp(48px, 9vw, 180px);
+    max-width:min(920px, 72vw);
+    pointer-events:none;            /* let the field receive the cursor; CTA re-enables */
+  }
+  .bp-hero-copy h1{
+    margin:0; font-family:var(--sans); font-weight:600;
+    /* large display headline, breaks intentionally onto 3 lines via <br> */
+    font-size:clamp(44px, 5.8vw, 92px); line-height:1.02; letter-spacing:-0.035em;
+    color:#f2f6ff;
+    /* prevent the browser from breaking "self-improving" at the hyphen */
+    word-break: keep-all; hyphens: none;
+  }
+  .bp-hero-copy h1 .nb{ white-space: nowrap; }
+  .bp-hero-copy p{
+    margin:28px 0 0; font-family:var(--sans); font-weight:400;
+    font-size:clamp(15px, 1.25vw, 19px); line-height:1.5; color:var(--dim); max-width:46ch;
+  }
+  /* hero CTA — outline pill, identical to the nav CTA (.nav-btn) */
+  .bp-cta{
+    pointer-events:auto; margin-top:36px;
+    display:inline-flex; align-items:center;
+    font-family:var(--sans); font-size:13px; font-weight:500;
+    letter-spacing:.18em; text-transform:uppercase;
+    color:var(--white); background:transparent;
+    border:1px solid var(--lines); border-radius:999px;
+    padding:14px 28px; text-decoration:none;
+    transition:border-color .2s, color .2s;
+  }
+  .bp-cta:hover{ border-color:var(--blue-d); color:var(--blue-d); }
+  .waitlist button .arr{font-size:1.15em;transition:transform .2s;}
+  .waitlist button:hover .arr{transform:translateX(4px);}
   /* mobile headline (HTML reflow). The SVG HUD scales to a tiny letterboxed band on
      narrow screens, so below 760px we hide the whole instrument HUD + WebGL canvas
      and show the headline/story as plain flowing text on a static gradient, at a
      natural (non-full) height. Hidden on desktop. */
   .bp-hero-m{display:none;position:relative;z-index:3;width:100%;max-width:600px;}
-  .bp-hero-m h1{margin:0 0 16px;font-family:'Geist Mono',ui-monospace,monospace;font-weight:600;font-size:clamp(33px,9vw,46px);line-height:1.08;letter-spacing:.04em;color:#f2f6ff;text-transform:uppercase;}
-  .bp-hero-m p{margin:0;font-family:'Geist Mono',ui-monospace,monospace;font-weight:400;font-size:clamp(14px,3.8vw,17px);line-height:1.55;letter-spacing:.02em;color:#c3d2ff;}
+  .bp-hero-m h1{margin:0 0 16px;font-family:var(--sans);font-weight:600;font-size:clamp(34px,9vw,46px);line-height:1.0;letter-spacing:-0.03em;color:#f2f6ff;}
+  .bp-hero-m p{margin:0;font-family:var(--sans);font-weight:400;font-size:clamp(14px,3.8vw,17px);line-height:1.5;letter-spacing:0;color:var(--dim);}
   @media(max-width:760px){
     /* headline at the top; extra bottom room so the particle field shows beneath it.
        Not full-height — the field fills this box (text + the padded space below). */
@@ -1215,7 +1269,8 @@
     .bp-hero canvas{opacity:.6;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 16%,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 16%,#000 80%,transparent 100%);}
     #heroBg{display:none;}               /* skip the separate persistent bg field on phones */
     .bp-scroll{display:none;}
-    .bp-cta{display:none;}               /* HUD-anchored CTA is desktop-only; mobile uses the nav + CTA section */
+    .bp-hero-copy{display:none;}         /* desktop centred copy off; mobile uses .bp-hero-m */
+    .bp-cta{display:none;}               /* CTA is desktop-only; mobile uses the nav + CTA section */
     .bp-hero-m{display:block;position:relative;z-index:3;}
     .bp-hero-m h1{text-shadow:0 1px 16px rgba(3,6,15,.65);}
     .bp-hero-m p{text-shadow:0 1px 12px rgba(3,6,15,.7);}
@@ -1236,59 +1291,54 @@
   .bp-hero .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
   .bp-hero .ghost{opacity:.48}
   .bp-hero .stage canvas{background:#030409}
+  /* minimal HUD corners: a small crosshair mark + dotted rules along each edge */
+  .bp-hero .hud-mark{stroke:#9fb0d8;fill:none;stroke-width:1.2;opacity:.75}
+  .bp-hero .hud-rule{stroke:#9fb0d8;fill:none;stroke-width:1;opacity:.4;stroke-dasharray:4 10;stroke-linecap:round}
+  /* small blue eyebrow above the hero headline */
+  .bp-hero .bp-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--blue-d);margin:0 0 18px}
 </style>
 
 <section class="bp-hero">
   <!-- hero coherence field: inlined from wave-coherence-tuner.html, baked to the USE_ME_FOR_MAIN config -->
   <div class="stage">
     <canvas id="heroCanvas"></canvas>
-    <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
-    <!-- instrument frame -->
-    <g class="ln" stroke-width="1.35" opacity="0.78">
-      <path d="M42 98 V42 H98"/><path d="M110 62 h18 M119 53 v18"/>
-      <path d="M1638 98 V42 H1582"/>
-      <path d="M42 847 V903 H98"/>
-      <path d="M1638 847 V903 H1582"/>
-      <circle cx="1598" cy="116" r="11"/><path d="M1598 99 V133 M1581 116 H1615"/>
-    </g>
+    <!-- TOP chrome — minimal corner crosshair marks + dotted rules, pinned top.
+         The brand tag moved to the .bp-hero-copy eyebrow; only [2026] stays here. -->
+    <svg class="hud hud-top" viewBox="0 0 1680 280" preserveAspectRatio="xMidYMin meet">
+      <!-- top-left -->
+      <path class="hud-mark" d="M52 62 h20 M62 52 v20"/>
+      <path class="hud-rule" d="M88 62 H300"/>
+      <path class="hud-rule" d="M62 88 V262"/>
+      <!-- top-right -->
+      <path class="hud-mark" d="M1608 62 h20 M1618 52 v20"/>
+      <path class="hud-rule" d="M1592 62 H1380"/>
+      <path class="hud-rule" d="M1618 88 V262"/>
+      <text class="sm" x="1340" y="67" text-anchor="end">[ 2026 ]</text>
+    </svg>
 
-    <!-- title -->
-    <text class="title" x="80" y="172">
-      <tspan x="80" dy="0">ENABLING</tspan>
-      <tspan x="80" dy="64">SELF-IMPROVING</tspan>
-      <tspan x="80" dy="64">PRODUCTS</tspan>
-    </text>
-
-
-    <!-- right readout -->
-
-    <!-- bottom process axis -->
-    <g class="dimln" stroke-width="1.1" opacity="0.38">
-      <path d="M82 766 H1532"/>
-      <path d="M82 766 v18 M565 766 v18 M1048 766 v18 M1532 766 v18"/>
-    </g>
-    <g opacity="0.42">
-      <text class="sm" x="82" y="748">SENSE</text>
-      <text class="sm" x="565" y="748">DECIDE</text>
-      <text class="sm" x="1048" y="748">ACT</text>
-      <text class="sm" x="1532" y="748" text-anchor="end">LEARN</text>
-    </g>
-
-    <!-- bottom story line -->
-    <text class="hero" x="82" y="836">
-      <tspan x="82" dy="0">Products that find what's worth building, ship it,</tspan>
-      <tspan x="82" dy="34">and prove it worked. Every release, on its own.</tspan>
-    </text>
-    <text class="cap" x="1486" y="878">[ 2026 ]</text>
-    <path class="ln ghost" stroke-width="1.1" d="M82 900 H1336"/>
-  </svg>
+    <!-- BOTTOM instrument chrome — pinned to the bottom edge: corner marks only
+         (the BUILD/SHIP/USE/LEARN timeline was removed). -->
+    <svg class="hud hud-bot" viewBox="0 722 1680 223" preserveAspectRatio="xMidYMax meet">
+      <path class="hud-mark" d="M52 903 h20 M62 893 v20"/>
+      <path class="hud-rule" d="M88 903 H300"/>
+      <path class="hud-rule" d="M62 879 V740"/>
+      <path class="hud-mark" d="M1608 903 h20 M1618 893 v20"/>
+      <path class="hud-rule" d="M1592 903 H1380"/>
+      <path class="hud-rule" d="M1618 879 V740"/>
+    </svg>
   </div>
-  <!-- hero CTA: HTML pill overlaid on the HUD, anchored under the title (see .bp-cta) -->
-  <a class="bp-cta" href="#cta">Request access <span class="arr" aria-hidden="true">→</span></a>
+  <!-- hero copy — real HTML (Poppins), vertically centred over the field -->
+  <div class="bp-hero-copy">
+    <div class="bp-eyebrow">Amplitude Wave · Closed Beta</div>
+    <h1>Enabling<br><span class="nb">self-improving</span><br>products.</h1>
+    <p>Products that reinforce what's working and improve<br>and fix what isn't without explicit intervention.</p>
+    <a class="bp-cta" href="#cta">Request access</a>
+  </div>
   <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
   <div class="bp-hero-m">
-    <h1>Enabling self-improving products</h1>
-    <p>Products that find what's worth building, ship it, and prove it worked. Every release, on its own.</p>
+    <div class="bp-eyebrow">Amplitude Wave · Closed Beta</div>
+    <h1>Enabling self-improving products.</h1>
+    <p>Products that reinforce what's working and improve and fix what isn't without explicit intervention.</p>
   </div>
   <a class="bp-scroll" href="#demo" aria-label="Scroll to content">
     <span>Scroll</span>
@@ -1367,7 +1417,10 @@
       * smoothstep(0.58, -0.42, uv.y);
     float leftShade = smoothstep(0.0, 0.24, st.x);
     float rightShade = 1.0 - smoothstep(0.70, 1.0, st.x);
-    float vgn = smoothstep(0.93, 0.28, length(st - 0.5));
+    // horizontal-only vignette: darken left/right edges but NOT top/bottom, so the
+    // opaque hero canvas doesn't render a dark band at its bottom edge (which read as
+    // an inset "shadow" where the hero meets the next section).
+    float vgn = smoothstep(0.93, 0.28, abs(st.x - 0.5));
 
     vec3 ink = vec3(0.006, 0.010, 0.026);
     vec3 blue = vec3(0.010, 0.090, 0.320);
@@ -1869,15 +1922,51 @@
   .film-wrap:not(.sound-on) .fc-ping { animation: fc-ping 2.4s ease-out infinite; }
   @keyframes fc-ping { 0% { opacity: .6; transform: scale(.5); } 70%, 100% { opacity: 0; transform: scale(1.3); } }
   .fc-label {
-    position: absolute; left: 34px; top: -10px; white-space: nowrap;
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); white-space: nowrap;
     font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #eaf1ff;
     padding: 5px 10px; border: 1px solid rgba(180,200,255,.28); border-radius: 7px;
     background: rgba(8,12,28,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   }
+  /* ── timeline scrubber ──────────────────────────────────────────────
+     Sits at the bottom of the video frame. Invisible until cursor enters
+     the wrap; a gradient veil above it provides readability. Clicks on the
+     scrubber are stopPropagation'd so they don't trigger the sound toggle. */
+  .film-scrub {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+    padding: 28px 18px 14px; /* generous touch area above the bar */
+    cursor: ew-resize;
+    background: linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 100%);
+    opacity: 0; transition: opacity .3s ease;
+  }
+  .film-wrap.cursor-on .film-scrub,
+  .film-wrap:hover .film-scrub { opacity: 1; }
+  .film-scrub-track {
+    position: relative; height: 3px; border-radius: 3px;
+    background: rgba(255,255,255,.2);
+    transition: height .18s ease, border-radius .18s ease;
+  }
+  .film-scrub:hover .film-scrub-track { height: 5px; }
+  .film-scrub-fill {
+    position: absolute; inset: 0; right: auto; border-radius: inherit;
+    background: #fff; width: 0%; transition: width .1s linear;
+    pointer-events: none;
+  }
+  .film-scrub.is-dragging .film-scrub-fill { transition: none; }
+  .film-scrub-thumb {
+    position: absolute; top: 50%; width: 11px; height: 11px;
+    border-radius: 50%; background: #fff;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform .15s ease; pointer-events: none;
+  }
+  .film-scrub:hover .film-scrub-thumb { transform: translate(-50%, -50%) scale(1); }
+  .film-scrub.is-dragging .film-scrub-thumb { transform: translate(-50%, -50%) scale(1.2); }
+
   @media (prefers-reduced-motion: reduce) {
     .film-frame { transform: scale(.94); } .film-scrim { display: none; }
     .fc-ping { animation: none; } .fc-inner { transition: none; }
   }
+  /* hide cursor ring while hovering/dragging the scrubber */
+  .film-wrap.scrub-hover .fc-inner { opacity: 0; pointer-events: none; }
   /* no hover pointer on touch — tapping still toggles sound */
   @media (hover: none) { .film-cursor { display: none; } }
   /* Mobile: the demo sits right under the hero, so the scroll-driven grow + the
@@ -1892,12 +1981,14 @@
   <div class="film-scrim"></div>
   <div class="film-wrap">
     <div class="film-frame">
-      <span class="film-tag">Wave · Demo</span>
-      <!-- drop the product demo here, then remove .film-ph -->
-      <video class="film-media" muted loop playsinline preload="none"><!-- <source src="wave-demo.mp4" type="video/mp4"> --></video>
-      <div class="film-ph">
-        <span class="film-play">&#9654;</span>
-        <span class="film-ph-label">Product demo · video placeholder</span>
+      <video class="film-media" muted loop playsinline preload="metadata">
+        <source src="resources/Wave - Vision.mp4" type="video/mp4">
+      </video>
+      <div class="film-scrub" aria-label="Video timeline">
+        <div class="film-scrub-track">
+          <div class="film-scrub-fill"></div>
+          <div class="film-scrub-thumb"></div>
+        </div>
       </div>
     </div>
     <!-- cursor-attached "click for sound" micrographic (position driven by JS) -->
@@ -1939,8 +2030,31 @@
     var label = cur.querySelector('.fc-label');
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var tx=0, ty=0, cx=0, cy=0, raf=0, on=false;
+    var started = false;
+
+    function setLabel(t){ if(label) label.textContent = t; }
+    function onPlayStarted(){
+      started = true;
+      wrap.classList.remove('sound-on');
+      setLabel('Click to unmute');
+    }
+
+    // initial label before autoplay resolves
+    setLabel('Click to play');
+
+    // attempt autoplay when the wrap is 50% visible
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting && vid && !started){
+          var p = vid.play && vid.play();
+          if(p && p.then) p.then(onPlayStarted).catch(function(){ setLabel('Click to play'); });
+          else if(p !== undefined) onPlayStarted();
+        }
+      });
+    }, { threshold: 0.5 }).observe(wrap);
+
     function loop(){
-      var k = reduce ? 1 : 0.18;                 // lerp toward the pointer → trailing feel
+      var k = reduce ? 1 : 0.18;
       cx += (tx-cx)*k; cy += (ty-cy)*k;
       cur.style.setProperty('--fx', cx.toFixed(1)+'px');
       cur.style.setProperty('--fy', cy.toFixed(1)+'px');
@@ -1948,7 +2062,7 @@
     }
     wrap.addEventListener('pointermove', function(e){
       if(e.pointerType === 'touch') return;
-      var r = wrap.getBoundingClientRect();      // wrap is NOT scaled → coords map 1:1
+      var r = wrap.getBoundingClientRect();
       tx = e.clientX - r.left; ty = e.clientY - r.top;
       if(!on){ on = true; cx = tx; cy = ty; wrap.classList.add('cursor-on'); }
       if(!raf) raf = requestAnimationFrame(loop);
@@ -1956,11 +2070,68 @@
     wrap.addEventListener('pointerleave', function(){ on = false; wrap.classList.remove('cursor-on'); });
     wrap.addEventListener('click', function(){
       if(!vid) return;
+      if(!started){
+        // first manual click: start playing muted
+        var p = vid.play && vid.play();
+        if(p && p.then) p.then(onPlayStarted).catch(function(){});
+        else onPlayStarted();
+        return;
+      }
+      // toggle mute
       vid.muted = !vid.muted;
-      if(!vid.muted){ var p = vid.play && vid.play(); if(p && p.catch) p.catch(function(){}); }
       wrap.classList.toggle('sound-on', !vid.muted);
-      if(label) label.textContent = vid.muted ? 'Click for sound' : 'Click to mute';
+      setLabel(vid.muted ? 'Click to unmute' : 'Click to mute');
     });
+  })();
+
+  // ── timeline scrubber ──────────────────────────────────────────────
+  // Clicks stop-propagate so they never reach the sound-toggle handler.
+  (function(){
+    var scrub = wrap.querySelector('.film-scrub');
+    var fill  = wrap.querySelector('.film-scrub-fill');
+    var thumb = wrap.querySelector('.film-scrub-thumb');
+    var vid   = film.querySelector('.film-media');
+    if(!scrub || !vid) return;
+
+    function pct(){ return vid.duration ? vid.currentTime / vid.duration : 0; }
+    function applyPct(p){
+      var w = (p * 100).toFixed(2) + '%';
+      fill.style.width = w;
+      thumb.style.left = w;
+    }
+
+    vid.addEventListener('timeupdate', function(){ if(!dragging) applyPct(pct()); });
+
+    function seekTo(e){
+      var r = scrub.querySelector('.film-scrub-track').getBoundingClientRect();
+      var p = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+      if(vid.duration) vid.currentTime = p * vid.duration;
+      applyPct(p);
+    }
+
+    var dragging = false;
+    scrub.addEventListener('pointerdown', function(e){
+      e.stopPropagation();
+      dragging = true;
+      scrub.setPointerCapture(e.pointerId);
+      scrub.classList.add('is-dragging');
+      seekTo(e);
+    });
+    scrub.addEventListener('pointermove', function(e){
+      if(dragging) seekTo(e);
+    });
+    scrub.addEventListener('pointerup', function(e){
+      if(!dragging) return;
+      dragging = false;
+      scrub.classList.remove('is-dragging');
+      seekTo(e);
+    });
+    scrub.addEventListener('click', function(e){ e.stopPropagation(); });
+    scrub.addEventListener('pointerenter', function(){ wrap.classList.add('scrub-hover'); });
+    scrub.addEventListener('pointerleave', function(){ if(!dragging) wrap.classList.remove('scrub-hover'); });
+    scrub.addEventListener('pointerup', function(e){
+      wrap.classList.remove('scrub-hover');
+    }, true);
   })();
 
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -1984,14 +2155,6 @@
   addEventListener('resize', update);
   update();
 
-  // --- once it's the focal point, auto-play; click to add sound (wire up with a real
-  //     <video> source in .film-media) ---
-  // var vid = film.querySelector('.film-media');
-  // new IntersectionObserver(function(es){ es.forEach(function(e){
-  //   if (e.isIntersecting) { var p = vid.play && vid.play(); if (p && p.catch) p.catch(function(){}); }
-  //   else if (vid.pause) { vid.pause(); }
-  // }); }, { threshold: 0.6 }).observe(wrap);
-  // film.querySelector('.film-frame').addEventListener('click', function(){ vid.muted = !vid.muted; });
 })();
 </script>
 
@@ -2004,80 +2167,232 @@
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
-      <svg viewBox="0 0 760 440" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <linearGradient id="lv-fast" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0%" stop-color="#0052F2"/><stop offset="55%" stop-color="#4083FF"/><stop offset="100%" stop-color="#9FC0FF"/>
-        </linearGradient>
-        <linearGradient id="lv-slow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#A373FF"/><stop offset="100%" stop-color="#FF7D78"/>
-        </linearGradient>
-        <radialGradient id="lv-node-fill" cx="50%" cy="38%" r="70%"><stop offset="0%" stop-color="#16233f"/><stop offset="100%" stop-color="#0A0A0F"/></radialGradient>
-        <radialGradient id="lv-core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#cfe0ff"/><stop offset="45%" stop-color="#4083FF" stop-opacity="0.5"/><stop offset="100%" stop-color="#4083FF" stop-opacity="0"/></radialGradient>
-        <filter id="lv-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter>
-        <filter id="lv-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
-      </defs>
-        <!-- rotated loop: USE top · LEARN right · BUILD bottom · SHIP left; left half fast/blue, right half slow/red -->
-        <circle cx="380" cy="220" r="120" fill="url(#lv-core)" opacity="0.5"/>
-        <!-- faint full base track -->
-        <circle cx="380" cy="220" r="150" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="38"/>
-        <!-- RIGHT half = BOTTLENECK (USE→LEARN→BUILD): dim red, narrower -->
-        <path d="M 380 70 A 150 150 0 0 1 380 370" stroke="url(#lv-slow)" stroke-width="18" fill="none" stroke-linecap="round" opacity="0.5"/>
-        <!-- LEFT half = FAST (BUILD→SHIP→USE): bright blue, thicker -->
-        <path d="M 380 370 A 150 150 0 0 1 380 70" stroke="#4083FF" stroke-width="30" fill="none" stroke-linecap="round" opacity="0.4" filter="url(#lv-glow)"/>
-        <path d="M 380 370 A 150 150 0 0 1 380 70" stroke="url(#lv-fast)" stroke-width="30" fill="none" stroke-linecap="round"/>
-        <path id="lv-left-142" d="M 380 362 A 142 142 0 0 1 380 78" fill="none" stroke="none"/>
-        <path id="lv-left-150" d="M 380 370 A 150 150 0 0 1 380 70" fill="none" stroke="none"/>
-        <path id="lv-left-158" d="M 380 378 A 158 158 0 0 1 380 62" fill="none" stroke="none"/>
-        <path id="lv-right-150" d="M 380 70 A 150 150 0 0 1 380 370" fill="none" stroke="none"/>
-        <g class="lv-pulses" fill="#fff">
-          <circle r="2.5" opacity="0"><animateMotion dur="3.6s" begin="-0.09s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.09s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.84;0.84;0"/></circle>
-          <circle r="1.2" opacity="0"><animateMotion dur="3.6s" begin="-0.43s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.43s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.56;0.56;0"/></circle>
-          <circle r="1.7" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-0.83s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.83s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.67;0.67;0"/></circle>
-          <circle r="1.6" opacity="0"><animateMotion dur="3.6s" begin="-1.34s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.34s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
-          <circle r="1.1" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.85s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
-          <circle r="1.6" opacity="0"><animateMotion dur="3.6s" begin="-2.3s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.3s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
-          <circle r="1.5" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-2.76s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.76s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="1.8" opacity="0"><animateMotion dur="3.6s" begin="-3.18s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-3.18s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.69;0.69;0"/></circle>
-          <circle r="2.7" opacity="0"><animateMotion dur="3.6s" begin="-0.24s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.24s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.89;0.89;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="3.6s" begin="-0.67s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.67s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="1.5" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-1.07s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.07s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="2.0" opacity="0"><animateMotion dur="3.6s" begin="-1.52s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.52s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.74;0.74;0"/></circle>
-          <circle r="1.9" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-1.91s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.91s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.71;0.71;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="3.6s" begin="-2.36s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.36s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="1.2" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-2.78s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.78s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.56;0.56;0"/></circle>
-          <circle r="1.4" opacity="0"><animateMotion dur="3.6s" begin="-3.4s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-3.4s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="3.6s" begin="-0.31s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.31s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="1.5" opacity="0"><animateMotion dur="3.6s" begin="-0.82s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.82s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
-          <circle r="1.4" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-1.32s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.32s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
-          <circle r="2.0" opacity="0"><animateMotion dur="3.6s" begin="-1.65s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.65s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.74;0.74;0"/></circle>
-          <circle r="1.8" opacity="0"><animateMotion dur="3.6s" begin="-2.18s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.18s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.69;0.69;0"/></circle>
-          <circle r="2.6" fill="#cfe0ff" opacity="0"><animateMotion dur="3.6s" begin="-2.72s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.72s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.86;0.86;0"/></circle>
-          <circle r="1.1" opacity="0"><animateMotion dur="3.6s" begin="-2.95s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.95s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
-          <circle r="2.2" opacity="0"><animateMotion dur="3.6s" begin="-0.02s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.02s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.78;0.78;0"/></circle>
-          <g opacity="0"><circle r="7.2" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="3.2" fill="#fff"/><animateMotion dur="3.6s" begin="-0.4s" repeatCount="indefinite"><mpath href="#lv-left-150"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-0.4s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></g>
-          <g opacity="0"><circle r="6.9" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="2.9" fill="#fff"/><animateMotion dur="3.6s" begin="-2.0s" repeatCount="indefinite"><mpath href="#lv-left-142"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-2.0s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></g>
-          <g opacity="0"><circle r="6.8" fill="#cfe0ff" opacity="0.35" filter="url(#lv-glow-sm)"/><circle r="2.8" fill="#fff"/><animateMotion dur="3.6s" begin="-1.2s" repeatCount="indefinite"><mpath href="#lv-left-158"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="-1.2s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></g>
-          <circle r="2.1" opacity="0"><animateMotion dur="7.5s" begin="-0.03s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-0.03s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
-          <circle r="2.5" opacity="0"><animateMotion dur="7.5s" begin="-1.13s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-1.13s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
-          <circle r="2.4" opacity="0"><animateMotion dur="7.5s" begin="-2.27s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-2.27s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
-          <circle r="1.3" opacity="0"><animateMotion dur="7.5s" begin="-3.52s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-3.52s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.23;0.23;0"/></circle>
-          <circle r="2.3" opacity="0"><animateMotion dur="7.5s" begin="-4.79s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-4.79s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
-          <circle r="1.4" opacity="0"><animateMotion dur="7.5s" begin="-6.0s" repeatCount="indefinite"><mpath href="#lv-right-150"/></animateMotion><animate attributeName="opacity" dur="7.5s" begin="-6.0s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.24;0.24;0"/></circle>
+      <svg viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="fl3-bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="54.83%" stop-color="rgba(21,24,39,0.10)"/>
+            <stop offset="100%"   stop-color="rgba(75,87,141,0.10)"/>
+          </linearGradient>
+          <linearGradient id="fl3-name-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#93A6F8"/>
+            <stop offset="1" stop-color="#FFFFFF"/>
+          </linearGradient>
+          <linearGradient id="fl3-name-grad-red" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#FF9F9F"/>
+            <stop offset="1" stop-color="#FFFFFF"/>
+          </linearGradient>
+          <!-- FAST → BOTTLENECK lighting: horizontal linear gradient with a soft
+               blue wash on the left (fast side) and a soft red wash on the right
+               (bottleneck side), fading out in the middle so the loop sits in
+               neutral space. -->
+          <linearGradient id="fl3-bottom-glow" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.55"/>
+            <stop offset="25%"  stop-color="#4083FF" stop-opacity="0.30"/>
+            <stop offset="50%"  stop-color="#0A0A0F" stop-opacity="0"/>
+            <stop offset="75%"  stop-color="#FF7D78" stop-opacity="0.30"/>
+            <stop offset="100%" stop-color="#FF7D78" stop-opacity="0.55"/>
+          </linearGradient>
+          <filter id="fl3-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
+                  <radialGradient id="fl-node-fill" cx="50%" cy="38%" r="70%">
+            <stop offset="0%"   stop-color="#16233f"/>
+            <stop offset="100%" stop-color="#0A0A0F"/>
+          </radialGradient>
+        </defs>
+
+        <!-- ── Background gradient panel ── -->
+        <rect x="50" y="40" width="800" height="560" fill="url(#fl3-bg)"/>
+        <!-- ── FAST→BOTTLENECK side wash (blue left, red right) ── -->
+        <rect x="50" y="40" width="800" height="560" fill="url(#fl3-bottom-glow)"/>
+
+        <!-- ── Corner brackets ── -->
+        <g stroke="rgba(255,255,255,0.30)" stroke-width="1" fill="none" stroke-linecap="square">
+          <line x1="40"  y1="35"  x2="50"  y2="35"/>
+          <line x1="45"  y1="30"  x2="45"  y2="40"/>
+          <line x1="55"  y1="35"  x2="145" y2="35" stroke-dasharray="3 6"/>
+          <line x1="45"  y1="45"  x2="45"  y2="135" stroke-dasharray="3 6"/>
+          <line x1="850" y1="35"  x2="860" y2="35"/>
+          <line x1="855" y1="30"  x2="855" y2="40"/>
+          <line x1="755" y1="35"  x2="845" y2="35" stroke-dasharray="3 6"/>
+          <line x1="855" y1="45"  x2="855" y2="135" stroke-dasharray="3 6"/>
+          <line x1="40"  y1="605" x2="50"  y2="605"/>
+          <line x1="45"  y1="600" x2="45"  y2="610"/>
+          <line x1="55"  y1="605" x2="145" y2="605" stroke-dasharray="3 6"/>
+          <line x1="45"  y1="505" x2="45"  y2="595" stroke-dasharray="3 6"/>
+          <line x1="850" y1="605" x2="860" y2="605"/>
+          <line x1="855" y1="600" x2="855" y2="610"/>
+          <line x1="755" y1="605" x2="845" y2="605" stroke-dasharray="3 6"/>
+          <line x1="855" y1="505" x2="855" y2="595" stroke-dasharray="3 6"/>
         </g>
-        <g class="lv-node slow"><circle cx="380" cy="70" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/><text x="380" y="76" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">USE</text></g>
-        <g class="lv-node slow"><circle cx="530" cy="220" r="46" fill="url(#lv-node-fill)" stroke="rgba(255,125,120,0.45)" stroke-width="1.5"/><text x="530" y="226" class="lv-node-label" text-anchor="middle" style="fill:rgba(255,255,255,0.78)">LEARN</text></g>
-        <g class="lv-node fast"><circle cx="380" cy="370" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/><circle cx="380" cy="370" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/><text x="380" y="376" class="lv-node-label" text-anchor="middle">BUILD</text></g>
-        <g class="lv-node fast"><circle cx="230" cy="220" r="46" fill="url(#lv-node-fill)" stroke="rgba(64,131,255,0.85)" stroke-width="1.5"/><circle cx="230" cy="220" r="46" fill="none" stroke="#4083FF" stroke-width="2" opacity="0.4" filter="url(#lv-glow-sm)"/><text x="230" y="226" class="lv-node-label" text-anchor="middle">SHIP</text></g>
+
+
+        <!-- ── Monochrome dotted ring band (matches loop-v2 visual language) ── -->
+        <circle cx="450" cy="320" r="180" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
+        <circle cx="450" cy="320" r="190" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
+        <circle cx="450" cy="320" r="200" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
+
+        <!-- ── Invisible motion paths (clockwise; left = BUILD→SHIP→USE, right = USE→LEARN→BUILD) -->
+        <path id="fl3-left-180"  d="M 450 500 A 180 180 0 0 1 450 140" fill="none" stroke="none"/>
+        <path id="fl3-left-190"  d="M 450 510 A 190 190 0 0 1 450 130" fill="none" stroke="none"/>
+        <path id="fl3-left-200"  d="M 450 520 A 200 200 0 0 1 450 120" fill="none" stroke="none"/>
+        <path id="fl3-right-190" d="M 450 130 A 190 190 0 0 1 450 510" fill="none" stroke="none"/>
+
+        <!-- ── PARTICLES (3× density) ────────────────────────────────────
+             LEFT (fast): 75 across 3 lanes at 3.2s/half-rev
+             RIGHT (slow): 12 on r=190 at 13s/half-rev — they visibly pool
+        ──────────────────────────────────────────────────────────── -->
         <g>
-          <circle cx="118" cy="218" r="3.5" fill="#4083FF"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
-          <line x1="130" y1="218" x2="172" y2="218" stroke="rgba(64,131,255,0.5)" stroke-width="1"/>
-          <text x="118" y="200" class="lv-side fast" text-anchor="start">Fast</text>
+          <!-- LEFT lanes (3 × 40, randomized) -->
+          <circle r="1.94" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.039s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.039s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.79;0.79;0"/></circle>
+          <circle r="1.58" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.041s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.041s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.48;0.48;0"/></circle>
+          <circle r="2.02" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.119s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.119s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.74;0.74;0"/></circle>
+          <circle r="0.95" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.656s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.656s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.43;0.43;0"/></circle>
+          <circle r="1.38" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.841s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.841s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.53;0.53;0"/></circle>
+          <circle r="2.05" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.673s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.673s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.76;0.76;0"/></circle>
+          <circle r="1.38" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.684s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.684s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.62;0.62;0"/></circle>
+          <circle r="1.25" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.097s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.097s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.41;0.41;0"/></circle>
+          <circle r="1.19" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.699s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.699s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="1.72" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.051s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.051s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.72;0.72;0"/></circle>
+          <circle r="1.56" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.83s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.83s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.51;0.51;0"/></circle>
+          <circle r="1.22" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.125s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.125s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.34;0.34;0"/></circle>
+          <circle r="1.12" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.564s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.564s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.41;0.41;0"/></circle>
+          <circle r="2.25" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.299s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.299s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.77;0.77;0"/></circle>
+          <circle r="1.42" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.143s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.143s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.62;0.62;0"/></circle>
+          <circle r="1.9" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.365s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.365s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.73;0.73;0"/></circle>
+          <circle r="1.76" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.797s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.797s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.85;0.85;0"/></circle>
+          <circle r="1.8" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.074s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.074s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.85;0.85;0"/></circle>
+          <circle r="1.62" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.522s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.522s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.51;0.51;0"/></circle>
+          <circle r="1.54" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-3.141s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.141s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.62;0.62;0"/></circle>
+          <circle r="1.18" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.441s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.441s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.47;0.47;0"/></circle>
+          <circle r="1.61" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.456s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.456s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="2.05" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.76s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.76s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.74;0.74;0"/></circle>
+          <circle r="1.55" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.423s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.423s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.63;0.63;0"/></circle>
+          <circle r="1.25" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.525s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.525s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.42;0.42;0"/></circle>
+          <circle r="1.51" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.774s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.774s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.59;0.59;0"/></circle>
+          <circle r="2.07" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.726s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.726s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.71;0.71;0"/></circle>
+          <circle r="1.51" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.043s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.043s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.52;0.52;0"/></circle>
+          <circle r="1.13" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.017s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.017s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.31;0.31;0"/></circle>
+          <circle r="1.95" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.73s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.73s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.68;0.68;0"/></circle>
+          <circle r="2.23" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.824s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.824s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.71;0.71;0"/></circle>
+          <circle r="1.68" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.942s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.942s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="1.0" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.967s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.967s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="1.46" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.604s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.604s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
+          <circle r="1.89" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.263s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.263s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.71;0.71;0"/></circle>
+          <circle r="2.28" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.359s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.359s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.83;0.83;0"/></circle>
+          <circle r="1.56" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.842s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.842s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.58;0.58;0"/></circle>
+          <circle r="1.42" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.108s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.108s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.54;0.54;0"/></circle>
+          <circle r="1.41" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.14s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.14s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.51;0.51;0"/></circle>
+          <circle r="1.61" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.854s" repeatCount="indefinite"><mpath href="#fl3-left-180"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.854s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.43" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.709s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.709s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.47;0.47;0"/></circle>
+          <circle r="1.1" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.066s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.066s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.34;0.34;0"/></circle>
+          <circle r="1.0" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.501s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.501s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.44;0.44;0"/></circle>
+          <circle r="2.23" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.274s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.274s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.8;0.8;0"/></circle>
+          <circle r="2.12" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.635s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.635s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.66;0.66;0"/></circle>
+          <circle r="1.69" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.189s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.189s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
+          <circle r="1.2" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.049s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.049s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.37;0.37;0"/></circle>
+          <circle r="1.62" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.451s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.451s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.64;0.64;0"/></circle>
+          <circle r="1.36" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.723s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.723s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="1.49" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.408s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.408s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.59;0.59;0"/></circle>
+          <circle r="1.09" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.752s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.752s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.35;0.35;0"/></circle>
+          <circle r="1.65" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.997s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.997s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.57;0.57;0"/></circle>
+          <circle r="1.17" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.338s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.338s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="1.08" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.124s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.124s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.36;0.36;0"/></circle>
+          <circle r="1.26" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.613s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.613s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.43;0.43;0"/></circle>
+          <circle r="1.52" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.912s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.912s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.61;0.61;0"/></circle>
+          <circle r="1.02" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.179s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.179s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.42;0.42;0"/></circle>
+          <circle r="1.09" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.628s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.628s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.33;0.33;0"/></circle>
+          <circle r="1.21" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.09s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.09s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="1.07" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.913s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.913s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.29;0.29;0"/></circle>
+          <circle r="1.23" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.085s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.085s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.47;0.47;0"/></circle>
+          <circle r="1.18" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.372s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.372s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.34;0.34;0"/></circle>
+          <circle r="1.38" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.127s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.127s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.55;0.55;0"/></circle>
+          <circle r="1.49" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.56s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.56s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.52;0.52;0"/></circle>
+          <circle r="2.06" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.543s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.543s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.71;0.71;0"/></circle>
+          <circle r="0.95" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.757s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.757s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.42;0.42;0"/></circle>
+          <circle r="1.25" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.954s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.954s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.39;0.39;0"/></circle>
+          <circle r="1.01" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.895s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.895s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.39;0.39;0"/></circle>
+          <circle r="1.12" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.518s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.518s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="1.33" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.121s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.121s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.57;0.57;0"/></circle>
+          <circle r="2.28" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.202s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.202s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.79;0.79;0"/></circle>
+          <circle r="0.97" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.363s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.363s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.38;0.38;0"/></circle>
+          <circle r="1.22" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.183s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.183s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.38;0.38;0"/></circle>
+          <circle r="1.31" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.639s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.639s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.52;0.52;0"/></circle>
+          <circle r="1.42" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.306s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.306s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.49;0.49;0"/></circle>
+          <circle r="1.04" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.362s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.362s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="2.24" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.517s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.517s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.78;0.78;0"/></circle>
+          <circle r="1.71" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.604s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.604s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.66;0.66;0"/></circle>
+          <circle r="1.92" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.814s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.814s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.73;0.73;0"/></circle>
+          <circle r="1.34" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.082s" repeatCount="indefinite"><mpath href="#fl3-left-190"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.082s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.47;0.47;0"/></circle>
+          <circle r="1.72" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.646s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.646s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.66;0.66;0"/></circle>
+          <circle r="1.61" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.265s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.265s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.6;0.6;0"/></circle>
+          <circle r="2.22" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.041s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.041s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.77;0.77;0"/></circle>
+          <circle r="1.7" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.669s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.669s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.58;0.58;0"/></circle>
+          <circle r="1.0" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.276s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.276s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="1.14" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.056s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.056s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.41;0.41;0"/></circle>
+          <circle r="1.38" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.872s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.872s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.45" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.514s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.514s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.29" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.118s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.118s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.37;0.37;0"/></circle>
+          <circle r="1.47" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.292s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.292s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.56;0.56;0"/></circle>
+          <circle r="1.51" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.053s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.053s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.57;0.57;0"/></circle>
+          <circle r="1.58" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.35s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.35s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.64;0.64;0"/></circle>
+          <circle r="1.52" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.572s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.572s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.45;0.45;0"/></circle>
+          <circle r="1.01" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.128s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.128s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.47;0.47;0"/></circle>
+          <circle r="1.36" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.893s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.893s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.57;0.57;0"/></circle>
+          <circle r="1.39" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.597s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.597s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.57;0.57;0"/></circle>
+          <circle r="1.41" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.095s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.095s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="1.32" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.082s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.082s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.58;0.58;0"/></circle>
+          <circle r="1.09" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.427s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.427s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.42;0.42;0"/></circle>
+          <circle r="0.97" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.473s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.473s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.35;0.35;0"/></circle>
+          <circle r="1.05" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-3.04s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-3.04s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="1.33" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.38s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.38s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.58;0.58;0"/></circle>
+          <circle r="1.39" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.147s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.147s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.47;0.47;0"/></circle>
+          <circle r="1.65" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.431s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.431s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="2.03" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.491s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.491s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.67;0.67;0"/></circle>
+          <circle r="1.61" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.687s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.687s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.65;0.65;0"/></circle>
+          <circle r="1.23" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.391s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.391s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.48;0.48;0"/></circle>
+          <circle r="1.96" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-0.157s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.157s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.85;0.85;0"/></circle>
+          <circle r="1.57" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.718s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.718s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.23" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.61s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.61s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.48;0.48;0"/></circle>
+          <circle r="1.83" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.936s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.936s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.66;0.66;0"/></circle>
+          <circle r="1.25" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.828s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.828s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.42;0.42;0"/></circle>
+          <circle r="0.93" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.255s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.255s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.33;0.33;0"/></circle>
+          <circle r="1.16" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.099s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.099s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.4;0.4;0"/></circle>
+          <circle r="1.45" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-1.264s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.264s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="2.15" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-0.006s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-0.006s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.67;0.67;0"/></circle>
+          <circle r="1.91" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-2.383s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.383s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.77;0.77;0"/></circle>
+          <circle r="1.63" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.253s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.253s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.65" opacity="0" fill="#fff"><animateMotion dur="3.2s" begin="-1.272s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-1.272s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.59;0.59;0"/></circle>
+          <circle r="2.12" opacity="0" fill="#cfe0ff"><animateMotion dur="3.2s" begin="-2.839s" repeatCount="indefinite"><mpath href="#fl3-left-200"/></animateMotion><animate attributeName="opacity" dur="3.2s" begin="-2.839s" repeatCount="indefinite" keyTimes="0;0.12;0.86;1" values="0;0.79;0.79;0"/></circle>
+          <!-- RIGHT lane r=190 (slow, 12 particles, randomized — they pool visibly) -->
+          <circle r="1.7" opacity="0" fill="#fff"><animateMotion dur="13.0s" begin="-9.869s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-9.869s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.41;0.41;0"/></circle>
+          <circle r="1.4" opacity="0" fill="#FFB8B5"><animateMotion dur="13.0s" begin="-8.273s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-8.273s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.46;0.46;0"/></circle>
+          <circle r="1.96" opacity="0" fill="#FFB8B5"><animateMotion dur="13.0s" begin="-8.397s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-8.397s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.41;0.41;0"/></circle>
+          <circle r="1.65" opacity="0" fill="#FFB8B5"><animateMotion dur="13.0s" begin="-0.109s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-0.109s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.39;0.39;0"/></circle>
+          <circle r="1.73" opacity="0" fill="#fff"><animateMotion dur="13.0s" begin="-8.717s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-8.717s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.47;0.47;0"/></circle>
+          <circle r="1.89" opacity="0" fill="#fff"><animateMotion dur="13.0s" begin="-3.993s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-3.993s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="1.71" opacity="0" fill="#FFB8B5"><animateMotion dur="13.0s" begin="-1.818s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-1.818s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.5;0.5;0"/></circle>
+          <circle r="1.44" opacity="0" fill="#fff"><animateMotion dur="13.0s" begin="-9.778s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-9.778s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.33;0.33;0"/></circle>
+          <circle r="1.49" opacity="0" fill="#fff"><animateMotion dur="13.0s" begin="-10.909s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-10.909s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.42;0.42;0"/></circle>
+          <circle r="1.6" opacity="0" fill="#FFB8B5"><animateMotion dur="13.0s" begin="-1.497s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-1.497s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.31;0.31;0"/></circle>
+          <circle r="1.84" opacity="0" fill="#fff"><animateMotion dur="13.0s" begin="-12.787s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-12.787s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.32;0.32;0"/></circle>
+          <circle r="1.74" opacity="0" fill="#fff"><animateMotion dur="13.0s" begin="-1.92s" repeatCount="indefinite"><mpath href="#fl3-right-190"/></animateMotion><animate attributeName="opacity" dur="13.0s" begin="-1.92s" repeatCount="indefinite" keyTimes="0;0.10;0.88;1" values="0;0.39;0.39;0"/></circle>
+        </g>
+
+        <!-- ── 4 Nodes (r=50) ── -->
+        <!-- USE — top (slight red-tint border, bottleneck side) -->
+        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.40)" stroke-width="1.5"/><text x="450" y="136" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="36" lengthAdjust="spacing" fill="url(#fl3-name-grad-red)">USE</text></g>
+        <!-- LEARN — right (red-tint border, bottleneck side) -->
+        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(255,125,120,0.40)" stroke-width="1.5"/><text x="640" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="62" lengthAdjust="spacing" fill="url(#fl3-name-grad-red)">LEARN</text></g>
+        <!-- BUILD — bottom (blue-tint border, fast side) -->
+        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="516" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="62" lengthAdjust="spacing" fill="url(#fl3-name-grad)">BUILD</text></g>
+        <!-- SHIP — left (blue-tint border, fast side) -->
+        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="260" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="50" lengthAdjust="spacing" fill="url(#fl3-name-grad)">SHIP</text></g>
+
+        <!-- ── Side labels ── -->
+        <g>
+          <text x="170" y="325" font-family="'Geist Mono',ui-monospace,monospace" font-size="11" font-weight="500" letter-spacing="0.22em" text-anchor="end" fill="#4083FF">FAST</text>
         </g>
         <g>
-          <circle cx="680" cy="218" r="3.5" fill="#FF7D78" style="animation: soft-pulse 2.2s ease-in-out infinite;"/>
-          <line x1="626" y1="218" x2="668" y2="218" stroke="rgba(255,125,120,0.5)" stroke-width="1"/>
-          <text x="710" y="200" class="lv-side slow" text-anchor="end">Bottleneck</text>
+          <text x="730" y="325" font-family="'Geist Mono',ui-monospace,monospace" font-size="11" font-weight="500" letter-spacing="0.22em" text-anchor="start" fill="#FF7D78">BOTTLENECK</text>
         </g>
       </svg>
     </div>
@@ -2093,7 +2408,40 @@
 <section class="manifesto" id="data">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <svg class="mg sec-mg" viewBox="47 21 70 70" aria-hidden="true" style="width:96px;height:96px"><g class="l2" fill="none"><rect x="65" y="22" width="13" height="13" rx="2"/><rect x="47" y="40" width="13" height="13" rx="2"/><rect x="83" y="40" width="13" height="13" rx="2"/><rect x="65" y="58" width="13" height="13" rx="2"/><rect x="101" y="58" width="13" height="13" rx="2"/><rect x="47" y="76" width="13" height="13" rx="2"/><rect x="65" y="76" width="13" height="13" rx="2"/><rect x="83" y="76" width="13" height="13" rx="2"/></g><g class="nd"><rect x="47" y="22" width="13" height="13" rx="2"/><rect class="d-pulse" x="83" y="22" width="13" height="13" rx="2" style="--sp:3.1s"/><rect class="d-pulse" x="65" y="40" width="13" height="13" rx="2" style="--sp:2.7s;animation-delay:.6s"/><rect class="d-pulse" x="101" y="40" width="13" height="13" rx="2" style="--sp:3.3s;animation-delay:1.1s"/><rect x="83" y="58" width="13" height="13" rx="2"/><rect class="d-pulse" x="101" y="76" width="13" height="13" rx="2" style="--sp:2.9s;animation-delay:.3s"/></g><g class="acf"><rect class="d-throb" x="101" y="22" width="13" height="13" rx="2" style="--sp:2.4s"/><rect class="d-throb" x="47" y="58" width="13" height="13" rx="2" style="--sp:2.4s;animation-delay:.8s"/></g></svg>
+      <!-- COMP 10 · Find What Matters — raw signals fan in, funnel through a pulsing
+           rank pipeline, and diverge to candidates; the top pick pings. (moved here
+           from §6; signals → ranked opportunity reads well as the §4 data motif) -->
+      <svg class="mg" viewBox="0 0 300 170" aria-hidden="true" style="width:210px;max-width:62vw;height:auto;margin:0 0 24px">
+        <defs>
+          <path id="c10-f1" d="M30 20 L142 86" fill="none"/><path id="c10-f2" d="M30 44 L142 86" fill="none"/>
+          <path id="c10-f3" d="M30 92 L142 86" fill="none"/><path id="c10-f4" d="M30 140 L142 86" fill="none"/>
+          <path id="c10-f5" d="M58 14 L142 86" fill="none"/><path id="c10-pick" d="M178 86 L268 42" fill="none"/>
+        </defs>
+        <!-- HUD corner frame -->
+        <path class="l2 thin" opacity=".5" d="M10 14 H24 M10 14 V28 M290 14 H276 M290 14 V28 M10 156 H24 M10 156 V142 M290 156 H276 M290 156 V142"/>
+        <!-- fan-in -->
+        <g class="l2 thin"><path d="M30 20 L142 86"/><path d="M30 44 L142 86"/><path d="M30 68 L142 86"/><path d="M30 92 L142 86"/><path d="M30 116 L142 86"/><path d="M30 140 L142 86"/><path d="M58 14 L142 86"/><path d="M58 146 L142 86"/></g>
+        <g class="no thin"><circle cx="30" cy="20" r="4"/><circle cx="30" cy="44" r="4"/><circle cx="30" cy="68" r="4"/><circle cx="30" cy="92" r="4"/><circle cx="30" cy="116" r="4"/><circle cx="30" cy="140" r="4"/><circle cx="58" cy="14" r="4"/><circle cx="58" cy="146" r="4"/></g>
+        <!-- signals streaming toward the rank node -->
+        <g fill="#fff">
+          <circle r="1.7"><animateMotion dur="2.2s" begin="0s"    repeatCount="indefinite"><mpath href="#c10-f1"/></animateMotion></circle>
+          <circle r="1.3"><animateMotion dur="2.2s" begin="-0.5s" repeatCount="indefinite"><mpath href="#c10-f2"/></animateMotion></circle>
+          <circle r="1.7"><animateMotion dur="2.2s" begin="-0.9s" repeatCount="indefinite"><mpath href="#c10-f3"/></animateMotion></circle>
+          <circle r="1.3"><animateMotion dur="2.2s" begin="-1.3s" repeatCount="indefinite"><mpath href="#c10-f4"/></animateMotion></circle>
+          <circle r="1.7"><animateMotion dur="2.2s" begin="-1.7s" repeatCount="indefinite"><mpath href="#c10-f5"/></animateMotion></circle>
+        </g>
+        <!-- rank pipeline -->
+        <path class="ln" stroke-linecap="round" d="M146 86 L172 86"/>
+        <circle class="l2 thin" cx="146" cy="86" r="9" fill="none"><animate attributeName="r" values="9;12.5;9" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;.15;.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <g class="nd"><circle cx="146" cy="86" r="5.5"/><circle cx="172" cy="86" r="5.5"/></g>
+        <!-- diverge to candidates -->
+        <g class="l2 thin" stroke-linecap="round"><path d="M178 86 L268 42"/><path d="M178 86 L268 86"/><path d="M178 86 L268 130"/></g>
+        <g class="no thin"><circle cx="272" cy="42" r="5"/><circle cx="272" cy="86" r="5"/><circle cx="272" cy="130" r="5"/></g>
+        <!-- the pick (pings) + a particle delivered to it -->
+        <circle r="1.7" fill="#4083FF"><animateMotion dur="1.6s" begin="-0.3s" repeatCount="indefinite"><mpath href="#c10-pick"/></animateMotion></circle>
+        <circle class="acf" cx="272" cy="42" r="3"/>
+        <circle class="ac thin" cx="272" cy="42" r="9" fill="none"><animate attributeName="r" values="6;13;6" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".85;0;.85" dur="2.2s" repeatCount="indefinite"/></circle>
+      </svg>
       <h2>Your next best move is already in your data</h2>
       <p class="dagger">Every click, session replay, customer feedback, log, and agent trace is a signal about what's working and what's not — and your next best idea is buried in them.</p>
     </div>
@@ -2105,15 +2453,13 @@
   </div>
 </section>
 
+<!-- ── Gradient divider (per Figma: linear, #2B73E8, 0→100→0, 2px) ── -->
+<hr class="grad-divider" aria-hidden="true">
+
 <!-- ── INTRODUCING WAVE (Unicorn Studio full-bleed embed) ─── -->
 <section class="intro-wave" aria-label="Introducing Wave">
   <div class="intro-wave-in">
     <div style="width: 1440px; height: 900px" data-us-project="CKe6dFknhkRJIEA3unTS"></div>
-  </div>
-  <!-- text overlay: centred in the lower half of the embed, above the bottom fade -->
-  <div class="intro-wave-overlay" aria-hidden="true">
-    <p class="intro-wave-eyebrow">Introducing</p>
-    <p class="intro-wave-tagline">The world's first<br>self-improving product engine</p>
   </div>
 </section>
 <script type="text/javascript">
@@ -2148,58 +2494,70 @@
 <!-- ── POST-WAVE: deeper background from here to footer ─── -->
 <div class="post-wave-bg">
 
+<!-- ── wave→solution bridge: animated vertical connector ─────────────
+     Top flourish (HUD crosshair node) → animated dotted line → bottom
+     flourish (bracket frame + node). IntersectionObserver triggers the
+     SMIL clip-rect reveal so it fires on scroll, not on load.
+     Geometry: viewBox 0 0 48 240; line runs y 31→207; clip animates
+     height 0→240 over 1.5s eased; foot fades in at t=1.5s.          -->
+<div class="wave-bridge" aria-hidden="true">
+  <!-- viewBox 760 wide = the text block; x380 = centre (over the wave), x16 = text
+       left edge (the "A"). TUNING: jog y=106 (halfway), land y=172; overlap via the
+       -100 margin-top in CSS. (~⅓ the previous height.) -->
+  <svg viewBox="0 0 760 308" width="760" height="308" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="wb-clip">
+        <rect id="wb-clip-rect" x="0" y="0" width="760" height="0">
+          <animate id="wb-anim" attributeName="height" from="0" to="308" dur="1.4s"
+                   calcMode="spline" keySplines="0.4 0 0.2 1" keyTimes="0;1"
+                   fill="freeze" begin="indefinite"/>
+        </rect>
+      </clipPath>
+    </defs>
+    <!-- top flourish: crosshair node centred over the wave -->
+    <circle cx="380" cy="24" r="10.5" stroke="#4083FF" stroke-width="1" stroke-dasharray="2 3.2" opacity=".3"/>
+    <circle cx="380" cy="24" r="5"    stroke="#4083FF" stroke-width="1.3" opacity=".6"/>
+    <circle cx="380" cy="24" r="2"    fill="#4083FF" opacity=".75"/>
+    <path d="M380 11 V5 M380 37 V43 M367 24 H361 M393 24 H399" stroke="#4083FF" stroke-width="1" stroke-linecap="round" opacity=".2"/>
+    <!-- dotted connector: down to halfway → left ALL the way to the text edge → down to the "A" -->
+    <path d="M380 40 V166 H16 V292" stroke="#4083FF" stroke-width="1.3"
+          stroke-dasharray="3 6" stroke-linecap="round" opacity=".45" clip-path="url(#wb-clip)"/>
+    <!-- bottom flourish: bracket corners + node landing on the "A"; fades in as line arrives -->
+    <g id="wb-foot" opacity="0">
+      <animate id="wb-foot-anim" attributeName="opacity" from="0" to="1"
+               dur="0.4s" begin="indefinite" fill="freeze"/>
+      <path d="M8 276 H0 V292"   stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+      <path d="M24 276 H32 V292" stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+      <circle cx="16" cy="293" r="4"   stroke="#4083FF" stroke-width="1.2" opacity=".6"/>
+      <circle cx="16" cy="293" r="1.8" fill="#4083FF" opacity=".7"/>
+    </g>
+  </svg>
+</div>
+<script>
+(function(){
+  var bridge   = document.querySelector('.wave-bridge'); if(!bridge) return;
+  var anim     = document.getElementById('wb-anim');
+  var footAnim = document.getElementById('wb-foot-anim');
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+    var r = document.getElementById('wb-clip-rect'); if(r) r.setAttribute('height','308');
+    var f = document.getElementById('wb-foot');      if(f) f.setAttribute('opacity','1');
+    return;
+  }
+  new IntersectionObserver(function(es, obs){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      if(anim) anim.beginElement();
+      setTimeout(function(){ if(footAnim) footAnim.beginElement(); }, 1400);
+      obs.unobserve(e.target);
+    });
+  }, { threshold: 0.3 }).observe(bridge);
+})();
+</script>
+
 <!-- ── §3 · SOLUTION — the category, defined (moved after Wave reveal) ─── -->
 <section class="manifesto" id="solution">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <!-- loop micrographic (adapted from /micrographics COMP 07 "The Product Loop"):
-           graduation rings + cardinal nodes + center reticle, a rotating radar sweep,
-           and a clockwise particle stream (small + glowing leads). -->
-      <svg class="mg mg-loop" viewBox="0 0 300 240" aria-hidden="true">
-        <defs>
-          <radialGradient id="c7-lead" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#fff"/><stop offset="42%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-          </radialGradient>
-          <linearGradient id="c7-sweep" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="100%" stop-color="#fff" stop-opacity=".16"/>
-          </linearGradient>
-          <path id="c7-orbit" d="M150 24 A96 96 0 0 1 246 120 A96 96 0 0 1 150 216 A96 96 0 0 1 54 120 A96 96 0 0 1 150 24" fill="none"/>
-        </defs>
-        <circle class="l2 thin" cx="150" cy="120" r="116" stroke-dasharray="1 9" opacity=".42"/>
-        <circle class="ln thin" cx="150" cy="120" r="110" stroke-dasharray="2 7" opacity=".5"/>
-        <path class="l2 thin" d="M236.6 70 L243.5 66 M200 33.4 L204 26.5 M100 33.4 L96 26.5 M63.4 70 L56.5 66 M63.4 170 L56.5 174 M100 206.6 L96 213.5 M200 206.6 L204 213.5 M236.6 170 L243.5 174"/>
-        <path class="ln thin" d="M150 16 L150 6 M254 120 L264 120 M150 224 L150 234 M46 120 L36 120"/>
-        <circle class="l2" cx="150" cy="120" r="96"/>
-        <circle class="l2 thin" cx="150" cy="120" r="70" stroke-dasharray="3 7" opacity=".7"/>
-        <circle class="l2" cx="150" cy="120" r="44"/>
-        <path d="M150 24 A96 96 0 0 1 246 120" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-        <g>
-          <path d="M150 120 L150 24 A96 96 0 0 1 173 27 Z" fill="url(#c7-sweep)"/>
-          <path class="ln thin" d="M150 120 L150 24" opacity=".5"/>
-          <animateTransform attributeName="transform" type="rotate" from="0 150 120" to="360 150 120" dur="9s" repeatCount="indefinite"/>
-        </g>
-        <g class="nd"><circle cx="217.9" cy="52.1" r="1.6"/><circle cx="82.1" cy="52.1" r="1.6"/><circle cx="82.1" cy="187.9" r="1.6"/><circle cx="217.9" cy="187.9" r="1.6"/></g>
-        <g class="nd" opacity=".65"><circle cx="150" cy="50" r="1.1"/><circle cx="220" cy="120" r="1.1"/><circle cx="150" cy="190" r="1.1"/><circle cx="80" cy="120" r="1.1"/></g>
-        <g><circle class="no" cx="150" cy="24" r="6.5"/><circle class="nd" cx="150" cy="24" r="2.4"/>
-           <circle class="no" cx="246" cy="120" r="6.5"/><circle class="nd" cx="246" cy="120" r="2.4"/>
-           <circle class="no" cx="150" cy="216" r="6.5"/><circle class="nd" cx="150" cy="216" r="2.4"/>
-           <circle class="no" cx="54" cy="120" r="6.5"/><circle class="nd" cx="54" cy="120" r="2.4"/></g>
-        <circle class="ac thin" cx="246" cy="120" r="10" fill="none" opacity=".7"/>
-        <circle class="ln" cx="150" cy="120" r="9" fill="none"/>
-        <path class="l2 thin" d="M150 105 v8 M150 127 v8 M135 120 h8 M157 120 h8"/>
-        <circle class="nd" cx="150" cy="120" r="2.2"/>
-        <g fill="#fff">
-          <circle r="1.3"><animateMotion dur="3.6s" begin="0s"     repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.0"><animateMotion dur="3.6s" begin="-0.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.5"><animateMotion dur="3.6s" begin="-0.95s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.0"><animateMotion dur="3.6s" begin="-1.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.2"><animateMotion dur="3.6s" begin="-2.0s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.0"><animateMotion dur="3.6s" begin="-2.5s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <circle r="1.2"><animateMotion dur="3.6s" begin="-3.05s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></circle>
-          <g><circle r="4.5" fill="url(#c7-lead)"/><circle r="2"/><animateMotion dur="3.6s" begin="-0.3s"  repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
-          <g><circle r="4" fill="url(#c7-lead)"/><circle r="1.8"/><animateMotion dur="3.6s" begin="-1.85s" repeatCount="indefinite"><mpath href="#c7-orbit"/></animateMotion></g>
-        </g>
-      </svg>
       <h2>A self-improving product runs the whole loop on its own.</h2>
       <p>It reads the signals across your product, decides what's worth building, and orchestrates the people and agents who ship it. Then it measures what worked (monitoring outcomes, running experiments) and feeds the learning into the next cycle.</p>
       <p>So your product doesn't just grow, it <strong>compounds</strong>: every loop sharper than the last.</p>
@@ -2208,10 +2566,8 @@
 </section>
 
 <!-- ── THE PRODUCT LOOP — Josh v2 with Wave (replaces blueprint-v16) ──── -->
+<!-- heading removed; the diagram leads the section directly (tighter top) -->
 <section class="pl-section reveal" id="loops">
-  <div class="pl-head">
-    <h3>The loop that's always running</h3>
-  </div>
   <div class="product-loop" aria-hidden="true">
       <svg viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet">
         <defs>
@@ -2223,18 +2579,14 @@
             <stop offset="0" stop-color="#93A6F8"/>
             <stop offset="1" stop-color="#FFFFFF"/>
           </linearGradient>
-          <!-- Subtle SIDE GLOWS — radial gradients that soak each half of the ring
-               in a faint color wash without competing with the ring itself. -->
-          <radialGradient id="fl3w-blue-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.22"/>
-            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.06"/>
+          <!-- Bottom-up light: linear gradient that fades from a soft blue at the
+               bottom of the diagram up to transparent at the top. Replaces the
+               prior left/right side glows. -->
+          <linearGradient id="fl3w-bottom-glow" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.30"/>
+            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.08"/>
             <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="fl3w-blue-glow-r" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.22"/>
-            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.06"/>
-            <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-          </radialGradient>
+          </linearGradient>
           <filter id="fl3w-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
           <!-- Per-dot glow: each particle gets a soft halo via blur + merge -->
           <filter id="fl3w-dot-glow" x="-100%" y="-100%" width="300%" height="300%">
@@ -2253,6 +2605,8 @@
 
         <!-- ── Background gradient panel ── -->
         <rect x="50" y="40" width="800" height="560" fill="url(#fl3w-bg)"/>
+        <!-- ── Bottom-up light wash ── -->
+        <rect x="50" y="40" width="800" height="560" fill="url(#fl3w-bottom-glow)"/>
 
         <!-- ── Corner brackets ── -->
         <g stroke="rgba(255,255,255,0.30)" stroke-width="1" fill="none" stroke-linecap="square">
@@ -2274,10 +2628,6 @@
           <line x1="855" y1="505" x2="855" y2="595" stroke-dasharray="3 6"/>
         </g>
 
-        <!-- ── Subtle side glows — blue blob on the FAST half, red on the BOTTLENECK half.
-             Sized large enough (r≈250) to spill into the ring band and out into the frame. -->
-        <circle cx="200" cy="320" r="250" fill="url(#fl3w-blue-glow)"/>
-        <circle cx="700" cy="320" r="250" fill="url(#fl3w-blue-glow-r)"/>
 
         <!-- ── Monochrome dotted ring band (matches loop-v2 visual language) ── -->
         <circle cx="450" cy="320" r="180" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
@@ -2603,57 +2953,79 @@
 
         <!-- ── 4 Nodes (r=50) ── -->
         <!-- USE — top (slight red-tint border, bottleneck side) -->
-        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="136" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl3w-name-grad)">USE</text></g>
+        <g><circle cx="450" cy="130" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="136" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="36" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">USE</text></g>
         <!-- LEARN — right (red-tint border, bottleneck side) -->
-        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="640" y="326" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl3w-name-grad)">LEARN</text></g>
+        <g><circle cx="640" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="640" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="62" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">LEARN</text></g>
         <!-- BUILD — bottom (blue-tint border, fast side) -->
-        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="516" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl3w-name-grad)">BUILD</text></g>
+        <g><circle cx="450" cy="510" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="450" y="516" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="62" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">BUILD</text></g>
         <!-- SHIP — left (blue-tint border, fast side) -->
-        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="260" y="326" font-family="'Inter','JetBrains Mono',monospace" font-size="18" font-weight="500" letter-spacing="0.31em" text-anchor="middle" fill="url(#fl3w-name-grad)">SHIP</text></g>
+        <g><circle cx="260" cy="320" r="50" fill="url(#fl-node-fill)" stroke="rgba(64,131,255,0.55)" stroke-width="1.5"/><text x="260" y="326" font-family="'Geist Mono',ui-monospace,monospace" font-size="18" font-weight="500" text-anchor="middle" textLength="50" lengthAdjust="spacing" fill="url(#fl3w-name-grad)">SHIP</text></g>
       </svg>
   </div>
 </section>
 
 
+<!-- proof card styles (replaces the dogfooding loop micrographic with a stat block) -->
+<style>
+  .proof-card{
+    margin: 56px 0 0;
+    background: var(--panel);
+    border: 1px solid var(--lines);
+    border-radius: 16px;
+    padding: 42px 48px 20px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+    position: relative; overflow: hidden;
+  }
+  .proof-card::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(
+      500px circle at var(--mx, 50%) var(--my, -20%),
+      rgba(64,131,255,.09) 0%, transparent 65%
+    );
+    opacity: 0; transition: opacity .5s ease;
+  }
+  .proof-card:hover::before { opacity: 1; }
+  @media (max-width: 720px){ .proof-card{ padding: 26px 22px; } }
+  .proof-card h3{
+    font-family: var(--sans); font-size: clamp(23px,2.6vw,29px); font-weight: 400;
+    letter-spacing: -0.02em; line-height: 1.2; color: var(--white); margin: 0 0 14px;
+  }
+  .proof-card p{
+    font-size: 16px; line-height: 1.65; color: var(--dim); margin: 0; max-width: 62ch;
+  }
+  .proof-stats{ display: grid; grid-template-columns: 1fr 1fr; margin: 34px 0 0; }
+  .proof-stat:nth-child(1){ padding-right: 44px; }
+  .proof-stat:nth-child(2){ border-left: 1px solid var(--line); padding-left: 44px; }
+  @media (max-width: 600px){
+    .proof-stats{ grid-template-columns: 1fr; gap: 26px; }
+    .proof-stat:nth-child(1){ padding-right: 0; }
+    .proof-stat:nth-child(2){ border-left: 0; border-top: 1px solid var(--line); padding: 26px 0 0; }
+  }
+  .ps-label{
+    font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--dim2); margin-bottom: 16px;
+  }
+  .ps-num{
+    font-family: var(--sans); font-size: clamp(44px,5.6vw,64px); font-weight: 600;
+    line-height: .92; letter-spacing: -0.03em; color: var(--white);
+  }
+  .ps-sub{ font-size: 14px; line-height: 1.5; color: var(--dim); margin-top: 16px; }
+  .proof-foot{
+    display: flex; justify-content: flex-end;
+    margin: 34px 0 0; padding-top: 22px; border-top: 1px solid var(--line);
+  }
+  .proof-link{
+    font-family: var(--sans); font-size: 15px; color: var(--blue-d);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: gap .2s;
+  }
+  .proof-link:hover{ gap: 12px; }
+  .proof-link .arr{ transition: transform .2s; }
+  .proof-link:hover .arr{ transform: translateX(3px); }
+</style>
 <!-- ── §6 · MEET WAVE + PROOF — reveal & dogfooding, one left-aligned section ─── -->
 <section class="manifesto" id="wave">
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
-      <!-- COMP 10 · Find What Matters — raw signals fan in, funnel through a pulsing
-           rank pipeline, and diverge to candidates; the top pick pings (ported from
-           micrographics.html, accf→acf / acc→ac, arrowheads dropped). -->
-      <svg class="mg" viewBox="0 0 300 170" aria-hidden="true" style="width:210px;max-width:62vw;height:auto;margin:0 0 24px">
-        <defs>
-          <path id="c10-f1" d="M30 20 L142 86" fill="none"/><path id="c10-f2" d="M30 44 L142 86" fill="none"/>
-          <path id="c10-f3" d="M30 92 L142 86" fill="none"/><path id="c10-f4" d="M30 140 L142 86" fill="none"/>
-          <path id="c10-f5" d="M58 14 L142 86" fill="none"/><path id="c10-pick" d="M178 86 L268 42" fill="none"/>
-        </defs>
-        <!-- HUD corner frame + ticked baseline -->
-        <path class="l2 thin" opacity=".5" d="M10 14 H24 M10 14 V28 M290 14 H276 M290 14 V28 M10 156 H24 M10 156 V142 M290 156 H276 M290 156 V142"/>
-        <path class="l2 thin" opacity=".4" d="M26 150 H274 M40 150 v5 M72 150 v5 M104 150 v5 M136 150 v5 M168 150 v5 M200 150 v5 M232 150 v5 M264 150 v5"/>
-        <!-- fan-in -->
-        <g class="l2 thin"><path d="M30 20 L142 86"/><path d="M30 44 L142 86"/><path d="M30 68 L142 86"/><path d="M30 92 L142 86"/><path d="M30 116 L142 86"/><path d="M30 140 L142 86"/><path d="M58 14 L142 86"/><path d="M58 146 L142 86"/></g>
-        <g class="no thin"><circle cx="30" cy="20" r="4"/><circle cx="30" cy="44" r="4"/><circle cx="30" cy="68" r="4"/><circle cx="30" cy="92" r="4"/><circle cx="30" cy="116" r="4"/><circle cx="30" cy="140" r="4"/><circle cx="58" cy="14" r="4"/><circle cx="58" cy="146" r="4"/></g>
-        <!-- signals streaming toward the rank node -->
-        <g fill="#fff">
-          <circle r="1.7"><animateMotion dur="2.2s" begin="0s"    repeatCount="indefinite"><mpath href="#c10-f1"/></animateMotion></circle>
-          <circle r="1.3"><animateMotion dur="2.2s" begin="-0.5s" repeatCount="indefinite"><mpath href="#c10-f2"/></animateMotion></circle>
-          <circle r="1.7"><animateMotion dur="2.2s" begin="-0.9s" repeatCount="indefinite"><mpath href="#c10-f3"/></animateMotion></circle>
-          <circle r="1.3"><animateMotion dur="2.2s" begin="-1.3s" repeatCount="indefinite"><mpath href="#c10-f4"/></animateMotion></circle>
-          <circle r="1.7"><animateMotion dur="2.2s" begin="-1.7s" repeatCount="indefinite"><mpath href="#c10-f5"/></animateMotion></circle>
-        </g>
-        <!-- rank pipeline -->
-        <path class="ln" stroke-linecap="round" d="M146 86 L172 86"/>
-        <circle class="l2 thin" cx="146" cy="86" r="9" fill="none"><animate attributeName="r" values="9;12.5;9" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;.15;.6" dur="2.4s" repeatCount="indefinite"/></circle>
-        <g class="nd"><circle cx="146" cy="86" r="5.5"/><circle cx="172" cy="86" r="5.5"/></g>
-        <!-- diverge to candidates -->
-        <g class="l2 thin" stroke-linecap="round"><path d="M178 86 L268 42"/><path d="M178 86 L268 86"/><path d="M178 86 L268 130"/></g>
-        <g class="no thin"><circle cx="272" cy="42" r="5"/><circle cx="272" cy="86" r="5"/><circle cx="272" cy="130" r="5"/></g>
-        <!-- the pick (pings) + a particle delivered to it -->
-        <circle r="1.7" fill="#4083FF"><animateMotion dur="1.6s" begin="-0.3s" repeatCount="indefinite"><mpath href="#c10-pick"/></animateMotion></circle>
-        <circle class="acf" cx="272" cy="42" r="3"/>
-        <circle class="ac thin" cx="272" cy="42" r="9" fill="none"><animate attributeName="r" values="6;13;6" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".85;0;.85" dur="2.2s" repeatCount="indefinite"/></circle>
-      </svg>
       <h2>Wave knows what to build</h2>
       <p class="dagger">A proactive product agent that helps teams build self-improving products.</p>
     </div>
@@ -2661,33 +3033,27 @@
     <div class="manifesto-body reveal">
       <p>It continuously analyzes your Amplitude data for <strong>Signals</strong>, surfaces <strong>Opportunities</strong> you or your agents can approve and ship, and tracks the experiments and <strong>Outcomes</strong>, so your product learns what works and gets smarter every cycle.</p>
 
-      <!-- loop micrographic: the build→ship→use→learn loop, always running on
-           Amplitude itself. Unique wl- ids so it never collides with §3's c7- loop. -->
-      <svg class="mg" style="display:block;width:96px;height:96px;margin:44px 0 20px" viewBox="0 0 64 64" aria-hidden="true">
-        <defs>
-          <radialGradient id="wl-lead" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#fff"/><stop offset="45%" stop-color="#fff" stop-opacity=".4"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-          </radialGradient>
-          <path id="wl-orbit" d="M32 8 A24 24 0 1 1 32 56 A24 24 0 1 1 32 8" fill="none"/>
-        </defs>
-        <circle class="l2 thin" cx="32" cy="32" r="29" stroke-dasharray="2 6" opacity=".55"/>
-        <circle class="l2" cx="32" cy="32" r="24"/>
-        <g><circle class="no" cx="32" cy="8" r="3.6"/><circle class="nd" cx="32" cy="8" r="1.5"/>
-           <circle class="no" cx="56" cy="32" r="3.6"/><circle class="nd" cx="56" cy="32" r="1.5"/>
-           <circle class="no" cx="32" cy="56" r="3.6"/><circle class="nd" cx="32" cy="56" r="1.5"/>
-           <circle class="no" cx="8" cy="32" r="3.6"/><circle class="nd" cx="8" cy="32" r="1.5"/></g>
-        <circle class="ln thin" cx="32" cy="32" r="5" fill="none"/>
-        <path class="l2 thin" d="M32 23 v4 M32 37 v4 M23 32 h4 M37 32 h4"/>
-        <circle class="nd d-throb" cx="32" cy="32" r="1.6" style="--sp:2.6s"/>
-        <g fill="#fff">
-          <circle r="1"><animateMotion dur="4.2s" begin="-1.4s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></circle>
-          <circle r="1.2"><animateMotion dur="4.2s" begin="-2.8s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></circle>
-        </g>
-        <g><circle r="3.4" fill="url(#wl-lead)"/><circle r="1.5" fill="#fff"/><animateMotion dur="4.2s" repeatCount="indefinite"><mpath href="#wl-orbit"/></animateMotion></g>
-      </svg>
-      <h3>We use Wave to build Amplitude</h3>
-      <p>For months, Wave has run on Amplitude itself, auto-triaging bugs, optimizing our landing pages and product flows, and sharpening our own agents and tools by analyzing their traces.</p>
-      <p>It surfaced hundreds of <strong>Opportunities</strong>. We've shipped better and faster than ever.</p>
+      <!-- dogfooding proof card: copy + two block stats + link to the blog -->
+      <div class="proof-card">
+        <h3>We use Wave to build Amplitude</h3>
+        <p>For months, Wave has run on Amplitude itself — auto-triaging bugs, optimizing our landing pages and product flows, and sharpening our own agents by analyzing their traces.</p>
+        <div class="proof-stats">
+          <div class="proof-stat">
+            <div class="ps-label">Positive feedback</div>
+            <div class="ps-num">70%+</div>
+            <div class="ps-sub up">↑ up from 5% at inception</div>
+          </div>
+          <div class="proof-stat">
+            <div class="ps-label">Pull requests</div>
+            <div class="ps-num">101</div>
+            <div class="ps-sub">Shipped autonomously</div>
+          </div>
+        </div>
+        <div class="proof-foot">
+          <!-- TODO: point at the specific blog post -->
+          <a class="proof-link" href="https://amplitude.com/blog" target="_blank" rel="noopener">Read more on our blog <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -2738,6 +3104,16 @@
     });
   });
 })();
+// proof card mouse-following spotlight
+(function(){
+  var card = document.querySelector('.proof-card');
+  if(!card) return;
+  card.addEventListener('mousemove', function(e){
+    var r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top)  + 'px');
+  });
+})();
 </script>
 
 <!-- ── footer loop · the product loop returns to close the page (ported from v16's hero) ── -->
@@ -2757,6 +3133,9 @@
   .bp-foot .t-2026{font-weight:500;font-size:22px;letter-spacing:4px;}
   .bp-foot .ln{stroke:#e9f0ff;fill:none;}
   .bp-foot .lnf{stroke:rgba(233,240,255,0.7);fill:none;}
+  /* minimal corner treatment — matches the hero: crosshair "+" + dotted rules */
+  .bp-foot .hud-mark{stroke:#9fb0d8;fill:none;stroke-width:1.2;opacity:.75}
+  .bp-foot .hud-rule{stroke:#9fb0d8;fill:none;stroke-width:1;opacity:.4;stroke-dasharray:4 10;stroke-linecap:round}
   /* Mobile: the HUD is a 16:9 instrument composition that letterboxes to a tiny
      centred band on a tall phone, and a full 100vh of mostly-empty navy reads as
      dead space. Drop the desktop instrument HUD (it's decorative, aria-hidden) and
@@ -2782,22 +3161,24 @@
   <div class="stage">
     <canvas id="bp-foot"></canvas>
     <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <!-- corner frames -->
-      <g class="ln" stroke-width="1.4">
-        <path d="M40 96 V40 H96"/><path d="M106 62 h18 M115 53 v18"/>
-        <path d="M1640 96 V40 H1584"/>
-        <path d="M40 849 V905 H96"/>
-        <path d="M1640 849 V905 H1584"/>
-        <circle cx="1600" cy="116" r="11"/><path d="M1600 99 V133 M1583 116 H1617"/>
+      <!-- corner marks: crosshair "+" + dotted rules, equidistant from each corner -->
+      <g>
+        <path class="hud-mark" d="M42 52 h20 M52 42 v20"/>
+        <path class="hud-rule" d="M78 52 H300"/><path class="hud-rule" d="M52 78 V300"/>
+        <path class="hud-mark" d="M1618 52 h20 M1628 42 v20"/>
+        <path class="hud-rule" d="M1602 52 H1380"/><path class="hud-rule" d="M1628 78 V300"/>
+        <path class="hud-mark" d="M42 893 h20 M52 883 v20"/>
+        <path class="hud-rule" d="M78 893 H300"/><path class="hud-rule" d="M52 867 V645"/>
+        <path class="hud-mark" d="M1618 893 h20 M1628 883 v20"/>
+        <path class="hud-rule" d="M1602 893 H1380"/><path class="hud-rule" d="M1628 867 V645"/>
       </g>
-      <!-- right edge tick scale + scanning readout -->
+      <!-- right edge tick scale (static; looping scanner removed) -->
       <g class="ln" stroke-width="1">
         <rect x="1632" y="150" width="16" height="5" fill="#e9f0ff" stroke="none"/>
         <rect x="1632" y="160" width="16" height="5" fill="#e9f0ff" stroke="none"/>
         <rect x="1632" y="170" width="16" height="5"/><rect x="1632" y="180" width="16" height="5"/>
         <rect x="1632" y="190" width="11" height="5"/><rect x="1632" y="200" width="16" height="5"/>
         <rect x="1632" y="210" width="9" height="5"/>
-        <rect x="1628" width="22" height="5" fill="#dfeaff" stroke="none"><animate attributeName="y" values="150;210;150" dur="3.2s" calcMode="linear" repeatCount="indefinite"/></rect>
       </g>
       <!-- left edge tick scale -->
       <g class="ln" stroke-width="1">
@@ -2808,9 +3189,9 @@
       </g>
       <!-- title -->
       <text class="t-title" x="92" y="150">YOUR PRODUCT LOOP</text>
-      <text class="t-sub" x="95" y="184">ALWAYS RUNNING</text>
-      <!-- SENSE / DECIDE / ACT / LEARN -->
-      <path class="ln" stroke-width="1.3" d="M92 352 h-10 V500 h10"/>
+      <text class="t-sub" x="92" y="184">ALWAYS RUNNING</text>
+      <!-- SENSE / DECIDE / ACT / LEARN — bracket left edge on the x92 key line -->
+      <path class="ln" stroke-width="1.3" d="M102 352 H92 V500 H102"/>
       <path class="ln" stroke-width="1.3" d="M360 352 h10 V500 h-10"/>
       <text class="t-lab" x="106" y="372">SENSE</text><text class="t-lab" x="106" y="410">DECIDE</text>
       <text class="t-lab" x="106" y="448">ACT</text><text class="t-lab" x="106" y="486">LEARN</text>
@@ -2824,36 +3205,36 @@
         <circle cx="307" cy="404" r="11"/><rect x="296" y="431" width="22" height="22" rx="6"/>
         <circle cx="307" cy="478" r="11"/><path d="M301 478 l4 4 l8 -9"/>
       </g>
-      <!-- icon row -->
+      <!-- icon row — shifted so the leftmost icon edge sits on the x92 key line -->
       <g class="ln" stroke-width="1.3">
-        <circle cx="106" cy="552" r="5"/><path d="M97 569 a9 9 0 0 1 18 0"/>
-        <ellipse cx="148" cy="549" rx="9" ry="3.5"/><path d="M139 549 v15 a9 3.5 0 0 0 18 0 v-15"/>
-        <rect x="176" y="547" width="20" height="17" rx="3"/><path d="M180 555 h12"/>
-        <rect x="214" y="545" width="20" height="20" rx="3"/><circle cx="220" cy="551" r="1.6" fill="#e9f0ff"/><circle cx="228" cy="559" r="1.6" fill="#e9f0ff"/>
-        <rect x="252" y="549" width="26" height="13" rx="6"/>
+        <circle cx="101" cy="552" r="5"/><path d="M92 569 a9 9 0 0 1 18 0"/>
+        <ellipse cx="143" cy="549" rx="9" ry="3.5"/><path d="M134 549 v15 a9 3.5 0 0 0 18 0 v-15"/>
+        <rect x="171" y="547" width="20" height="17" rx="3"/><path d="M175 555 h12"/>
+        <rect x="209" y="545" width="20" height="20" rx="3"/><circle cx="215" cy="551" r="1.6" fill="#e9f0ff"/><circle cx="223" cy="559" r="1.6" fill="#e9f0ff"/>
+        <rect x="247" y="549" width="26" height="13" rx="6"/>
       </g>
       <!-- callouts -->
       <g class="lnf" stroke-width="1" stroke-dasharray="3 5">
         <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite"/>
-        <path d="M1292 688 L1180 642"/><path d="M1322 470 L1280 470"/><path d="M1292 252 L1180 300"/><path d="M1294 158 L1198 322"/>
-        <path d="M268 290 L570 302"/><path d="M268 632 L520 614"/><path d="M310 708 L720 690"/>
+        <path d="M1180 642 H1292"/><path d="M1280 470 H1322"/><path d="M1180 270 H1292"/><path d="M1198 322 H1292"/>
+        <path d="M280 302 H570"/><path d="M290 614 H520"/><path d="M400 690 H720"/>
       </g>
       <g fill="#e9f0ff">
         <circle cx="1180" cy="642" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="3s"   repeatCount="indefinite"/></circle>
         <circle cx="1280" cy="470" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.6s" repeatCount="indefinite"/></circle>
-        <circle cx="1180" cy="300" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="1180" cy="270" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
         <circle cx="1198" cy="322" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.5s" repeatCount="indefinite"/></circle>
         <circle cx="570"  cy="302" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></circle>
         <circle cx="520"  cy="614" r="2.4"><animate attributeName="opacity" values="1;.2;1" dur="2.8s" repeatCount="indefinite"/></circle>
         <circle cx="720"  cy="690" r="2.4"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
       </g>
-      <text class="t-call" x="1300" y="146">CONVERSION FUNNELS</text>
-      <text class="t-call" x="1300" y="250">WEB VITALS</text>
-      <text class="t-call" x="1330" y="472">PRODUCT FEEDBACK</text>
-      <text class="t-call" x="1300" y="692">SESSION REPLAYS</text>
-      <text class="t-call" x="110" y="292">COMPETITIVE</text>
-      <text class="t-call" x="110" y="636">AGENT TRACES</text>
-      <text class="t-call" x="110" y="712">CUSTOM METRICS · MCP</text>
+      <text class="t-call" x="1300" y="327">CONVERSION FUNNELS</text>
+      <text class="t-call" x="1300" y="275">WEB VITALS</text>
+      <text class="t-call" x="1330" y="475">PRODUCT FEEDBACK</text>
+      <text class="t-call" x="1300" y="647">SESSION REPLAYS</text>
+      <text class="t-call" x="110" y="307">COMPETITIVE</text>
+      <text class="t-call" x="110" y="619">AGENT TRACES</text>
+      <text class="t-call" x="110" y="695">CUSTOM METRICS · MCP</text>
       <!-- bottom-left version (squares blink in sequence) -->
       <text class="t-sm" x="92" y="858" style="font-size:14px;fill:#e9f0ff">V1.0</text>
       <g class="ln" stroke-width="1">
@@ -2865,7 +3246,6 @@
       </g>
       <!-- bottom-right -->
       <text class="t-2026" x="1448" y="848">[ 2026 ]</text>
-      <circle cx="1600" cy="116" r="3" fill="#e9f0ff"><animate attributeName="opacity" values="1;0.2;1" dur="3.4s" repeatCount="indefinite"/></circle>
     </svg>
   </div>
   <!-- mobile-only: plain-text labels in roughly the desktop HUD positions
