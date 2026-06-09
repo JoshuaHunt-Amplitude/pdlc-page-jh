@@ -1191,15 +1191,18 @@
     position:absolute; z-index:3;
     top:50%; transform:translateY(-50%);
     left:clamp(48px, 9vw, 180px);
-    max-width:min(780px, 64vw);
+    max-width:min(920px, 72vw);
     pointer-events:none;            /* let the field receive the cursor; CTA re-enables */
   }
   .bp-hero-copy h1{
     margin:0; font-family:var(--sans); font-weight:600;
     /* large display headline, breaks intentionally onto 3 lines via <br> */
-    font-size:clamp(48px, 7.2vw, 112px); line-height:1.0; letter-spacing:-0.035em;
+    font-size:clamp(44px, 5.8vw, 92px); line-height:1.02; letter-spacing:-0.035em;
     color:#f2f6ff;
+    /* prevent the browser from breaking "self-improving" at the hyphen */
+    word-break: keep-all; hyphens: none;
   }
+  .bp-hero-copy h1 .nb{ white-space: nowrap; }
   .bp-hero-copy p{
     margin:28px 0 0; font-family:var(--sans); font-weight:400;
     font-size:clamp(15px, 1.25vw, 19px); line-height:1.5; color:var(--dim); max-width:46ch;
@@ -1299,7 +1302,7 @@
   <!-- hero copy — real HTML (Poppins), vertically centred over the field -->
   <div class="bp-hero-copy">
     <div class="bp-eyebrow">Amplitude Wave · Closed Beta</div>
-    <h1>Enabling<br>self-improving<br>products.</h1>
+    <h1>Enabling<br><span class="nb">self-improving</span><br>products.</h1>
     <p>Products that reinforce what's working and improve<br>and fix what isn't without explicit intervention.</p>
     <a class="bp-cta" href="#cta">Request access</a>
   </div>
