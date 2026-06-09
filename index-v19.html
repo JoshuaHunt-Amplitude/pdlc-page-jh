@@ -2171,17 +2171,14 @@
             <stop offset="0" stop-color="#FF9F9F"/>
             <stop offset="1" stop-color="#FFFFFF"/>
           </linearGradient>
-          <!-- Subtle SIDE GLOWS — radial gradients that soak each half of the ring
-               in a faint color wash without competing with the ring itself. -->
-          <!-- Bottom-up light: a single radial glow anchored to the bottom-center
-               of the frame, fading up to transparent so the lighting reads as if a
-               light source sits beneath the loop. Replaces the prior left/right
-               side glows. -->
-          <radialGradient id="fl3-bottom-glow" cx="50%" cy="100%" r="70%">
+          <!-- Bottom-up light: linear gradient that fades from a soft blue at the
+               bottom of the diagram up to transparent at the top. Replaces the
+               prior left/right side glows. -->
+          <linearGradient id="fl3-bottom-glow" x1="0" y1="1" x2="0" y2="0">
             <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.30"/>
-            <stop offset="40%"  stop-color="#4083FF" stop-opacity="0.10"/>
+            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.08"/>
             <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-          </radialGradient>
+          </linearGradient>
           <filter id="fl3-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
                   <radialGradient id="fl-node-fill" cx="50%" cy="38%" r="70%">
             <stop offset="0%"   stop-color="#16233f"/>
@@ -2212,9 +2209,10 @@
           <line x1="855" y1="505" x2="855" y2="595" stroke-dasharray="3 6"/>
         </g>
 
-        <!-- ── Bottom-up light: single soft blue glow rising from beneath the loop,
-             replacing the previous left/right side glows. -->
-        <ellipse cx="450" cy="640" rx="520" ry="380" fill="url(#fl3-bottom-glow)"/>
+        <!-- ── Bottom-up light: soft blue glow anchored to the bottom-center of the
+             diagram, painted on a rect matching the background panel so the gradient
+             stays inside the frame (the SVG itself has overflow:visible). -->
+        <rect x="50" y="40" width="800" height="560" fill="url(#fl3-bottom-glow)"/>
 
         <!-- ── Monochrome dotted ring band (matches loop-v2 visual language) ── -->
         <circle cx="450" cy="320" r="180" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
@@ -2570,15 +2568,14 @@
             <stop offset="0" stop-color="#93A6F8"/>
             <stop offset="1" stop-color="#FFFFFF"/>
           </linearGradient>
-          <!-- Subtle SIDE GLOWS — radial gradients that soak each half of the ring
-               in a faint color wash without competing with the ring itself. -->
-          <!-- Bottom-up light: single radial glow anchored to bottom-center, replaces
-               the prior left/right side glows. -->
-          <radialGradient id="fl3w-bottom-glow" cx="50%" cy="100%" r="70%">
+          <!-- Bottom-up light: linear gradient that fades from a soft blue at the
+               bottom of the diagram up to transparent at the top. Replaces the
+               prior left/right side glows. -->
+          <linearGradient id="fl3w-bottom-glow" x1="0" y1="1" x2="0" y2="0">
             <stop offset="0%"   stop-color="#4083FF" stop-opacity="0.30"/>
-            <stop offset="40%"  stop-color="#4083FF" stop-opacity="0.10"/>
+            <stop offset="55%"  stop-color="#4083FF" stop-opacity="0.08"/>
             <stop offset="100%" stop-color="#4083FF" stop-opacity="0"/>
-          </radialGradient>
+          </linearGradient>
           <filter id="fl3w-glow-sm" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
           <!-- Per-dot glow: each particle gets a soft halo via blur + merge -->
           <filter id="fl3w-dot-glow" x="-100%" y="-100%" width="300%" height="300%">
@@ -2618,9 +2615,10 @@
           <line x1="855" y1="505" x2="855" y2="595" stroke-dasharray="3 6"/>
         </g>
 
-        <!-- ── Bottom-up light: single soft blue glow rising from beneath the loop,
-             replacing the previous left/right side glows. -->
-        <ellipse cx="450" cy="640" rx="520" ry="380" fill="url(#fl3w-bottom-glow)"/>
+        <!-- ── Bottom-up light: soft blue glow anchored to the bottom-center of the
+             diagram, painted on a rect matching the background panel so the gradient
+             stays inside the frame (the SVG itself has overflow:visible). -->
+        <rect x="50" y="40" width="800" height="560" fill="url(#fl3w-bottom-glow)"/>
 
         <!-- ── Monochrome dotted ring band (matches loop-v2 visual language) ── -->
         <circle cx="450" cy="320" r="180" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.5 5" stroke-linecap="round"/>
