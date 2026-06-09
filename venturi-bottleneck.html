@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Venturi Bottleneck — Amplitude Wave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:#030409;display:flex;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace}
+  :root{--panelW:360px}
+  .wrap{flex:1;display:flex;align-items:center;justify-content:center;height:100vh;min-width:0}
+  .stage{position:relative;width:min(calc(100vw - var(--panelW)),177.78vh);aspect-ratio:16/9;overflow:hidden;background:#030409}
+  canvas,.hud{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hud{pointer-events:none}
+  .ln{stroke:#cdd8ff;fill:none}
+  .dimln{stroke:#5c6fac;fill:none}
+  .ey{font-weight:500;font-size:18px;letter-spacing:5px;fill:#aebeff}
+  .title{font-weight:600;font-size:36px;letter-spacing:8px;fill:#f2f6ff}
+  .sub{font-weight:400;font-size:18px;letter-spacing:5px;fill:#91a3dc}
+  .k{font-weight:400;font-size:14px;letter-spacing:2px;fill:#7686b6}
+  .v{font-weight:400;font-size:15px;letter-spacing:2px;fill:#e9efff}
+  .sm{font-weight:400;font-size:13px;letter-spacing:2px;fill:#8fa2d6}
+  .cap{font-weight:500;font-size:18px;letter-spacing:4px;fill:#e9efff}
+  .hero{font-weight:500;font-size:24px;letter-spacing:4px;fill:#f2f6ff}
+  .ghost{opacity:.48}
+  .reveal{opacity:0;transition:opacity .8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);transform:translateY(15px)}
+  .reveal.active{opacity:1!important;transform:translateY(0)}
+  .rv{font-weight:600;font-size:13px;letter-spacing:3px;fill:#ffffff}
+  .rv-sub{font-weight:500;font-size:12px;letter-spacing:2px;fill:#f1f5f9}
+  .backing{fill:#05070e;opacity:0.75}
+  .veil{fill:#040816;opacity:0.96;stroke:#60a5fa;stroke-width:1.5}
+
+  /* ---- tuning panel ---- */
+  #panel{
+    width:var(--panelW);flex:0 0 var(--panelW);height:100vh;overflow-y:auto;
+    background:#070b16;border-left:1px solid #1b2740;color:#cdd8ff;
+    font-size:12px;letter-spacing:.5px;padding:0 0 40px;
+  }
+  #panel.hidden{display:none}
+  #panel::-webkit-scrollbar{width:9px}
+  #panel::-webkit-scrollbar-thumb{background:#22314f;border-radius:6px}
+  .p-head{position:sticky;top:0;z-index:2;background:#070b16;border-bottom:1px solid #1b2740;padding:12px 14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .p-head h1{font-size:12px;font-weight:600;letter-spacing:2px;color:#aebeff;flex:1 0 100%;margin-bottom:2px}
+  .p-presets{display:flex;gap:6px;width:100%;margin-top:4px}
+  .p-presets select{flex:1;min-width:0;background:#0c1424;border:1px solid #243352;color:#cdd8ff;border-radius:5px;padding:4px 6px;font-family:inherit;font-size:11px}
+  .btn{font-family:inherit;font-size:11px;letter-spacing:1px;cursor:pointer;background:#13203a;color:#cdd8ff;border:1px solid #2a3c61;border-radius:5px;padding:5px 9px}
+  .btn:hover{background:#1b2c4e}
+  .btn.primary{background:#0052F2;border-color:#2f6dff;color:#fff}
+  .btn.primary:hover{background:#2f6dff}
+  .grp{border-bottom:1px solid #121b2e}
+  .grp > summary{list-style:none;cursor:pointer;padding:9px 14px;font-weight:600;letter-spacing:2px;color:#8fa2d6;font-size:11px;user-select:none;display:flex;align-items:center;gap:6px}
+  .grp > summary::-webkit-details-marker{display:none}
+  .grp > summary::before{content:'▸';color:#4a5a82;font-size:9px}
+  .grp[open] > summary::before{content:'▾'}
+  .grp > summary:hover{color:#cdd8ff}
+  .row{display:grid;grid-template-columns:1fr 64px;gap:6px 8px;align-items:center;padding:5px 14px 9px}
+  .row label{grid-column:1 / -1;color:#9fb0e0;font-size:11px;display:flex;justify-content:space-between}
+  .row label .def{color:#475878;font-size:10px}
+  .row input[type=range]{grid-column:1;width:100%;accent-color:#4083FF;height:18px}
+  .row input[type=number]{grid-column:2;width:100%;background:#0c1424;border:1px solid #243352;color:#e9efff;border-radius:4px;padding:3px 4px;font-family:inherit;font-size:11px}
+  .row input[type=color]{grid-column:1 / -1;width:100%;height:26px;background:#0c1424;border:1px solid #243352;border-radius:4px;padding:2px;cursor:pointer}
+  .row.dirty input[type=number],.row.dirty input[type=color]{border-color:#4083FF}
+  /* export sheet */
+  #sheet,#importSheet{position:fixed;inset:0;background:rgba(3,4,9,.72);display:none;align-items:center;justify-content:center;z-index:50}
+  #sheet.open,#importSheet.open{display:flex}
+  #sheet .card,#importSheet .card{width:min(640px,90vw);max-height:80vh;background:#070b16;border:1px solid #2a3c61;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+  #sheet h2,#importSheet h2{font-size:12px;letter-spacing:2px;color:#aebeff}
+  #sheet textarea,#importSheet textarea{flex:1;min-height:300px;background:#0c1424;border:1px solid #243352;color:#e9efff;border-radius:6px;padding:10px;font-family:inherit;font-size:12px;resize:vertical;white-space:pre}
+  #importSheet input[type=file]{color:#cdd8ff;font-family:inherit;font-size:11px}
+  #sheet .actions,#importSheet .actions{display:flex;gap:8px;justify-content:flex-end}
+  /* floating re-open tab when panel hidden */
+  #showTab{position:fixed;top:12px;right:12px;z-index:40;display:none}
+  body.panel-off #showTab{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="stage">
+  <canvas id="c"></canvas>
+  <svg class="hud" viewBox="0 0 1680 945" preserveAspectRatio="xMidYMid meet">
+    <!-- title -->
+    <text class="title" x="80" y="172">
+      <tspan x="80" dy="0">THE DECISION</tspan>
+      <tspan x="80" dy="48">BOTTLENECK</tspan>
+    </text>
+
+    <!-- bottom process axis -->
+    <g class="dimln" stroke-width="1.1" opacity="0.64">
+      <path d="M82 766 H1532"/>
+      <path d="M82 766 v18 M445 766 v18 M807 766 v18 M1170 766 v18"/>
+    </g>
+    <g>
+      <!-- SENSE & DECIDE are the bottleneck -->
+      <text class="sm" x="82" y="748" style="fill:#ff7d78;font-weight:600">SENSE [BOTTLENECK]</text>
+      <text class="sm" x="445" y="748" style="fill:#ff7d78;font-weight:600">DECIDE [BOTTLENECK]</text>
+      <!-- ACT & LEARN are fast -->
+      <text class="sm" x="807" y="748" style="fill:#57e3a4">ACT [FAST]</text>
+      <text class="sm" x="1170" y="748" style="fill:#57e3a4">LEARN [FAST]</text>
+    </g>
+
+    <!-- hover overlays for the stages -->
+    <g id="rv-signals" class="reveal">
+      <rect class="veil" x="42" y="620" width="280" height="106" rx="8"/>
+      <g class="dimln" stroke-width="1" opacity="0.72">
+        <path d="M70 672 H290 M94 646 v52 M122 646 v52 M150 646 v52 M178 646 v52"/>
+        <circle cx="94" cy="662" r="3" fill="#ff7d78"/>
+        <circle cx="150" cy="685" r="3" fill="#ff7d78"/>
+        <circle cx="178" cy="654" r="3" fill="#ff7d78"/>
+      </g>
+      <text class="rv" x="68" y="642" style="fill:#ff7d78">SENSE BOTTLENECK</text>
+      <text class="rv-sub" x="68" y="716">95% OF PRODUCT DATA GOES UNREAD</text>
+    </g>
+
+    <g id="rv-synthesis" class="reveal">
+      <rect class="veil" x="405" y="620" width="280" height="86" rx="8"/>
+      <g class="dimln" stroke-width="1.1" opacity="0.8">
+        <path d="M444 676 C492 644 536 644 584 676"/>
+        <path d="M444 652 C498 686 530 686 584 652"/>
+        <circle cx="509" cy="664" r="5" fill="#ff7d78"/>
+      </g>
+      <text class="rv" x="430" y="644" style="fill:#ff7d78">DECIDE BOTTLENECK</text>
+      <text class="rv-sub" x="430" y="698">DECIDING WHAT TO BUILD IS SLOW</text>
+    </g>
+
+    <g id="rv-experiments" class="reveal">
+      <rect class="veil" x="767" y="620" width="280" height="100" rx="8"/>
+      <g class="dimln" stroke-width="1" opacity="0.74">
+        <path d="M797 686 H927"/>
+        <path d="M797 686 C823 656 857 656 883 686 C899 704 915 708 927 686"/>
+        <path d="M797 664 H843 M881 664 H927"/>
+      </g>
+      <text class="rv" x="795" y="646" style="fill:#57e3a4">ACT IS SOLVED</text>
+      <text class="rv-sub" x="795" y="710">AGENTS WRITE &amp; SHIP CODE INSTANTLY</text>
+    </g>
+
+    <g id="rv-outcomes" class="reveal">
+      <rect class="veil" x="1130" y="620" width="280" height="96" rx="8"/>
+      <g class="dimln" stroke-width="1.2" opacity="0.82">
+        <path d="M1162 692 H1326 M1162 692 V648"/>
+        <path d="M1162 682 C1198 674 1226 688 1256 664 C1278 644 1300 652 1322 636"/>
+        <circle cx="1256" cy="664" r="3" fill="#57e3a4"/>
+        <circle cx="1322" cy="636" r="3" fill="#57e3a4"/>
+      </g>
+      <text class="rv" x="1160" y="642" style="fill:#57e3a4">LEARN IS SOLVED</text>
+      <text class="rv-sub" x="1160" y="710">OUTCOMES AUTOMATICALLY MEASURED</text>
+    </g>
+
+    <circle id="cursorRing" class="reveal" r="24" fill="none" stroke="#7d93ff" stroke-width="1.2"/>
+  </svg>
+</div>
+</div>
+
+<!-- ===== TUNING PANEL ===== -->
+<aside id="panel">
+  <div class="p-head">
+    <h1>VENTURI BOTTLENECK — TUNER</h1>
+    <button class="btn primary" id="exportBtn">Export config</button>
+    <button class="btn" id="importBtn">Import</button>
+    <button class="btn" id="resetBtn">Reset</button>
+    <button class="btn" id="hideBtn">Hide ▸</button>
+    <div class="p-presets">
+      <select id="presetSelect"><option value="">— presets —</option></select>
+      <button class="btn" id="saveBtn">Save</button>
+      <button class="btn" id="delBtn">Delete</button>
+    </div>
+  </div>
+  <div id="controls"></div>
+</aside>
+<button class="btn primary" id="showTab">◂ Tuner</button>
+
+<!-- export sheet -->
+<div id="sheet">
+  <div class="card">
+    <h2>EXPORT CONFIG</h2>
+    <textarea id="sheetText" spellcheck="false"></textarea>
+    <div class="actions">
+      <button class="btn" id="sheetClose">Close</button>
+      <button class="btn" id="sheetDownload">Download .json</button>
+      <button class="btn primary" id="sheetCopy">Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- import sheet -->
+<div id="importSheet">
+  <div class="card">
+    <h2>IMPORT CONFIG</h2>
+    <input type="file" id="importFile" accept="application/json,.json,.txt">
+    <textarea id="importText" spellcheck="false" placeholder="…or paste config JSON here"></textarea>
+    <div class="actions">
+      <button class="btn" id="importClose">Close</button>
+      <button class="btn primary" id="importApply">Apply</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const x = canvas.getContext('2d');
+  const velVal = document.getElementById('vel-val');
+  let W = 0, H = 0, dpr = 1, sc = 1;
+
+  // ============================================================
+  //  CONFIG & SCHEMA
+  // ============================================================
+  const SCHEMA = [
+    { group: 'Simulation', open: true, params: [
+      { k: 'particleCount', label: 'Particle Count', min: 100, max: 400000, step: 100, def: 3700, rebuild: true },
+      { k: 'baseSpeed',     label: 'Base Speed',     min: 0.1, max: 4.0,  step: 0.05, def: 0.5 },
+      { k: 'speedVar',      label: 'Speed Variation',min: 0.0, max: 1.0,  step: 0.05, def: 0.05 },
+      { k: 'particleSize',  label: 'Particle Size',  min: 0.2, max: 5.0,  step: 0.1,  def: 1.8 },
+      { k: 'tailLength',    label: 'Tracer Tail Length',min: 1, max: 40,  step: 1,    def: 23, rebuild: true },
+      { k: 'tailOpacity',   label: 'Tracer Tail Opacity',min: 0.0, max: 1.0, step: 0.05,def: 1.0 },
+    ]},
+    { group: 'Canyon Geometry', open: true, params: [
+      { k: 'hMin',          label: 'Bottleneck Height',min: 10, max: 150,  step: 5,   def: 30 },
+      { k: 'hMax',          label: 'Channel Height',   min: 100,max: 400,  step: 5,   def: 145 },
+      { k: 'canyonAmp',     label: 'Canyon Curve Amp', min: 0,   max: 200,  step: 5,   def: 75 },
+      { k: 'canyonFreq',    label: 'Canyon Curve Freq',min: 0.1, max: 3.0,  step: 0.1,  def: 2.0 },
+      { k: 'rockiness',     label: 'Wall Jaggedness',  min: 0,   max: 50,   step: 1,    def: 7 },
+      { k: 'canyonRoughness',label: 'Path Jaggedness',  min: 0,   max: 30,   step: 1,    def: 12 },
+    ]},
+    { group: 'Turbulence (Decide)', open: true, params: [
+      { k: 'turbAmt',       label: 'Turbulence Amount',min: 0.0, max: 3.0,  step: 0.05, def: 0.45 },
+      { k: 'turbFreq',      label: 'Turbulence Freq',  min: 0.1, max: 5.0,  step: 0.05, def: 2.9 },
+      { k: 'turbSpeed',     label: 'Turbulence Speed', min: 0.1, max: 10.0, step: 0.1,  def: 3.0 },
+      { k: 'turbCenter',    label: 'Turbulence Center',min: 0.1, max: 0.9,  step: 0.01, def: 0.53 },
+      { k: 'turbWidth',     label: 'Turbulence Width', min: 0.05,max: 0.5,  step: 0.01, def: 0.15 },
+    ]},
+    { group: 'Pressure Waves', open: false, params: [
+      { k: 'waveSpeed',     label: 'Wave Speed',       min: 0.5, max: 10.0, step: 0.1,  def: 9.9 },
+      { k: 'waveFreqLeft',  label: 'Left Wave Freq',   min: 0.01,max: 0.2,  step: 0.005,def: 0.125 },
+      { k: 'waveFreqRight', label: 'Right Wave Freq',  min: 0.005,max:0.1,  step: 0.001,def: 0.02 },
+      { k: 'waveGlowAmt',   label: 'Wave Glow Mod',    min: 0.0, max: 1.0,  step: 0.05, def: 0.2 },
+      { k: 'waveSizeAmt',   label: 'Wave Size Mod',    min: 0.0, max: 1.0,  step: 0.05, def: 0.35 },
+    ]},
+    { group: 'Colors', open: true, params: [
+      { k: 'colorLeft',     label: 'Left Particle',    type: 'color', def: '#a31414' },
+      { k: 'colorRight',    label: 'Right Particle',   type: 'color', def: '#224ce2' },
+      { k: 'bgGlowLeft',    label: 'Left Ambient Glow',type: 'color', def: '#bd504c' },
+      { k: 'bgGlowRight',   label: 'Right Ambient Glow',type: 'color', def: '#57e3a4' },
+      { k: 'wallColor',     label: 'Channel Walls',    type: 'color', def: '#0059ff' },
+    ]}
+  ];
+
+  const PARAMS = []; SCHEMA.forEach(g => g.params.forEach(p => PARAMS.push(p)));
+  const DEFAULTS = {}; PARAMS.forEach(p => DEFAULTS[p.k] = p.def);
+
+  const STORE_KEY = 'venturi-bottleneck-tuner';
+  const config = Object.assign({}, DEFAULTS);
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+    for (const k in saved) if (k in config) config[k] = saved[k];
+  } catch (e) {}
+
+  function persist() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(config));
+    } catch (e) {}
+  }
+
+  const BUILTIN_PRESETS = {
+    "Amplitude Default": {
+      particleCount: 3700, baseSpeed: 0.5, speedVar: 0.05, particleSize: 1.8, tailLength: 23, tailOpacity: 1.0,
+      hMin: 30, hMax: 145, canyonAmp: 75, canyonFreq: 2.0, rockiness: 7, canyonRoughness: 12,
+      turbAmt: 0.45, turbFreq: 2.9, turbSpeed: 3.0, turbCenter: 0.53, turbWidth: 0.15,
+      waveSpeed: 9.9, waveFreqLeft: 0.125, waveFreqRight: 0.02, waveGlowAmt: 0.2, waveSizeAmt: 0.35,
+      colorLeft: "#a31414", colorRight: "#224ce2", bgGlowLeft: "#bd504c", bgGlowRight: "#57e3a4", wallColor: "#0059ff"
+    },
+    "High Turbulence": {
+      particleCount: 2200, baseSpeed: 1.4, speedVar: 0.6, particleSize: 1.5, tailLength: 20, tailOpacity: 0.5,
+      hMin: 35, hMax: 240, canyonAmp: 120, canyonFreq: 1.5, rockiness: 25, canyonRoughness: 12,
+      turbAmt: 2.2, turbFreq: 2.5, turbSpeed: 5.0, turbCenter: 0.42, turbWidth: 0.18,
+      waveSpeed: 5.5, waveFreqLeft: 0.12, waveFreqRight: 0.015, waveGlowAmt: 0.6, waveSizeAmt: 0.5,
+      colorLeft: "#ff8080", colorRight: "#2050ff", bgGlowLeft: "#ff5050", bgGlowRight: "#30ffaa", wallColor: "#ffffff"
+    },
+    "Rapid Flow": {
+      particleCount: 2500, baseSpeed: 2.2, speedVar: 0.3, particleSize: 1.1, tailLength: 25, tailOpacity: 0.3,
+      hMin: 50, hMax: 200, canyonAmp: 60, canyonFreq: 1.0, rockiness: 10, canyonRoughness: 5,
+      turbAmt: 0.5, turbFreq: 1.0, turbSpeed: 2.0, turbCenter: 0.35, turbWidth: 0.12,
+      waveSpeed: 7.0, waveFreqLeft: 0.15, waveFreqRight: 0.04, waveGlowAmt: 0.3, waveSizeAmt: 0.2,
+      colorLeft: "#ffffff", colorRight: "#00ffff", bgGlowLeft: "#ff9999", bgGlowRight: "#00ffcc", wallColor: "#80c0ff"
+    },
+    "Calm Stream": {
+      particleCount: 1000, baseSpeed: 0.6, speedVar: 0.2, particleSize: 1.6, tailLength: 10, tailOpacity: 0.6,
+      hMin: 80, hMax: 250, canyonAmp: 40, canyonFreq: 0.8, rockiness: 5, canyonRoughness: 2,
+      turbAmt: 0.2, turbFreq: 0.8, turbSpeed: 1.0, turbCenter: 0.4, turbWidth: 0.1,
+      waveSpeed: 2.0, waveFreqLeft: 0.04, waveFreqRight: 0.01, waveGlowAmt: 0.2, waveSizeAmt: 0.1,
+      colorLeft: "#e0f0ff", colorRight: "#4080ff", bgGlowLeft: "#ffb0b0", bgGlowRight: "#a0ffd0", wallColor: "#a0b0d0"
+    },
+    "Red Alert": {
+      particleCount: 1800, baseSpeed: 1.5, speedVar: 0.5, particleSize: 1.4, tailLength: 18, tailOpacity: 0.4,
+      hMin: 40, hMax: 220, canyonAmp: 90, canyonFreq: 1.3, rockiness: 20, canyonRoughness: 10,
+      turbAmt: 1.5, turbFreq: 2.0, turbSpeed: 4.0, turbCenter: 0.38, turbWidth: 0.16,
+      waveSpeed: 5.0, waveFreqLeft: 0.1, waveFreqRight: 0.03, waveGlowAmt: 0.5, waveSizeAmt: 0.4,
+      colorLeft: "#ff3333", colorRight: "#ffaa00", bgGlowLeft: "#ff0000", bgGlowRight: "#ffaa00", wallColor: "#ff8888"
+    }
+  };
+
+  // Helper: Hex to RGB
+  function hexToRgb(hex) {
+    const h = hex.replace('#', '');
+    return {
+      r: parseInt(h.substr(0, 2), 16),
+      g: parseInt(h.substr(2, 2), 16),
+      b: parseInt(h.substr(4, 2), 16)
+    };
+  }
+
+  function resize(){
+    const rect = canvas.parentElement.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = rect.width;
+    H = rect.height;
+    canvas.width = Math.max(1, (W * dpr) | 0);
+    canvas.height = Math.max(1, (H * dpr) | 0);
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sc = W / 1680;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // --- PHYSICS SIMULATION ---
+  const X_START = 82;
+  const X_END = 1532;
+
+  function getChannelCenter(vx) {
+    const t = (vx - X_START) / (X_END - X_START);
+    const curve = Math.sin(t * Math.PI * config.canyonFreq) * config.canyonAmp;
+    const noise = (Math.sin(vx * 0.03) * 0.5 + Math.sin(vx * 0.09) * 0.3 + Math.sin(vx * 0.25) * 0.2) * config.canyonRoughness;
+    return 450 + curve + noise;
+  }
+
+  function getChannelHeight(vx) {
+    const t = (vx - X_START) / (X_END - X_START);
+    const hMin = config.hMin;
+    const hMax = config.hMax;
+    const smooth = Math.min(1, Math.max(0, (t - 0.35) / 0.35));
+    const ease = smooth * smooth * (3 - 2 * smooth);
+    let h = hMin + (hMax - hMin) * ease;
+    const noise = (Math.sin(vx * 0.05) * 0.4 + Math.sin(vx * 0.12) * 0.25 + Math.sin(vx * 0.3) * 0.1) * config.rockiness;
+    return h + noise;
+  }
+
+  // Particle class representing pressure wave tracers
+  class Particle {
+    constructor() {
+      this.reset(true);
+    }
+
+    reset(randomStart) {
+      this.x = randomStart ? X_START + Math.random() * (X_END - X_START) : X_START;
+      this.ny = Math.random() - 0.5;
+      this.speedOffset = (1.0 - config.speedVar * 0.5) + Math.random() * config.speedVar;
+      this.phase = Math.random() * Math.PI * 2;
+      this.history = [];
+      
+      const h = getChannelHeight(this.x);
+      const yc = getChannelCenter(this.x);
+      this.y = yc + this.ny * h;
+    }
+
+    update(t) {
+      this.history.push({ x: this.x, y: this.y });
+      if (this.history.length > config.tailLength) {
+        this.history.shift();
+      }
+
+      const h = getChannelHeight(this.x);
+      // Continuity equation: speed is inversely proportional to channel height
+      const localSpeed = config.baseSpeed * (config.hMax / h) * this.speedOffset;
+      
+      this.x += localSpeed;
+
+      if (this.x >= X_END) {
+        this.reset(false);
+        return;
+      }
+
+      // Add turbulence in the bottleneck (Sense & Decide)
+      const tFactor = (this.x - X_START) / (X_END - X_START);
+      // Gaussian envelope centered at turbCenter with width turbWidth
+      const turbEnvelope = Math.exp(-Math.pow((tFactor - config.turbCenter) / config.turbWidth, 2));
+
+      // Multi-frequency time-varying spatial noise to create organic fluid eddies
+      const noiseX = this.x * 0.05 * config.turbFreq;
+      const noiseY = this.ny * 5.0 * config.turbFreq;
+      const noiseT = t * 10.0 * config.turbSpeed;
+
+      const n1 = Math.sin(noiseX - noiseT + noiseY);
+      const n2 = Math.sin(noiseX * 2.2 + noiseT * 1.5 - noiseY * 1.8);
+      const n3 = Math.cos(noiseX * 0.5 - noiseT * 0.4);
+      const eddy = (n1 * 0.5 + n2 * 0.35 + n3 * 0.15) * turbEnvelope * config.turbAmt;
+
+      // Keep particles inside the boundaries smoothly
+      const limit = 0.48;
+      let effectiveNy = this.ny + eddy * 0.4;
+      if (effectiveNy > limit) effectiveNy = limit;
+      if (effectiveNy < -limit) effectiveNy = -limit;
+      
+      const yc = getChannelCenter(this.x);
+      this.y = yc + effectiveNy * h;
+    }
+
+    draw(t) {
+      const h = getChannelHeight(this.x);
+      const tFactor = Math.max(0, 1 - (this.x - X_START) / (X_END - X_START) * 1.8); // 1 at start, 0 at end
+
+      // --- PHYSICAL PRESSURE WAVE MODULATION ---
+      const k = mix(config.waveFreqLeft, config.waveFreqRight, 1 - tFactor); // Wavenumber varies with position
+      const wavePhase = (this.x * k) - t * config.waveSpeed;
+      const waveGlow = 0.5 + 0.5 * Math.sin(wavePhase);
+
+      // Color interpolation
+      const cLeft = hexToRgb(config.colorLeft);
+      const cRight = hexToRgb(config.colorRight);
+      const r = Math.floor(mix(cRight.r, cLeft.r, tFactor));
+      const g = Math.floor(mix(cRight.g, cLeft.g, tFactor));
+      const b = Math.floor(mix(cRight.b, cLeft.b, tFactor));
+
+      // Modulate opacity by the pressure wave phase to show wave crests
+      const baseAlpha = mix(0.15, 0.75, tFactor) * ((1 - config.waveGlowAmt) + config.waveGlowAmt * waveGlow);
+      const size = config.particleSize * mix(1.6, 1.0, tFactor) * ((1 - config.waveSizeAmt) + config.waveSizeAmt * waveGlow) * sc;
+
+      // Draw tracer tail if length > 1, otherwise draw a simple point (huge performance boost for high counts)
+      if (config.tailLength > 1 && this.history.length >= 2) {
+        x.beginPath();
+        x.moveTo(this.history[0].x * sc, this.history[0].y * sc);
+        for (let i = 1; i < this.history.length; i++) {
+          x.lineTo(this.history[i].x * sc, this.history[i].y * sc);
+        }
+        x.lineTo(this.x * sc, this.y * sc);
+
+        x.strokeStyle = `rgba(${r}, ${g}, ${b}, ${baseAlpha * config.tailOpacity})`;
+        x.lineWidth = size;
+        x.lineCap = 'round';
+        x.lineJoin = 'round';
+        x.stroke();
+      } else {
+        x.fillStyle = `rgba(${r}, ${g}, ${b}, ${baseAlpha})`;
+        x.beginPath();
+        x.arc(this.x * sc, this.y * sc, size, 0, Math.PI * 2);
+        x.fill();
+      }
+    }
+  }
+
+  function mix(a, b, t) { return a + (b - a) * t; }
+
+  // Initialize particle system
+  let particles = [];
+  function buildParticles() {
+    particles = [];
+    for (let i = 0; i < config.particleCount; i++) {
+      particles.push(new Particle());
+    }
+  }
+  buildParticles();
+
+  // --- HOVER INTERACTIVITY ---
+  const stage = document.querySelector('.stage');
+  const ring = document.getElementById('cursorRing');
+  const zones = [
+    { el: document.getElementById('rv-signals'), cx: 147, cy: 673, r: 180 },
+    { el: document.getElementById('rv-synthesis'), cx: 445, cy: 673, r: 180 },
+    { el: document.getElementById('rv-experiments'), cx: 807, cy: 670, r: 180 },
+    { el: document.getElementById('rv-outcomes'), cx: 1170, cy: 668, r: 180 }
+  ];
+
+  let mouseX = -1000, mouseY = -1000;
+  let hoverActive = false;
+
+  stage.addEventListener('mousemove', (e) => {
+    const rect = stage.getBoundingClientRect();
+    const fx = (e.clientX - rect.left) / rect.width;
+    const fy = (e.clientY - rect.top) / rect.height;
+    const vbX = fx * 1680;
+    const vbY = fy * 945;
+    mouseX = vbX;
+    mouseY = vbY;
+    hoverActive = true;
+
+    if (ring) {
+      ring.setAttribute('cx', vbX.toFixed(1));
+      ring.setAttribute('cy', vbY.toFixed(1));
+      ring.classList.add('active');
+    }
+
+    for (const z of zones) {
+      if (!z.el) continue;
+      const d = Math.hypot(vbX - z.cx, vbY - z.cy);
+      if (d < z.r) {
+        z.el.classList.add('active');
+      } else {
+        z.el.classList.remove('active');
+      }
+    }
+  });
+
+  stage.addEventListener('mouseleave', () => {
+    hoverActive = false;
+    if (ring) ring.classList.remove('active');
+    for (const z of zones) {
+      if (z.el) z.el.classList.remove('active');
+    }
+  });
+
+  // --- MAIN RENDER LOOP ---
+  function drawFrame(now) {
+    const t = now * 0.001;
+
+    // Clear background
+    x.fillStyle = '#030409';
+    x.fillRect(0, 0, W, H);
+
+    // Draw ambient glow behind the bottleneck
+    const glowColor = hexToRgb(config.bgGlowLeft);
+    const glow = x.createRadialGradient(
+      W * 0.25, H * 0.48, 0,
+      W * 0.25, H * 0.48, Math.max(W, H) * 0.45
+    );
+    glow.addColorStop(0, `rgba(${glowColor.r}, ${glowColor.g}, ${glowColor.b}, 0.08)`);
+    glow.addColorStop(1, `rgba(${glowColor.r}, ${glowColor.g}, ${glowColor.b}, 0)`);
+    x.fillStyle = glow;
+    x.fillRect(0, 0, W, H);
+
+    // Draw ambient glow behind the fast path
+    const fastGlowColor = hexToRgb(config.bgGlowRight);
+    const fastGlow = x.createRadialGradient(
+      W * 0.75, H * 0.48, 0,
+      W * 0.75, H * 0.48, Math.max(W, H) * 0.45
+    );
+    fastGlow.addColorStop(0, `rgba(${fastGlowColor.r}, ${fastGlowColor.g}, ${fastGlowColor.b}, 0.05)`);
+    fastGlow.addColorStop(1, `rgba(${fastGlowColor.r}, ${fastGlowColor.g}, ${fastGlowColor.b}, 0)`);
+    x.fillStyle = fastGlow;
+    x.fillRect(0, 0, W, H);
+
+    // Draw channel boundaries (top and bottom walls)
+    const wallCol = hexToRgb(config.wallColor);
+    x.strokeStyle = `rgba(${wallCol.r}, ${wallCol.g}, ${wallCol.b}, 0.12)`;
+    x.lineWidth = 1.5 * sc;
+    x.beginPath();
+    // Top wall
+    for (let vx = X_START; vx <= X_END; vx += 4) {
+      const h = getChannelHeight(vx);
+      const yc = getChannelCenter(vx);
+      const vy = yc - h * 0.5;
+      if (vx === X_START) x.moveTo(vx * sc, vy * sc);
+      else x.lineTo(vx * sc, vy * sc);
+    }
+    x.stroke();
+
+    // Bottom wall
+    x.beginPath();
+    for (let vx = X_START; vx <= X_END; vx += 4) {
+      const h = getChannelHeight(vx);
+      const yc = getChannelCenter(vx);
+      const vy = yc + h * 0.5;
+      if (vx === X_START) x.moveTo(vx * sc, vy * sc);
+      else x.lineTo(vx * sc, vy * sc);
+    }
+    x.stroke();
+
+    // Draw pressure wave wavefronts (background guide lines)
+    x.strokeStyle = `rgba(${wallCol.r}, ${wallCol.g}, ${wallCol.b}, 0.03)`;
+    x.lineWidth = 1 * sc;
+    const waveCount = 14;
+    for (let i = 0; i < waveCount; i++) {
+      const wavePhase = fract((i / waveCount) + t * 0.08);
+      const waveX = mix(X_START, X_END, wavePhase);
+      const h = getChannelHeight(waveX);
+      const yc = getChannelCenter(waveX);
+      x.beginPath();
+      x.moveTo(waveX * sc, (yc - h * 0.5) * sc);
+      x.lineTo(waveX * sc, (yc + h * 0.5) * sc);
+      x.stroke();
+    }
+
+    // Update and draw particles with additive blending for brightness and glow
+    x.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].update(t);
+      particles[i].draw(t);
+    }
+    x.globalCompositeOperation = 'source-over';
+
+    // Draw mouse attractor glow if active
+    if (hoverActive) {
+      const mouseGlow = x.createRadialGradient(
+        mouseX * sc, mouseY * sc, 0,
+        mouseX * sc, mouseY * sc, 120 * sc
+      );
+      mouseGlow.addColorStop(0, 'rgba(125, 147, 255, 0.08)');
+      mouseGlow.addColorStop(1, 'rgba(125, 147, 255, 0)');
+      x.fillStyle = mouseGlow;
+      x.beginPath();
+      x.arc(mouseX * sc, mouseY * sc, 120 * sc, 0, Math.PI * 2);
+      x.fill();
+    }
+
+    // Update live velocity readout based on time
+    if (velVal) {
+      // SENSE velocity fluctuates slightly around 4.0x
+      const v = 4.0 + 0.15 * Math.sin(t * 2.5);
+      velVal.textContent = v.toFixed(2) + 'x (SENSE)';
+    }
+
+    requestAnimationFrame(drawFrame);
+  }
+
+  function fract(v) { return v - Math.floor(v); }
+
+  requestAnimationFrame(drawFrame);
+
+  // ============================================================
+  //  PANEL UI
+  // ============================================================
+  const controls = document.getElementById('controls');
+  const rowRefs = {};
+
+  function fmt(v) {
+    return String(Math.round(v * 1000) / 1000);
+  }
+
+  let rebuildTimer = null;
+  function scheduleRebuild() {
+    clearTimeout(rebuildTimer);
+    rebuildTimer = setTimeout(buildParticles, 200);
+  }
+
+  SCHEMA.forEach(group => {
+    const det = document.createElement('details');
+    det.className = 'grp';
+    if (group.open) det.open = true;
+    const sum = document.createElement('summary');
+    sum.textContent = group.group;
+    det.appendChild(sum);
+
+    group.params.forEach(p => {
+      const row = document.createElement('div');
+      row.className = 'row';
+      const label = document.createElement('label');
+
+      if (p.type === 'color') {
+        label.innerHTML = '<span>' + p.label + '</span><span class="def">def ' + p.def + '</span>';
+        const col = document.createElement('input');
+        col.type = 'color';
+        col.value = config[p.k];
+        function markDirty() {
+          row.classList.toggle('dirty', config[p.k].toLowerCase() !== p.def.toLowerCase());
+        }
+        col.addEventListener('input', () => {
+          config[p.k] = col.value;
+          markDirty();
+          persist();
+        });
+        row.appendChild(label);
+        row.appendChild(col);
+        rowRefs[p.k] = { col, row, p, markDirty };
+        markDirty();
+      } else {
+        label.innerHTML = '<span>' + p.label + '</span><span class="def">def ' + fmt(p.def) + '</span>';
+        const range = document.createElement('input');
+        range.type = 'range';
+        range.min = p.min; range.max = p.max; range.step = p.step;
+        range.value = config[p.k];
+        const num = document.createElement('input');
+        num.type = 'number';
+        num.min = p.min; num.max = p.max; num.step = p.step;
+        num.value = config[p.k];
+
+        function markDirty() {
+          row.classList.toggle('dirty', Math.abs(config[p.k] - p.def) > 1e-9);
+        }
+        function apply(v, fromRange) {
+          v = parseFloat(v);
+          if (isNaN(v)) return;
+          config[p.k] = v;
+          if (fromRange) num.value = v; else range.value = v;
+          markDirty();
+          persist();
+          if (p.rebuild) scheduleRebuild();
+        }
+        range.addEventListener('input', () => apply(range.value, true));
+        num.addEventListener('input', () => apply(num.value, false));
+        row.appendChild(label);
+        row.appendChild(range);
+        row.appendChild(num);
+        rowRefs[p.k] = { range, num, row, p, markDirty };
+        markDirty();
+      }
+      det.appendChild(row);
+    });
+    controls.appendChild(det);
+  });
+
+  function syncInputs() {
+    for (const k in rowRefs) {
+      const rf = rowRefs[k];
+      if (rf.p.type === 'color') {
+        rf.col.value = config[k];
+      } else {
+        rf.range.value = config[k];
+        rf.num.value = config[k];
+      }
+      rf.markDirty();
+    }
+  }
+
+  // ---- panel buttons ----
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    Object.assign(config, DEFAULTS);
+    persist();
+    syncInputs();
+    buildParticles();
+  });
+
+  // ---- named presets ----
+  const PRESET_KEY = STORE_KEY + '-presets';
+  const presetSelect = document.getElementById('presetSelect');
+
+  function loadPresets() {
+    try {
+      const custom = JSON.parse(localStorage.getItem(PRESET_KEY) || '{}');
+      return Object.assign({}, BUILTIN_PRESETS, custom);
+    } catch (e) {
+      return BUILTIN_PRESETS;
+    }
+  }
+
+  function storePresets(o) {
+    try {
+      // Filter out built-ins before storing custom presets
+      const custom = {};
+      for (const k in o) {
+        if (!(k in BUILTIN_PRESETS)) custom[k] = o[k];
+      }
+      localStorage.setItem(PRESET_KEY, JSON.stringify(custom));
+    } catch (e) {}
+  }
+
+  function refreshPresets(selected) {
+    const all = loadPresets();
+    presetSelect.innerHTML = '<option value="">— presets —</option>';
+    Object.keys(all).sort().forEach(name => {
+      const o = document.createElement('option');
+      o.value = name; o.textContent = name;
+      if (name === selected) o.selected = true;
+      presetSelect.appendChild(o);
+    });
+  }
+
+  function snapshot() {
+    const s = {};
+    PARAMS.forEach(p => s[p.k] = config[p.k]);
+    return s;
+  }
+
+  function applyConfig(obj) {
+    for (const k in obj) if (k in config) config[k] = obj[k];
+    persist();
+    syncInputs();
+    buildParticles();
+  }
+
+  presetSelect.addEventListener('change', () => {
+    const p = loadPresets()[presetSelect.value];
+    if (p) applyConfig(p);
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const name = (window.prompt('Save preset as:', presetSelect.value || '') || '').trim();
+    if (!name) return;
+    const all = loadPresets();
+    all[name] = snapshot();
+    storePresets(all);
+    refreshPresets(name);
+  });
+
+  document.getElementById('delBtn').addEventListener('click', () => {
+    const name = presetSelect.value;
+    if (!name) return;
+    if (name in BUILTIN_PRESETS) {
+      window.alert('Cannot delete built-in preset.');
+      return;
+    }
+    if (!window.confirm('Delete preset "' + name + '"?')) return;
+    const all = loadPresets();
+    delete all[name];
+    storePresets(all);
+    refreshPresets('');
+  });
+
+  refreshPresets('');
+
+  const root = document.documentElement;
+  function setPanel(on) {
+    document.getElementById('panel').classList.toggle('hidden', !on);
+    document.body.classList.toggle('panel-off', !on);
+    root.style.setProperty('--panelW', on ? '360px' : '0px');
+    requestAnimationFrame(resize);
+  }
+  document.getElementById('hideBtn').addEventListener('click', () => setPanel(false));
+  document.getElementById('showTab').addEventListener('click', () => setPanel(true));
+
+  // ---- export sheet ----
+  const sheet = document.getElementById('sheet');
+  const sheetText = document.getElementById('sheetText');
+
+  function buildExport() {
+    const out = {};
+    PARAMS.forEach(p => out[p.k] = config[p.k]);
+    return JSON.stringify(out, null, 2);
+  }
+
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    sheetText.value = buildExport();
+    sheet.classList.add('open');
+    sheetText.focus();
+    sheetText.select();
+  });
+
+  document.getElementById('sheetClose').addEventListener('click', () => sheet.classList.remove('open'));
+  sheet.addEventListener('click', (e) => { if (e.target === sheet) sheet.classList.remove('open'); });
+
+  document.getElementById('sheetDownload').addEventListener('click', () => {
+    const blob = new Blob([sheetText.value], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'venturi-bottleneck-' + (presetSelect.value || 'config') + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  document.getElementById('sheetCopy').addEventListener('click', async () => {
+    const btn = document.getElementById('sheetCopy');
+    try {
+      await navigator.clipboard.writeText(sheetText.value);
+      btn.textContent = 'Copied ✓';
+    } catch (e) {
+      sheetText.select(); document.execCommand('copy');
+      btn.textContent = 'Copied ✓';
+    }
+    setTimeout(() => btn.textContent = 'Copy to clipboard', 1400);
+  });
+
+  // ---- import ----
+  const importSheet = document.getElementById('importSheet');
+  const importText = document.getElementById('importText');
+  const importFile = document.getElementById('importFile');
+
+  function importConfig(obj) {
+    const clean = {};
+    let n = 0;
+    PARAMS.forEach(p => {
+      if (!(p.k in obj)) return;
+      let v = obj[p.k];
+      if (p.type === 'color') {
+        if (typeof v === 'string') { clean[p.k] = v; n++; }
+      } else {
+        v = parseFloat(v);
+        if (!isNaN(v)) {
+          if (typeof p.min === 'number') v = Math.max(p.min, Math.min(p.max, v));
+          clean[p.k] = v; n++;
+        }
+      }
+    });
+    applyConfig(clean);
+    return n;
+  }
+
+  document.getElementById('importBtn').addEventListener('click', () => {
+    importText.value = '';
+    importSheet.classList.add('open');
+    importText.focus();
+  });
+
+  document.getElementById('importClose').addEventListener('click', () => importSheet.classList.remove('open'));
+  importSheet.addEventListener('click', (e) => { if (e.target === importSheet) importSheet.classList.remove('open'); });
+
+  importFile.addEventListener('change', () => {
+    const f = importFile.files && importFile.files[0];
+    if (!f) return;
+    const fr = new FileReader();
+    fr.onload = () => { importText.value = fr.result; };
+    fr.readAsText(f);
+  });
+
+  document.getElementById('importApply').addEventListener('click', () => {
+    const btn = document.getElementById('importApply');
+    let data;
+    try { data = JSON.parse(importText.value); }
+    catch (e) { btn.textContent = 'Invalid JSON'; setTimeout(() => btn.textContent = 'Apply', 1400); return; }
+    if (!data || typeof data !== 'object') { btn.textContent = 'Not an object'; setTimeout(() => btn.textContent = 'Apply', 1400); return; }
+    const n = importConfig(data);
+    btn.textContent = 'Applied ' + n + ' ✓';
+    setTimeout(() => { btn.textContent = 'Apply'; importSheet.classList.remove('open'); importFile.value = ''; }, 800);
+  });
+
+})();
+</script>
+</body>
+</html>
