@@ -1022,7 +1022,7 @@
      left edge) and lands on the "A". Negative margin-top pulls the top ~290px up so
      the crosshair overlaps the wave diagram above. Hidden where the 760 block can't
      fit (alignment would break). */
-  .wave-bridge { display: flex; justify-content: center; margin-top: -290px; padding: 0; position: relative; z-index: 2; pointer-events: none; }
+  .wave-bridge { display: flex; justify-content: center; margin-top: -100px; padding: 0; position: relative; z-index: 2; pointer-events: none; }
   @media (max-width: 860px){ .wave-bridge { display: none; } }
 
   /* ── HOVER CARDS (inline term tooltips) ── */
@@ -2492,32 +2492,36 @@
      Geometry: viewBox 0 0 48 240; line runs y 31→207; clip animates
      height 0→240 over 1.5s eased; foot fades in at t=1.5s.          -->
 <div class="wave-bridge" aria-hidden="true">
-  <svg viewBox="0 0 48 240" width="48" height="240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- viewBox 760 wide = the text block; x380 = centre (over the wave), x16 = text
+       left edge (the "A"). TUNING: jog y=106 (halfway), land y=172; overlap via the
+       -100 margin-top in CSS. (~⅓ the previous height.) -->
+  <svg viewBox="0 0 760 188" width="760" height="188" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <clipPath id="wb-clip">
-        <rect id="wb-clip-rect" x="0" y="0" width="48" height="0">
-          <animate id="wb-anim" attributeName="height" from="0" to="240" dur="1.5s"
+        <rect id="wb-clip-rect" x="0" y="0" width="760" height="0">
+          <animate id="wb-anim" attributeName="height" from="0" to="188" dur="1.2s"
                    calcMode="spline" keySplines="0.4 0 0.2 1" keyTimes="0;1"
                    fill="freeze" begin="indefinite"/>
         </rect>
       </clipPath>
     </defs>
-    <!-- top flourish: outer dashed ring + inner ring + center dot + cardinal ticks -->
-    <circle cx="24" cy="18" r="10.5" stroke="#4083FF" stroke-width="1" stroke-dasharray="2 3.2" opacity=".3"/>
-    <circle cx="24" cy="18" r="5"    stroke="#4083FF" stroke-width="1.3" opacity=".6"/>
-    <circle cx="24" cy="18" r="2"    fill="#4083FF" opacity=".75"/>
-    <path d="M24 5 V0 M24 31 V37 M11 18 H5 M37 18 H43" stroke="#4083FF" stroke-width="1" stroke-linecap="round" opacity=".2"/>
-    <!-- dotted connector — clip-path reveals top→bottom on scroll -->
-    <line x1="24" y1="31" x2="24" y2="207" stroke="#4083FF" stroke-width="1.3"
-          stroke-dasharray="3 6" opacity=".45" clip-path="url(#wb-clip)"/>
-    <!-- bottom flourish: bracket corners + node; fades in when line arrives -->
+    <!-- top flourish: crosshair node centred over the wave -->
+    <circle cx="380" cy="24" r="10.5" stroke="#4083FF" stroke-width="1" stroke-dasharray="2 3.2" opacity=".3"/>
+    <circle cx="380" cy="24" r="5"    stroke="#4083FF" stroke-width="1.3" opacity=".6"/>
+    <circle cx="380" cy="24" r="2"    fill="#4083FF" opacity=".75"/>
+    <path d="M380 11 V5 M380 37 V43 M367 24 H361 M393 24 H399" stroke="#4083FF" stroke-width="1" stroke-linecap="round" opacity=".2"/>
+    <!-- dotted connector: down (centred) → left to the text edge → down to the "A".
+         clip-path reveals it top→bottom on scroll. -->
+    <path d="M380 40 V106 H16 V172" stroke="#4083FF" stroke-width="1.3"
+          stroke-dasharray="3 6" stroke-linecap="round" opacity=".45" clip-path="url(#wb-clip)"/>
+    <!-- bottom flourish: bracket corners + node, landing on the "A"; fades in last -->
     <g id="wb-foot" opacity="0">
       <animate id="wb-foot-anim" attributeName="opacity" from="0" to="1"
                dur="0.4s" begin="indefinite" fill="freeze"/>
-      <path d="M16 211 H8 V227"  stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
-      <path d="M32 211 H40 V227" stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
-      <circle cx="24" cy="228" r="4"   stroke="#4083FF" stroke-width="1.2" opacity=".6"/>
-      <circle cx="24" cy="228" r="1.8" fill="#4083FF" opacity=".7"/>
+      <path d="M8 156 H0 V172"   stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+      <path d="M24 156 H32 V172" stroke="#4083FF" stroke-width="1" stroke-linecap="square" opacity=".38"/>
+      <circle cx="16" cy="173" r="4"   stroke="#4083FF" stroke-width="1.2" opacity=".6"/>
+      <circle cx="16" cy="173" r="1.8" fill="#4083FF" opacity=".7"/>
     </g>
   </svg>
 </div>
@@ -2527,7 +2531,7 @@
   var anim     = document.getElementById('wb-anim');
   var footAnim = document.getElementById('wb-foot-anim');
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){
-    var r = document.getElementById('wb-clip-rect'); if(r) r.setAttribute('height','240');
+    var r = document.getElementById('wb-clip-rect'); if(r) r.setAttribute('height','188');
     var f = document.getElementById('wb-foot');      if(f) f.setAttribute('opacity','1');
     return;
   }
@@ -2535,7 +2539,7 @@
     es.forEach(function(e){
       if(!e.isIntersecting) return;
       if(anim) anim.beginElement();
-      setTimeout(function(){ if(footAnim) footAnim.beginElement(); }, 1500);
+      setTimeout(function(){ if(footAnim) footAnim.beginElement(); }, 1650);
       obs.unobserve(e.target);
     });
   }, { threshold: 0.3 }).observe(bridge);
