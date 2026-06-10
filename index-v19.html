@@ -4,10 +4,10 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0C53 20 80 47 100 50 80 53 53 80 50 100 47 80 20 53 0 50 20 47 47 20 50 0Z' fill='%231e61f0'/></svg>">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Amplitude Wave · v19 · enabling self-improving products | Amplitude</title>
+<title>Amplitude Wave: Enabling self-improving products</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -28,6 +28,21 @@
     --dim2:   rgba(213,224,255,.42);
     --mono:   'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans:   'Poppins', Helvetica, system-ui, sans-serif;
+    /* ── type scale (v19) — paired with --sans / --mono above ──────────
+       Editorial headings (Poppins) stay responsive via clamp(); utility
+       sizes are fixed. Diagram / HUD / SVG-label sizes are intentionally
+       NOT on this scale — they're hand-tuned per illustration. */
+    --fs-display: clamp(44px, 5.8vw, 92px); /* hero headline */
+    --fs-h1:      clamp(34px, 4.4vw, 60px); /* section titles, CTA, big stat */
+    --fs-h2:      clamp(28px, 3.4vw, 44px); /* sub-headings */
+    --fs-h3:      clamp(22px, 2.4vw, 30px); /* minor heads, dagger, proof */
+    --fs-lead:    20px;                     /* lead paragraphs */
+    --fs-body:    17px;                     /* body copy */
+    --fs-small:   15px;                     /* secondary text, inputs, links */
+    --fs-label:   13px;                     /* nav, buttons, mono labels */
+    --fs-caption: 12px;                     /* eyebrows, captions */
+    --fs-micro:   11px;                     /* small mono UI */
+    --fs-nano:    10px;                     /* tiny labels */
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -76,16 +91,16 @@
   .nav-in { max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
   .brand { display: inline-flex; align-items: center; line-height: 0; }
   .brand-mark { width: 26px; height: 26px; display: block; fill: var(--white); }
-  .nav-btn { font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--white); text-decoration: none; padding: 11px 22px; border: 1px solid var(--lines); border-radius: 999px; transition: border-color .2s, color .2s; white-space: nowrap; }
+  .nav-btn { font-family: var(--sans); font-size: var(--fs-label); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--white); text-decoration: none; padding: 11px 22px; border: 1px solid var(--lines); border-radius: 999px; transition: border-color .2s, color .2s; white-space: nowrap; }
   .nav-btn:hover { border-color: var(--blue-d); color: var(--blue-d); }
 
   /* ── SHARED ─────────────────────────── */
   .sec { padding: 120px 32px; max-width: 1320px; margin: 0 auto; }
   @media (max-width: 720px) { .sec { padding: 80px 22px; } .nav-in { padding: 14px 22px; } }
 
-  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--blue-d); display: inline-flex; align-items: center; gap: 14px; }
+  .eyebrow { font-family: var(--mono); font-size: var(--fs-caption); letter-spacing: .22em; text-transform: uppercase; color: var(--blue-d); display: inline-flex; align-items: center; gap: 14px; }
 
-  .sec-title { font-size: clamp(36px,4.8vw,64px); font-weight:400; letter-spacing: -0.035em; line-height: 1; margin: 16px 0 0; }
+  .sec-title { font-size: var(--fs-h1); font-weight:400; letter-spacing: -0.035em; line-height: 1; margin: 16px 0 0; }
   .sec-title .a { color: var(--blue-d); font-style:normal; font-weight:400; }
 
   /* ── HERO ───────────────────────────── */
@@ -175,11 +190,11 @@
   .pl-head { max-width: 760px; margin: 0 auto 80px; text-align: left; }
   .pl-head .loop-pill { display: inline-flex; margin: 0 auto 24px; }
   .pl-head h3 {
-    font-family: var(--sans); font-size: clamp(32px,4.4vw,52px);
+    font-family: var(--sans); font-size: var(--fs-h1);
     font-weight:400; line-height: 1.05; letter-spacing: -0.025em;
     color: var(--white); margin: 0 0 24px;
   }
-  .pl-head p { font-size: 17px; line-height: 1.65; color: var(--dim); margin: 0 0 16px; }
+  .pl-head p { font-size: var(--fs-body); line-height: 1.65; color: var(--dim); margin: 0 0 16px; }
   .pl-head p:last-child { margin-bottom: 0; }
   .pl-head p strong { color: var(--white); font-weight: 500; }
   .product-loop { width: 100%; max-width: 1120px; margin: 0 auto; }
@@ -193,7 +208,7 @@
     .closer { padding: 64px 20px 72px; }
     .funnel { padding: 0 6px; }
     .hero { padding: 0 22px; }
-    .manifesto-head p, .manifesto-body p { font-size: 17px; }
+    .manifesto-head p, .manifesto-body p { font-size: var(--fs-body); }
     /* the centered radial glow is 720px wide → clamp it so it can't push the
        document past 100vw and reintroduce horizontal scroll on phones */
     .closer::before { width: min(720px, 92vw); }
@@ -466,21 +481,21 @@
      width and a short headline lands at a different x than the body. */
   .manifesto-head { width: 100%; max-width: 760px; margin: 0 auto; }
   .manifesto-head .eyebrow { margin-bottom: 24px; }
-  .manifesto-head h2 { font-family: var(--sans); font-size: clamp(30px, 3.6vw, 44px); font-weight:400; letter-spacing: -0.03em; line-height: 1.06; margin: 0; max-width: 720px; }
+  .manifesto-head h2 { font-family: var(--sans); font-size: var(--fs-h2); font-weight:400; letter-spacing: -0.03em; line-height: 1.06; margin: 0; max-width: 720px; }
   .manifesto-head h2 .a { color: var(--blue-d); font-style:normal; font-weight:400; }
 
   .manifesto-body { width: 100%; max-width: 760px; margin: 0 auto; }
   @media (max-width: 880px) { .manifesto-body { grid-template-columns: 1fr; gap: 40px; } }
-  .manifesto-body p { font-size: 18px; line-height: 1.7; color: var(--dim); margin: 0 0 18px; }
+  .manifesto-body p { font-size: var(--fs-body); line-height: 1.7; color: var(--dim); margin: 0 0 18px; }
   .manifesto-body p:last-child { margin-bottom: 0; }
   .manifesto-body strong { color: var(--white); font-weight: 500; }
-  .manifesto-head p { font-size: 18px; line-height: 1.7; color: var(--dim); margin: 22px 0 0; }
+  .manifesto-head p { font-size: var(--fs-body); line-height: 1.7; color: var(--dim); margin: 22px 0 0; }
   .manifesto-head p strong { color: var(--white); font-weight: 500; }
   .manifesto-body em { color: var(--dim); font-style:normal; }
-  .manifesto-mv { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--blue-d); margin: 42px 0 6px; }
-  .manifesto-body h3 { font-family: var(--sans); font-size: 24px; font-weight:400; letter-spacing: -0.02em; line-height: 1.15; color: var(--white); margin: 0 0 12px; }
+  .manifesto-mv { font-family: var(--mono); font-size: var(--fs-caption); letter-spacing: .2em; text-transform: uppercase; color: var(--blue-d); margin: 42px 0 6px; }
+  .manifesto-body h3 { font-family: var(--sans); font-size: var(--fs-h3); font-weight:400; letter-spacing: -0.02em; line-height: 1.15; color: var(--white); margin: 0 0 12px; }
   /* "dagger" — the punchy lead line under a section headline (v17) */
-  .dagger { max-width: 760px; margin: 28px auto 0; font-family: var(--sans); font-size: clamp(20px,2.2vw,26px); font-weight: 400; line-height: 1.4; letter-spacing: -0.01em; color: var(--white); }
+  .dagger { max-width: 760px; margin: 28px auto 0; font-family: var(--sans); font-size: var(--fs-h3); font-weight: 400; line-height: 1.4; letter-spacing: -0.01em; color: var(--white); }
   .dagger .a { color: var(--blue-d); font-style: normal; }
   .manifesto-head .dagger { margin-top: 26px; }
 
@@ -552,7 +567,7 @@
   .loops-sec { padding: 0 0 180px; }
   .loops-head { max-width: 1320px; margin: 0 auto; padding: 80px 32px 40px; }
   .loops-head .eyebrow { margin-bottom: 20px; }
-  .loops-head h2 { font-size: clamp(36px,4.8vw,64px); font-weight:400; letter-spacing: -0.035em; line-height: 1; margin: 0; }
+  .loops-head h2 { font-size: var(--fs-h1); font-weight:400; letter-spacing: -0.035em; line-height: 1; margin: 0; }
   .loops-head h2 .a { color: var(--blue-d); font-style:normal; font-weight:400; }
   .loops-head p { color: var(--dim); font-size: 17px; line-height: 1.7; margin-top: 22px; max-width: 60ch; }
 
@@ -579,7 +594,7 @@
   .loop-pill {
     display: inline-flex; align-items: center; gap: 8px;
     height: 28px; padding: 0 14px; border-radius: 100px;
-    font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .14em;
+    font-family: var(--mono); font-size: var(--fs-micro); font-weight: 500; letter-spacing: .14em;
     text-transform: uppercase;
     margin-bottom: 24px; width: fit-content;
   }
@@ -756,17 +771,17 @@
     pointer-events: none; z-index: -1;
   }
   .closer h2 {
-    font-size: clamp(34px,4.2vw,58px); font-weight:400;
+    font-size: var(--fs-h1); font-weight:400;
     letter-spacing: -0.035em; line-height: 1.04;
     margin: 0 auto 24px; max-width: 22ch;
   }
   .closer h2 .a { color: var(--blue-d); font-style:normal; font-weight:400; }
   .closer p {
-    color: var(--dim); font-size: 17px; line-height: 1.55;
-    max-width: 44ch; margin: 0 auto 36px;
+    color: var(--dim); font-size: var(--fs-body); line-height: 1.55;
+    max-width: 56ch; margin: 0 auto 36px;
   }
   .cta-row { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-  .btn { font-family: var(--sans); font-size: 15px; font-weight: 500; text-decoration: none; padding: 16px 30px; border-radius: 999px; transition: all .2s; display: inline-flex; align-items: center; border: none; cursor: pointer; gap: 8px; }
+  .btn { font-family: var(--sans); font-size: var(--fs-small); font-weight: 500; text-decoration: none; padding: 16px 30px; border-radius: 999px; transition: all .2s; display: inline-flex; align-items: center; border: none; cursor: pointer; gap: 8px; }
   .btn-p { background: var(--blue); color: var(--white); }
   .btn-p:hover { background: var(--blue-d); transform: translateY(-2px); }
   .btn-g { color: var(--white); border: 1px solid var(--lines); background: transparent; }
@@ -784,7 +799,7 @@
   .waitlist input {
     flex: 1; min-width: 0;
     background: transparent; border: 0; outline: 0;
-    color: var(--white); font-family: var(--sans); font-size: 15px;
+    color: var(--white); font-family: var(--sans); font-size: var(--fs-small);
     padding: 11px 18px;
   }
   .waitlist input::placeholder { color: var(--dim2); }
@@ -801,7 +816,7 @@
   .waitlist button {
     background: var(--blue); color: var(--white);
     border: 0; cursor: pointer; padding: 11px 20px;
-    font-family: var(--sans); font-size: 13px; letter-spacing: .12em;
+    font-family: var(--sans); font-size: var(--fs-label); letter-spacing: .12em;
     text-transform: uppercase; font-weight: 500;
     border-radius: 999px;
     transition: background .2s, transform .15s;
@@ -811,14 +826,14 @@
   .waitlist button:active { transform: translateY(1px); }
   .waitlist-help {
     margin-top: 12px;
-    font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
+    font-family: var(--mono); font-size: var(--fs-caption); letter-spacing: .04em;
     color: var(--dim2); line-height: 1.6;
     display: block;
     max-width: 480px;
   }
   /* closer section: keep max-width in sync with the form (480px) */
   .closer .waitlist-help {
-    font-size: 12px; line-height: 1.6; color: var(--dim2);
+    font-size: var(--fs-caption); line-height: 1.6; color: var(--dim2);
     max-width: 480px; margin: 12px 0 0;
   }
 
@@ -829,13 +844,16 @@
   .hero .waitlist-help-wrap { margin-top: 22px; }
 
   /* polished email success state — the form swaps to a confirmation card */
-  .waitlist-zone { position: relative; }
-  /* layout in CSS (not inline) so the is-done rule below can hide it on success */
+  /* Grid overlay: form-wrap and success share the same cell so height never changes.
+     Transition via opacity/visibility — no display toggling, no layout jump. */
+  .waitlist-zone { display: grid; }
+  .waitlist-form-wrap, .waitlist-success { grid-area: 1 / 1; }
   .waitlist-help-row { display: flex; justify-content: center; }
-  .waitlist-success { display: none; flex-direction: column; align-items: center; text-align: center; gap: 15px; max-width: 480px; margin: 0 auto; }
-  .waitlist-zone.is-done .waitlist,
-  .waitlist-zone.is-done .waitlist-help-row { display: none; }
-  .waitlist-zone.is-done .waitlist-success { display: flex; animation: ws-in .55s cubic-bezier(.2,.7,.2,1) both; }
+  .waitlist-success { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 15px; max-width: 480px; margin: 0 auto;
+    opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility 0s .45s; }
+  .waitlist-form-wrap { transition: opacity .3s ease, visibility 0s .3s; }
+  .waitlist-zone.is-done .waitlist-form-wrap { opacity: 0; visibility: hidden; }
+  .waitlist-zone.is-done .waitlist-success { opacity: 1; visibility: visible; transition: opacity .55s cubic-bezier(.2,.7,.2,1), visibility 0s; animation: ws-in .55s cubic-bezier(.2,.7,.2,1) both; }
   @keyframes ws-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   .ws-badge { position: relative; width: 64px; height: 64px; display: grid; place-items: center; }
   .ws-badge::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; background: radial-gradient(circle, rgba(64,131,255,.5), transparent 68%); animation: ws-glow 2.8s ease-in-out infinite; }
@@ -848,10 +866,10 @@
   .ws-check { fill: none; stroke: #eaf1ff; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 44; stroke-dashoffset: 44; }
   .waitlist-zone.is-done .ws-check { animation: ws-draw .45s .2s cubic-bezier(.6,0,.3,1) forwards; }
   @keyframes ws-draw { to { stroke-dashoffset: 0; } }
-  .ws-title { font-family: var(--sans); font-weight: 400; font-size: clamp(24px,3.2vw,34px); letter-spacing: -0.02em; line-height: 1.1; color: var(--white); }
-  .ws-sub { font-size: 16px; line-height: 1.6; color: var(--dim); margin: 0; }
+  .ws-title { font-family: var(--sans); font-weight: 400; font-size: var(--fs-h3); letter-spacing: -0.02em; line-height: 1.1; color: var(--white); }
+  .ws-sub { font-size: var(--fs-body); line-height: 1.6; color: var(--dim); margin: 0; }
   .ws-sub strong { color: var(--blue-d); font-weight: 500; }
-  .ws-meta { font-family: var(--mono); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim2); display: inline-flex; align-items: center; gap: 7px; margin-top: 2px; }
+  .ws-meta { font-family: var(--mono); font-size: var(--fs-nano); letter-spacing: .16em; text-transform: uppercase; color: var(--dim2); display: inline-flex; align-items: center; gap: 7px; margin-top: 2px; }
   .ws-meta .dot { width: 5px; height: 5px; border-radius: 50%; background: #57e3a4; box-shadow: 0 0 7px #57e3a4; flex-shrink: 0; }
   @media (prefers-reduced-motion: reduce) {
     .ws-badge::before, .waitlist-zone.is-done .ws-ping, .waitlist-zone.is-done .ws-check { animation: none; }
@@ -862,13 +880,13 @@
      squeezing side-by-side), with a full-width, finger-friendly button. */
   @media (max-width: 560px) {
     .waitlist { flex-direction: column; align-items: stretch; gap: 6px; }
-    .waitlist input, .hero .waitlist input { padding: 13px 14px; font-size: 15px; }
-    .waitlist button, .hero .waitlist button { width: 100%; justify-content: center; padding: 14px 18px; font-size: 11px; }
+    .waitlist input, .hero .waitlist input { padding: 13px 14px; font-size: var(--fs-small); }
+    .waitlist button, .hero .waitlist button { width: 100%; justify-content: center; padding: 14px 18px; font-size: var(--fs-micro); }
   }
 
   /* ── FOOTER ─────────────────────────── */
   footer { padding: 40px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: #00070e; }
-  .fc { color: var(--dim); font-size: 13px; font-family: var(--mono); letter-spacing: .1em; }
+  .fc { color: var(--dim); font-size: var(--fs-label); font-family: var(--mono); letter-spacing: .1em; }
 
   /* ── WHAT THIS IS (under-hero strip) ── */
   .whatis { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.015); }
@@ -950,6 +968,7 @@
   /* ── INTRODUCING WAVE (full-bleed Unicorn Studio embed) ── */
   .intro-wave {
     position: relative;
+    z-index: 1;          /* explicit stacking level; post-wave-bg (z-index:2) renders above */
     overflow: hidden;
     margin-top: 0;
     margin-bottom: 0;
@@ -984,19 +1003,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 6% 0 10%;
+    padding: 6% 0 20%;
     text-align: center;
   }
   .intro-wave-eyebrow {
     font-family: var(--mono);
-    font-size: clamp(10px, 1vw, 13px);
+    font-size: var(--fs-caption);
     letter-spacing: .28em;
     text-transform: uppercase;
     color: rgba(195,210,255,.52);
   }
   .intro-wave-tagline {
     font-family: var(--mono);
-    font-size: clamp(11px, 1.1vw, 14px);
+    font-size: var(--fs-label);
     letter-spacing: .22em;
     text-transform: uppercase;
     color: rgba(195,210,255,.72);
@@ -1014,14 +1033,23 @@
     aspect-ratio: 1440 / 900;
     display: block;
   }
+  /* Mobile: Unicorn Studio ships a separate portrait breakpoint for this scene.
+     Force a portrait aspect-ratio on small viewports so the embed renders at the
+     mobile composition instead of squashing the landscape scene into a thin band. */
+  @media (max-width: 760px) {
+    .intro-wave-in > div { aspect-ratio: 9 / 16; }
+  }
 
   /* ── POST-WAVE: deep background for all content below the Wave reveal ── */
   .post-wave-bg {
-    /* No solid background here — the wave's ::after fade (→#00070e) handles the
-       visual transition. A solid rect caused visible overlap at small viewports
-       where the embed is shorter (aspect-ratio 1440/900 = 62.5vw height). */
-    background: transparent;
+    /* z-index:2 stacks this above .intro-wave (z-index:1); margin/padding-top overlap
+       the wave's bottom 80px (already solid #00070e from ::after) to hide the join seam.
+       Gradient top: transparent→#00070e over 80px ensures no hard edge at the overlap. */
+    background: linear-gradient(to bottom, transparent 0, #00070e 80px);
     position: relative;
+    z-index: 2;
+    margin-top: -80px;
+    padding-top: 80px;
   }
   /* The #solution and #loops padding rules from earlier apply inside this wrapper */
   /* bridge: tighten the solution section's top so the SVG connector leads directly into the heading */
@@ -1033,10 +1061,10 @@
      left edge) and lands on the "A". Negative margin-top pulls the top ~290px up so
      the crosshair overlaps the wave diagram above. Hidden where the 760 block can't
      fit (alignment would break). */
-  /* margin-top: -23vw — wave embed is 62.5vw tall (aspect 1440/900); -23vw pins
-     the crosshair at ~63% of the wave height regardless of viewport width.
-     Previously fixed at -330px, which over-lapped at narrow and under-reached at wide. */
-  .wave-bridge { display: flex; justify-content: center; margin-top: -23vw; padding: 0 0 36px; position: relative; z-index: 2; pointer-events: none; }
+  /* margin-top: -12vw — wave embed is 62.5vw tall (aspect 1440/900); -12vw places the
+     top crosshair at ~82% of wave height (solidly in the dark bottom zone).
+     post-wave-bg's 80px top-overlap is accounted for: content-area 0 = wave bottom. */
+  .wave-bridge { display: flex; justify-content: center; margin-top: -12vw; padding: 0 0 36px; position: relative; z-index: 2; pointer-events: none; }
   @media (max-width: 860px){ .wave-bridge { display: none; } }
 
   /* ── HOVER CARDS (inline term tooltips) ── */
@@ -1057,7 +1085,7 @@
   .hc:hover .hc-term { text-decoration-color: var(--blue-d); }
   .hc-card {
     position: absolute;
-    bottom: calc(100% + 10px);
+    bottom: calc(100% + 6px);
     left: 50%;
     transform: translateX(-50%) translateY(6px);
     width: 320px;
@@ -1086,15 +1114,7 @@
     left: -16px; right: -16px;
     height: 20px;
   }
-  /* small arrow pointing down */
-  .hc-card::after {
-    content: "";
-    position: absolute;
-    top: 100%; left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: rgba(64,131,255,.28);
-  }
+  .hc-card::after { display: none; }
   .hc:hover .hc-card, .hc:focus-within .hc-card {
     opacity: 1;
     visibility: visible;
@@ -1210,7 +1230,7 @@
   .bp-hero .ln{stroke:#e9f0ff;fill:none;}
   .bp-hero .lnf{stroke:rgba(233,240,255,0.7);fill:none;}
   /* scroll-down indicator */
-  .bp-scroll{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:9px;color:#c3d2ff;font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;opacity:.85;transition:opacity .2s;}
+  .bp-scroll{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:9px;color:#c3d2ff;font-family:'Geist Mono',ui-monospace,monospace;font-size:var(--fs-micro);letter-spacing:.3em;text-transform:uppercase;text-decoration:none;opacity:.85;transition:opacity .2s;}
   .bp-scroll:hover{opacity:1;}
   .bp-scroll svg{width:20px;height:28px;}
   .bp-scroll .chev{animation:bp-bob 1.8s ease-in-out infinite;}
@@ -1229,7 +1249,7 @@
   .bp-hero-copy h1{
     margin:0; font-family:var(--sans); font-weight:600;
     /* large display headline, breaks intentionally onto 3 lines via <br> */
-    font-size:clamp(44px, 5.8vw, 92px); line-height:1.02; letter-spacing:-0.035em;
+    font-size:var(--fs-display); line-height:1.02; letter-spacing:-0.035em;
     color:#f2f6ff;
     /* prevent the browser from breaking "self-improving" at the hyphen */
     word-break: keep-all; hyphens: none;
@@ -1237,13 +1257,13 @@
   .bp-hero-copy h1 .nb{ white-space: nowrap; }
   .bp-hero-copy p{
     margin:28px 0 0; font-family:var(--sans); font-weight:400;
-    font-size:clamp(15px, 1.25vw, 19px); line-height:1.5; color:var(--dim); max-width:46ch;
+    font-size:var(--fs-lead); line-height:1.5; color:var(--dim); max-width:46ch;
   }
   /* hero CTA — outline pill, identical to the nav CTA (.nav-btn) */
   .bp-cta{
     pointer-events:auto; margin-top:36px;
     display:inline-flex; align-items:center;
-    font-family:var(--sans); font-size:13px; font-weight:500;
+    font-family:var(--sans); font-size:var(--fs-label); font-weight:500;
     letter-spacing:.18em; text-transform:uppercase;
     color:var(--white); background:transparent;
     border:1px solid var(--lines); border-radius:999px;
@@ -1299,7 +1319,7 @@
   .bp-hero .hud-mark{stroke:#9fb0d8;fill:none;stroke-width:1.2;opacity:.75}
   .bp-hero .hud-rule{stroke:#9fb0d8;fill:none;stroke-width:1;opacity:.4;stroke-dasharray:4 10;stroke-linecap:round}
   /* small blue eyebrow above the hero headline */
-  .bp-hero .bp-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--blue-d);margin:0 0 18px}
+  .bp-hero .bp-eyebrow{font-family:var(--mono);font-size:var(--fs-caption);font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--blue-d);margin:0 0 18px}
 </style>
 
 <section class="bp-hero">
@@ -1335,14 +1355,14 @@
   <div class="bp-hero-copy">
     <div class="bp-eyebrow">Amplitude Wave · Closed Beta</div>
     <h1>Enabling<br><span class="nb">self-improving</span><br>products</h1>
-    <p>Products that reinforce what's working and fix what isn't without explicit intervention.</p>
+    <p>Wave analyzes your data and code, surfaces what to build, orchestrates the plans, PRs, experiments, then measures the impact.</p>
     <a class="bp-cta" href="#cta">Request access</a>
   </div>
   <!-- mobile-only plain headline; replaces the SVG HUD below 760px -->
   <div class="bp-hero-m">
     <div class="bp-eyebrow">Amplitude Wave · Closed Beta</div>
     <h1>Enabling self-improving products</h1>
-    <p>Products that reinforce what's working and fix what isn't without explicit intervention.</p>
+    <p>Wave analyzes your data and code, surfaces what to build, orchestrates the plans, PRs, experiments, then measures the impact.</p>
   </div>
   <a class="bp-scroll" href="#demo" aria-label="Scroll to content">
     <span>Scroll</span>
@@ -1893,8 +1913,8 @@
   .film-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .film-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #c3d2ff; font-family: var(--mono); }
   .film-play { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; border: 1px solid rgba(180,200,255,.4); background: rgba(180,200,255,.08); color: #e9f0ff; font-size: 24px; padding-left: 5px; box-shadow: 0 0 44px rgba(64,131,255,.35); }
-  .film-ph-label { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #7f8cc4; }
-  .film-tag { position: absolute; left: 16px; top: 14px; z-index: 1; font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #9fb0d8; opacity: .85; }
+  .film-ph-label { font-size: var(--fs-caption); letter-spacing: .22em; text-transform: uppercase; color: #7f8cc4; }
+  .film-tag { position: absolute; left: 16px; top: 14px; z-index: 1; font-family: var(--mono); font-size: var(--fs-nano); letter-spacing: .2em; text-transform: uppercase; color: #9fb0d8; opacity: .85; }
 
   /* ── cursor-attached "click for sound" micrographic ───────────────────
      A HUD crosshair + speaker that trails the pointer over the demo, so the
@@ -1927,7 +1947,7 @@
   @keyframes fc-ping { 0% { opacity: .6; transform: scale(.5); } 70%, 100% { opacity: 0; transform: scale(1.3); } }
   .fc-label {
     position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); white-space: nowrap;
-    font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #eaf1ff;
+    font-family: var(--mono); font-size: var(--fs-nano); letter-spacing: .2em; text-transform: uppercase; color: #eaf1ff;
     padding: 5px 10px; border: 1px solid rgba(180,200,255,.28); border-radius: 7px;
     background: rgba(8,12,28,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   }
@@ -1981,9 +2001,6 @@
     .film-frame { transform: none; }
   }
 </style>
-<!-- ── Gradient divider (matches the divider above Intro Wave) ── -->
-<hr class="grad-divider" aria-hidden="true">
-
 <section class="film" id="demo" aria-label="Product demo">
   <div class="film-scrim"></div>
   <div class="film-wrap">
@@ -2170,7 +2187,8 @@
   <div class="manifesto-in">
     <div class="manifesto-head reveal">
       <h2>The new bottleneck: <span class="a">knowing what to build</span></h2>
-      <p>Quality comes from iteration. The military strategist <span class="hc" tabindex="0"><span class="hc-term">John Boyd</span><span class="hc-card"><span class="hc-label">John Boyd · 1927–1997</span><span class="hc-body">USAF fighter pilot and Pentagon consultant. His theories on decision cycles shaped military, business, and legal strategy worldwide. <a href="https://en.wikipedia.org/wiki/John_Boyd_(military_strategist)" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> showed that whoever cycles their <span class="hc" tabindex="0"><span class="hc-term">OODA loop</span><span class="hc-card"><span class="hc-label">Observe, Orient, Decide, Act</span><span class="hc-body">Decision-making as an iterative cycle. Influential across litigation, business, law enforcement, military strategy, and cybersecurity. <a href="https://en.wikipedia.org/wiki/OODA_loop" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> fastest wins the dogfight. Whether it's a team of 1,000 or a solo developer, every product builder runs through roughly the same loop to build and iterate on a product: build, ship, use, learn.</p>
+      <p>Quality comes from iteration, and the winner is whoever iterates fastest. The military strategist <span class="hc" tabindex="0"><span class="hc-term">John Boyd</span><span class="hc-card"><span class="hc-label">John Boyd · 1927–1997</span><span class="hc-body">USAF fighter pilot and Pentagon consultant. His theories on decision cycles shaped military, business, and legal strategy worldwide. <a href="https://en.wikipedia.org/wiki/John_Boyd_(military_strategist)" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> showed it in combat: the pilot who cycles their <span class="hc" tabindex="0"><span class="hc-term">OODA loop</span><span class="hc-card"><span class="hc-label">Observe, Orient, Decide, Act</span><span class="hc-body">Decision-making as an iterative cycle. Influential across litigation, business, law enforcement, military strategy, and cybersecurity. <a href="https://en.wikipedia.org/wiki/OODA_loop" target="_blank" rel="noopener" style="color:var(--blue-d);text-decoration:none;opacity:.7;">— via Wikipedia ↗</a></span></span></span> fastest wins the dogfight.</p>
+      <p>Software is no different. Whether you're a team of 1,000 or a solo developer, the loop is the same: build, ship, use, learn. The best products come from the builders who run it fastest and with the most care.</p>
     </div>
 
     <div class="loop-viz reveal" aria-hidden="true">
@@ -2466,6 +2484,10 @@
   <div class="intro-wave-in">
     <div style="width: 1440px; height: 900px" data-us-project="CKe6dFknhkRJIEA3unTS"></div>
   </div>
+  <div class="intro-wave-overlay" aria-hidden="true">
+    <div class="intro-wave-eyebrow">Introducing</div>
+    <div class="intro-wave-tagline">The Self-improving product engine</div>
+  </div>
 </section>
 <script type="text/javascript">
 /* PERF: the "Introducing Wave" embed is a 3rd WebGL context driven by an external
@@ -2552,7 +2574,7 @@
     es.forEach(function(e){
       if(!e.isIntersecting) return;
       if(anim) anim.beginElement();
-      setTimeout(function(){ if(footAnim) footAnim.beginElement(); }, 1400);
+      setTimeout(function(){ if(footAnim) footAnim.beginElement(); }, 1250);
       obs.unobserve(e.target);
     });
   }, { threshold: 0.3 }).observe(bridge);
@@ -2990,11 +3012,11 @@
   .proof-card:hover::before { opacity: 1; }
   @media (max-width: 720px){ .proof-card{ padding: 26px 22px; } }
   .proof-card h3{
-    font-family: var(--sans); font-size: clamp(23px,2.6vw,29px); font-weight: 400;
+    font-family: var(--sans); font-size: var(--fs-h3); font-weight: 400;
     letter-spacing: -0.02em; line-height: 1.2; color: var(--white); margin: 0 0 14px;
   }
   .proof-card p{
-    font-size: 16px; line-height: 1.65; color: var(--dim); margin: 0; max-width: 62ch;
+    font-size: var(--fs-body); line-height: 1.65; color: var(--dim); margin: 0; max-width: 62ch;
   }
   .proof-stats{ display: grid; grid-template-columns: 1fr 1fr; margin: 34px 0 0; }
   .proof-stat:nth-child(1){ padding-right: 44px; }
@@ -3005,20 +3027,20 @@
     .proof-stat:nth-child(2){ border-left: 0; border-top: 1px solid var(--line); padding: 26px 0 0; }
   }
   .ps-label{
-    font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+    font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: .16em; text-transform: uppercase;
     color: var(--dim2); margin-bottom: 16px;
   }
   .ps-num{
-    font-family: var(--sans); font-size: clamp(44px,5.6vw,64px); font-weight: 600;
+    font-family: var(--sans); font-size: var(--fs-h1); font-weight: 600;
     line-height: .92; letter-spacing: -0.03em; color: var(--white);
   }
-  .ps-sub{ font-size: 14px; line-height: 1.5; color: var(--dim); margin-top: 16px; }
+  .ps-sub{ font-size: var(--fs-small); line-height: 1.5; color: var(--dim); margin-top: 16px; }
   .proof-foot{
     display: flex; justify-content: flex-end;
     margin: 34px 0 0; padding-top: 22px; border-top: 1px solid var(--line);
   }
   .proof-link{
-    font-family: var(--sans); font-size: 15px; color: var(--blue-d);
+    font-family: var(--sans); font-size: var(--fs-small); color: var(--blue-d);
     text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: gap .2s;
   }
   .proof-link:hover{ gap: 12px; }
@@ -3066,12 +3088,14 @@
   <h2 class="reveal">Build products that<br>improve themselves</h2>
   <p class="reveal">Wave is rolling out to design partners. You can be one of them.</p>
   <div class="waitlist-zone reveal" id="cta-zone">
-    <form class="waitlist" id="cta-form" onsubmit="event.preventDefault()">
-      <input type="email" id="cta-email" placeholder="you@company.com" aria-label="Email address">
-      <button type="submit">Request access <span class="arr" aria-hidden="true">→</span></button>
-    </form>
-    <div class="waitlist-help-row">
-      <p class="waitlist-help">By submitting your email, you acknowledge Amplitude processing your personal data in accordance with our <a href="https://amplitude.com/privacy" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px;opacity:.7;">Privacy Policy</a>.</p>
+    <div class="waitlist-form-wrap">
+      <form class="waitlist" id="cta-form" onsubmit="event.preventDefault()">
+        <input type="email" id="cta-email" placeholder="you@company.com" aria-label="Email address">
+        <button type="submit">Request access <span class="arr" aria-hidden="true">→</span></button>
+      </form>
+      <div class="waitlist-help-row">
+        <p class="waitlist-help">By submitting your email, you acknowledge Amplitude processing your personal data in accordance with our <a href="https://amplitude.com/privacy" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px;opacity:.7;">Privacy Policy</a>.</p>
+      </div>
     </div>
     <div class="waitlist-success" role="status" aria-live="polite">
       <span class="ws-badge" aria-hidden="true">
@@ -3455,13 +3479,13 @@
   .cmdk-head {
     display: flex; justify-content: space-between; align-items: center;
     padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,.08);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: var(--mono);
     font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
   }
   .cmdk-label { color: #4083FF; }
   .cmdk-hint { color: rgba(255,255,255,.42); }
   .cmdk-hint kbd {
-    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    font-family: var(--mono); font-size: 9px;
     padding: 2px 5px; margin: 0 1px;
     background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
     border-radius: 3px; color: #fff;
@@ -3478,16 +3502,16 @@
   .cmdk-item.selected { background: rgba(64,131,255,.12); outline: 1px solid rgba(64,131,255,.3); }
   .cmdk-item:hover { background: rgba(255,255,255,.04); }
   .cmdk-num {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
     letter-spacing: .14em; color: #4083FF;
     padding: 5px 8px; border: 1px solid rgba(64,131,255,.3);
     border-radius: 4px; background: rgba(64,131,255,.06);
     text-align: center;
   }
   .cmdk-text .cmdk-name { font-size: 14px; font-weight: 500; color: #fff; letter-spacing: -.01em; line-height: 1.35; }
-  .cmdk-text .cmdk-desc { font-size: 11px; color: rgba(255,255,255,.55); font-family: 'JetBrains Mono', monospace; letter-spacing: .03em; margin-top: 3px; }
+  .cmdk-text .cmdk-desc { font-size: 11px; color: rgba(255,255,255,.55); font-family: var(--mono); letter-spacing: .03em; margin-top: 3px; }
   .cmdk-current {
-    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .16em;
+    font-family: var(--mono); font-size: 9px; letter-spacing: .16em;
     color: #57E3A4; padding: 3px 7px;
     border: 1px solid rgba(87,227,164,.3); background: rgba(87,227,164,.06);
     border-radius: 3px;
