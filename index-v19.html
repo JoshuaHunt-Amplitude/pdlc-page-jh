@@ -1040,6 +1040,11 @@
   @media (max-width: 760px) {
     .intro-wave-in > div { aspect-ratio: 390 / 420; }
     .intro-wave-overlay { padding: 24% 0 24%; }
+    /* Desktop fades are pixel-sized for a ~900px-tall embed (260px top + 340px
+       bottom). On mobile the embed is ~420px tall, so those fades overlap and
+       darken the wordmark. Shrink them so the centre stays clear. */
+    .intro-wave::before { height: 90px; }
+    .intro-wave::after  { height: 120px; }
   }
 
   /* ── POST-WAVE: deep background for all content below the Wave reveal ── */
