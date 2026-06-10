@@ -1033,13 +1033,11 @@
     aspect-ratio: 1440 / 900;
     display: block;
   }
-  /* Mobile: Unicorn Studio ships this scene at 390×420 for the phone breakpoint,
-     so match that aspect-ratio and tighten the overlay padding so "Introducing"
-     and the tagline frame the Wave wordmark instead of floating to the very
-     top/bottom of a much taller box. */
+  /* Mobile: Unicorn Studio ships a separate portrait breakpoint for this scene.
+     Force a portrait aspect-ratio on small viewports so the embed renders at the
+     mobile composition instead of squashing the landscape scene into a thin band. */
   @media (max-width: 760px) {
-    .intro-wave-in > div { aspect-ratio: 390 / 420; }
-    .intro-wave-overlay { padding: 18% 0 18%; }
+    .intro-wave-in > div { aspect-ratio: 9 / 16; }
   }
 
   /* ── POST-WAVE: deep background for all content below the Wave reveal ── */
